@@ -24,6 +24,7 @@ import {
 
 import {
   defaultGeneralConfiguration,
+  defaultImportSorterConfiguration,
   GeneralConfiguration,
   ImportRunner,
   ImportSorterConfiguration,
@@ -39,7 +40,7 @@ import { ConfigurationProvider } from './core/import-runner';
 const EXTENSION_CONFIGURATION_NAME = "importSorter";
 
 export class VSCodeConfigurationProvider implements ConfigurationProvider {
-  private currentConfiguration: ImportSorterConfiguration;
+  private currentConfiguration = defaultImportSorterConfiguration;
   public getConfiguration(): ImportSorterConfiguration {
     return this.currentConfiguration;
   }
@@ -53,7 +54,7 @@ export class VSCodeConfigurationProvider implements ConfigurationProvider {
       | GeneralConfiguration
       | ProxyHandler<GeneralConfiguration> = workspace
       .getConfiguration(EXTENSION_CONFIGURATION_NAME)
-      .get<GeneralConfiguration>("generalConfiguration");
+      .get<GeneralConfiguration>("generalConfiguration")!;
     const generalConfig = cloneDeep(generalConfigProxy);
 
     const configPath = `${workspace.rootPath}${sep}${generalConfig.configurationFilePath}`;
@@ -80,7 +81,7 @@ export class VSCodeConfigurationProvider implements ConfigurationProvider {
     const fileConfigJsonObj = JSON.parse(fileConfigurationString);
     const fileConfigMerged = Object.keys(fileConfigJsonObj)
       .map(key => {
-        const total = {};
+        const total: Record<string, any> = {};
         const keys = key.split(".").filter(str => str !== "importSorter");
         keys.reduce((sum, currentKey, index) => {
           if (index === keys.length - 1) {
@@ -98,14 +99,14 @@ export class VSCodeConfigurationProvider implements ConfigurationProvider {
       | SortConfiguration
       | ProxyHandler<SortConfiguration> = workspace
       .getConfiguration(EXTENSION_CONFIGURATION_NAME)
-      .get<SortConfiguration>("sortConfiguration");
+      .get<SortConfiguration>("sortConfiguration")!;
     const sortConfig = cloneDeep(sortConfigProxy);
 
     const importStringConfigProxy:
       | ImportStringConfiguration
       | ProxyHandler<ImportStringConfiguration> = workspace
       .getConfiguration(EXTENSION_CONFIGURATION_NAME)
-      .get<ImportStringConfiguration>("importStringConfiguration");
+      .get<ImportStringConfiguration>("importStringConfiguration")!;
     const importStringConfig = cloneDeep(importStringConfigProxy);
 
     const sortConfiguration = merge(
@@ -131,7 +132,7 @@ export class VSCodeConfigurationProvider implements ConfigurationProvider {
 export class ImportSorterExtension {
   private importRunner: ImportRunner;
   private configurationProvider: VSCodeConfigurationProvider;
-  public initialise() {
+  public constructor() {
     this.configurationProvider = new VSCodeConfigurationProvider();
     this.importRunner = new SimpleImportRunner(
       new SimpleImportAstParser(),
@@ -199,9 +200,7 @@ export class ImportSorterExtension {
 
   private sortActiveDocumentImports(event?: TextDocumentWillSaveEvent): void {
     try {
-      const doc: TextDocument = event
-        ? event.document
-        : window.activeTextEditor.document;
+      const doc = event ? event.document : window.activeTextEditor!.document;
       const text = doc.getText();
       const importData = this.importRunner.getSortImportData(
         doc.uri.fsPath,
@@ -211,7 +210,7 @@ export class ImportSorterExtension {
         return;
       }
 
-      const deleteEdits = importData.rangesToDelete.map(x =>
+      const deleteEdits = importData.rangesToDelete!.map(x =>
         TextEdit.delete(
           new Range(
             new Position(x.startLine, x.startCharacter),
@@ -222,17 +221,17 @@ export class ImportSorterExtension {
 
       if (event) {
         const insertEdit = TextEdit.insert(
-          new Position(importData.firstLineNumberToInsertText, 0),
+          new Position(importData.firstLineNumberToInsertText!, 0),
           importData.sortedImportsText + "\n"
         );
         event.waitUntil(Promise.resolve([...deleteEdits, insertEdit]));
       } else {
-        window.activeTextEditor.edit((editBuilder: TextEditorEdit) => {
+        window.activeTextEditor?.edit((editBuilder: TextEditorEdit) => {
           deleteEdits.forEach(x => {
             editBuilder.delete(x.range);
           });
           editBuilder.insert(
-            new Position(importData.firstLineNumberToInsertText, 0),
+            new Position(importData.firstLineNumberToInsertText!, 0),
             importData.sortedImportsText + "\n"
           );
         });

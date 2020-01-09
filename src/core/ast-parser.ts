@@ -25,8 +25,7 @@ export class SimpleImportAstParser implements AstParser {
     ) {
       return {
         importElements: [],
-        usedTypeReferences: [],
-        firstImportLineNumber: null
+        usedTypeReferences: []
       };
     }
     const sourceText = _sourceText || fs.readFileSync(fullFilePath).toString();
@@ -60,6 +59,8 @@ export class SimpleImportAstParser implements AstParser {
       return;
     }
     const lastLeadingComment = this.getLastLeadingComment(firstNode);
+    if (!lastLeadingComment) return;
+
     const leadingCommentNextLine =
       textProcessing.getPositionByOffset(lastLeadingComment.range.end, text)
         .line + 1;
@@ -75,7 +76,7 @@ export class SimpleImportAstParser implements AstParser {
 
   private firstImportLineNumber(importNode: ImportNode, text: string) {
     if (!importNode) {
-      return null;
+      return undefined;
     }
 
     const leadingComments = this.getLastLeadingComment(importNode);
@@ -118,13 +119,15 @@ export class SimpleImportAstParser implements AstParser {
       let isSkipChildNode = false;
       switch (node.kind) {
         case ts.SyntaxKind.ImportDeclaration:
-          const lines = this.getCodeLineNumbers(node, sourceFile);
-          importNodes.push({
-            importDeclaration: node as ts.ImportDeclaration,
-            start: lines.importStartLine,
-            end: lines.importEndLine,
-            importComment: this.getComments(sourceFileText, node)
-          });
+          {
+            const lines = this.getCodeLineNumbers(node, sourceFile);
+            importNodes.push({
+              importDeclaration: node as ts.ImportDeclaration,
+              start: lines.importStartLine,
+              end: lines.importEndLine,
+              importComment: this.getComments(sourceFileText, node)
+            });
+          }
           this.getCodeLineNumbers(node, sourceFile);
           //if we get import declaration then we do not want to do further delinting on the children of the node
           isSkipChildNode = true;
@@ -209,21 +212,23 @@ export class SimpleImportAstParser implements AstParser {
     result.hasFromKeyWord = true;
 
     if (importClause.namedBindings.kind === ts.SyntaxKind.NamespaceImport) {
-      const nsImport = importClause.namedBindings as ts.NamespaceImport;
-      result.namedBindings.push({ aliasName: nsImport.name.text, name: "*" });
+      const nsImport = importClause.namedBindings;
+      result.namedBindings?.push({ aliasName: nsImport.name.text, name: "*" });
       return result;
     }
 
     if (importClause.namedBindings.kind === ts.SyntaxKind.NamedImports) {
-      const nImport = importClause.namedBindings as ts.NamedImports;
+      const nImport = importClause.namedBindings;
       nImport.elements.forEach(y => {
         const propertyName = y.propertyName ? y.propertyName.text : y.name.text;
         const aliasName = !y.propertyName ? null : y.name.text;
-        result.namedBindings.push({ aliasName: aliasName, name: propertyName });
+        result.namedBindings?.push({
+          aliasName: aliasName ?? "",
+          name: propertyName
+        });
       });
       return result;
     }
-    console.warn("unsupported import: ", JSON.stringify(importClause));
-    return null;
+    throw Error(`unsupported import: ${JSON.stringify(importClause)}`);
   }
 }

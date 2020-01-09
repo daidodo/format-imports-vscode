@@ -3,28 +3,6 @@
   "displayName": "TsImportSorter",
   "description": "Help sort imports for TypeScript.",
   "version": "0.0.1",
-  "engines": {
-    "vscode": "^1.41.0"
-  },
-  "categories": [
-    "Other"
-  ],
-  "activationEvents": [
-    "onCommand:extension.helloWorld"
-  ],
-  "main": "./out/extension.js",
-  "contributes": {
-    "commands": [
-      {
-        "command": "extension.helloWorld",
-        "title": "Hello DoZerg"
-      },
-      {
-        "command": "extension.greet",
-        "title": "Greet DoZerg"
-      }
-    ]
-  },
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
@@ -32,15 +10,84 @@
     "pretest": "npm run compile",
     "test": "node ./out/test/runTest.js"
   },
+  "engines": {
+    "vscode": "^1.41.0"
+  },
+  "categories": [
+    "Formatters"
+  ],
+  "keywords": [
+    "Typescript",
+    "imports",
+    "sort",
+    "order",
+    "sort imports"
+  ],
+  "activationEvents": [
+    "onLanguage:javascript",
+    "onLanguage:javascriptreact",
+    "onLanguage:typescript",
+    "onLanguage:typescriptreact"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "",
+      "properties": {}
+    }
+  },
   "devDependencies": {
     "@types/glob": "^7.1.1",
+    "@types/lodash": "^4.14.149",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.11.7",
     "@types/vscode": "^1.41.0",
-    "glob": "^7.1.5",
+    "@typescript-eslint/eslint-plugin": "^2.15.0",
+    "@typescript-eslint/parser": "^2.15.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-tsdoc": "^0.2.0",
+    "glob": "^7.1.6",
+    "lodash": "^4.17.15",
     "mocha": "^6.2.2",
-    "typescript": "^3.6.4",
+    "prettier": "^1.19.1",
+    "rxjs": "^6.5.4",
     "tslint": "^5.20.0",
+    "typescript": "^3.6.4",
     "vscode-test": "^1.2.2"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "all",
+    "printWidth": 100
+  },
+  "eslintConfig": {
+    "root": true,
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "tsconfigRootDir": "./",
+      "project": [
+        "./tsconfig.json"
+      ]
+    },
+    "plugins": [
+      "@typescript-eslint",
+      "eslint-plugin-tsdoc"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/eslint-recommended",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:@typescript-eslint/recommended-requiring-type-checking",
+      "prettier/@typescript-eslint"
+    ],
+    "ignorePatterns": [
+      "*.spec.*"
+    ],
+    "rules": {
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/explicit-function-return-type": "off",
+      "tsdoc/syntax": "warn"
+    }
   }
 }
