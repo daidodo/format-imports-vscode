@@ -1,0 +1,33 @@
+{
+  "importStringConfiguration": {
+    "trailingComma": "multiLine",
+    "tabSize": 2,
+    "maximumNumberOfImportExpressionsPerLine": { "count": 1, "type": "words" }
+  },
+  "generalConfiguration": { "sortOnBeforeSave": true },
+  "sortConfiguration": {
+    "removeUnusedImports": true,
+    "customOrderingRules": {
+      "rules": [
+        {
+          "type": "importMember",
+          "regex": "^$",
+          "orderLevel": 10,
+          "disableSort": true
+        },
+        {
+          "regex": "^react$",
+          "orderLevel": 15
+        },
+        {
+          "regex": "^[@]",
+          "orderLevel": 30
+        },
+        {
+          "regex": "^[.]",
+          "orderLevel": 40
+        }
+      ]
+    }
+  }
+}
