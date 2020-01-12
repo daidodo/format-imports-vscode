@@ -19,4 +19,5 @@ export interface LineRange {
 
 export interface NodeComment extends LineRange {
   range: CommentRange;
+  text: string;
 }

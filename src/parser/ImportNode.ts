@@ -4,6 +4,7 @@ import {
   getTrailingCommentRanges,
   ImportDeclaration,
   ImportEqualsDeclaration,
+  Node,
   SourceFile,
   StringLiteral,
   SyntaxKind,
@@ -20,14 +21,12 @@ import {
 } from './types';
 
 export default class ImportNode {
-  private readonly sourceText_: string;
-  private readonly sourceFile_: SourceFile;
   private readonly node_: ImportDeclaration | ImportEqualsDeclaration;
 
   private moduleIdentifier_: string;
   private defaultName_?: NameBinding;
   private names_?: NameBinding[];
-  private lineRange_: LineRange;
+  private declLineRange_: LineRange;
   private leadingComments_?: NodeComment[];
   private trailingComments_?: NodeComment[];
 
@@ -69,6 +68,13 @@ export default class ImportNode {
     return new ImportNode(node, sourceFile, sourceText, moduleIdentifier, defaultName);
   }
 
+  get lineRange(): LineRange {
+    return {
+      startLine: this.leadingComments_?.[0].startLine ?? this.declLineRange_.startLine,
+      endLine: this.trailingComments_?.reverse()?.[0].endLine ?? this.declLineRange_.endLine,
+    };
+  }
+
   private constructor(
     node: ImportDeclaration | ImportEqualsDeclaration,
     sourceFile: SourceFile,
@@ -78,46 +84,51 @@ export default class ImportNode {
     names?: NameBinding[],
   ) {
     this.node_ = node;
-    this.sourceFile_ = sourceFile;
-    this.sourceText_ = sourceText;
     this.moduleIdentifier_ = normalizePath(moduleIdentifier);
     this.defaultName_ = defaultName;
     this.names_ = names;
-    this.lineRange_ = {
+    this.declLineRange_ = {
       startLine: sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile)),
       endLine: sourceFile.getLineAndCharacterOfPosition(node.getEnd()),
     };
-    this.leadingComments_ = this.parseLeadingComments();
+    this.leadingComments_ = parseLeadingComments(node, this.declLineRange_, sourceFile, sourceText);
     this.trailingComments_ = getTrailingCommentRanges(sourceText, node.getEnd())?.map(
-      this.transformComment.bind(this),
+      transformComment.bind(undefined, sourceFile, sourceText),
     );
   }
+}
 
-  private parseLeadingComments() {
-    const node = this.node_;
-    const fullStart = node.getFullStart();
-    const text = this.sourceText_;
-    const comments = getLeadingCommentRanges(text, fullStart)?.map(
-      this.transformComment.bind(this),
-    );
-    // Skip initial comments that separated by empty line(s) from the first import statement.
-    if (fullStart === 0 && comments && comments.length > 0) {
-      const results = [];
-      let nextStartLine = this.lineRange_.startLine.line;
-      for (let i = comments.length - 1; i >= 0; --i) {
-        const comment = comments[i];
-        if (comment.endLine.line + 1 < nextStartLine) return results.reverse();
-        results.push(comment);
-        nextStartLine = comment.startLine.line;
-      }
+function parseLeadingComments(
+  node: Node,
+  lineRange: LineRange,
+  sourceFile: SourceFile,
+  sourceText: string,
+) {
+  const fullStart = node.getFullStart();
+  const comments = getLeadingCommentRanges(sourceText, fullStart)?.map(
+    transformComment.bind(undefined, sourceFile, sourceText),
+  );
+  // Skip initial comments that separated by empty line(s) from the first import statement.
+  if (fullStart === 0 && comments && comments.length > 0) {
+    const results = [];
+    let nextStartLine = lineRange.startLine.line;
+    for (let i = comments.length - 1; i >= 0; --i) {
+      const comment = comments[i];
+      if (comment.endLine.line + 1 < nextStartLine) return results.reverse();
+      results.push(comment);
+      nextStartLine = comment.startLine.line;
     }
-    return comments;
   }
+  return comments;
+}
 
-  private transformComment(range: CommentRange): NodeComment {
-    const s = this.sourceFile_;
-    const startLine = s.getLineAndCharacterOfPosition(range.pos);
-    const endLine = s.getLineAndCharacterOfPosition(range.end);
-    return { range, startLine, endLine };
-  }
+function transformComment(
+  sourceFile: SourceFile,
+  sourceText: string,
+  range: CommentRange,
+): NodeComment {
+  const startLine = sourceFile.getLineAndCharacterOfPosition(range.pos);
+  const endLine = sourceFile.getLineAndCharacterOfPosition(range.end);
+  const text = sourceText.slice(range.pos, range.end);
+  return { range, startLine, endLine, text };
 }
