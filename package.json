@@ -33,7 +33,83 @@
   "contributes": {
     "configuration": {
       "title": "",
-      "properties": {}
+      "properties": {
+        "tsImportSorter.generalConfiguration.configurationFileName": {
+          "type": "string",
+          "default": "import-sorter.json",
+          "description": "Default file configuration name"
+        },
+        "tsImportSorter.generalConfiguration.exclude": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "description": "Excludes sorting for files which match given regex expression. Regex considers the whole file path. The file path separator is normalized to '/'"
+        },
+        "tsImportSorter.sortConfiguration.customOrderingRules.rules": {
+          "type": "array",
+          "default": [
+            {
+              "regex": "^react$",
+              "orderLevel": 10
+            },
+            {
+              "regex": "^[@]",
+              "orderLevel": 30
+            },
+            {
+              "regex": "^[.]",
+              "orderLevel": 40
+            }
+          ],
+          "description": "Custom grouping levels of different import path patterns. Everything else has a default level of 20"
+        },
+        "tsImportSorter.importStringConfiguration.maximumLineLength": {
+          "type": "number",
+          "default": 0,
+          "description": "The count of characters before import is new-lined. 0 for no limit."
+        },
+        "tsImportSorter.importStringConfiguration.maximumWords": {
+          "type": "number",
+          "default": 1,
+          "description": "The count of words before import is new-lined. 0 for no limit."
+        },
+        "tsImportSorter.importStringConfiguration.tabSize": {
+          "type": "number",
+          "default": 2,
+          "description": "Left number of spaces for the new lined imports. If tabType is set to 'tab', then the configuration defines the size of the tab in number of spaces"
+        },
+        "tsImportSorter.importStringConfiguration.tabType": {
+          "enum": [
+            "space",
+            "tab"
+          ],
+          "default": "space",
+          "description": "Defines the character which will be printed on each new lined import expression"
+        },
+        "tsImportSorter.importStringConfiguration.quoteMark": {
+          "enum": [
+            "single",
+            "double"
+          ],
+          "default": "single",
+          "description": "The path quotes"
+        },
+        "tsImportSorter.importStringConfiguration.trailingComma": {
+          "enum": [
+            "none",
+            "multiLine"
+          ],
+          "default": "multiLine",
+          "description": "If 'multiLine' then adds a trailing comma at the end of the imports for multi-line imports."
+        },
+        "tsImportSorter.importStringConfiguration.hasSemicolon": {
+          "type": "boolean",
+          "default": true,
+          "description": "If true then the import string has a semicolon at the end, otherwise it will not be appended. Default is true"
+        }
+      }
     }
   },
   "devDependencies": {
