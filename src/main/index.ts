@@ -17,8 +17,8 @@ export class ImportSorterExtension {
 
     const sourceText = document.getText();
     const { fsPath: fileName } = document.uri;
-    const { allIdentifiers, importNodes } = parseImportNodes(sourceText, fileName);
-    const deleteEdits = getDeleteEdits(sourceText, importNodes);
+    const { allIdentifiers, importNodes, insertLine } = parseImportNodes(sourceText, fileName);
+    const deleteEdits = getDeleteEdits(importNodes);
     console.log('deleteEdits: ', deleteEdits);
   }
 

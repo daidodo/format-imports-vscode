@@ -7,16 +7,11 @@ import {
 import {
   ImportNode,
   LineRange,
+  RangeAndEmptyLines,
 } from '../parser';
 
-interface RangeAndEmptyLines extends LineRange {
-  leadingEmptyLines: number;
-  trailingEmptyLines: number;
-}
-
-export function getDeleteEdits(sourceText: string, nodes: ImportNode[]) {
-  const sourceLines = sourceText.split(/\r?\n/).map(s => s.trimRight());
-  const ranges = getRanges(sourceLines, nodes);
+export function getDeleteEdits(nodes: ImportNode[]) {
+  const ranges = nodes.map(n => n.rangeAndEmptyLines);
   const merged = mergeRanges(ranges);
   return merged
     .map(decideRange)
@@ -28,31 +23,6 @@ export function getDeleteEdits(sourceText: string, nodes: ImportNode[]) {
         ),
       ),
     );
-}
-
-function getRanges(sourceLines: string[], nodes: ImportNode[]): RangeAndEmptyLines[] {
-  return nodes
-    .map(n => {
-      const { lineRange } = n;
-      return {
-        ...lineRange,
-        leadingEmptyLines: leadingEmptyLines(sourceLines, lineRange.startLine.line),
-        trailingEmptyLines: trailingEmptyLines(sourceLines, lineRange.endLine.line),
-      };
-    })
-    .sort((a, b) => a.startLine.line - b.startLine.line);
-}
-
-function leadingEmptyLines(sourceLines: string[], index: number) {
-  let i = index - 1;
-  for (; i >= 0 && !sourceLines[i]; --i);
-  return index - i - 1;
-}
-
-function trailingEmptyLines(sourceLines: string[], index: number) {
-  let i = index + 1;
-  for (; i < sourceLines.length && !sourceLines[i]; ++i);
-  return i - index - 1;
 }
 
 function mergeRanges(ranges: RangeAndEmptyLines[]) {

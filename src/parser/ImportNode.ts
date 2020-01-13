@@ -1,10 +1,6 @@
 import {
-  CommentRange,
-  getLeadingCommentRanges,
-  getTrailingCommentRanges,
   ImportDeclaration,
   ImportEqualsDeclaration,
-  Node,
   SourceFile,
   StringLiteral,
   SyntaxKind,
@@ -14,10 +10,12 @@ import {
   assert,
   normalizePath,
 } from '../utils';
+import { parseCommentsAndLines } from './lines';
 import {
   LineRange,
   NameBinding,
   NodeComment,
+  RangeAndEmptyLines,
 } from './types';
 
 export default class ImportNode {
@@ -29,6 +27,9 @@ export default class ImportNode {
   private declLineRange_: LineRange;
   private leadingComments_?: NodeComment[];
   private trailingComments_?: NodeComment[];
+  private declAndCommentsLineRange_: LineRange;
+  private leadingEmptyLines_: number;
+  private trailingEmptyLines_: number;
 
   static fromDecl(node: ImportDeclaration, sourceFile: SourceFile, sourceText: string) {
     const { importClause, moduleSpecifier } = node;
@@ -68,10 +69,11 @@ export default class ImportNode {
     return new ImportNode(node, sourceFile, sourceText, moduleIdentifier, defaultName);
   }
 
-  get lineRange(): LineRange {
+  get rangeAndEmptyLines(): RangeAndEmptyLines {
     return {
-      startLine: this.leadingComments_?.[0].startLine ?? this.declLineRange_.startLine,
-      endLine: this.trailingComments_?.reverse()?.[0].endLine ?? this.declLineRange_.endLine,
+      ...this.declAndCommentsLineRange_,
+      leadingEmptyLines: this.leadingEmptyLines_,
+      trailingEmptyLines: this.trailingEmptyLines_,
     };
   }
 
@@ -87,48 +89,19 @@ export default class ImportNode {
     this.moduleIdentifier_ = normalizePath(moduleIdentifier);
     this.defaultName_ = defaultName;
     this.names_ = names;
-    this.declLineRange_ = {
-      startLine: sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile)),
-      endLine: sourceFile.getLineAndCharacterOfPosition(node.getEnd()),
-    };
-    this.leadingComments_ = parseLeadingComments(node, this.declLineRange_, sourceFile, sourceText);
-    this.trailingComments_ = getTrailingCommentRanges(sourceText, node.getEnd())?.map(
-      transformComment.bind(undefined, sourceFile, sourceText),
-    );
+    const {
+      declLineRange,
+      leadingComments,
+      trailingComments,
+      declAndCommentsLineRange,
+      leadingEmptyLines,
+      trailingEmptyLines,
+    } = parseCommentsAndLines(node, sourceFile, sourceText);
+    this.declLineRange_ = declLineRange;
+    this.declAndCommentsLineRange_ = declAndCommentsLineRange;
+    this.leadingComments_ = leadingComments;
+    this.trailingComments_ = trailingComments;
+    this.leadingEmptyLines_ = leadingEmptyLines;
+    this.trailingEmptyLines_ = trailingEmptyLines;
   }
-}
-
-function parseLeadingComments(
-  node: Node,
-  lineRange: LineRange,
-  sourceFile: SourceFile,
-  sourceText: string,
-) {
-  const fullStart = node.getFullStart();
-  const comments = getLeadingCommentRanges(sourceText, fullStart)?.map(
-    transformComment.bind(undefined, sourceFile, sourceText),
-  );
-  // Skip initial comments that separated by empty line(s) from the first import statement.
-  if (fullStart === 0 && comments && comments.length > 0) {
-    const results = [];
-    let nextStartLine = lineRange.startLine.line;
-    for (let i = comments.length - 1; i >= 0; --i) {
-      const comment = comments[i];
-      if (comment.endLine.line + 1 < nextStartLine) return results.reverse();
-      results.push(comment);
-      nextStartLine = comment.startLine.line;
-    }
-  }
-  return comments;
-}
-
-function transformComment(
-  sourceFile: SourceFile,
-  sourceText: string,
-  range: CommentRange,
-): NodeComment {
-  const startLine = sourceFile.getLineAndCharacterOfPosition(range.pos);
-  const endLine = sourceFile.getLineAndCharacterOfPosition(range.end);
-  const text = sourceText.slice(range.pos, range.end);
-  return { range, startLine, endLine, text };
 }

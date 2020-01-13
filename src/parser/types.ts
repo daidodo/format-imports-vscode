@@ -21,3 +21,8 @@ export interface NodeComment extends LineRange {
   range: CommentRange;
   text: string;
 }
+
+export interface RangeAndEmptyLines extends LineRange {
+  leadingEmptyLines: number;
+  trailingEmptyLines: number;
+}
