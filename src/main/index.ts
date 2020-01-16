@@ -3,12 +3,14 @@ import {
   TextDocumentWillSaveEvent,
 } from 'vscode';
 
+import loadConfig from '../config';
 import { getDeleteEdits } from '../edit';
 // import {
 //   ImportSorterConfig,
 //   ImportSorterConfigLoader,
 // } from '../config';
 import parseImportNodes from '../parser';
+import sortImports from '../sort';
 
 export class ImportSorterExtension {
   sortImportsBeforeSavingDocument(event: TextDocumentWillSaveEvent) {
@@ -16,9 +18,12 @@ export class ImportSorterExtension {
     if (!this.isSupported(document)) return;
 
     const sourceText = document.getText();
-    const { fsPath: fileName } = document.uri;
+    const { uri: fileUri } = document;
+    const { fsPath: fileName } = fileUri;
     const { allIdentifiers, importNodes, insertLine } = parseImportNodes(sourceText, fileName);
     const deleteEdits = getDeleteEdits(importNodes);
+    const config = loadConfig(fileUri);
+    const sortedImports = sortImports(importNodes, allIdentifiers, config);
     console.log('deleteEdits: ', deleteEdits);
   }
 

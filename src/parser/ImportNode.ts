@@ -64,7 +64,7 @@ export default class ImportNode {
     assert(moduleReference.kind === SyntaxKind.ExternalModuleReference);
     const { expression } = moduleReference;
     assert(expression.kind === SyntaxKind.StringLiteral);
-    const moduleIdentifier = expression.getText(sourceFile);
+    const moduleIdentifier = (expression as StringLiteral).text;
     const defaultName = { propertyName: node.name.text };
     return new ImportNode(node, sourceFile, sourceText, moduleIdentifier, defaultName);
   }
@@ -75,6 +75,51 @@ export default class ImportNode {
       leadingEmptyLines: this.leadingEmptyLines_,
       trailingEmptyLines: this.trailingEmptyLines_,
     };
+  }
+
+  removeUnusedNames(allNames: Set<string>) {
+    if (!isNameUsed(this.defaultName_, allNames)) this.defaultName_ = undefined;
+    this.names_ = this.names_?.filter(n => isNameUsed(n, allNames));
+    if (this.names_?.length === 0) this.names_ = undefined;
+    return this.defaultName_ || this.names_ ? this : undefined;
+  }
+
+  match(regex: string) {
+    return !!new RegExp(regex).exec(this.moduleIdentifier_);
+  }
+
+  compare(node: ImportNode) {
+    return (
+      idComparator(this.moduleIdentifier_, node.moduleIdentifier_) ||
+      nameComparator(this.defaultName_, node.defaultName_)
+    );
+  }
+
+  /**
+   * @returns true if `node` is fully merged to `this`; Or false if `node` still has names thus can't be ignored.
+   */
+  mergeAndSortNames(node: ImportNode) {
+    const { moduleIdentifier_, node_ } = node;
+    if (this.moduleIdentifier_ !== moduleIdentifier_ || this.node_.kind !== node_.kind)
+      return false;
+    // Take and merge binding names from node
+    if (this.names_ && node.names_) this.names_ = this.names_.concat(node.names_);
+    else if (!this.names_) this.names_ = node.names_;
+    if (this.names_) {
+      this.names_ = this.names_.sort(nameComparator).reduce((r, n) => {
+        if (!r.length) return [n];
+        const last = r[r.length - 1];
+        return nameComparator(last, n) ? [...r, n] : r;
+      }, [] as NameBinding[]);
+    }
+    node.names_ = undefined;
+    // Try to merge default name from node
+    if (!this.defaultName_) {
+      this.defaultName_ = node.defaultName_;
+    } else if (node.defaultName_ && nameComparator(this.defaultName_, node.defaultName_))
+      return false;
+    node.defaultName_ = undefined;
+    return true;
   }
 
   private constructor(
@@ -104,4 +149,25 @@ export default class ImportNode {
     this.leadingEmptyLines_ = leadingEmptyLines;
     this.trailingEmptyLines_ = trailingEmptyLines;
   }
+}
+
+export function isNameUsed(nameBinding: NameBinding | undefined, allNames: Set<string>) {
+  const name = nameBinding?.aliasName ?? nameBinding?.propertyName;
+  return !!name && allNames.has(name);
+}
+
+function idComparator(aa: string | undefined, bb: string | undefined) {
+  if (aa === undefined) return bb === undefined ? 0 : -1;
+  else if (bb === undefined) return 1;
+  const a = aa.toLowerCase();
+  const b = bb.toLowerCase();
+  return a < b ? -1 : a > b ? 1 : aa < bb ? -1 : aa > bb ? 1 : 0;
+}
+
+function nameComparator(a: NameBinding | undefined, b: NameBinding | undefined) {
+  if (!a) return b ? -1 : 0;
+  else if (!b) return 1;
+  const { propertyName: pa, aliasName: aa } = a;
+  const { propertyName: pb, aliasName: ab } = b;
+  return idComparator(pa, pb) || idComparator(aa, ab);
 }

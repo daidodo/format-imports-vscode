@@ -3,14 +3,10 @@ import {
   LineAndCharacter,
 } from 'typescript';
 
-export type NameBinding =
-  | {
-      propertyName: string;
-      aliasName?: string;
-    }
-  | {
-      aliasName: string;
-    };
+export interface NameBinding {
+  propertyName?: string;
+  aliasName?: string;
+}
 
 export interface LineRange {
   startLine: LineAndCharacter;
