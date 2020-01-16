@@ -63,3 +63,8 @@ Added features X, Y, and Z.
 * [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
 
 **Enjoy!**
+
+### TODO
+
+* One line comment to disable import sorter for a file or line.
+* Lower case first or upper case first.
