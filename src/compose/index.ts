@@ -1,5 +1,12 @@
 import { Configuration } from '../config';
-import { ImportNode } from '../parser';
+import {
+  ImportNode,
+  NameBinding,
+} from '../parser';
+import {
+  assert,
+  assertNonNull,
+} from '../utils';
 
 export interface ComposeConfig {
   maxLength: number;
@@ -10,9 +17,53 @@ export interface ComposeConfig {
   semi: string;
 }
 
-export default function composeImportGroups(groups: ImportNode[][], config: Configuration) {
+export default function composeInsertSource(groups: ImportNode[][], config: Configuration) {
   const c = configForCompose(config);
   return groups.map(g => g.map(n => n.compose(c)).join('\n') + '\n').join('\n') + '\n';
+}
+
+export function composeNames(
+  names: NameBinding[] | undefined,
+  config: ComposeConfig,
+  forceWrap: boolean,
+) {
+  const { maxWords, maxLength } = config;
+  const words = names?.map(composeName);
+  if (!words || !words.length) return {};
+  if (!forceWrap && words.length <= maxWords) {
+    const text = `{ ${words.join(', ')} }`;
+    if (text.length + 15 < maxLength) return { text, type: 'line' as const };
+  }
+  const lines = [];
+  for (let n = words; n.length; ) {
+    const { text, left } = composeOneLine(n, config);
+    lines.push(text);
+    n = left;
+  }
+  return { text: `{\n${lines.join('\n')}\n}` };
+}
+
+export function composeName(name: NameBinding | undefined) {
+  if (!name) return '';
+  const { propertyName, aliasName } = name;
+  if (propertyName) return aliasName ? `${propertyName} as ${aliasName}` : propertyName;
+  assertNonNull(aliasName);
+  return `* as ${aliasName}`;
+}
+
+export function composeOneLine(words: string[], config: ComposeConfig) {
+  assert(words.length > 0);
+  const { tab, maxWords, maxLength, comma } = config;
+  const append = (t: string, n: string, e: boolean) => t + ' ' + n + (e ? comma : ',');
+  const [first, ...rest] = words;
+  let text = append(tab, first, !rest.length);
+  for (let i = 0; i < rest.length; ++i) {
+    const n = rest[i];
+    const t = append(text, n, i + 1 >= rest.length);
+    if (i + 2 > maxWords || t.length > maxLength) return { text, left: rest.slice(i) };
+    text = t;
+  }
+  return { text, left: [] };
 }
 
 function configForCompose(config: Configuration): ComposeConfig {

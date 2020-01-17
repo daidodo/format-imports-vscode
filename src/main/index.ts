@@ -3,7 +3,7 @@ import {
   TextDocumentWillSaveEvent,
 } from 'vscode';
 
-import composeImportGroups from '../compose';
+import composeInsertSource from '../compose';
 import loadConfig from '../config';
 import { getDeleteEdits } from '../edit';
 import parseSource from '../parser';
@@ -21,7 +21,7 @@ export class ImportSorterExtension {
     const deleteEdits = getDeleteEdits(importNodes);
     const config = loadConfig(fileUri);
     const groups = sortImports(importNodes, allIdentifiers, config);
-    const importSource = composeImportGroups(groups, config);
+    const insertSource = composeInsertSource(groups, config);
     console.log('deleteEdits: ', deleteEdits);
   }
 

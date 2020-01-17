@@ -42,7 +42,7 @@ export default function parseSource(sourceText: string, fileName: string) {
 
 export { ImportNode };
 
-export { LineRange, RangeAndEmptyLines } from './types';
+export { LineRange, RangeAndEmptyLines, NameBinding } from './types';
 
 function getInsertLine(sourceFile: SourceFile, sourceText: string) {
   const firstNode = sourceFile.getChildren().find(n => !n.getFullStart());

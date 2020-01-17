@@ -6,7 +6,11 @@ import {
   SyntaxKind,
 } from 'typescript';
 
-import { ComposeConfig } from '../compose';
+import {
+  ComposeConfig,
+  composeName,
+  composeNames,
+} from '../compose';
 import {
   assert,
   assertNonNull,
@@ -206,30 +210,9 @@ export default class ImportNode {
   composeDeclImpl(config: ComposeConfig, forceWrap: boolean) {
     const { quote, semi } = config;
     const path = this.moduleIdentifier_;
-    const { text, type } = this.composeBindingNames(config, forceWrap);
-    const names = [this.composeDefaultName(), text].filter(s => !!s).join(', ');
+    const { text, type } = composeNames(this.names_, config, forceWrap);
+    const names = [composeName(this.defaultName_), text].filter(s => !!s).join(', ');
     return { text: `import ${names} from ${quote(path)}${semi}`, type };
-  }
-
-  composeDefaultName() {
-    return composeName(this.defaultName_);
-  }
-
-  composeBindingNames(config: ComposeConfig, forceWrap: boolean) {
-    const { maxWords, maxLength } = config;
-    const names = this.names_?.map(composeName);
-    if (!names || !names.length) return {};
-    if (!forceWrap && names.length <= maxWords) {
-      const text = `{ ${names.join(', ')} }`;
-      if (text.length + 15 < maxLength) return { text, type: 'line' as const };
-    }
-    const lines = [];
-    for (let n = names; n.length; ) {
-      const { text, left } = composeOneLineNames(n, config);
-      lines.push(text);
-      n = left;
-    }
-    return { text: '{\n' + lines.join('\n') + '\n}' };
   }
 }
 
@@ -252,26 +235,4 @@ function nameComparator(a: NameBinding | undefined, b: NameBinding | undefined) 
   const { propertyName: pa, aliasName: aa } = a;
   const { propertyName: pb, aliasName: ab } = b;
   return idComparator(pa, pb) || idComparator(aa, ab);
-}
-
-function composeName(name: NameBinding | undefined) {
-  if (!name) return '';
-  const { propertyName, aliasName } = name;
-  if (propertyName) return aliasName ? `${propertyName} as ${aliasName}` : propertyName;
-  assertNonNull(aliasName);
-  return `* as ${aliasName}`;
-}
-
-function composeOneLineNames(names: string[], config: ComposeConfig) {
-  assert(names.length > 0);
-  const { tab, maxWords, maxLength } = config;
-  const [first, ...rest] = names;
-  let text = tab + first + ',';
-  for (let i = 0; i < rest.length; ++i) {
-    const n = rest[i];
-    if (i + 2 > maxWords || text.length + n.length + 2 > maxLength)
-      return { text, left: rest.slice(i) };
-    text = text + ' ' + n + ',';
-  }
-  return { text, left: [] };
 }
