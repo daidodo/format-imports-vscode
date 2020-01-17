@@ -7,6 +7,7 @@ import {
 } from 'typescript';
 
 import {
+  composeComments,
   ComposeConfig,
   composeName,
   composeNames,
@@ -30,9 +31,10 @@ export default class ImportNode {
   private moduleIdentifier_: string;
   private defaultName_?: NameBinding;
   private names_?: NameBinding[];
-  private declLineRange_: LineRange;
+  // private declLineRange_: LineRange;
   private leadingComments_?: NodeComment[];
-  private trailingComments_?: NodeComment[];
+  // private trailingComments_?: NodeComment[];
+  private trailingCommentsText_?: string;
   private declAndCommentsLineRange_: LineRange;
   private leadingEmptyLines_: number;
   private trailingEmptyLines_: number;
@@ -102,20 +104,23 @@ export default class ImportNode {
   }
 
   compose(config: ComposeConfig) {
-    switch (this.node_.kind) {
-      case SyntaxKind.ImportDeclaration:
-        return this.composeDecl(config);
-      case SyntaxKind.ImportEqualsDeclaration:
-        return this.composeEqDecl(config);
-    }
+    const leadingText = composeComments(this.leadingComments_) ?? '';
+    const importText = this.composeImport(config);
+    const trailingText = this.trailingCommentsText_ ?? '';
+    return leadingText + importText + trailingText;
   }
 
   /**
    * @returns true if `node` is fully merged to `this`; Or false if `node` still has names thus can't be ignored.
    */
-  mergeAndSortNames(node: ImportNode) {
+  merge(node: ImportNode) {
     const { moduleIdentifier_, node_ } = node;
-    if (this.moduleIdentifier_ !== moduleIdentifier_ || this.node_.kind !== node_.kind)
+    if (
+      this.moduleIdentifier_ !== moduleIdentifier_ ||
+      this.node_.kind !== node_.kind ||
+      (this.hasLeadingComments && node.hasLeadingComments) ||
+      (this.hasTailingComments && node.hasTailingComments)
+    )
       return false;
     // Take and merge binding names from node
     if (this.names_ && node.names_) this.names_ = this.names_.concat(node.names_);
@@ -134,6 +139,12 @@ export default class ImportNode {
     } else if (node.defaultName_ && nameComparator(this.defaultName_, node.defaultName_))
       return false;
     node.defaultName_ = undefined;
+    // Take comments if any
+    if (!this.leadingComments_) this.leadingComments_ = node.leadingComments_;
+    if (!this.trailingCommentsText_) this.trailingCommentsText_ = node.trailingCommentsText_;
+    node.leadingComments_ = undefined;
+    node.trailingCommentsText_ = undefined;
+
     return true;
   }
 
@@ -150,19 +161,38 @@ export default class ImportNode {
     this.defaultName_ = defaultName;
     this.names_ = names;
     const {
-      declLineRange,
+      // declLineRange,
       leadingComments,
-      trailingComments,
+      // trailingComments,
+      trailingCommentsText,
       declAndCommentsLineRange,
       leadingEmptyLines,
       trailingEmptyLines,
     } = parseCommentsAndLines(node, sourceFile, sourceText);
-    this.declLineRange_ = declLineRange;
+    // this.declLineRange_ = declLineRange;
     this.declAndCommentsLineRange_ = declAndCommentsLineRange;
     this.leadingComments_ = leadingComments;
-    this.trailingComments_ = trailingComments;
+    // this.trailingComments_ = trailingComments;
+    this.trailingCommentsText_ = trailingCommentsText;
     this.leadingEmptyLines_ = leadingEmptyLines;
     this.trailingEmptyLines_ = trailingEmptyLines;
+  }
+
+  private get hasLeadingComments() {
+    return !!this.leadingComments_ && this.leadingComments_.length > 0;
+  }
+
+  private get hasTailingComments() {
+    return !!this.trailingCommentsText_;
+  }
+
+  private composeImport(config: ComposeConfig) {
+    switch (this.node_.kind) {
+      case SyntaxKind.ImportDeclaration:
+        return this.composeDecl(config);
+      case SyntaxKind.ImportEqualsDeclaration:
+        return this.composeEqDecl(config);
+    }
   }
 
   // import A = require('B');

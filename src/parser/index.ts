@@ -14,6 +14,10 @@ import {
   parseCommentsAndLines,
 } from './lines';
 
+export { ImportNode };
+
+export { LineRange, RangeAndEmptyLines, NameBinding, NodeComment } from './types';
+
 export default function parseSource(sourceText: string, fileName: string) {
   const sourceFile = createSourceFile(fileName, sourceText, ScriptTarget.Latest);
   const allIdentifiers = new Set<string>();
@@ -44,10 +48,6 @@ export default function parseSource(sourceText: string, fileName: string) {
   parseNode(sourceFile);
   return { allIdentifiers, importNodes, insertLine };
 }
-
-export { ImportNode };
-
-export { LineRange, RangeAndEmptyLines, NameBinding } from './types';
 
 function getInsertLine(sourceFile: SourceFile, sourceText: string) {
   const firstNode = sourceFile.getChildren().find(n => !n.getFullStart());

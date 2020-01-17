@@ -2,6 +2,7 @@ import { Configuration } from '../config';
 import {
   ImportNode,
   NameBinding,
+  NodeComment,
 } from '../parser';
 import {
   assert,
@@ -36,7 +37,7 @@ export function composeNames(
   }
   const lines = [];
   for (let n = words; n.length; ) {
-    const { text, left } = composeOneLine(n, config);
+    const { text, left } = composeOneLineNames(n, config);
     lines.push(text);
     n = left;
   }
@@ -51,7 +52,12 @@ export function composeName(name: NameBinding | undefined) {
   return `* as ${aliasName}`;
 }
 
-export function composeOneLine(words: string[], config: ComposeConfig) {
+export function composeComments(comments: NodeComment[] | undefined) {
+  if (!comments || !comments.length) return;
+  return comments.map(c => c.text).join('\n') + '\n';
+}
+
+function composeOneLineNames(words: string[], config: ComposeConfig) {
   assert(words.length > 0);
   const { tab, maxWords, maxLength, comma } = config;
   const append = (t: string, n: string, e: boolean) => t + ' ' + n + (e ? comma : ',');

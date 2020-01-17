@@ -40,7 +40,7 @@ function sortAndMergeNodes(nodes: ImportNode[]) {
     .reduce((r, n) => {
       if (!r.length) return [n];
       const last = r[r.length - 1];
-      if (last.mergeAndSortNames(n)) return r;
+      if (last.merge(n)) return r;
       return [...r, n];
     }, [] as ImportNode[]);
 }

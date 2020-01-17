@@ -13,14 +13,19 @@ import {
 
 export function parseCommentsAndLines(node: Node, sourceFile: SourceFile, sourceText: string) {
   const sourceLines = sourceText.split(/\r?\n/).map(s => s.trimRight());
+  const end = node.getEnd();
   const declLineRange: LineRange = {
     startLine: sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile)),
-    endLine: sourceFile.getLineAndCharacterOfPosition(node.getEnd()),
+    endLine: sourceFile.getLineAndCharacterOfPosition(end),
   };
   const leadingComments = parseLeadingComments(node, declLineRange, sourceFile, sourceText);
-  const trailingComments = getTrailingCommentRanges(sourceText, node.getEnd())?.map(
+  const trailingComments = getTrailingCommentRanges(sourceText, end)?.map(
     transformComment.bind(undefined, sourceFile, sourceText),
   );
+  // All tailing comments text should keep unchanged including the leading spaces
+  const fullEnd = trailingComments?.reduce((e, c) => Math.max(e, c.range.end), 0);
+  const trailingCommentsText = fullEnd ? sourceText.slice(end, fullEnd) : undefined;
+
   const declAndCommentsLineRange = calcLineRange(declLineRange, leadingComments, trailingComments);
   const { startLine, endLine } = declAndCommentsLineRange;
   const leadingEmptyLines = getLeadingEmptyLines(sourceLines, startLine.line);
@@ -29,6 +34,7 @@ export function parseCommentsAndLines(node: Node, sourceFile: SourceFile, source
     declLineRange,
     leadingComments,
     trailingComments,
+    trailingCommentsText,
     declAndCommentsLineRange,
     leadingEmptyLines,
     trailingEmptyLines,
