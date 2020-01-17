@@ -17,11 +17,12 @@ import {
   assertNonNull,
   normalizePath,
 } from '../utils';
-import { parseCommentsAndLines } from './lines';
+import { parseLineRanges } from './lines';
 import {
   LineRange,
   NameBinding,
   NodeComment,
+  Pos,
   RangeAndEmptyLines,
 } from './types';
 
@@ -31,13 +32,13 @@ export default class ImportNode {
   private moduleIdentifier_: string;
   private defaultName_?: NameBinding;
   private names_?: NameBinding[];
-  // private declLineRange_: LineRange;
-  private leadingComments_?: NodeComment[];
-  // private trailingComments_?: NodeComment[];
-  private trailingCommentsText_?: string;
-  private declAndCommentsLineRange_: LineRange;
+  private fullStart_: Pos;
   private leadingEmptyLines_: number;
-  private trailingEmptyLines_: number;
+  private leadingComments_?: NodeComment[];
+  // private declLineRange_: LineRange;
+  // private trailingComments_?: NodeComment[];
+  private trailingCommentsText_: string;
+  private declAndCommentsLineRange_: LineRange;
 
   static fromDecl(node: ImportDeclaration, sourceFile: SourceFile, sourceText: string) {
     const { importClause, moduleSpecifier } = node;
@@ -80,8 +81,8 @@ export default class ImportNode {
   get rangeAndEmptyLines(): RangeAndEmptyLines {
     return {
       ...this.declAndCommentsLineRange_,
+      fullStart: this.fullStart_,
       leadingEmptyLines: this.leadingEmptyLines_,
-      trailingEmptyLines: this.trailingEmptyLines_,
     };
   }
 
@@ -106,7 +107,7 @@ export default class ImportNode {
   compose(config: ComposeConfig) {
     const leadingText = composeComments(this.leadingComments_) ?? '';
     const importText = this.composeImport(config);
-    const trailingText = this.trailingCommentsText_ ?? '';
+    const trailingText = this.trailingCommentsText_;
     return leadingText + importText + trailingText;
   }
 
@@ -143,7 +144,7 @@ export default class ImportNode {
     if (!this.leadingComments_) this.leadingComments_ = node.leadingComments_;
     if (!this.trailingCommentsText_) this.trailingCommentsText_ = node.trailingCommentsText_;
     node.leadingComments_ = undefined;
-    node.trailingCommentsText_ = undefined;
+    node.trailingCommentsText_ = '';
 
     return true;
   }
@@ -161,21 +162,21 @@ export default class ImportNode {
     this.defaultName_ = defaultName;
     this.names_ = names;
     const {
-      // declLineRange,
+      fullStart,
+      leadingEmptyLines,
       leadingComments,
+      // declLineRange,
       // trailingComments,
       trailingCommentsText,
       declAndCommentsLineRange,
-      leadingEmptyLines,
-      trailingEmptyLines,
-    } = parseCommentsAndLines(node, sourceFile, sourceText);
+    } = parseLineRanges(node, sourceFile, sourceText);
     // this.declLineRange_ = declLineRange;
     this.declAndCommentsLineRange_ = declAndCommentsLineRange;
     this.leadingComments_ = leadingComments;
     // this.trailingComments_ = trailingComments;
     this.trailingCommentsText_ = trailingCommentsText;
     this.leadingEmptyLines_ = leadingEmptyLines;
-    this.trailingEmptyLines_ = trailingEmptyLines;
+    this.fullStart_ = fullStart;
   }
 
   private get hasLeadingComments() {

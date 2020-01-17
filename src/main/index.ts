@@ -5,7 +5,10 @@ import {
 
 import composeInsertSource from '../compose';
 import loadConfig from '../config';
-import { getDeleteEdits } from '../edit';
+import {
+  getDeleteEdits,
+  getEdits,
+} from '../edit';
 import parseSource from '../parser';
 import sortImports from '../sort';
 
@@ -22,7 +25,8 @@ export class ImportSorterExtension {
     const config = loadConfig(fileUri);
     const groups = sortImports(importNodes, allIdentifiers, config);
     const insertSource = composeInsertSource(groups, config);
-    console.log('deleteEdits: ', deleteEdits);
+    const edits = getEdits(deleteEdits, insertSource, insertLine);
+    event.waitUntil(edits);
   }
 
   private isSupported(document: TextDocument) {

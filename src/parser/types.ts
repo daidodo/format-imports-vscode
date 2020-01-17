@@ -1,24 +1,24 @@
-import {
-  CommentRange,
-  LineAndCharacter,
-} from 'typescript';
+import { LineAndCharacter } from 'typescript';
 
 export interface NameBinding {
   propertyName?: string;
   aliasName?: string;
 }
 
+export interface Pos extends LineAndCharacter {
+  pos: number;
+}
+
 export interface LineRange {
-  startLine: LineAndCharacter;
-  endLine: LineAndCharacter;
+  start: Pos;
+  end: Pos;
 }
 
 export interface NodeComment extends LineRange {
-  range: CommentRange;
   text: string;
 }
 
 export interface RangeAndEmptyLines extends LineRange {
+  fullStart: Pos;
   leadingEmptyLines: number;
-  trailingEmptyLines: number;
 }

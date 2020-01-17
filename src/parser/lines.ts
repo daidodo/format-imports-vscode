@@ -4,78 +4,104 @@ import {
   getTrailingCommentRanges,
   Node,
   SourceFile,
+  TextRange,
 } from 'typescript';
 
 import {
   LineRange,
   NodeComment,
+  Pos,
 } from './types';
 
-export function parseCommentsAndLines(node: Node, sourceFile: SourceFile, sourceText: string) {
-  const sourceLines = sourceText.split(/\r?\n/).map(s => s.trimRight());
-  const end = node.getEnd();
-  const declLineRange: LineRange = {
-    startLine: sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile)),
-    endLine: sourceFile.getLineAndCharacterOfPosition(end),
-  };
-  const leadingComments = parseLeadingComments(node, declLineRange, sourceFile, sourceText);
-  const trailingComments = getTrailingCommentRanges(sourceText, end)?.map(
+export function parseLineRanges(node: Node, sourceFile: SourceFile, sourceText: string) {
+  // const sourceLines = sourceText.split(/\r?\n/).map(s => s.trimRight());
+  const declEnd = node.getEnd();
+  const declLineRange = transformRange(
+    { pos: node.getStart(sourceFile), end: declEnd },
+    sourceFile,
+  );
+  const { fullStart, leadingEmptyLines, commentsStart, leadingComments } = parseLeadingComments(
+    node,
+    declLineRange,
+    sourceFile,
+    sourceText,
+  );
+  const trailingComments = getTrailingCommentRanges(sourceText, declEnd)?.map(
     transformComment.bind(undefined, sourceFile, sourceText),
   );
   // All tailing comments text should keep unchanged including the leading spaces
-  const fullEnd = trailingComments?.reduce((e, c) => Math.max(e, c.range.end), 0);
-  const trailingCommentsText = fullEnd ? sourceText.slice(end, fullEnd) : undefined;
+  const commentsEnd = (trailingComments ?? []).reduce((e, c) => Math.max(e, c.end.pos), declEnd);
+  const trailingCommentsText = sourceText.slice(declEnd, commentsEnd);
 
-  const declAndCommentsLineRange = calcLineRange(declLineRange, leadingComments, trailingComments);
-  const { startLine, endLine } = declAndCommentsLineRange;
-  const leadingEmptyLines = getLeadingEmptyLines(sourceLines, startLine.line);
-  const trailingEmptyLines = getTrailingEmptyLines(sourceLines, endLine.line);
+  const declAndCommentsLineRange = transformRange(
+    { pos: commentsStart, end: commentsEnd },
+    sourceFile,
+  );
+  // const { startLine, endLine } = declAndCommentsLineRange;
+  // const trailingEmptyLines = getTrailingEmptyLines(sourceLines, endLine.line);
   return {
-    declLineRange,
+    fullStart,
+    leadingEmptyLines,
     leadingComments,
+    declLineRange,
     trailingComments,
     trailingCommentsText,
     declAndCommentsLineRange,
-    leadingEmptyLines,
-    trailingEmptyLines,
+    // trailingEmptyLines,
   };
 }
 
-export function calcLineRange(
-  declLineRange: LineRange,
-  leadingComments?: NodeComment[],
-  trailingComments?: NodeComment[],
-): LineRange {
+function transformRange({ pos, end }: TextRange, sourceFile: SourceFile): LineRange {
   return {
-    startLine: leadingComments?.[0].startLine ?? declLineRange.startLine,
-    endLine: trailingComments?.reverse()?.[0].endLine ?? declLineRange.endLine,
+    start: transformPos(pos, sourceFile),
+    end: transformPos(end, sourceFile),
   };
+}
+
+function transformPos(pos: number, sourceFile: SourceFile): Pos {
+  return { pos, ...sourceFile.getLineAndCharacterOfPosition(pos) };
 }
 
 function parseLeadingComments(
   node: Node,
-  lineRange: LineRange,
+  declLineRange: LineRange,
   sourceFile: SourceFile,
   sourceText: string,
 ) {
-  const fullStart = node.getFullStart();
-  const comments = getLeadingCommentRanges(sourceText, fullStart)?.map(
+  const fullStart = transformPos(node.getFullStart(), sourceFile);
+  const comments = getLeadingCommentRanges(sourceText, fullStart.pos)?.map(
     transformComment.bind(undefined, sourceFile, sourceText),
   );
   // Skip initial comments that separated by empty line(s) or triple-slash comment(s)
   // from the first import statement.
-  if (fullStart === 0 && comments && comments.length > 0) {
+  if (fullStart.pos === 0 && comments && comments.length > 0) {
     const results = [];
-    let nextStartLine = lineRange.startLine.line;
+    let nextStartLine = declLineRange.start.line;
     for (let i = comments.length - 1; i >= 0; --i) {
       const comment = comments[i];
-      const { startLine, endLine, text } = comment;
-      if (endLine.line + 1 < nextStartLine || isTripleSlashComment(text)) return results.reverse();
+      const { start, end, text } = comment;
+      const leadingEmptyLines = Math.max(0, nextStartLine - end.line - 1);
+      if (0 < leadingEmptyLines || isTripleSlashComment(text)) {
+        const leadingComments = results.reverse();
+        const commentsStart = results[0]?.start.pos ?? declLineRange.start.pos;
+        return {
+          fullStart: transformPos(end.pos, sourceFile),
+          leadingEmptyLines,
+          commentsStart,
+          leadingComments,
+        };
+      }
       results.push(comment);
-      nextStartLine = startLine.line;
+      nextStartLine = start.line;
     }
   }
-  return comments;
+  // Find out leading empty lines
+  const commentsStart =
+    comments && comments.length > 0 ? comments[0].start.pos : declLineRange.start.pos;
+  const leadingEmptyLines = (sourceText.slice(fullStart.pos, commentsStart).match(/\n/g) ?? [])
+    .length;
+
+  return { fullStart, leadingEmptyLines, commentsStart, leadingComments: comments };
 }
 
 function transformComment(
@@ -83,24 +109,16 @@ function transformComment(
   sourceText: string,
   range: CommentRange,
 ): NodeComment {
-  const startLine = sourceFile.getLineAndCharacterOfPosition(range.pos);
-  const endLine = sourceFile.getLineAndCharacterOfPosition(range.end);
   const text = sourceText.slice(range.pos, range.end);
-  return { range, startLine, endLine, text };
+  return { ...range, ...transformRange(range, sourceFile), text };
 }
 
 function isTripleSlashComment(text: string) {
   return text.trimLeft().search(/^\/\/\/\s*</) >= 0;
 }
 
-function getLeadingEmptyLines(sourceLines: string[], index: number) {
-  let i = index - 1;
-  for (; i >= 0 && !sourceLines[i]; --i);
-  return index - i - 1;
-}
-
-function getTrailingEmptyLines(sourceLines: string[], index: number) {
-  let i = index + 1;
-  for (; i < sourceLines.length && !sourceLines[i]; ++i);
-  return i - index - 1;
-}
+// function getTrailingEmptyLines(sourceLines: string[], index: number) {
+//   let i = index + 1;
+//   for (; i < sourceLines.length && !sourceLines[i]; ++i);
+//   return i - index - 1;
+// }
