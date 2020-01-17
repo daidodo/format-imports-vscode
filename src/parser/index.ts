@@ -33,6 +33,11 @@ export default function parseSource(sourceText: string, fileName: string) {
         return;
       case SyntaxKind.Identifier:
         allIdentifiers.add(node.getText(sourceFile));
+        break;
+      case SyntaxKind.JsxElement:
+      case SyntaxKind.JsxFragment:
+        allIdentifiers.add('React');
+        break;
     }
     node.forEachChild(parseNode);
   };

@@ -68,5 +68,5 @@ Added features X, Y, and Z.
 
 - One line comment to disable import sorter for a file or line.
 - Lower case first or upper case first.
-- Handle implicit React.
+- ~~Handle implicit React.~~
 - Keep comments.
