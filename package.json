@@ -67,10 +67,10 @@
         },
         "tsImportSorter.configuration.maximumLineLength": {
           "type": "number",
-          "default": 0,
+          "default": 100,
           "description": "The count of characters before import is new-lined. 0 for no limit."
         },
-        "tsImportSorter.configuration.maximumWords": {
+        "tsImportSorter.configuration.maximumWordsPerLine": {
           "type": "number",
           "default": 1,
           "description": "The count of words before import is new-lined. 0 for no limit."
@@ -168,6 +168,14 @@
         {
           "functions": false,
           "classes": false
+        }
+      ],
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          "varsIgnorePattern": "^_",
+          "argsIgnorePattern": "^_"
         }
       ],
       "tsdoc/syntax": "warn"

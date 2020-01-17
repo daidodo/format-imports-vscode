@@ -6,8 +6,10 @@ import {
   SyntaxKind,
 } from 'typescript';
 
+import { ComposeConfig } from '../compose';
 import {
   assert,
+  assertNonNull,
   normalizePath,
 } from '../utils';
 import { parseCommentsAndLines } from './lines';
@@ -95,6 +97,15 @@ export default class ImportNode {
     );
   }
 
+  compose(config: ComposeConfig) {
+    switch (this.node_.kind) {
+      case SyntaxKind.ImportDeclaration:
+        return this.composeDecl(config);
+      case SyntaxKind.ImportEqualsDeclaration:
+        return this.composeEqDecl(config);
+    }
+  }
+
   /**
    * @returns true if `node` is fully merged to `this`; Or false if `node` still has names thus can't be ignored.
    */
@@ -149,6 +160,77 @@ export default class ImportNode {
     this.leadingEmptyLines_ = leadingEmptyLines;
     this.trailingEmptyLines_ = trailingEmptyLines;
   }
+
+  // import A = require('B');
+  composeEqDecl(config: ComposeConfig) {
+    const { quote, semi } = config;
+    const path = this.moduleIdentifier_;
+    const name = this.defaultName_?.propertyName;
+    assertNonNull(name);
+    return `import ${name} = require(${quote(path)})${semi}`;
+  }
+
+  /**
+   * Default name examples:
+   * ```
+   *    import A from 'B';
+   *    import * as A from 'B';
+   * ```
+   *
+   * Binding names examples:
+   * ```
+   *    import { A, B as C } from 'D';
+   *    import {
+   *      A, B,
+   *      C as D,
+   *    } from 'E';
+   * ```
+   *
+   * Mixed examples:
+   * ```
+   *    import A, { B, C } from 'D';
+   *    import * as A, {
+   *      B,
+   *      C as D,
+   *      E,
+   *    } from 'F';
+   * ```
+   */
+  composeDecl(config: ComposeConfig) {
+    const { maxLength } = config;
+    const { text, type } = this.composeDeclImpl(config, false);
+    if (maxLength >= text.length || type !== 'line') return text;
+    return this.composeDeclImpl(config, true).text;
+  }
+
+  composeDeclImpl(config: ComposeConfig, forceWrap: boolean) {
+    const { quote, semi } = config;
+    const path = this.moduleIdentifier_;
+    const { text, type } = this.composeBindingNames(config, forceWrap);
+    const names = [this.composeDefaultName(), text].filter(s => !!s).join(', ');
+    return { text: `import ${names} from ${quote(path)}${semi}`, type };
+  }
+
+  composeDefaultName() {
+    return composeName(this.defaultName_);
+  }
+
+  composeBindingNames(config: ComposeConfig, forceWrap: boolean) {
+    const { maxWords, maxLength } = config;
+    const names = this.names_?.map(composeName);
+    if (!names || !names.length) return {};
+    if (!forceWrap && names.length <= maxWords) {
+      const text = `{ ${names.join(', ')} }`;
+      if (text.length + 15 < maxLength) return { text, type: 'line' as const };
+    }
+    const lines = [];
+    for (let n = names; n.length; ) {
+      const { text, left } = composeOneLineNames(n, config);
+      lines.push(text);
+      n = left;
+    }
+    return { text: '{\n' + lines.join('\n') + '\n}' };
+  }
 }
 
 export function isNameUsed(nameBinding: NameBinding | undefined, allNames: Set<string>) {
@@ -170,4 +252,26 @@ function nameComparator(a: NameBinding | undefined, b: NameBinding | undefined) 
   const { propertyName: pa, aliasName: aa } = a;
   const { propertyName: pb, aliasName: ab } = b;
   return idComparator(pa, pb) || idComparator(aa, ab);
+}
+
+function composeName(name: NameBinding | undefined) {
+  if (!name) return '';
+  const { propertyName, aliasName } = name;
+  if (propertyName) return aliasName ? `${propertyName} as ${aliasName}` : propertyName;
+  assertNonNull(aliasName);
+  return `* as ${aliasName}`;
+}
+
+function composeOneLineNames(names: string[], config: ComposeConfig) {
+  assert(names.length > 0);
+  const { tab, maxWords, maxLength } = config;
+  const [first, ...rest] = names;
+  let text = tab + first + ',';
+  for (let i = 0; i < rest.length; ++i) {
+    const n = rest[i];
+    if (i + 2 > maxWords || text.length + n.length + 2 > maxLength)
+      return { text, left: rest.slice(i) };
+    text = text + ' ' + n + ',';
+  }
+  return { text, left: [] };
 }

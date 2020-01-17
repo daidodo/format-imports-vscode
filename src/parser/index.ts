@@ -14,7 +14,7 @@ import {
   parseCommentsAndLines,
 } from './lines';
 
-export default function parseImportNodes(sourceText: string, fileName: string) {
+export default function parseSource(sourceText: string, fileName: string) {
   const sourceFile = createSourceFile(fileName, sourceText, ScriptTarget.Latest);
   const allIdentifiers = new Set<string>();
   const importNodes: ImportNode[] = [];

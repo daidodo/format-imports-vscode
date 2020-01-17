@@ -3,13 +3,10 @@ import {
   TextDocumentWillSaveEvent,
 } from 'vscode';
 
+import composeImportGroups from '../compose';
 import loadConfig from '../config';
 import { getDeleteEdits } from '../edit';
-// import {
-//   ImportSorterConfig,
-//   ImportSorterConfigLoader,
-// } from '../config';
-import parseImportNodes from '../parser';
+import parseSource from '../parser';
 import sortImports from '../sort';
 
 export class ImportSorterExtension {
@@ -20,10 +17,11 @@ export class ImportSorterExtension {
     const sourceText = document.getText();
     const { uri: fileUri } = document;
     const { fsPath: fileName } = fileUri;
-    const { allIdentifiers, importNodes, insertLine } = parseImportNodes(sourceText, fileName);
+    const { allIdentifiers, importNodes, insertLine } = parseSource(sourceText, fileName);
     const deleteEdits = getDeleteEdits(importNodes);
     const config = loadConfig(fileUri);
-    const sortedImports = sortImports(importNodes, allIdentifiers, config);
+    const groups = sortImports(importNodes, allIdentifiers, config);
+    const importSource = composeImportGroups(groups, config);
     console.log('deleteEdits: ', deleteEdits);
   }
 

@@ -9,11 +9,7 @@ export default function sortImports(
   const usedNodes = nodes
     .map(n => n.removeUnusedNames(usedIds))
     .filter((n): n is ImportNode => !!n);
-
-  const groupedNodes = groupNodes(usedNodes, config);
-  groupedNodes.forEach((nodes, level, groups) => groups.set(level, sortAndMergeNodes(nodes)));
-
-  return groupedNodes;
+  return groupNodes(usedNodes, config).map(nn => sortAndMergeNodes(nn));
 }
 
 function groupNodes(nodes: ImportNode[], config: Configuration) {
@@ -27,9 +23,9 @@ function groupNodes(nodes: ImportNode[], config: Configuration) {
       }
       addNode(n, DEFAULT_LEVEL, groups);
     });
-    return groups;
+    return [...groups.entries()].sort(([a], [b]) => a - b).map(([_, n]) => n);
   }
-  return groups.set(DEFAULT_LEVEL, nodes);
+  return [nodes];
 }
 
 function addNode(node: ImportNode, level: number, groups: Map<number, ImportNode[]>) {

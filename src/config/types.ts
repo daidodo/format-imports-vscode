@@ -1,14 +1,12 @@
-interface GroupRule {
-  regex: string;
-  level: number;
-}
-
 export interface Configuration {
   configurationFileName?: string;
   exclude?: string[];
-  groupRules?: GroupRule[];
+  groupRules?: {
+    regex: string;
+    level: number;
+  }[];
   maximumLineLength?: number;
-  maximumWords?: number;
+  maximumWordsPerLine?: number;
   tabSize?: number;
   tabType?: 'space' | 'tab';
   quoteMark?: 'single' | 'double';
