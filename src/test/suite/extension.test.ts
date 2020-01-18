@@ -22,6 +22,7 @@ suite('Extension Test Suite', () => {
       const origin = `${dir}/${n}.origin.ts`;
       const sorted = `${dir}/${n}.sorted.ts`;
 
+      console.log('origin: ', origin);
       console.log('sorted: ', sorted);
     });
   });

@@ -20,5 +20,8 @@ export interface NodeComment extends LineRange {
 
 export interface RangeAndEmptyLines extends LineRange {
   fullStart: Pos;
-  leadingEmptyLines: number;
+  leadingNewLines: number;
+  trailingNewLines: number;
+  fullEnd: Pos;
+  eof: boolean;
 }

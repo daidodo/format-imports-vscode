@@ -33,12 +33,15 @@ export default class ImportNode {
   private defaultName_?: NameBinding;
   private names_?: NameBinding[];
   private fullStart_: Pos;
-  private leadingEmptyLines_: number;
+  private leadingNewLines_: number;
   private leadingComments_?: NodeComment[];
   // private declLineRange_: LineRange;
   // private trailingComments_?: NodeComment[];
   private trailingCommentsText_: string;
   private declAndCommentsLineRange_: LineRange;
+  private trailingNewLines_: number;
+  private fullEnd_: Pos;
+  private eof_: boolean;
 
   static fromDecl(node: ImportDeclaration, sourceFile: SourceFile, sourceText: string) {
     const { importClause, moduleSpecifier } = node;
@@ -82,7 +85,10 @@ export default class ImportNode {
     return {
       ...this.declAndCommentsLineRange_,
       fullStart: this.fullStart_,
-      leadingEmptyLines: this.leadingEmptyLines_,
+      leadingNewLines: this.leadingNewLines_,
+      trailingNewLines: this.trailingNewLines_,
+      fullEnd: this.fullEnd_,
+      eof: this.eof_,
     };
   }
 
@@ -163,20 +169,26 @@ export default class ImportNode {
     this.names_ = names;
     const {
       fullStart,
-      leadingEmptyLines,
+      leadingNewLines,
       leadingComments,
       // declLineRange,
       // trailingComments,
       trailingCommentsText,
       declAndCommentsLineRange,
+      trailingNewLines,
+      fullEnd,
+      eof,
     } = parseLineRanges(node, sourceFile, sourceText);
-    // this.declLineRange_ = declLineRange;
-    this.declAndCommentsLineRange_ = declAndCommentsLineRange;
+    this.fullStart_ = fullStart;
+    this.leadingNewLines_ = leadingNewLines;
     this.leadingComments_ = leadingComments;
+    // this.declLineRange_ = declLineRange;
     // this.trailingComments_ = trailingComments;
     this.trailingCommentsText_ = trailingCommentsText;
-    this.leadingEmptyLines_ = leadingEmptyLines;
-    this.fullStart_ = fullStart;
+    this.declAndCommentsLineRange_ = declAndCommentsLineRange;
+    this.trailingNewLines_ = trailingNewLines;
+    this.fullEnd_ = fullEnd;
+    this.eof_ = eof;
   }
 
   private get hasLeadingComments() {

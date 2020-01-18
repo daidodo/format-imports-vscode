@@ -1,3 +1,4 @@
+import { LineAndCharacter } from 'typescript';
 import {
   Position,
   Range,
@@ -6,7 +7,6 @@ import {
 
 import {
   ImportNode,
-  LineRange,
   RangeAndEmptyLines,
 } from '../parser';
 
@@ -35,25 +35,44 @@ function mergeRanges(ranges: RangeAndEmptyLines[]) {
     const last = merged[merged.length - 1];
     if (last.end >= cur.fullStart) {
       last.end = cur.end;
-      last.end = cur.end;
+      last.trailingNewLines = cur.trailingNewLines;
+      last.fullEnd = cur.fullEnd;
+      last.eof = cur.eof;
     } else merged.push(cur);
   });
   return merged;
 }
 
-function decideRange(range: RangeAndEmptyLines): LineRange {
-  return range;
-  // const { leadingEmptyLines, startLine: declStart, endLine: declEnd } = range;
-  // const fullStart = declStart.line - leadingEmptyLines;
-  // const fullEnd = declEnd.line + trailingEmptyLines;
-  // // Preserve one empty line between prev and next statements if there were empty line(s).
-  // const startLine = !leadingEmptyLines
-  //   ? declStart
-  //   : { line: fullStart ? fullStart + 1 : 0, character: 0 };
-  // const endLine = !trailingEmptyLines
-  //   ? declEnd
-  //   : leadingEmptyLines || !fullStart
-  //   ? { line: fullEnd, character: 0 }
-  //   : { line: fullEnd - 1, character: 0 };
-  // return { startLine, endLine };
+function decideRange(
+  range: RangeAndEmptyLines,
+): { start: LineAndCharacter; end: LineAndCharacter } {
+  const {
+    fullStart,
+    leadingNewLines,
+    start: cmStart,
+    trailingNewLines,
+    end: cmEnd,
+    fullEnd,
+    eof,
+  } = range;
+  if (!fullStart.pos) return { start: fullStart, end: fullEnd };
+  // Preserve one empty line between prev and next statements if there were empty line(s).
+  if (!leadingNewLines) {
+    const start = fullStart;
+    const ends = eof
+      ? [cmEnd, cmEnd, { line: fullEnd.line - 1, character: 0 }]
+      : [cmEnd, cmEnd, cmEnd, { line: fullEnd.line - 2, character: 0 }];
+    const end = ends[Math.min(trailingNewLines, ends.length - 1)];
+    return { start, end };
+  } else if (leadingNewLines === 1) {
+    const start = cmStart;
+    const end = eof || trailingNewLines < 2 ? fullEnd : { line: fullEnd.line - 1, character: 0 };
+    return { start, end };
+  } else if (leadingNewLines === 2) {
+    const start = eof ? { line: cmStart.line - 1, character: 0 } : cmStart;
+    return { start, end: fullEnd };
+  } else {
+    const start = { line: fullStart.line + (eof ? 1 : 2), character: 0 };
+    return { start, end: fullEnd };
+  }
 }
