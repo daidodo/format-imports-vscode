@@ -10,6 +10,10 @@
     "pretest": "npm run compile",
     "test": "node ./out/test/runTest.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daidodo/tsimportsorter.git"
+  },
   "engines": {
     "vscode": "^1.41.0"
   },
