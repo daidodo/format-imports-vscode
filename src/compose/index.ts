@@ -67,12 +67,13 @@ export function composeComments(comments: NodeComment[] | undefined) {
 function composeOneLineNames(words: string[], config: ComposeConfig) {
   assert(words.length > 0);
   const { tab, maxWords, maxLength, comma } = config;
-  const append = (t: string, n: string, e: boolean) => t + ' ' + n + (e ? comma : ',');
+  const append = (t: string, n: string, s: boolean, e: boolean) =>
+    t + (s ? '' : ' ') + n + (e ? comma : ',');
   const [first, ...rest] = words;
-  let text = append(tab, first, !rest.length);
+  let text = append(tab, first, true, !rest.length);
   for (let i = 0; i < rest.length; ++i) {
     const n = rest[i];
-    const t = append(text, n, i + 1 >= rest.length);
+    const t = append(text, n, false, i + 1 >= rest.length);
     if (i + 2 > maxWords || t.length > maxLength) return { text, left: rest.slice(i) };
     text = t;
   }
