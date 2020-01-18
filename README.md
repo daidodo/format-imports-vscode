@@ -71,7 +71,7 @@ TsImportSorter can loads configurations from both `package.json` and `import-sor
 
 ```{.json}
 "importSorter": {
-  "configurationFileName": "import-sorter.json";
+  "configurationFileName": "import-sorter.json",
   "exclude": ["regexPattern"],
   "groupRules": [
     {
@@ -86,14 +86,14 @@ TsImportSorter can loads configurations from both `package.json` and `import-sor
       "regex": "^[.]",
       "level": 40
     }
-  ];
-  "maximumLineLength": 100;
-  "maximumWordsPerLine": 1;
+  ],
+  "maximumLineLength": 100,
+  "maximumWordsPerLine": 1,
   "tabSize": 2;
-  "tabType": "space";
-  "quoteMark": "single";
-  "trailingComma": "multiLine";
-  "hasSemicolon": true;
+  "tabType": "space",
+  "quoteMark": "single",
+  "trailingComma": "multiLine",
+  "hasSemicolon": true
 },
 ```
 
@@ -101,10 +101,10 @@ TsImportSorter can loads configurations from both `package.json` and `import-sor
 
 ```{.json}
 {
-  "maximumLineLength": 100;
-  "maximumWordsPerLine": 1;
-  "tabSize": 2;
-  "tabType": "space";
+  "maximumLineLength": 100,
+  "maximumWordsPerLine": 1,
+  "tabSize": 2,
+  "tabType": "space"
 }
 ```
 

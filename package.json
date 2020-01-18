@@ -1,6 +1,6 @@
 {
   "name": "tsimportsorter",
-  "displayName": "TsImportSorter",
+  "displayName": "TS Import Sorter",
   "description": "Help sort imports for TypeScript.",
   "icon": "assets/icons/main.jpg",
   "publisher": "dozerg",
@@ -186,5 +186,10 @@
       ],
       "tsdoc/syntax": "warn"
     }
+  },
+  "importSorter": {
+    "exclude": [
+      ".*src/test/suite/examples/.+"
+    ]
   }
 }
