@@ -19,12 +19,12 @@ export default function sortImportsBeforeSavingDocument(event: TextDocumentWillS
   const sourceText = document.getText();
   const { uri: fileUri } = document;
   const { fsPath: fileName } = fileUri;
-  const { allIdentifiers, importNodes, insertLine } = parseSource(sourceText, fileName);
-  const deleteEdits = getDeleteEdits(importNodes);
+  const { allIds, importNodes, insertLine } = parseSource(sourceText, fileName);
+  const { deleteEdits, noFinalNewLine } = getDeleteEdits(importNodes, insertLine);
   const config = loadConfig(fileUri);
-  const groups = sortImports(importNodes, allIdentifiers, config);
-  const insertSource = composeInsertSource(groups, config);
-  const edits = getEdits(deleteEdits, insertSource, insertLine);
+  const groups = sortImports(importNodes, allIds, config);
+  const insertSource = composeInsertSource(groups, config, noFinalNewLine);
+  const edits = getEdits(deleteEdits, insertSource, insertLine.line);
   event.waitUntil(edits);
   const newSource = event.document.getText();
   console.log('newSource: ', newSource);

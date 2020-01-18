@@ -18,9 +18,16 @@ export interface ComposeConfig {
   semi: string;
 }
 
-export default function composeInsertSource(groups: ImportNode[][], config: Configuration) {
+export default function composeInsertSource(
+  groups: ImportNode[][],
+  config: Configuration,
+  noFinalNewLine: boolean,
+) {
   const c = configForCompose(config);
-  return groups.map(g => g.map(n => n.compose(c)).join('\n') + '\n').join('\n') + '\n';
+  return (
+    groups.map(g => g.map(n => n.compose(c)).join('\n') + '\n').join('\n') +
+    (noFinalNewLine ? '' : '\n')
+  );
 }
 
 export function composeNames(
@@ -29,7 +36,7 @@ export function composeNames(
   forceWrap: boolean,
 ) {
   const { maxWords, maxLength } = config;
-  const words = names?.map(composeName);
+  const words = names?.map(composeName).filter((w): w is string => !!w);
   if (!words || !words.length) return {};
   if (!forceWrap && words.length <= maxWords) {
     const text = `{ ${words.join(', ')} }`;
@@ -45,7 +52,7 @@ export function composeNames(
 }
 
 export function composeName(name: NameBinding | undefined) {
-  if (!name) return '';
+  if (!name) return;
   const { propertyName, aliasName } = name;
   if (propertyName) return aliasName ? `${propertyName} as ${aliasName}` : propertyName;
   assertNonNull(aliasName);

@@ -25,3 +25,8 @@ export interface RangeAndEmptyLines extends LineRange {
   fullEnd: Pos;
   eof: boolean;
 }
+
+export interface InsertLine {
+  line: number;
+  leadingNewLines: number;
+}

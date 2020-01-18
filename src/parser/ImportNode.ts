@@ -30,8 +30,10 @@ export default class ImportNode {
   private readonly node_: ImportDeclaration | ImportEqualsDeclaration;
 
   private moduleIdentifier_: string;
+  private isScript_: boolean;
   private defaultName_?: NameBinding;
   private names_?: NameBinding[];
+
   private fullStart_: Pos;
   private leadingNewLines_: number;
   private leadingComments_?: NodeComment[];
@@ -45,11 +47,13 @@ export default class ImportNode {
 
   static fromDecl(node: ImportDeclaration, sourceFile: SourceFile, sourceText: string) {
     const { importClause, moduleSpecifier } = node;
-    if (!importClause) return undefined; // import 'some/scripts'
 
     // moduleIdentifier
     assert(moduleSpecifier.kind === SyntaxKind.StringLiteral);
     const moduleIdentifier = (moduleSpecifier as StringLiteral).text;
+
+    // import 'some/scripts'
+    if (!importClause) return new ImportNode(node, sourceFile, sourceText, moduleIdentifier, true);
 
     // defaultName & names
     const { name, namedBindings } = importClause;
@@ -68,7 +72,15 @@ export default class ImportNode {
           })
         : undefined;
 
-    return new ImportNode(node, sourceFile, sourceText, moduleIdentifier, defaultName, names);
+    return new ImportNode(
+      node,
+      sourceFile,
+      sourceText,
+      moduleIdentifier,
+      false,
+      defaultName,
+      names,
+    );
   }
 
   static fromEqDecl(node: ImportEqualsDeclaration, sourceFile: SourceFile, sourceText: string) {
@@ -78,7 +90,7 @@ export default class ImportNode {
     assert(expression.kind === SyntaxKind.StringLiteral);
     const moduleIdentifier = (expression as StringLiteral).text;
     const defaultName = { propertyName: node.name.text };
-    return new ImportNode(node, sourceFile, sourceText, moduleIdentifier, defaultName);
+    return new ImportNode(node, sourceFile, sourceText, moduleIdentifier, false, defaultName);
   }
 
   get rangeAndEmptyLines(): RangeAndEmptyLines {
@@ -92,7 +104,12 @@ export default class ImportNode {
     };
   }
 
+  get isScriptImport() {
+    return this.isScript_;
+  }
+
   removeUnusedNames(allNames: Set<string>) {
+    if (this.isScript_) return this;
     if (!isNameUsed(this.defaultName_, allNames)) this.defaultName_ = undefined;
     this.names_ = this.names_?.filter(n => isNameUsed(n, allNames));
     if (this.names_?.length === 0) this.names_ = undefined;
@@ -160,11 +177,13 @@ export default class ImportNode {
     sourceFile: SourceFile,
     sourceText: string,
     moduleIdentifier: string,
+    isScript: boolean,
     defaultName?: NameBinding,
     names?: NameBinding[],
   ) {
     this.node_ = node;
     this.moduleIdentifier_ = normalizePath(moduleIdentifier);
+    this.isScript_ = isScript;
     this.defaultName_ = defaultName;
     this.names_ = names;
     const {
@@ -253,9 +272,11 @@ export default class ImportNode {
   composeDeclImpl(config: ComposeConfig, forceWrap: boolean) {
     const { quote, semi } = config;
     const path = this.moduleIdentifier_;
+    const ending = quote(path) + semi;
+    if (this.isScript_) return { text: `import ${ending}` };
     const { text, type } = composeNames(this.names_, config, forceWrap);
     const names = [composeName(this.defaultName_), text].filter(s => !!s).join(', ');
-    return { text: `import ${names} from ${quote(path)}${semi}`, type };
+    return { text: `import ${names} from ${ending}`, type };
   }
 }
 
