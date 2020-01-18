@@ -4,7 +4,7 @@
     "tabSize": 2,
     "maximumNumberOfImportExpressionsPerLine": { "count": 1, "type": "words" }
   },
-  "generalConfiguration": { "sortOnBeforeSave": true },
+  "generalConfiguration": { "sortOnBeforeSave": true, "exclude": [".*src/test/suite/examples/.+"] },
   "sortConfiguration": {
     "removeUnusedImports": true,
     "customOrderingRules": {

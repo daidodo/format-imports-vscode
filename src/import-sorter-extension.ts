@@ -37,7 +37,7 @@ import {
 } from './core/core-public';
 import { ConfigurationProvider } from './core/import-runner';
 
-const EXTENSION_CONFIGURATION_NAME = "importSorter";
+const EXTENSION_CONFIGURATION_NAME = 'importSorter';
 
 export class VSCodeConfigurationProvider implements ConfigurationProvider {
   private currentConfiguration = defaultImportSorterConfiguration;
@@ -54,7 +54,7 @@ export class VSCodeConfigurationProvider implements ConfigurationProvider {
       | GeneralConfiguration
       | ProxyHandler<GeneralConfiguration> = workspace
       .getConfiguration(EXTENSION_CONFIGURATION_NAME)
-      .get<GeneralConfiguration>("generalConfiguration")!;
+      .get<GeneralConfiguration>('generalConfiguration')!;
     const generalConfig = cloneDeep(generalConfigProxy);
 
     const configPath = `${workspace.rootPath}${sep}${generalConfig.configurationFilePath}`;
@@ -62,27 +62,24 @@ export class VSCodeConfigurationProvider implements ConfigurationProvider {
 
     if (
       !isConfigExist &&
-      generalConfig.configurationFilePath !==
-        defaultGeneralConfiguration.configurationFilePath
+      generalConfig.configurationFilePath !== defaultGeneralConfiguration.configurationFilePath
     ) {
       console.error(
-        "configurationFilePath is not found by the following path, import sorter will proceed with defaults from settings",
-        configPath
+        'configurationFilePath is not found by the following path, import sorter will proceed with defaults from settings',
+        configPath,
       );
       window.showErrorMessage(
-        "configurationFilePath is not found by the following path, import sorter will proceed with defaults from settings",
-        configPath
+        'configurationFilePath is not found by the following path, import sorter will proceed with defaults from settings',
+        configPath,
       );
     }
 
-    const fileConfigurationString = isConfigExist
-      ? fs.readFileSync(configPath, "utf8")
-      : "{}";
+    const fileConfigurationString = isConfigExist ? fs.readFileSync(configPath, 'utf8') : '{}';
     const fileConfigJsonObj = JSON.parse(fileConfigurationString);
     const fileConfigMerged = Object.keys(fileConfigJsonObj)
       .map(key => {
         const total: Record<string, any> = {};
-        const keys = key.split(".").filter(str => str !== "importSorter");
+        const keys = key.split('.').filter(str => str !== 'importSorter');
         keys.reduce((sum, currentKey, index) => {
           if (index === keys.length - 1) {
             sum[currentKey] = fileConfigJsonObj[key];
@@ -99,32 +96,26 @@ export class VSCodeConfigurationProvider implements ConfigurationProvider {
       | SortConfiguration
       | ProxyHandler<SortConfiguration> = workspace
       .getConfiguration(EXTENSION_CONFIGURATION_NAME)
-      .get<SortConfiguration>("sortConfiguration")!;
+      .get<SortConfiguration>('sortConfiguration')!;
     const sortConfig = cloneDeep(sortConfigProxy);
 
     const importStringConfigProxy:
       | ImportStringConfiguration
       | ProxyHandler<ImportStringConfiguration> = workspace
       .getConfiguration(EXTENSION_CONFIGURATION_NAME)
-      .get<ImportStringConfiguration>("importStringConfiguration")!;
+      .get<ImportStringConfiguration>('importStringConfiguration')!;
     const importStringConfig = cloneDeep(importStringConfigProxy);
 
-    const sortConfiguration = merge(
-      sortConfig,
-      fileConfig.sortConfiguration || {}
-    );
+    const sortConfiguration = merge(sortConfig, fileConfig.sortConfiguration || {});
     const importStringConfiguration = merge(
       importStringConfig,
-      fileConfig.importStringConfiguration || {}
+      fileConfig.importStringConfiguration || {},
     );
-    const generalConfiguration = merge(
-      generalConfig,
-      fileConfig.generalConfiguration || {}
-    );
+    const generalConfiguration = merge(generalConfig, fileConfig.generalConfiguration || {});
     return {
       sortConfiguration,
       importStringConfiguration,
-      generalConfiguration
+      generalConfiguration,
     };
   }
 }
@@ -138,7 +129,7 @@ export class ImportSorterExtension {
       new SimpleImportAstParser(),
       new InMemoryImportSorter(),
       new InMemoryImportCreator(),
-      this.configurationProvider
+      this.configurationProvider,
     );
   }
 
@@ -147,10 +138,7 @@ export class ImportSorterExtension {
   }
 
   public sortActiveDocumentImportsFromCommand(): void {
-    if (
-      !window.activeTextEditor ||
-      !this.isSortAllowed(window.activeTextEditor.document, false)
-    ) {
+    if (!window.activeTextEditor || !this.isSortAllowed(window.activeTextEditor.document, false)) {
       return;
     }
     this.configurationProvider.resetConfiguration();
@@ -163,8 +151,8 @@ export class ImportSorterExtension {
     return window.withProgress(
       {
         location: ProgressLocation.Notification,
-        title: "Import sorter: sorting...",
-        cancellable: false
+        title: 'Import sorter: sorting...',
+        cancellable: false,
       },
       (progress, _token) => {
         progress.report({ increment: 0 });
@@ -172,23 +160,21 @@ export class ImportSorterExtension {
           .pipe(
             mapObservable(_ => 1),
             scan((acc, curr) => acc + curr, 0),
-            mapObservable(fileCount =>
-              progress.report({ message: `${fileCount} - sorted` })
-            ),
-            delay(1000)
+            mapObservable(fileCount => progress.report({ message: `${fileCount} - sorted` })),
+            delay(1000),
           )
           .toPromise();
-      }
+      },
     );
   }
 
   public sortModifiedDocumentImportsFromOnBeforeSaveCommand(
-    event: TextDocumentWillSaveEvent
+    event: TextDocumentWillSaveEvent,
   ): void {
     this.configurationProvider.resetConfiguration();
-    const configuration = this.configurationProvider.getConfiguration();
+    // const configuration = this.configurationProvider.getConfiguration();
     const isSortOnBeforeSaveEnabled = true; // configuration.generalConfiguration.sortOnBeforeSave;
-    console.log("isSortOnBeforeSaveEnabled:", isSortOnBeforeSaveEnabled);
+    console.log('isSortOnBeforeSaveEnabled:', isSortOnBeforeSaveEnabled);
     if (!isSortOnBeforeSaveEnabled) {
       return;
     }
@@ -202,10 +188,7 @@ export class ImportSorterExtension {
     try {
       const doc = event ? event.document : window.activeTextEditor!.document;
       const text = doc.getText();
-      const importData = this.importRunner.getSortImportData(
-        doc.uri.fsPath,
-        text
-      );
+      const importData = this.importRunner.getSortImportData(doc.uri.fsPath, text);
       if (!importData.isSortRequired) {
         return;
       }
@@ -214,15 +197,15 @@ export class ImportSorterExtension {
         TextEdit.delete(
           new Range(
             new Position(x.startLine, x.startCharacter),
-            new Position(x.endLine, x.endCharacter)
-          )
-        )
+            new Position(x.endLine, x.endCharacter),
+          ),
+        ),
       );
 
       if (event) {
         const insertEdit = TextEdit.insert(
           new Position(importData.firstLineNumberToInsertText!, 0),
-          importData.sortedImportsText + "\n"
+          importData.sortedImportsText + '\n',
         );
         event.waitUntil(Promise.resolve([...deleteEdits, insertEdit]));
       } else {
@@ -232,29 +215,23 @@ export class ImportSorterExtension {
           });
           editBuilder.insert(
             new Position(importData.firstLineNumberToInsertText!, 0),
-            importData.sortedImportsText + "\n"
+            importData.sortedImportsText + '\n',
           );
         });
       }
     } catch (error) {
       window.showErrorMessage(
-        `Typescript import sorter failed with - ${error.message}. Please log a bug.`
+        `Typescript import sorter failed with - ${error.message}. Please log a bug.`,
       );
     }
   }
 
-  private isSortAllowed(
-    document: TextDocument,
-    isFileExtensionErrorIgnored: boolean
-  ): boolean {
+  private isSortAllowed(document: TextDocument, isFileExtensionErrorIgnored: boolean): boolean {
     if (!document) {
       return false;
     }
 
-    if (
-      document.languageId === "typescript" ||
-      document.languageId === "typescriptreact"
-    ) {
+    if (document.languageId === 'typescript' || document.languageId === 'typescriptreact') {
       return true;
     }
 
@@ -263,7 +240,7 @@ export class ImportSorterExtension {
     }
 
     window.showErrorMessage(
-      "Import Sorter currently only supports typescript (.ts) or typescriptreact (.tsx) language files"
+      'Import Sorter currently only supports typescript (.ts) or typescriptreact (.tsx) language files',
     );
     return false;
   }

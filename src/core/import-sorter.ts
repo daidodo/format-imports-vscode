@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   chain,
   cloneDeep,
@@ -6,7 +7,6 @@ import {
 } from 'lodash';
 import * as path from 'path';
 
-import { CustomOrderRule } from './models/custom-order-rule';
 import { ImportElementSortResult } from './models/import-element-sort-result';
 import {
   defaultSortConfiguration,
@@ -35,42 +35,37 @@ export class InMemoryImportSorter implements ImportSorter {
     const clonedElements = cloneDeep(imports);
     const joinedImportsResult = this.joinImportPaths(clonedElements);
     const duplicates = joinedImportsResult.duplicates;
-    const sortedImportsExpr = this.sortNamedBindings(
-      joinedImportsResult.joinedExpr
-    );
+    const sortedImportsExpr = this.sortNamedBindings(joinedImportsResult.joinedExpr);
     const sortedElementGroups = this.applyCustomSortingRules(sortedImportsExpr);
     this.sortModuleSpecifiers(sortedElementGroups);
     return {
       groups: sortedElementGroups,
-      duplicates: duplicates
+      duplicates: duplicates,
     };
   }
 
   private assertIsInitialised() {
     if (!this.sortConfig) {
-      throw new Error("SortConfiguration: has not been initialised");
+      throw new Error('SortConfiguration: has not been initialised');
     }
   }
 
   private normalizePaths(imports: ImportElement[]) {
     return chain(imports).map(x => {
       const isRelativePath =
-        x.moduleSpecifierName.startsWith(`.`) ||
-        x.moduleSpecifierName.startsWith(`..`);
+        x.moduleSpecifierName.startsWith(`.`) || x.moduleSpecifierName.startsWith(`..`);
       x.moduleSpecifierName = isRelativePath
-        ? path
-            .normalize(x.moduleSpecifierName)
-            .replace(new RegExp("\\" + path.sep, "g"), "/")
+        ? path.normalize(x.moduleSpecifierName).replace(new RegExp('\\' + path.sep, 'g'), '/')
         : x.moduleSpecifierName;
       if (
         isRelativePath &&
         !x.moduleSpecifierName.startsWith(`./`) &&
         !x.moduleSpecifierName.startsWith(`../`)
       ) {
-        if (x.moduleSpecifierName === ".") {
-          x.moduleSpecifierName = "./";
-        } else if (x.moduleSpecifierName === "..") {
-          x.moduleSpecifierName = "../";
+        if (x.moduleSpecifierName === '.') {
+          x.moduleSpecifierName = './';
+        } else if (x.moduleSpecifierName === '..') {
+          x.moduleSpecifierName = '../';
         } else {
           x.moduleSpecifierName = `./${x.moduleSpecifierName}`;
         }
@@ -80,42 +75,37 @@ export class InMemoryImportSorter implements ImportSorter {
   }
 
   private sortNamedBindings(
-    importsExpr: LoDashExplicitArrayWrapper<ImportElement>
+    importsExpr: LoDashExplicitArrayWrapper<ImportElement>,
   ): LoDashExplicitArrayWrapper<ImportElement> {
-    const sortOrder = this.getSortOrderFunc(
-      this.sortConfig.importMembers?.order ?? "caseInsensitive"
-    );
-    return importsExpr.map((x: ImportElement) => {
-      if (x.namedBindings && x.namedBindings.length) {
-        x.namedBindings = chain(x.namedBindings)
-          .orderBy(
-            (y: { name: string; aliasName: string }) => sortOrder?.(y.name),
-            [this.sortConfig.importMembers.direction]
-          )
-          .value();
-        return x;
-      }
-      return x;
-    });
+    // const sortOrder = this.getSortOrderFunc(
+    //   this.sortConfig.importMembers?.order ?? 'caseInsensitive',
+    // );
+    // return importsExpr.map((x: ImportElement) => {
+    //   if (x.namedBindings && x.namedBindings.length) {
+    //     x.namedBindings = chain(x.namedBindings)
+    //       .orderBy((y: { name: string; aliasName: string }) => sortOrder?.(y.name), [
+    //         this.sortConfig.importMembers.direction,
+    //       ])
+    //       .value();
+    //     return x;
+    //   }
+    //   return x;
+    // });
+    return importsExpr;
   }
   private sortModuleSpecifiers(elementGroups: ImportElementGroup[]): void {
-    const sortOrder = this.getSortOrderFunc(
-      this.sortConfig.importPaths.order,
-      true
-    );
+    const sortOrder = this.getSortOrderFunc(this.sortConfig.importPaths.order, true);
     elementGroups
       .filter(gr => !gr.customOrderRule.disableSort)
       .forEach(gr => {
         gr.elements = chain(gr.elements)
-          .orderBy(y => sortOrder?.(y.moduleSpecifierName), [
-            this.sortConfig.importPaths.direction
-          ])
+          .orderBy(y => sortOrder?.(y.moduleSpecifierName), [this.sortConfig.importPaths.direction])
           .value();
       });
   }
 
   private joinImportPaths(
-    imports: ImportElement[]
+    imports: ImportElement[],
   ): {
     joinedExpr: LoDashExplicitArrayWrapper<ImportElement>;
     duplicates: ImportElement[];
@@ -124,7 +114,7 @@ export class InMemoryImportSorter implements ImportSorter {
     if (!this.sortConfig.joinImportPaths) {
       return {
         joinedExpr: normalizedPathsExpr,
-        duplicates: []
+        duplicates: [],
       };
     }
     const duplicates: ImportElement[] = [];
@@ -138,12 +128,9 @@ export class InMemoryImportSorter implements ImportSorter {
             .uniqBy(y => y?.name)
             .value();
           const defaultImportElement = x.find(
-            y =>
-              !isNil(y.defaultImportName) &&
-              !(y.defaultImportName.trim() === "")
+            y => !isNil(y.defaultImportName) && !(y.defaultImportName.trim() === ''),
           );
-          const defaultImportName =
-            defaultImportElement && defaultImportElement.defaultImportName;
+          const defaultImportName = defaultImportElement && defaultImportElement.defaultImportName;
           x[0].defaultImportName = defaultImportName;
           x[0].namedBindings = nameBindings as {
             aliasName: string;
@@ -167,7 +154,7 @@ export class InMemoryImportSorter implements ImportSorter {
       .value();
     return {
       joinedExpr: chain(joined),
-      duplicates: duplicates
+      duplicates: duplicates,
     };
   }
 
@@ -176,14 +163,13 @@ export class InMemoryImportSorter implements ImportSorter {
       this.sortConfig.customOrderingRules &&
       this.sortConfig.customOrderingRules.defaultNumberOfEmptyLinesAfterGroup
     ) {
-      return this.sortConfig.customOrderingRules
-        .defaultNumberOfEmptyLinesAfterGroup;
+      return this.sortConfig.customOrderingRules.defaultNumberOfEmptyLinesAfterGroup;
     }
     return 0;
   }
 
   private applyCustomSortingRules(
-    sortedImports: LoDashExplicitArrayWrapper<ImportElement>
+    sortedImports: LoDashExplicitArrayWrapper<ImportElement>,
   ): ImportElementGroup[] {
     if (
       !this.sortConfig.customOrderingRules ||
@@ -196,14 +182,12 @@ export class InMemoryImportSorter implements ImportSorter {
           elements: sortedImports.value(),
           numberOfEmptyLinesAfterGroup: this.getDefaultLineNumber(),
           customOrderRule: {
-            disableSort: customRules
-              ? customRules.disableDefaultOrderSort
-              : false,
+            disableSort: customRules ? customRules.disableDefaultOrderSort : false,
             numberOfEmptyLinesAfterGroup:
               customRules && customRules.defaultNumberOfEmptyLinesAfterGroup,
-            orderLevel: customRules && customRules.defaultOrderLevel
-          }
-        }
+            orderLevel: customRules && customRules.defaultOrderLevel,
+          },
+        },
       ];
     }
     const rules = this.sortConfig.customOrderingRules.rules.map(x => ({
@@ -213,34 +197,34 @@ export class InMemoryImportSorter implements ImportSorter {
       disableSort: x.disableSort,
       numberOfEmptyLinesAfterGroup: isNil(x.numberOfEmptyLinesAfterGroup)
         ? this.getDefaultLineNumber()
-        : x.numberOfEmptyLinesAfterGroup
+        : x.numberOfEmptyLinesAfterGroup,
     }));
+    console.log('rules: ', rules);
 
     const result: { [key: number]: ImportElementGroup } = {};
-    sortedImports
-      .forEach((x: ImportElement) => {
-        const rule = rules.find(e =>
-          !e.type || e.type === "path"
-            ? // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
-              x.moduleSpecifierName.match(e.regex!) !== null
-            : this.matchNameBindings(x, e.regex!)
-        );
-        if (!rule) {
-          this.addElement(
-            result,
-            {
-              disableSort: this.sortConfig.customOrderingRules
-                ?.disableDefaultOrderSort,
-              numberOfEmptyLinesAfterGroup: this.getDefaultLineNumber(),
-              orderLevel: this.sortConfig.customOrderingRules?.defaultOrderLevel
-            },
-            x
-          );
-          return;
-        }
-        this.addElement(result, rule, x);
-      })
-      .value();
+    // sortedImports
+    //   .forEach((x: ImportElement) => {
+    //     const rule = rules.find(e =>
+    //       !e.type || e.type === 'path'
+    //         ? // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
+    //           x.moduleSpecifierName.match(e.regex!) !== null
+    //         : this.matchNameBindings(x, e.regex!),
+    //     );
+    //     if (!rule) {
+    //       this.addElement(
+    //         result,
+    //         {
+    //           disableSort: this.sortConfig.customOrderingRules?.disableDefaultOrderSort,
+    //           numberOfEmptyLinesAfterGroup: this.getDefaultLineNumber(),
+    //           orderLevel: this.sortConfig.customOrderingRules?.defaultOrderLevel,
+    //         },
+    //         x,
+    //       );
+    //       return;
+    //     }
+    //     this.addElement(result, rule, x);
+    //   })
+    //   .value();
     const customSortedImports = chain(Object.keys(result))
       .orderBy(x => +x)
       .map(x => result[+x])
@@ -248,78 +232,71 @@ export class InMemoryImportSorter implements ImportSorter {
     return customSortedImports;
   }
 
-  private matchNameBindings(importElement: ImportElement, regex: string) {
-    //match an empty string here
-    if (!importElement.hasFromKeyWord) {
-      // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
-      return "".match(regex) !== null;
-    }
-    if (
-      importElement.defaultImportName &&
-      importElement.defaultImportName.trim() !== ""
-    ) {
-      // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
-      return importElement.defaultImportName.match(regex) !== null;
-    }
-    return (
-      // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
-      importElement.namedBindings?.some(x => x.name.match(regex) !== null) ??
-      false
-    );
-  }
+  // private matchNameBindings(importElement: ImportElement, regex: string) {
+  //   //match an empty string here
+  //   if (!importElement.hasFromKeyWord) {
+  //     // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
+  //     return ''.match(regex) !== null;
+  //   }
+  //   if (importElement.defaultImportName && importElement.defaultImportName.trim() !== '') {
+  //     // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
+  //     return importElement.defaultImportName.match(regex) !== null;
+  //   }
+  //   return (
+  //     // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
+  //     importElement.namedBindings?.some(x => x.name.match(regex) !== null) ?? false
+  //   );
+  // }
 
-  private addElement(
-    dictionary: { [key: number]: ImportElementGroup },
-    rule: CustomOrderRule,
-    value: ImportElement
-  ) {
-    if (isNil(dictionary[rule.orderLevel!])) {
-      dictionary[rule.orderLevel!] = {
-        elements: [],
-        numberOfEmptyLinesAfterGroup: rule.numberOfEmptyLinesAfterGroup ?? 0,
-        customOrderRule: rule
-      };
-      dictionary[rule.orderLevel!].elements = [value];
-    } else {
-      dictionary[rule.orderLevel!].elements.push(value);
-    }
-  }
+  // private addElement(
+  //   dictionary: { [key: number]: ImportElementGroup },
+  //   rule: CustomOrderRule,
+  //   value: ImportElement,
+  // ) {
+  //   if (isNil(dictionary[rule.orderLevel!])) {
+  //     dictionary[rule.orderLevel!] = {
+  //       elements: [],
+  //       numberOfEmptyLinesAfterGroup: rule.numberOfEmptyLinesAfterGroup ?? 0,
+  //       customOrderRule: rule,
+  //     };
+  //     dictionary[rule.orderLevel!].elements = [value];
+  //   } else {
+  //     dictionary[rule.orderLevel!].elements.push(value);
+  //   }
+  // }
 
   private getSortOrderFunc(
     sortOrder: ImportSortOrder,
-    changePeriodOrder = false
+    changePeriodOrder = false,
   ): ((value: string) => string) | undefined {
-    if (sortOrder === "caseInsensitive") {
+    if (sortOrder === 'caseInsensitive') {
       return x =>
-        changePeriodOrder
-          ? this.parseStringWithPeriod(x.toLowerCase())
-          : x.toLowerCase();
+        changePeriodOrder ? this.parseStringWithPeriod(x.toLowerCase()) : x.toLowerCase();
     }
-    if (sortOrder === "lowercaseLast") {
+    if (sortOrder === 'lowercaseLast') {
       return x => (changePeriodOrder ? this.parseStringWithPeriod(x) : x);
     }
-    if (sortOrder === "unsorted") {
-      return () => "";
+    if (sortOrder === 'unsorted') {
+      return () => '';
     }
-    if (sortOrder === "lowercaseFirst") {
+    if (sortOrder === 'lowercaseFirst') {
       return x =>
         changePeriodOrder
           ? this.parseStringWithPeriod(this.swapStringCase(x))
           : this.swapStringCase(x);
     }
+    return;
   }
 
   private parseStringWithPeriod(value: string) {
-    return value && value.startsWith(".")
-      ? value.replace(".", NEW_PERIOD_CHAR)
-      : value;
+    return value && value.startsWith('.') ? value.replace('.', NEW_PERIOD_CHAR) : value;
   }
 
   private swapStringCase(str: string) {
     if (str == null) {
-      return "";
+      return '';
     }
-    let result = "";
+    let result = '';
     for (let i = 0; i < str.length; i++) {
       const c = str[i];
       const u = c.toUpperCase();
