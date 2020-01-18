@@ -2,6 +2,7 @@
   "name": "tsimportsorter",
   "displayName": "TsImportSorter",
   "description": "Help sort imports for TypeScript.",
+  "icon": "assets/icons/main.jpg",
   "version": "0.0.1",
   "scripts": {
     "vscode:prepublish": "npm run compile",
