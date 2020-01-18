@@ -20,16 +20,25 @@ export async function getEdits(edits: TextEdit[], insertText: string, insertLine
 export function getDeleteEdits(nodes: ImportNode[], insertLine: InsertLine) {
   const ranges = nodes.map(n => n.rangeAndEmptyLines);
   const merged = mergeRanges(ranges);
-  const { line, leadingNewLines } = insertLine;
+  const { line, leadingNewLines, needlessSpaces } = insertLine;
   const insert = { line, character: 0 };
   let noFinalNewLine = false;
+  let included = false;
   const deleteEdits = merged.map(decideRange).map(({ start, end, emptyLines }) => {
-    if (compare(start, insert) <= 0) noFinalNewLine = leadingNewLines < 2 && emptyLines > 0;
+    if (compare(start, insert) <= 0) {
+      included = true;
+      noFinalNewLine = leadingNewLines < 2 && emptyLines > 0;
+    }
     return TextEdit.delete(
       new Range(new Position(start.line, start.character), new Position(end.line, end.character)),
     );
   });
-  return { deleteEdits, noFinalNewLine };
+  if (included || !needlessSpaces) return { deleteEdits, noFinalNewLine };
+  const { start, end } = needlessSpaces;
+  const deleteSpaces = TextEdit.delete(
+    new Range(new Position(start.line, start.character), new Position(end.line, end.character)),
+  );
+  return { deleteEdits: [deleteSpaces, ...deleteEdits], noFinalNewLine };
 }
 
 function mergeRanges(ranges: RangeAndEmptyLines[]) {

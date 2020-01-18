@@ -48,8 +48,16 @@ export default function parseSource(sourceText: string, fileName: string) {
 function getInsertLine(sourceFile: SourceFile, sourceText: string): InsertLine {
   const firstNode = sourceFile.getChildren().find(n => !n.getFullStart());
   if (!firstNode) return { line: 0, leadingNewLines: 0 };
-  const { fullStart, leadingNewLines: l } = parseLineRanges(firstNode, sourceFile, sourceText);
-  const { pos, line } = fullStart;
-  const leadingNewLines = !pos ? 0 : l < 2 ? 1 : 2;
-  return { line: line + leadingNewLines, leadingNewLines };
+  const { fullStart, leadingNewLines: nl, declAndCommentsLineRange: decl } = parseLineRanges(
+    firstNode,
+    sourceFile,
+    sourceText,
+  );
+  const { pos, line: l } = fullStart;
+  if (!pos)
+    return { line: 0, leadingNewLines: 0, needlessSpaces: { start: fullStart, end: decl.start } };
+  const leadingNewLines = nl < 2 ? 1 : 2;
+  const line = l + leadingNewLines;
+  const needlessSpaces = nl < 3 ? undefined : { start: { line, character: 0 }, end: decl.start };
+  return { line, leadingNewLines, needlessSpaces };
 }

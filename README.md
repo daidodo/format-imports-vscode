@@ -71,4 +71,4 @@ Added features X, Y, and Z.
 - ~~Handle implicit React.~~
 - ~~Preserve comments after sorting.~~
 - ~~Handle script imports.~~
-- Format leading spaces anyway.
+- ~~Format leading spaces anyway.~~

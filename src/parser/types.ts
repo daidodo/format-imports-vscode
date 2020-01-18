@@ -29,4 +29,5 @@ export interface RangeAndEmptyLines extends LineRange {
 export interface InsertLine {
   line: number;
   leadingNewLines: number;
+  needlessSpaces?: { start: LineAndCharacter; end: LineAndCharacter };
 }
