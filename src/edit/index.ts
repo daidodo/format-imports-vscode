@@ -84,8 +84,9 @@ function decideRange(
     return { start, end, emptyLines };
   } else if (leadingNewLines === 1) {
     const start = cmStart;
-    const end = eof || trailingNewLines < 2 ? fullEnd : { line: fullEnd.line - 1, character: 0 };
-    return { start, end, emptyLines: eof || trailingNewLines > 1 ? 1 : 0 };
+    const ends = eof ? [fullEnd] : [fullEnd, cmEnd, { line: fullEnd.line - 1, character: 0 }];
+    const end = ends[Math.min(trailingNewLines, ends.length - 1)];
+    return { start, end, emptyLines: eof || trailingNewLines > 0 ? 1 : 0 };
   } else if (leadingNewLines === 2) {
     const start = eof ? { line: cmStart.line - 1, character: 0 } : cmStart;
     return { start, end: fullEnd, emptyLines: 1 };

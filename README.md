@@ -70,4 +70,5 @@ Added features X, Y, and Z.
 - Lower case first or upper case first.
 - ~~Handle implicit React.~~
 - ~~Preserve comments after sorting.~~
-- Handle script imports.
+- ~~Handle script imports.~~
+- Format leading spaces anyway.
