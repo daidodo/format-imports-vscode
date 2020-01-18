@@ -55,8 +55,9 @@ function decideRange(
     fullEnd,
     eof,
   } = range;
+  // No empty lines if there are no prev statements/comments.
   if (!fullStart.pos) return { start: fullStart, end: fullEnd };
-  // Preserve one empty line between prev and next statements if there were empty line(s).
+  // Preserve one empty line between prev and next (if any) statements if there were empty line(s).
   if (!leadingNewLines) {
     const start = fullStart;
     const ends = eof
