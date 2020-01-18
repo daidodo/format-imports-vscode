@@ -1,74 +1,125 @@
-# TsImportSorter README
+# TypeScript Import Sorter
 
-This is the README for your extension "tsimportsorter". After writing up a brief description, we recommend including the following sections.
+Automatically sort imports for **TypeScripts** source code.
+
+Based on [import-sorter](https://github.com/SoominHan/import-sorter). Thanks!
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
-
-For example if there is an image subfolder under your extension project workspace:
-
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
-
-## Requirements
-
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+- Auto sort on save. No need for commands or clicks.
+- Auto merge imports, deduplicate names.
+- Auto delete unused names and handle `React` with JSX properly.
+- Group by customizable rules.
+- Preserve leading and trailing comments with imports.
+- Handle script imports properly.
+- Support config both in `package.json` and `import-sorter.json`.
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+All config and their default value:
 
-For example:
+```{.json}
+// Configuration file name.
+"tsImportSorter.configuration.configurationFileName": "import-sorter.json",
 
-This extension contributes the following settings:
+// Disable sorting for files matching regex expressions.
+"tsImportSorter.configuration.exclude": [],
 
-- `myExtension.enable`: enable/disable this extension
-- `myExtension.thing`: set to `blah` to do something
+// Grouping rules for path patterns. Everything else has a default level of 20.
+"tsImportSorter.configuration.groupRules.": [
+  {
+    "regex": "^react$",
+    "level": 10
+  },
+  {
+    "regex": "^[@]",
+    "level": 30
+  },
+  {
+    "regex": "^[.]",
+    "level": 40
+  }
+],
 
-## Known Issues
+// Maximum line length before binding names are wrapped. 0 for no limit.
+"tsImportSorter.configuration.maximumLineLength": 100,
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+// Maximum words per line before binding names are wrapped. 0 for no limit.
+"tsImportSorter.configuration.maximumWordsPerLine": 1,
 
-## Release Notes
+// Number of spaces to replace a TAB.
+"tsImportSorter.configuration.tabSize": 2,
 
-Users appreciate release notes as you update your extension.
+// If set to "tab", TAB will be kept. If set to "space", TAB will be replaced by SPACEs.
+"tsImportSorter.configuration.tabType": "space",
 
-### 1.0.0
+// If set to "single", 'path' will be used to quote paths. If set to "double", "path" will be used to quote paths.
+"tsImportSorter.configuration.quoteMark": "single",
 
-Initial release of ...
+// If set to "multiLine", there will be a comma after the last binding name in a new line. Or "none" for no comma.
+"tsImportSorter.configuration.trailingComma": "multiLine",
 
-### 1.0.1
+// Whether there is a semicolon at the end of import declarations.
+"tsImportSorter.configuration.hasSemicolon": true,
+```
 
-Fixed issue #.
+## Configuration
 
-### 1.1.0
+TsImportSorter can loads configurations from both `package.json` and `import-sorter.json` (by default) automatically.
 
-Added features X, Y, and Z.
+`package.json` examples:
 
----
+```{.json}
+"importSorter": {
+  "configurationFileName": "import-sorter.json";
+  "exclude": ["regexPattern"],
+  "groupRules": [
+    {
+      "regex": "^react$",
+      "level": 10
+    },
+    {
+      "regex": "^[@]",
+      "level": 30
+    },
+    {
+      "regex": "^[.]",
+      "level": 40
+    }
+  ];
+  "maximumLineLength": 100;
+  "maximumWordsPerLine": 1;
+  "tabSize": 2;
+  "tabType": "space";
+  "quoteMark": "single";
+  "trailingComma": "multiLine";
+  "hasSemicolon": true;
+},
+```
 
-## Working with Markdown
+`import-sorter.json` example:
 
-**Note:** You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
+```{.json}
+{
+  "maximumLineLength": 100;
+  "maximumWordsPerLine": 1;
+  "tabSize": 2;
+  "tabType": "space";
+}
+```
 
-- Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-- Toggle preview (`Shift+CMD+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-- Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (macOS) to see a list of Markdown snippets
+### Search Order
 
-### For more information
+`package.json` and `import-sorter.json` are searched in the following order:
 
-- [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-- [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
+- The same folder of the edited file.
+- If not found, then go to the parent folder.
+- Continue if still not found, till the root folder (`/`)
 
-**Enjoy!**
+The configurations in `import-sorter.json` will overwrite the ones in `package.json`.
 
-### TODO
+So if you want a global settings, just put a `import-sorter.json` in your workspace folder.
 
-- One line comment to disable import sorter for a file or line.
-- Lower case first or upper case first.
-- ~~Handle implicit React.~~
-- ~~Preserve comments after sorting.~~
-- ~~Handle script imports.~~
-- ~~Format leading spaces anyway.~~
+## License
+
+MIT

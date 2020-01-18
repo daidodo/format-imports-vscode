@@ -37,7 +37,7 @@
         "tsImportSorter.configuration.configurationFileName": {
           "type": "string",
           "default": "import-sorter.json",
-          "description": "Default file configuration name"
+          "description": "Configuration file name."
         },
         "tsImportSorter.configuration.exclude": {
           "type": "array",
@@ -45,7 +45,7 @@
           "items": {
             "type": "string"
           },
-          "description": "Excludes sorting for files which match given regex expression. Regex considers the whole file path. The file path separator is normalized to '/'"
+          "description": "Disable sorting for files matching regex expressions."
         },
         "tsImportSorter.configuration.groupRules.": {
           "type": "array",
@@ -63,22 +63,22 @@
               "level": 40
             }
           ],
-          "description": "Custom grouping levels of different import path patterns. Everything else has a default level of 20"
+          "description": "Grouping rules for path patterns. Everything else has a default level of 20."
         },
         "tsImportSorter.configuration.maximumLineLength": {
           "type": "number",
           "default": 100,
-          "description": "The count of characters before import is new-lined. 0 for no limit."
+          "description": "Maximum line length before binding names are wrapped. 0 for no limit."
         },
         "tsImportSorter.configuration.maximumWordsPerLine": {
           "type": "number",
           "default": 1,
-          "description": "The count of words before import is new-lined. 0 for no limit."
+          "description": "Maximum words per line before binding names are wrapped. 0 for no limit."
         },
         "tsImportSorter.configuration.tabSize": {
           "type": "number",
           "default": 2,
-          "description": "Left number of spaces for the new lined imports. If tabType is set to 'tab', then the configuration defines the size of the tab in number of spaces"
+          "description": "Number of spaces to replace a TAB."
         },
         "tsImportSorter.configuration.tabType": {
           "enum": [
@@ -86,7 +86,7 @@
             "tab"
           ],
           "default": "space",
-          "description": "Defines the character which will be printed on each new lined import expression"
+          "description": "If set to \"tab\", TAB will be kept. If set to \"space\", TAB will be replaced by SPACEs."
         },
         "tsImportSorter.configuration.quoteMark": {
           "enum": [
@@ -94,7 +94,7 @@
             "double"
           ],
           "default": "single",
-          "description": "The path quotes"
+          "description": "If set to \"single\", 'path' will be used to quote paths. If set to \"double\", \"path\" will be used to quote paths."
         },
         "tsImportSorter.configuration.trailingComma": {
           "enum": [
@@ -102,12 +102,12 @@
             "multiLine"
           ],
           "default": "multiLine",
-          "description": "If 'multiLine' then adds a trailing comma at the end of the imports for multi-line imports."
+          "description": "If set to \"multiLine\", there will be a comma after the last binding name in a new line. Or \"none\" for no comma."
         },
         "tsImportSorter.configuration.hasSemicolon": {
           "type": "boolean",
           "default": true,
-          "description": "If true then the import string has a semicolon at the end, otherwise it will not be appended. Default is true"
+          "description": "Whether there is a semicolon at the end of import declarations."
         }
       }
     }
