@@ -1,6 +1,6 @@
 # TypeScript Import Sorter
 
-Automatically sort imports for **TypeScripts** source code.
+Automatically sort imports for **TypeScript** source code.
 
 Based on [import-sorter](https://github.com/SoominHan/import-sorter). Thanks!
 
@@ -116,9 +116,9 @@ TsImportSorter can loads configurations from both `package.json` and `import-sor
 - If not found, then go to the parent folder.
 - Continue if still not found, till the root folder (`/`)
 
-The configurations in `import-sorter.json` will overwrite the ones in `package.json`.
+The configurations in both files will merge together, and `package.json` will win in any conflicts.
 
-So if you want a global settings, just put a `import-sorter.json` in your workspace folder.
+So if you want global settings, just put a `import-sorter.json` in your workspace folder, and any rules in local `package.json` will still be respected.
 
 ## License
 

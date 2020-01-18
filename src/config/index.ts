@@ -18,8 +18,8 @@ export { Configuration };
 
 export default function loadConfig(fileUri: Uri) {
   const config = workspaceConfig(fileUri);
-  merge(config, packageConfig(fileUri));
   merge(config, fileConfig(config.configurationFileName ?? '', fileUri));
+  merge(config, packageConfig(fileUri));
   return config;
 }
 
