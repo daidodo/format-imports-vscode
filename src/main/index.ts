@@ -20,7 +20,9 @@ export default function sortImportsBeforeSavingDocument(event: TextDocumentWillS
     const { deleteEdits, noFinalNewLine } = getDeleteEdits(importNodes, insertLine);
     window.showInformationMessage('TS Import Sorter: loading config');
     const config = loadConfig(fileUri);
-    window.showInformationMessage('TS Import Sorter: sorting');
+    window.showInformationMessage(
+      `TS Import Sorter: sorting with config=${JSON.stringify(config)}`,
+    );
     const groups = sortImports(importNodes, allIds, config);
     const insertSource = composeInsertSource(groups, config, noFinalNewLine);
     const edits = getEdits(deleteEdits, insertSource, insertLine.line);
