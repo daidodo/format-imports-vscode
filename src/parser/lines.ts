@@ -14,18 +14,18 @@ import {
 } from './types';
 
 export function parseLineRanges(node: Node, sourceFile: SourceFile, sourceText: string) {
-  // const sourceLines = sourceText.split(/\r?\n/).map(s => s.trimRight());
   const declEnd = node.getEnd();
   const declLineRange = transformRange(
     { pos: node.getStart(sourceFile), end: declEnd },
     sourceFile,
   );
-  const { fullStart, leadingNewLines, commentsStart, leadingComments } = parseLeadingComments(
-    node,
-    declLineRange,
-    sourceFile,
-    sourceText,
-  );
+  const {
+    fileComments,
+    fullStart,
+    leadingNewLines,
+    commentsStart,
+    leadingComments,
+  } = parseLeadingComments(node, declLineRange, sourceFile, sourceText);
   const trailingComments = getTrailingCommentRanges(sourceText, declEnd)?.map(
     transformComment.bind(undefined, sourceFile, sourceText),
   );
@@ -42,6 +42,7 @@ export function parseLineRanges(node: Node, sourceFile: SourceFile, sourceText: 
     commentsEnd,
   );
   return {
+    fileComments,
     fullStart,
     leadingNewLines,
     leadingComments,
@@ -88,11 +89,13 @@ function parseLeadingComments(
       if (1 < leadingNewLines || isTripleSlashComment(text)) {
         const leadingComments = results.reverse();
         const commentsStart = results[0]?.start.pos ?? declLineRange.start.pos;
+        const fileComments = comments.slice(0, i + 1);
         return {
           fullStart: transformPos(end.pos, sourceFile),
           leadingNewLines,
           commentsStart,
           leadingComments,
+          fileComments,
         };
       }
       results.push(comment);

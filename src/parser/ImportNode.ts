@@ -117,7 +117,7 @@ export default class ImportNode {
   }
 
   match(regex: string) {
-    return !!new RegExp(regex).exec(this.moduleIdentifier_);
+    return new RegExp(regex).test(this.moduleIdentifier_);
   }
 
   compare(node: ImportNode) {

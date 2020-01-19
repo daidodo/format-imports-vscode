@@ -1,4 +1,8 @@
 import {
+  createSourceFile,
+  ScriptTarget,
+} from 'typescript';
+import {
   TextDocument,
   TextDocumentWillSaveEvent,
   window,
@@ -10,7 +14,11 @@ import {
   getDeleteEdits,
   getEdits,
 } from '../edit';
-import parseSource from '../parser';
+import {
+  parseSource,
+  getInsertLine,
+  NodeComment,
+} from '../parser';
 import sortImports from '../sort';
 
 export default function sortImportsBeforeSavingDocument(event: TextDocumentWillSaveEvent) {
@@ -23,7 +31,10 @@ export default function sortImportsBeforeSavingDocument(event: TextDocumentWillS
   try {
     const config = loadConfig(fileUri);
     if (isExcluded(fileName, config)) return;
-    const { allIds, importNodes, insertLine } = parseSource(sourceText, fileName);
+    const sourceFile = createSourceFile(fileName, sourceText, ScriptTarget.Latest);
+    const { insertLine, fileComments } = getInsertLine(sourceFile, sourceText);
+    if (isDisabled(fileComments)) return;
+    const { allIds, importNodes } = parseSource(sourceText, sourceFile);
     const { deleteEdits, noFinalNewLine } = getDeleteEdits(importNodes, insertLine);
     const groups = sortImports(importNodes, allIds, config);
     const insertSource = composeInsertSource(groups, config, noFinalNewLine);
@@ -44,6 +55,19 @@ function isSupported(document: TextDocument) {
 
 function isExcluded(fileName: string, config: Configuration) {
   const { exclude } = config;
-  for (const p of exclude ?? []) if (new RegExp(p).exec(fileName)) return true;
+  for (const p of exclude ?? []) if (new RegExp(p).test(fileName)) return true;
+  return false;
+}
+
+function isDisabled(comments: NodeComment[] | undefined) {
+  for (const c of comments ?? []) {
+    // ts-import-sorter: disable
+    /* ts-import-sorter: disable */
+    if (
+      /^\s*\/\/\s*ts-import-sorter:\s*disable\s*$/.test(c.text) ||
+      /^\s*\/\*\s*ts-import-sorter:\s*disable\s*\*\/$/.test(c.text)
+    )
+      return true;
+  }
   return false;
 }
