@@ -4,7 +4,7 @@
   "description": "Help sort imports for TypeScript.",
   "icon": "assets/icons/main.jpg",
   "publisher": "dozerg",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
