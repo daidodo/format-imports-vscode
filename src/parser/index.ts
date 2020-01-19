@@ -6,12 +6,16 @@ import {
   SyntaxKind,
 } from 'typescript';
 
-import ImportNode from './ImportNode';
-import { parseLineRanges } from './lines';
 import {
-  InsertLine,
-  NodeComment,
-} from './types';
+  assertNonNull,
+  assert,
+} from '../utils';
+import ImportNode from './ImportNode';
+import {
+  parseLineRanges,
+  isDisabled,
+} from './lines';
+import { InsertLine } from './types';
 
 export { ImportNode };
 
@@ -41,35 +45,44 @@ export function parseSource(sourceText: string, sourceFile: SourceFile) {
     node.forEachChild(parseNode);
   };
   parseNode(sourceFile);
-  return { allIds, importNodes };
+  return { allIds, importNodes: importNodes.filter(n => !n.disabled) };
 }
 
 export function getInsertLine(
   sourceFile: SourceFile,
   sourceText: string,
 ): {
-  fileComments?: NodeComment[];
-  insertLine: InsertLine;
+  isFileDisabled?: boolean;
+  insertLine?: InsertLine;
 } {
-  const firstNode = sourceFile.getChildren().find(n => !n.getFullStart());
-  if (!firstNode) return { insertLine: { line: 0, leadingNewLines: 0 } };
-  const {
-    fileComments,
-    fullStart,
-    leadingNewLines: nl,
-    declAndCommentsLineRange: decl,
-  } = parseLineRanges(firstNode, sourceFile, sourceText);
-  const { pos, line: l } = fullStart;
-  if (!pos)
-    return {
-      insertLine: {
-        line: 0,
-        leadingNewLines: 0,
-        needlessSpaces: { start: fullStart, end: decl.start },
-      },
-    };
-  const leadingNewLines = nl < 2 ? 1 : 2;
-  const line = l + leadingNewLines;
-  const needlessSpaces = nl < 3 ? undefined : { start: { line, character: 0 }, end: decl.start };
-  return { fileComments, insertLine: { line, leadingNewLines, needlessSpaces } };
+  // Find first node that is NOT disabled.
+  const [syntaxList] = sourceFile.getChildren();
+  assertNonNull(syntaxList);
+  assert(syntaxList.kind === SyntaxKind.SyntaxList);
+  for (const node of syntaxList.getChildren()) {
+    const {
+      fileComments,
+      disabled,
+      fullStart,
+      leadingNewLines: nl,
+      declAndCommentsLineRange: decl,
+    } = parseLineRanges(node, sourceFile, sourceText);
+    const isFileDisabled = isDisabled(fileComments);
+    if (isFileDisabled) return { isFileDisabled };
+    if (disabled) continue;
+    const { pos, line: l } = fullStart;
+    if (!pos)
+      return {
+        insertLine: {
+          line: 0,
+          leadingNewLines: 0,
+          needlessSpaces: { start: fullStart, end: decl.start },
+        },
+      };
+    const leadingNewLines = nl < 2 ? 1 : 2;
+    const line = l + leadingNewLines;
+    const needlessSpaces = nl < 3 ? undefined : { start: { line, character: 0 }, end: decl.start };
+    return { insertLine: { line, leadingNewLines, needlessSpaces } };
+  }
+  return { isFileDisabled: true };
 }

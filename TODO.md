@@ -2,9 +2,9 @@
 
 - JavaScript support.
 - Deep dive on id reference.
-- One line comment to disable import sorter for a file or line.
 - Respect `formatOnSave` and other config, e.g. `tabSize`.
 - Sort exports.
+- ~~Special comment to disable import sorter for a file or line.~~
 - ~~`exclude` should be merged instead of replaced.~~
 - ~~Lower case first or upper case first.~~
 - ~~Handle implicit React.~~

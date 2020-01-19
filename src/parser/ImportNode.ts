@@ -33,6 +33,7 @@ export default class ImportNode {
   private isScript_: boolean;
   private defaultName_?: NameBinding;
   private names_?: NameBinding[];
+  private disabled_: boolean; // Whether import sorting is disable for this node.
 
   private fullStart_: Pos;
   private leadingNewLines_: number;
@@ -106,6 +107,10 @@ export default class ImportNode {
 
   get isScriptImport() {
     return this.isScript_;
+  }
+
+  get disabled() {
+    return this.disabled_;
   }
 
   removeUnusedNames(allNames: Set<string>) {
@@ -187,6 +192,7 @@ export default class ImportNode {
     this.defaultName_ = defaultName;
     this.names_ = names;
     const {
+      disabled,
       fullStart,
       leadingNewLines,
       leadingComments,
@@ -208,6 +214,7 @@ export default class ImportNode {
     this.trailingNewLines_ = trailingNewLines;
     this.fullEnd_ = fullEnd;
     this.eof_ = eof;
+    this.disabled_ = disabled;
   }
 
   private get hasLeadingComments() {

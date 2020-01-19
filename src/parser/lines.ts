@@ -29,6 +29,7 @@ export function parseLineRanges(node: Node, sourceFile: SourceFile, sourceText: 
   const trailingComments = getTrailingCommentRanges(sourceText, declEnd)?.map(
     transformComment.bind(undefined, sourceFile, sourceText),
   );
+  const disabled = isDisabled(leadingComments) || isDisabled(trailingComments);
   // All tailing comments text should keep unchanged including the leading spaces
   const commentsEnd = (trailingComments ?? []).reduce((e, c) => Math.max(e, c.end.pos), declEnd);
   const trailingCommentsText = sourceText.slice(declEnd, commentsEnd);
@@ -43,6 +44,7 @@ export function parseLineRanges(node: Node, sourceFile: SourceFile, sourceText: 
   );
   return {
     fileComments,
+    disabled,
     fullStart,
     leadingNewLines,
     leadingComments,
@@ -54,6 +56,19 @@ export function parseLineRanges(node: Node, sourceFile: SourceFile, sourceText: 
     fullEnd: transformPos(fullEndPos, sourceFile),
     eof,
   };
+}
+
+export function isDisabled(comments: NodeComment[] | undefined) {
+  for (const c of comments ?? []) {
+    // ts-import-sorter: disable
+    /* ts-import-sorter: disable */
+    if (
+      /^\s*\/\/\s*ts-import-sorter:\s*disable\s*$/.test(c.text) ||
+      /^\s*\/\*\s*ts-import-sorter:\s*disable\s*\*\/$/.test(c.text)
+    )
+      return true;
+  }
+  return false;
 }
 
 function transformRange({ pos, end }: TextRange, sourceFile: SourceFile): LineRange {
