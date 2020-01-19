@@ -71,7 +71,6 @@ TS Import Sorter can load configurations from both `package.json` and `import-so
 
 ```{.json}
 "importSorter": {
-  "configurationFileName": "import-sorter.json",
   "exclude": ["regexPattern"],
   "groupRules": [
     {
@@ -110,11 +109,15 @@ TS Import Sorter can load configurations from both `package.json` and `import-so
 
 ### Search Order
 
-`package.json` and `import-sorter.json` are searched in the following order:
+`package.json` is searched in the following order:
 
 - The same folder of the edited file.
 - If not found, then go to the parent folder.
 - Continue if still not found, till the root folder (`/`)
+
+`import-sorter.json` is searched in a similar way if it's a relative path.
+
+If `tsImportSorter.configuration.configurationFileName` is an absolute path, e.g. `/path/to/import-sorter.json`, no search is needed.
 
 The configurations in both files will merge together, and `package.json` will win in any conflicts.
 
