@@ -201,7 +201,7 @@
   },
   "importSorter": {
     "exclude": [
-      ".*src/test/suite/examples/.+"
+      "src/test/suite/examples"
     ]
   }
 }
