@@ -1,5 +1,4 @@
 import { readFileSync } from 'fs';
-import merge from 'lodash.merge';
 import cloneDeep from 'lodash.clonedeep';
 
 import { Uri, workspace } from 'vscode';
@@ -9,11 +8,12 @@ import { Configuration } from './types';
 
 export { Configuration };
 
-export default function loadConfig(fileUri: Uri) {
-  const config = workspaceConfig(fileUri);
-  merge(config, fileConfig(config.configurationFileName ?? '', fileUri));
-  merge(config, packageConfig(fileUri));
-  return config;
+export default function loadConfig(fileUri: Uri): Configuration {
+  const wsConfig = workspaceConfig(fileUri);
+  const { configurationFileName: fname } = wsConfig;
+  const fConfig = fileConfig(fname, fileUri);
+  const pkgConfig = packageConfig(fileUri);
+  return { ...wsConfig, ...fConfig, ...pkgConfig };
 }
 
 function workspaceConfig(fileUri: Uri) {
@@ -26,13 +26,14 @@ function workspaceConfig(fileUri: Uri) {
 
 function packageConfig(fileUri: Uri) {
   const [packageFile] = findFileFromPathAndParents('package.json', fileUri.path);
-  if (!packageFile) return;
+  if (!packageFile) return {};
   const { importSorter: config } = JSON.parse(readFileSync(packageFile, 'utf8'));
   return config as Configuration;
 }
 
-function fileConfig(filename: string, fileUri: Uri) {
+function fileConfig(filename: string | undefined, fileUri: Uri) {
+  if (!filename) return {};
   const [configFile] = findFileFromPathAndParents(filename, fileUri.path);
-  if (!configFile) return;
+  if (!configFile) return {};
   return JSON.parse(readFileSync(configFile, 'utf8')) as Configuration;
 }

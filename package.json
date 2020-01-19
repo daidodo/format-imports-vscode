@@ -120,14 +120,12 @@
   },
   "dependencies": {
     "lodash.clonedeep": "^4.5.0",
-    "lodash.merge": "^4.6.2",
     "typescript": "^3.7.5"
   },
   "devDependencies": {
     "@types/glob": "^7.1.1",
     "@types/lodash": "^4.14.149",
     "@types/lodash.clonedeep": "^4.5.6",
-    "@types/lodash.merge": "^4.6.6",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.11.7",
     "@types/vscode": "^1.41.0",
