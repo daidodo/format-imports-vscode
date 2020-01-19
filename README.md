@@ -65,9 +65,9 @@ All config and their default value:
 
 ## Configuration
 
-TsImportSorter can loads configurations from both `package.json` and `import-sorter.json` (by default) automatically.
+TypeScript Import Sorter can load configurations from both `package.json` and `import-sorter.json` (by default) automatically.
 
-`package.json` examples:
+`package.json` example:
 
 ```{.json}
 "importSorter": {

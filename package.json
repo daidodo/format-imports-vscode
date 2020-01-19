@@ -1,7 +1,7 @@
 {
   "name": "tsimportsorter",
   "displayName": "TS Import Sorter",
-  "description": "Help sort imports for TypeScript.",
+  "description": "Auto sort imports for TypeScript.",
   "icon": "assets/icons/main.jpg",
   "publisher": "dozerg",
   "version": "0.0.14",
