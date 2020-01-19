@@ -1,5 +1,5 @@
 import fs from 'fs';
-import path from 'path';
+import path, { sep } from 'path';
 
 export function assert(condition: unknown, message?: string): asserts condition {
   if (!condition) throw Error(message ?? `Assert failed, condition = ${condition}`);
@@ -24,11 +24,12 @@ export function normalizePath(str: string) {
  */
 export function findFileFromPathAndParents(filename: string, path: string) {
   if (!filename) return [];
+  if (filename.startsWith(sep)) return [filename]; // Absolute path
   const comp = path.split(/\\|\//);
   if (isRegularFile(path)) comp.pop();
   const results = [];
   for (; comp.length > 0; comp.pop()) {
-    const p = `${comp.join('/')}/${filename}`;
+    const p = `${comp.join(sep)}${sep}${filename}`;
     if (isRegularFile(p)) results.push(p);
   }
   return results;

@@ -26,14 +26,16 @@ export function parseSource(sourceText: string, sourceFile: SourceFile) {
   const importNodes: ImportNode[] = [];
   const parseNode = (node: Node) => {
     switch (node.kind) {
-      case SyntaxKind.ImportDeclaration:
-        importNodes.push(ImportNode.fromDecl(node as ImportDeclaration, sourceFile, sourceText));
+      case SyntaxKind.ImportDeclaration: {
+        const n = ImportNode.fromDecl(node as ImportDeclaration, sourceFile, sourceText);
+        if (n) importNodes.push(n);
         return;
-      case SyntaxKind.ImportEqualsDeclaration:
-        importNodes.push(
-          ImportNode.fromEqDecl(node as ImportEqualsDeclaration, sourceFile, sourceText),
-        );
+      }
+      case SyntaxKind.ImportEqualsDeclaration: {
+        const n = ImportNode.fromEqDecl(node as ImportEqualsDeclaration, sourceFile, sourceText);
+        if (n) importNodes.push(n);
         return;
+      }
       case SyntaxKind.Identifier:
         allIds.add(node.getText(sourceFile));
         break;

@@ -1,6 +1,6 @@
-# TypeScript Import Sorter
+# TS Import Sorter
 
-Automatically sort imports for **TypeScript** source code.
+Automatically sort imports for **TypeScript** source code. ([Install](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter))
 
 Based on [import-sorter](https://github.com/SoominHan/import-sorter). Thanks!
 
@@ -11,7 +11,7 @@ Based on [import-sorter](https://github.com/SoominHan/import-sorter). Thanks!
 - Auto delete unused names and handle `React` with JSX properly.
 - Group by customizable rules.
 - Preserve leading and trailing comments with imports.
-- Handle script imports properly.
+- Ignore files or import declarations.
 - Support config both in `package.json` and `import-sorter.json`.
 
 ## Extension Settings
@@ -65,7 +65,7 @@ All config and their default value:
 
 ## Configuration
 
-TypeScript Import Sorter can load configurations from both `package.json` and `import-sorter.json` (by default) automatically.
+TS Import Sorter can load configurations from both `package.json` and `import-sorter.json` (by default) automatically.
 
 `package.json` example:
 
@@ -120,7 +120,7 @@ The configurations in both files will merge together, and `package.json` will wi
 
 So if you want global settings, just put a `import-sorter.json` in your workspace folder, and any rules in local `package.json` will still be respected.
 
-### Exclude files or imports
+### Ignore files or import declarations
 
 There are a few ways to exclude files from inspection:
 

@@ -13,7 +13,6 @@ import {
   composeNames,
 } from '../compose';
 import {
-  assert,
   assertNonNull,
   normalizePath,
 } from '../utils';
@@ -50,7 +49,7 @@ export default class ImportNode {
     const { importClause, moduleSpecifier } = node;
 
     // moduleIdentifier
-    assert(moduleSpecifier.kind === SyntaxKind.StringLiteral);
+    if (moduleSpecifier.kind !== SyntaxKind.StringLiteral) return undefined;
     const moduleIdentifier = (moduleSpecifier as StringLiteral).text;
 
     // import 'some/scripts'
@@ -86,9 +85,9 @@ export default class ImportNode {
 
   static fromEqDecl(node: ImportEqualsDeclaration, sourceFile: SourceFile, sourceText: string) {
     const { moduleReference } = node;
-    assert(moduleReference.kind === SyntaxKind.ExternalModuleReference);
+    if (moduleReference.kind !== SyntaxKind.ExternalModuleReference) return undefined;
     const { expression } = moduleReference;
-    assert(expression.kind === SyntaxKind.StringLiteral);
+    if (expression.kind !== SyntaxKind.StringLiteral) return undefined;
     const moduleIdentifier = (expression as StringLiteral).text;
     const defaultName = { propertyName: node.name.text };
     return new ImportNode(node, sourceFile, sourceText, moduleIdentifier, false, defaultName);
