@@ -120,6 +120,42 @@ The configurations in both files will merge together, and `package.json` will wi
 
 So if you want global settings, just put a `import-sorter.json` in your workspace folder, and any rules in local `package.json` will still be respected.
 
+### Exclude files or imports
+
+There are a few ways to exclude files from inspection:
+
+- Add file path pattern to extension config in VSCode.
+  `"tsImportSorter.configuration.exclude": ["pathPattern"],`
+- Add file path pattern to `package.json` or `import-sorter.json`.
+- Add the following comment at the beginning of the file:
+
+```{.ts}
+// ts-import-sorter: disable
+
+[Other code]
+```
+
+or
+
+```{.ts}
+/* ts-import-sorter: disable */
+
+[Other code]
+```
+
+To exclude a specific `import` declaration from sorting, please add the following as its leading or trailing comments:
+
+```{.ts}
+// ts-import-sorter: disable
+import 'Do/not/sort/me';
+```
+
+or
+
+```{.ts}
+import 'Do/not/sort/me';  /* ts-import-sorter: disable */
+```
+
 ## License
 
 MIT
