@@ -18,7 +18,7 @@ export default function loadConfig(fileUri: Uri): Configuration {
   const { configurationFileName: fname } = wsConfig;
   const fConfig = fileConfig(fname, fileUri);
   const pkgConfig = packageConfig(fileUri);
-  return { ...wsConfig, ...fConfig, ...pkgConfig };
+  return merge(wsConfig, fConfig, pkgConfig);
 }
 
 function workspaceConfig(fileUri: Uri) {
@@ -41,4 +41,13 @@ function fileConfig(filename: string | undefined, fileUri: Uri) {
   const [configFile] = findFileFromPathAndParents(filename, fileUri.path);
   if (!configFile) return {};
   return JSON.parse(readFileSync(configFile, 'utf8')) as Configuration;
+}
+
+function merge(...configs: Configuration[]) {
+  return configs.reduce((a, b) => {
+    const { exclude: e1 } = a;
+    const { exclude: e2 } = b;
+    const exclude = !e1 ? e2 : !e2 ? e1 : [...e1, ...e2];
+    return { ...a, ...b, exclude };
+  });
 }
