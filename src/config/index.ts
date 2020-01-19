@@ -1,4 +1,4 @@
-import { readFileSync } from 'fs';
+import fs from 'fs';
 import cloneDeep from 'lodash.clonedeep';
 import {
   Uri,
@@ -8,6 +8,7 @@ import {
 import {
   assertNonNull,
   findFileFromPathAndParents,
+  assert,
 } from '../utils';
 import { Configuration } from './types';
 
@@ -32,7 +33,9 @@ function workspaceConfig(fileUri: Uri) {
 function packageConfig(fileUri: Uri) {
   const [packageFile] = findFileFromPathAndParents('package.json', fileUri.path);
   if (!packageFile) return {};
-  const { importSorter: config } = JSON.parse(readFileSync(packageFile, 'utf8'));
+  const { importSorter: config } = JSON.parse(fs.readFileSync(packageFile, 'utf8'));
+  if (!config) return {};
+  assert(isObject(config), `Bad "importSorter" config in "${packageFile}"`);
   return config as Configuration;
 }
 
@@ -40,7 +43,9 @@ function fileConfig(filename: string | undefined, fileUri: Uri) {
   if (!filename) return {};
   const [configFile] = findFileFromPathAndParents(filename, fileUri.path);
   if (!configFile) return {};
-  return JSON.parse(readFileSync(configFile, 'utf8')) as Configuration;
+  const config = JSON.parse(fs.readFileSync(configFile, 'utf8'));
+  assert(isObject(config), `Bad config in "${configFile}"`);
+  return config as Configuration;
 }
 
 function merge(...configs: Configuration[]) {
@@ -50,4 +55,8 @@ function merge(...configs: Configuration[]) {
     const exclude = !e1 ? e2 : !e2 ? e1 : [...e1, ...e2];
     return { ...a, ...b, exclude };
   });
+}
+
+function isObject(v: any) {
+  return typeof v === 'object' && !Array.isArray(v) && v !== null;
 }

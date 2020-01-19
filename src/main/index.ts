@@ -31,8 +31,8 @@ export default function sortImportsBeforeSavingDocument(event: TextDocumentWillS
     event.waitUntil(edits);
   } catch (e) {
     window.showErrorMessage(
-      `TSImportSorter failed: ${e.message}.
-      Please report a bug on https://github.com/daidodo/tsimportsorter`,
+      `Error found: ${e.message}.
+      If you believe this is a bug, please report on https://github.com/daidodo/tsimportsorter`,
     );
   }
 }
