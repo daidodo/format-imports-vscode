@@ -1,9 +1,14 @@
 import { readFileSync } from 'fs';
 import cloneDeep from 'lodash.clonedeep';
+import {
+  Uri,
+  workspace,
+} from 'vscode';
 
-import { Uri, workspace } from 'vscode';
-
-import { assertNonNull, findFileFromPathAndParents } from '../utils';
+import {
+  assertNonNull,
+  findFileFromPathAndParents,
+} from '../utils';
 import { Configuration } from './types';
 
 export { Configuration };

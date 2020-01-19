@@ -24,10 +24,10 @@ export default function composeInsertSource(
   noFinalNewLine: boolean,
 ) {
   const c = configForCompose(config);
-  return (
-    groups.map(g => g.map(n => n.compose(c)).join('\n') + '\n').join('\n') +
-    (noFinalNewLine ? '' : '\n')
-  );
+  return groups.length
+    ? groups.map(g => g.map(n => n.compose(c)).join('\n') + '\n').join('\n') +
+        (noFinalNewLine ? '' : '\n')
+    : '';
 }
 
 export function composeNames(

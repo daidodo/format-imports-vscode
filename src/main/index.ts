@@ -1,8 +1,15 @@
-import { TextDocument, TextDocumentWillSaveEvent, window } from 'vscode';
+import {
+  TextDocument,
+  TextDocumentWillSaveEvent,
+  window,
+} from 'vscode';
 
 import composeInsertSource from '../compose';
 import loadConfig from '../config';
-import { getDeleteEdits, getEdits } from '../edit';
+import {
+  getDeleteEdits,
+  getEdits,
+} from '../edit';
 import parseSource from '../parser';
 import sortImports from '../sort';
 

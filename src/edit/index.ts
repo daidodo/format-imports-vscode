@@ -13,8 +13,10 @@ import {
 
 // eslint-disable-next-line @typescript-eslint/require-await
 export async function getEdits(edits: TextEdit[], insertText: string, insertLine: number) {
-  const insertEdit = TextEdit.insert(new Position(insertLine, 0), insertText);
-  return [...edits, insertEdit];
+  const insertEdit = insertText
+    ? TextEdit.insert(new Position(insertLine, 0), insertText)
+    : undefined;
+  return insertEdit ? [...edits, insertEdit] : edits;
 }
 
 export function getDeleteEdits(nodes: ImportNode[], insertLine: InsertLine) {
