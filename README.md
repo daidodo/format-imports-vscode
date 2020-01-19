@@ -18,7 +18,7 @@ Based on [import-sorter](https://github.com/SoominHan/import-sorter). Thanks!
 
 All config and their default value:
 
-```{.json}
+```json
 // Configuration file name.
 "tsImportSorter.configuration.configurationFileName": "import-sorter.json",
 
@@ -69,7 +69,7 @@ TS Import Sorter can load configurations from both `package.json` and `import-so
 
 `package.json` example:
 
-```{.json}
+```json
 "importSorter": {
   "exclude": ["regexPattern"],
   "groupRules": [
@@ -88,7 +88,7 @@ TS Import Sorter can load configurations from both `package.json` and `import-so
   ],
   "maximumLineLength": 100,
   "maximumWordsPerLine": 1,
-  "tabSize": 2;
+  "tabSize": 2,
   "tabType": "space",
   "quoteMark": "single",
   "trailingComma": "multiLine",
@@ -98,7 +98,7 @@ TS Import Sorter can load configurations from both `package.json` and `import-so
 
 `import-sorter.json` example:
 
-```{.json}
+```json
 {
   "maximumLineLength": 100,
   "maximumWordsPerLine": 1,
@@ -132,7 +132,7 @@ There are a few ways to exclude files from inspection:
 - Add file path pattern to `package.json` or `import-sorter.json`.
 - Add the following comment at the beginning of the file:
 
-```{.ts}
+```ts
 // ts-import-sorter: disable
 
 [Other code]
@@ -140,7 +140,7 @@ There are a few ways to exclude files from inspection:
 
 or
 
-```{.ts}
+```ts
 /* ts-import-sorter: disable */
 
 [Other code]
@@ -148,15 +148,15 @@ or
 
 To exclude a specific `import` declaration from sorting, please add the following as its leading or trailing comments:
 
-```{.ts}
+```ts
 // ts-import-sorter: disable
-import 'Do/not/sort/me';
+import Excluded from 'import/sorter';
 ```
 
 or
 
-```{.ts}
-import 'Do/not/sort/me';  /* ts-import-sorter: disable */
+```ts
+import Excluded from 'import/sorter'; /* ts-import-sorter: disable */
 ```
 
 ## License
