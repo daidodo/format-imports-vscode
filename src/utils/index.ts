@@ -1,13 +1,5 @@
-import {
-  existsSync,
-  statSync,
-} from 'fs';
-import {
-  normalize,
-  sep,
-} from 'path';
-
-
+import fs from 'fs';
+import path from 'path';
 
 export function assert(condition: unknown, message?: string): asserts condition {
   if (!condition) throw Error(message ?? `Assert failed, condition = ${condition}`);
@@ -21,8 +13,8 @@ export function assertNonNull<T>(value: T, message?: string): asserts value is N
 
 export function normalizePath(str: string) {
   if (str.startsWith('.')) {
-    const r = normalize(str).replace(new RegExp('\\' + sep, 'g'), '/');
-    return r === '.' ? './' : r === '..' ? '../' : r;
+    const r = path.normalize(str.replace(/\\/g, '/'));
+    return r === '.' ? './' : r === '..' ? '../' : !r.startsWith('.') ? './' + r : r;
   }
   return str;
 }
@@ -46,5 +38,5 @@ export function findFileFromPathAndParents(filename: string, path: string) {
  * Test if `path` exists and is a regular file.
  */
 export function isRegularFile(path: string) {
-  return existsSync(path) && statSync(path).isFile();
+  return fs.existsSync(path) && fs.statSync(path).isFile();
 }
