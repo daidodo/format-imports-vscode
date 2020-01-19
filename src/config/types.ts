@@ -1,4 +1,3 @@
-
 export interface Configuration {
   configurationFileName?: string;
   exclude?: string[];

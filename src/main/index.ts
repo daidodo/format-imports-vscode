@@ -5,7 +5,7 @@ import {
 } from 'vscode';
 
 import composeInsertSource from '../compose';
-import loadConfig from '../config';
+import loadConfig, { Configuration } from '../config';
 import {
   getDeleteEdits,
   getEdits,
@@ -18,15 +18,17 @@ export default function sortImportsBeforeSavingDocument(event: TextDocumentWillS
   const { document } = event;
   if (!isSupported(document)) return;
 
-  const sourceText = document.getText();
   const { uri: fileUri } = document;
   const { fsPath: fileName } = fileUri;
+  const sourceText = document.getText();
   try {
+    window.showInformationMessage('TS Import Sorter: loading config');
+    const config = loadConfig(fileUri);
+    if (isExcluded(fileName, config)) return;
     window.showInformationMessage('TS Import Sorter: parsing source');
     const { allIds, importNodes, insertLine } = parseSource(sourceText, fileName);
     const { deleteEdits, noFinalNewLine } = getDeleteEdits(importNodes, insertLine);
-    window.showInformationMessage('TS Import Sorter: loading config');
-    const config = loadConfig(fileUri);
+
     window.showInformationMessage(
       `TS Import Sorter: sorting with config=${JSON.stringify(config)}`,
     );
@@ -47,4 +49,10 @@ export default function sortImportsBeforeSavingDocument(event: TextDocumentWillS
 function isSupported(document: TextDocument) {
   const { languageId } = document;
   return languageId === 'typescript' || languageId === 'typescriptreact';
+}
+
+function isExcluded(fileName: string, config: Configuration) {
+  const { exclude } = config;
+  for (const p of exclude ?? []) if (new RegExp(p).exec(fileName)) return true;
+  return false;
 }
