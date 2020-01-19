@@ -53,7 +53,7 @@
           },
           "description": "Disable sorting for files matching regex expressions."
         },
-        "tsImportSorter.configuration.groupRules.": {
+        "tsImportSorter.configuration.groupRules": {
           "type": "array",
           "default": [
             {
@@ -69,6 +69,17 @@
               "level": 40
             }
           ],
+          "items": {
+            "type": "object",
+            "properties": {
+              "regex": {
+                "type": "string"
+              },
+              "level": {
+                "type": "integer"
+              }
+            }
+          },
           "description": "Grouping rules for path patterns. Everything else has a default level of 20."
         },
         "tsImportSorter.configuration.maximumLineLength": {

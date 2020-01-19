@@ -26,7 +26,7 @@ All config and their default value:
 "tsImportSorter.configuration.exclude": [],
 
 // Grouping rules for path patterns. Everything else has a default level of 20.
-"tsImportSorter.configuration.groupRules.": [
+"tsImportSorter.configuration.groupRules": [
   {
     "regex": "^react$",
     "level": 10
