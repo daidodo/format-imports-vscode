@@ -252,13 +252,17 @@ export default class ImportNode {
   }
 
   /**
-   * Default name examples:
+   * Script import:
    * ```
-   *    import A from 'B';
-   *    import * as A from 'B';
+   *    import 'A';
    * ```
    *
-   * Binding names examples:
+   * Default import:
+   * ```
+   *    import A from 'B';
+   * ```
+   *
+   * Binding names import:
    * ```
    *    import { A, B as C } from 'D';
    *    import {
@@ -267,14 +271,20 @@ export default class ImportNode {
    *    } from 'E';
    * ```
    *
+   * Namespace import:
+   * ```
+   *    import * as A from 'B';
+   * ```
+   *
    * Mixed examples:
    * ```
    *    import A, { B, C } from 'D';
-   *    import * as A, {
+   *    import A, {
    *      B,
    *      C as D,
    *      E,
    *    } from 'F';
+   *    import A, * as B from 'C';
    * ```
    */
   composeDecl(config: ComposeConfig) {
