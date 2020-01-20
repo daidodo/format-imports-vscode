@@ -4,13 +4,14 @@ import {
   SourceFile,
   StringLiteral,
   SyntaxKind,
+  NamedImportBindings,
 } from 'typescript';
 
 import {
   composeComments,
   ComposeConfig,
-  composeName,
-  composeNames,
+  composeNodeAsParts,
+  composeNodeAsNames,
 } from '../compose';
 import {
   assertNonNull,
@@ -30,8 +31,8 @@ export default class ImportNode {
 
   private moduleIdentifier_: string;
   private isScript_: boolean;
-  private defaultName_?: NameBinding;
-  private names_?: NameBinding[];
+  private defaultName_?: string;
+  private names_?: NameBinding[] | string;
   private disabled_: boolean; // Whether import sorting is disable for this node.
 
   private fullStart_: Pos;
@@ -57,20 +58,8 @@ export default class ImportNode {
 
     // defaultName & names
     const { name, namedBindings } = importClause;
-    const defaultName = name
-      ? { propertyName: name.text }
-      : namedBindings && namedBindings.kind === SyntaxKind.NamespaceImport
-      ? { aliasName: namedBindings.name.text }
-      : undefined;
-    const names =
-      namedBindings && namedBindings.kind === SyntaxKind.NamedImports
-        ? namedBindings.elements.map(e => {
-            const { name, propertyName } = e;
-            return propertyName
-              ? { aliasName: name.text, propertyName: propertyName.text }
-              : { propertyName: name.text };
-          })
-        : undefined;
+    const defaultName = name && name.text;
+    const names = getNames(namedBindings);
 
     return new ImportNode(
       node,
@@ -89,7 +78,7 @@ export default class ImportNode {
     const { expression } = moduleReference;
     if (expression.kind !== SyntaxKind.StringLiteral) return undefined;
     const moduleIdentifier = (expression as StringLiteral).text;
-    const defaultName = { propertyName: node.name.text };
+    const defaultName = node.name.text;
     return new ImportNode(node, sourceFile, sourceText, moduleIdentifier, false, defaultName);
   }
 
@@ -115,8 +104,10 @@ export default class ImportNode {
   removeUnusedNames(allNames: Set<string>) {
     if (this.isScript_) return this;
     if (!isNameUsed(this.defaultName_, allNames)) this.defaultName_ = undefined;
-    this.names_ = this.names_?.filter(n => isNameUsed(n, allNames));
-    if (this.names_?.length === 0) this.names_ = undefined;
+    if (Array.isArray(this.names_)) {
+      this.names_ = this.names_?.filter(n => isNameUsed(n, allNames));
+      if (this.names_?.length === 0) this.names_ = undefined;
+    } else if (!isNameUsed(this.names_, allNames)) this.names_ = undefined;
     return this.defaultName_ || this.names_ ? this : undefined;
   }
 
@@ -127,7 +118,8 @@ export default class ImportNode {
   compare(node: ImportNode) {
     return (
       idComparator(this.moduleIdentifier_, node.moduleIdentifier_) ||
-      nameComparator(this.defaultName_, node.defaultName_)
+      defaultNameComparator(this.defaultName_, node.defaultName_) ||
+      namesComparator(this.names_, node.names_)
     );
   }
 
@@ -147,32 +139,47 @@ export default class ImportNode {
       this.moduleIdentifier_ !== moduleIdentifier_ ||
       this.node_.kind !== node_.kind ||
       (this.hasLeadingComments && node.hasLeadingComments) ||
-      (this.hasTailingComments && node.hasTailingComments)
+      (this.hasTrailingComments && node.hasTrailingComments)
     )
       return false;
-    // Take and merge binding names from node
-    if (this.names_ && node.names_) this.names_ = this.names_.concat(node.names_);
-    else if (!this.names_) this.names_ = node.names_;
-    if (this.names_) {
-      this.names_ = this.names_.sort(nameComparator).reduce((r, n) => {
-        if (!r.length) return [n];
-        const last = r[r.length - 1];
-        return nameComparator(last, n) ? [...r, n] : r;
-      }, [] as NameBinding[]);
+    const r1 = this.mergeNames(node);
+    const r2 = this.mergeDefaultName(node);
+    const r = r1 && r2;
+    // Take comments if can merge
+    if (r) {
+      if (!this.leadingComments_) this.leadingComments_ = node.leadingComments_;
+      if (!this.trailingCommentsText_) this.trailingCommentsText_ = node.trailingCommentsText_;
+      node.leadingComments_ = undefined;
+      node.trailingCommentsText_ = '';
     }
-    node.names_ = undefined;
-    // Try to merge default name from node
-    if (!this.defaultName_) {
-      this.defaultName_ = node.defaultName_;
-    } else if (node.defaultName_ && nameComparator(this.defaultName_, node.defaultName_))
-      return false;
-    node.defaultName_ = undefined;
-    // Take comments if any
-    if (!this.leadingComments_) this.leadingComments_ = node.leadingComments_;
-    if (!this.trailingCommentsText_) this.trailingCommentsText_ = node.trailingCommentsText_;
-    node.leadingComments_ = undefined;
-    node.trailingCommentsText_ = '';
+    return r;
+  }
 
+  mergeNames(node: ImportNode) {
+    if (this.names_ === undefined) {
+      this.names_ = node.names_;
+      node.names_ = undefined;
+      return true;
+    } else if (typeof this.names_ === 'string') {
+      if (node.names_ === undefined || this.names_ === node.names_) {
+        node.names_ = undefined;
+        return true;
+      }
+      return false;
+    }
+    if (typeof node.names_ === 'string') return false;
+    if (node.names_) {
+      this.names_.concat(node.names_);
+      node.names_ = undefined;
+    }
+    return true;
+  }
+
+  mergeDefaultName(node: ImportNode) {
+    if (this.defaultName_ && node.defaultName_ && this.defaultName_ !== node.defaultName_)
+      return false;
+    if (!this.defaultName_) this.defaultName_ = node.defaultName_;
+    node.defaultName_ = undefined;
     return true;
   }
 
@@ -182,8 +189,8 @@ export default class ImportNode {
     sourceText: string,
     moduleIdentifier: string,
     isScript: boolean,
-    defaultName?: NameBinding,
-    names?: NameBinding[],
+    defaultName?: string,
+    names?: NameBinding[] | string,
   ) {
     this.node_ = node;
     this.moduleIdentifier_ = normalizePath(moduleIdentifier);
@@ -220,7 +227,7 @@ export default class ImportNode {
     return !!this.leadingComments_ && this.leadingComments_.length > 0;
   }
 
-  private get hasTailingComments() {
+  private get hasTrailingComments() {
     return !!this.trailingCommentsText_;
   }
 
@@ -237,9 +244,11 @@ export default class ImportNode {
   composeEqDecl(config: ComposeConfig) {
     const { quote, semi } = config;
     const path = this.moduleIdentifier_;
-    const name = this.defaultName_?.propertyName;
+    const name = this.defaultName_;
     assertNonNull(name);
-    return `import ${name} = require(${quote(path)})${semi}`;
+    const parts = [`${name} =`];
+    const from = `require(${quote(path)})${semi}`;
+    return composeNodeAsParts(parts, from, config);
   }
 
   /**
@@ -269,34 +278,59 @@ export default class ImportNode {
    * ```
    */
   composeDecl(config: ComposeConfig) {
-    const { maxLength } = config;
-    const { text, type } = this.composeDeclImpl(config, false);
-    if (maxLength >= text.length || type !== 'line') return text;
-    return this.composeDeclImpl(config, true).text;
-  }
-
-  composeDeclImpl(config: ComposeConfig, forceWrap: boolean) {
     const { quote, semi } = config;
     const path = this.moduleIdentifier_;
     const ending = quote(path) + semi;
-    if (this.isScript_) return { text: `import ${ending}` };
-    const { text, type } = composeNames(this.names_, config, forceWrap);
-    const names = [composeName(this.defaultName_), text].filter(s => !!s).join(', ');
-    return { text: `import ${names} from ${ending}`, type };
+    if (this.isScript_) return `import ${ending}`;
+    const from = `from ${ending}`;
+    if (Array.isArray(this.names_))
+      return composeNodeAsNames(this.defaultName_, this.names_, from, config);
+    const parts = [];
+    if (this.defaultName_) parts.push(this.defaultName_);
+    if (this.names_) parts.push(`* as ${this.names_}`);
+    return composeNodeAsParts(parts, from, config);
   }
 }
 
-export function isNameUsed(nameBinding: NameBinding | undefined, allNames: Set<string>) {
-  const name = nameBinding?.aliasName ?? nameBinding?.propertyName;
-  return !!name && allNames.has(name);
+function isNameUsed(name: NameBinding | string | undefined, allNames: Set<string>) {
+  if (!name) return false;
+  const n = typeof name === 'string' ? name : name.aliasName ?? name.propertyName;
+  return !!n && allNames.has(n);
+}
+
+function getNames(nb: NamedImportBindings | undefined) {
+  if (!nb) return;
+  if (nb.kind === SyntaxKind.NamespaceImport) return nb.name.text;
+  return nb.elements.map(e => {
+    const { name, propertyName } = e;
+    return propertyName
+      ? { aliasName: name.text, propertyName: propertyName.text }
+      : { propertyName: name.text };
+  });
 }
 
 function idComparator(aa: string | undefined, bb: string | undefined) {
   if (aa === undefined) return bb === undefined ? 0 : -1;
-  else if (bb === undefined) return 1;
+  if (bb === undefined) return 1;
   const a = aa.toLowerCase();
   const b = bb.toLowerCase();
   return a < b ? -1 : a > b ? 1 : aa < bb ? -1 : aa > bb ? 1 : 0;
+}
+
+function defaultNameComparator(a: string | undefined, b: string | undefined) {
+  if (a === undefined) return b === undefined ? 0 : 1;
+  if (b === undefined) return -1;
+  return idComparator(a, b);
+}
+
+function namesComparator(
+  a: string | NameBinding[] | undefined,
+  b: string | NameBinding[] | undefined,
+) {
+  if (Array.isArray(a) && Array.isArray(b)) return nameComparator(a[0], b[0]);
+  if (Array.isArray(a)) return 1;
+  if (Array.isArray(b)) return -1;
+  return idComparator(a, b);
 }
 
 function nameComparator(a: NameBinding | undefined, b: NameBinding | undefined) {
