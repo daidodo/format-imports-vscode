@@ -24,6 +24,7 @@ import {
   NodeComment,
   Pos,
   RangeAndEmptyLines,
+  Binding,
 } from './types';
 
 export default class ImportNode {
@@ -32,7 +33,7 @@ export default class ImportNode {
   private moduleIdentifier_: string;
   private isScript_: boolean;
   private defaultName_?: string;
-  private names_?: NameBinding[] | string;
+  private binding_?: Binding;
   private disabled_: boolean; // Whether import sorting is disable for this node.
 
   private fullStart_: Pos;
@@ -59,7 +60,7 @@ export default class ImportNode {
     // defaultName & names
     const { name, namedBindings } = importClause;
     const defaultName = name && name.text;
-    const names = getNames(namedBindings);
+    const binding = getBinding(namedBindings);
 
     return new ImportNode(
       node,
@@ -68,7 +69,7 @@ export default class ImportNode {
       moduleIdentifier,
       false,
       defaultName,
-      names,
+      binding,
     );
   }
 
@@ -104,11 +105,13 @@ export default class ImportNode {
   removeUnusedNames(allNames: Set<string>) {
     if (this.isScript_) return this;
     if (!isNameUsed(this.defaultName_, allNames)) this.defaultName_ = undefined;
-    if (Array.isArray(this.names_)) {
-      this.names_ = this.names_?.filter(n => isNameUsed(n, allNames));
-      if (this.names_?.length === 0) this.names_ = undefined;
-    } else if (!isNameUsed(this.names_, allNames)) this.names_ = undefined;
-    return this.defaultName_ || this.names_ ? this : undefined;
+    if (this.binding_) {
+      if (this.binding_.type === 'named') {
+        this.binding_.names.filter(n => isNameUsed(n, allNames));
+        if (!this.binding_.names.length) this.binding_ = undefined;
+      } else if (!isNameUsed(this.binding_.alias, allNames)) this.binding_ = undefined;
+    }
+    return this.defaultName_ || this.binding_ ? this : undefined;
   }
 
   match(regex: string) {
@@ -119,7 +122,7 @@ export default class ImportNode {
     return (
       idComparator(this.moduleIdentifier_, node.moduleIdentifier_) ||
       defaultNameComparator(this.defaultName_, node.defaultName_) ||
-      namesComparator(this.names_, node.names_)
+      bindingComparator(this.binding_, node.binding_)
     );
   }
 
@@ -142,7 +145,7 @@ export default class ImportNode {
       (this.hasTrailingComments && node.hasTrailingComments)
     )
       return false;
-    const r1 = this.mergeNames(node);
+    const r1 = this.mergeBinding(node);
     const r2 = this.mergeDefaultName(node);
     const r = r1 && r2;
     // Take comments if can merge
@@ -155,23 +158,21 @@ export default class ImportNode {
     return r;
   }
 
-  mergeNames(node: ImportNode) {
-    if (this.names_ === undefined) {
-      this.names_ = node.names_;
-      node.names_ = undefined;
+  mergeBinding(node: ImportNode) {
+    if (!node.binding_) return true;
+    else if (this.binding_ === undefined) {
+      this.binding_ = node.binding_;
+      node.binding_ = undefined;
       return true;
-    } else if (typeof this.names_ === 'string') {
-      if (node.names_ === undefined || this.names_ === node.names_) {
-        node.names_ = undefined;
+    } else if (this.binding_.type === 'namespace') {
+      if (node.binding_.type === 'namespace' && this.binding_.alias === node.binding_.alias) {
+        node.binding_ = undefined;
         return true;
       }
       return false;
-    }
-    if (typeof node.names_ === 'string') return false;
-    if (node.names_) {
-      this.names_.concat(node.names_);
-      node.names_ = undefined;
-    }
+    } else if (node.binding_.type === 'namespace') return false;
+    this.binding_.names.concat(node.binding_.names);
+    node.binding_ = undefined;
     return true;
   }
 
@@ -190,13 +191,13 @@ export default class ImportNode {
     moduleIdentifier: string,
     isScript: boolean,
     defaultName?: string,
-    names?: NameBinding[] | string,
+    binding?: Binding,
   ) {
     this.node_ = node;
     this.moduleIdentifier_ = normalizePath(moduleIdentifier);
     this.isScript_ = isScript;
     this.defaultName_ = defaultName;
-    this.names_ = names;
+    this.binding_ = binding;
     const {
       disabled,
       fullStart,
@@ -293,11 +294,11 @@ export default class ImportNode {
     const ending = quote(path) + semi;
     if (this.isScript_) return `import ${ending}`;
     const from = `from ${ending}`;
-    if (Array.isArray(this.names_))
-      return composeNodeAsNames(this.defaultName_, this.names_, from, config);
+    if (this.binding_?.type === 'named')
+      return composeNodeAsNames(this.defaultName_, this.binding_.names, from, config);
     const parts = [];
     if (this.defaultName_) parts.push(this.defaultName_);
-    if (this.names_) parts.push(`* as ${this.names_}`);
+    if (this.binding_?.type === 'namespace') parts.push(`* as ${this.binding_.alias}`);
     return composeNodeAsParts(parts, from, config);
   }
 }
@@ -308,15 +309,16 @@ function isNameUsed(name: NameBinding | string | undefined, allNames: Set<string
   return !!n && allNames.has(n);
 }
 
-function getNames(nb: NamedImportBindings | undefined) {
+function getBinding(nb: NamedImportBindings | undefined): Binding | undefined {
   if (!nb) return;
-  if (nb.kind === SyntaxKind.NamespaceImport) return nb.name.text;
-  return nb.elements.map(e => {
+  if (nb.kind === SyntaxKind.NamespaceImport) return { type: 'namespace', alias: nb.name.text };
+  const names = nb.elements.map(e => {
     const { name, propertyName } = e;
     return propertyName
       ? { aliasName: name.text, propertyName: propertyName.text }
       : { propertyName: name.text };
   });
+  return { type: 'named', names };
 }
 
 function idComparator(aa: string | undefined, bb: string | undefined) {
@@ -333,14 +335,13 @@ function defaultNameComparator(a: string | undefined, b: string | undefined) {
   return idComparator(a, b);
 }
 
-function namesComparator(
-  a: string | NameBinding[] | undefined,
-  b: string | NameBinding[] | undefined,
-) {
-  if (Array.isArray(a) && Array.isArray(b)) return nameComparator(a[0], b[0]);
-  if (Array.isArray(a)) return 1;
-  if (Array.isArray(b)) return -1;
-  return idComparator(a, b);
+function bindingComparator(a: Binding | undefined, b: Binding | undefined) {
+  if (a === undefined) return b === undefined ? 0 : -1;
+  if (b === undefined) return 1;
+  if (a.type === 'named' && b.type === 'named') return nameComparator(a.names[0], b.names[0]);
+  if (a.type === 'named') return 1;
+  if (b.type === 'named') return -1;
+  return idComparator(a.alias, b.alias);
 }
 
 function nameComparator(a: NameBinding | undefined, b: NameBinding | undefined) {

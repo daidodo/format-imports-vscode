@@ -1,7 +1,17 @@
 import { LineAndCharacter } from 'typescript';
 
+export type Binding =
+  | {
+      type: 'namespace';
+      alias: string;
+    }
+  | {
+      type: 'named';
+      names: NameBinding[];
+    };
+
 export interface NameBinding {
-  propertyName?: string;
+  propertyName: string;
   aliasName?: string;
 }
 
