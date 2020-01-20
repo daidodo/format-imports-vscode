@@ -5,6 +5,7 @@ import {
   StringLiteral,
   SyntaxKind,
   NamedImportBindings,
+  ImportClause,
 } from 'typescript';
 
 import {
@@ -49,19 +50,12 @@ export default class ImportNode {
 
   static fromDecl(node: ImportDeclaration, sourceFile: SourceFile, sourceText: string) {
     const { importClause, moduleSpecifier } = node;
-
-    // moduleIdentifier
     if (moduleSpecifier.kind !== SyntaxKind.StringLiteral) return undefined;
     const moduleIdentifier = (moduleSpecifier as StringLiteral).text;
-
     // import 'some/scripts'
     if (!importClause) return new ImportNode(node, sourceFile, sourceText, moduleIdentifier, true);
 
-    // defaultName & names
-    const { name, namedBindings } = importClause;
-    const defaultName = name && name.text;
-    const binding = getBinding(namedBindings);
-
+    const { defaultName, binding } = getDefaultAndBinding(importClause);
     return new ImportNode(
       node,
       sourceFile,
@@ -120,9 +114,9 @@ export default class ImportNode {
 
   compare(node: ImportNode) {
     return (
-      idComparator(this.moduleIdentifier_, node.moduleIdentifier_) ||
-      defaultNameComparator(this.defaultName_, node.defaultName_) ||
-      bindingComparator(this.binding_, node.binding_)
+      compareId(this.moduleIdentifier_, node.moduleIdentifier_) ||
+      compareDefaultName(this.defaultName_, node.defaultName_) ||
+      compareBinding(this.binding_, node.binding_)
     );
   }
 
@@ -158,30 +152,15 @@ export default class ImportNode {
     return r;
   }
 
-  mergeBinding(node: ImportNode) {
-    if (!node.binding_) return true;
-    else if (this.binding_ === undefined) {
-      this.binding_ = node.binding_;
-      node.binding_ = undefined;
-      return true;
-    } else if (this.binding_.type === 'namespace') {
-      if (node.binding_.type === 'namespace' && this.binding_.alias === node.binding_.alias) {
-        node.binding_ = undefined;
-        return true;
-      }
-      return false;
-    } else if (node.binding_.type === 'namespace') return false;
-    this.binding_.names.concat(node.binding_.names);
-    node.binding_ = undefined;
-    return true;
-  }
-
-  mergeDefaultName(node: ImportNode) {
-    if (this.defaultName_ && node.defaultName_ && this.defaultName_ !== node.defaultName_)
-      return false;
-    if (!this.defaultName_) this.defaultName_ = node.defaultName_;
-    node.defaultName_ = undefined;
-    return true;
+  sortBindingNames() {
+    if (this.binding_?.type === 'named')
+      this.binding_.names = this.binding_.names
+        .sort((a, b) => compareBindingName(a, b))
+        .reduce((r, a) => {
+          if (!r.length) return [a];
+          const l = r[r.length - 1];
+          return compareBindingName(l, a) ? [...r, a] : r;
+        }, [] as NameBinding[]);
   }
 
   private constructor(
@@ -232,6 +211,32 @@ export default class ImportNode {
     return !!this.trailingCommentsText_;
   }
 
+  private mergeBinding(node: ImportNode) {
+    if (!node.binding_) return true;
+    else if (this.binding_ === undefined) {
+      this.binding_ = node.binding_;
+      node.binding_ = undefined;
+      return true;
+    } else if (this.binding_.type === 'namespace') {
+      if (node.binding_.type === 'namespace' && this.binding_.alias === node.binding_.alias) {
+        node.binding_ = undefined;
+        return true;
+      }
+      return false;
+    } else if (node.binding_.type === 'namespace') return false;
+    this.binding_.names = [...this.binding_.names, ...node.binding_.names];
+    node.binding_ = undefined;
+    return true;
+  }
+
+  private mergeDefaultName(node: ImportNode) {
+    if (this.defaultName_ && node.defaultName_ && this.defaultName_ !== node.defaultName_)
+      return false;
+    if (!this.defaultName_) this.defaultName_ = node.defaultName_;
+    node.defaultName_ = undefined;
+    return true;
+  }
+
   private composeImport(config: ComposeConfig) {
     switch (this.node_.kind) {
       case SyntaxKind.ImportDeclaration:
@@ -242,7 +247,7 @@ export default class ImportNode {
   }
 
   // import A = require('B');
-  composeEqDecl(config: ComposeConfig) {
+  private composeEqDecl(config: ComposeConfig) {
     const { quote, semi } = config;
     const path = this.moduleIdentifier_;
     const name = this.defaultName_;
@@ -286,9 +291,10 @@ export default class ImportNode {
    *      E,
    *    } from 'F';
    *    import A, * as B from 'C';
+   *    import A, { default as B, C, D } from 'E';
    * ```
    */
-  composeDecl(config: ComposeConfig) {
+  private composeDecl(config: ComposeConfig) {
     const { quote, semi } = config;
     const path = this.moduleIdentifier_;
     const ending = quote(path) + semi;
@@ -309,6 +315,21 @@ function isNameUsed(name: NameBinding | string | undefined, allNames: Set<string
   return !!n && allNames.has(n);
 }
 
+function getDefaultAndBinding(importClause: ImportClause) {
+  const { name, namedBindings } = importClause;
+  let defaultName = name && name.text;
+  const binding = getBinding(namedBindings);
+  if (!defaultName && binding?.type === 'named') {
+    const { names } = binding;
+    const i = names.findIndex(n => n.propertyName === 'default' && n.aliasName);
+    if (i >= 0) {
+      defaultName = names[i].aliasName;
+      names.splice(i, 1);
+    }
+  }
+  return { defaultName, binding };
+}
+
 function getBinding(nb: NamedImportBindings | undefined): Binding | undefined {
   if (!nb) return;
   if (nb.kind === SyntaxKind.NamespaceImport) return { type: 'namespace', alias: nb.name.text };
@@ -321,33 +342,41 @@ function getBinding(nb: NamedImportBindings | undefined): Binding | undefined {
   return { type: 'named', names };
 }
 
-function idComparator(aa: string | undefined, bb: string | undefined) {
-  if (aa === undefined) return bb === undefined ? 0 : -1;
-  if (bb === undefined) return 1;
+/**
+ * @param def - If true, 'default' is less than any other non-empty strings
+ */
+function compareId(aa: string | undefined, bb: string | undefined, def?: boolean) {
+  if (!aa) return bb ? -1 : 0;
+  if (!bb) return 1;
+  if (def) {
+    if (aa === 'default') return bb === 'default' ? 0 : -1;
+    if (bb === 'default') return 1;
+  }
   const a = aa.toLowerCase();
   const b = bb.toLowerCase();
   return a < b ? -1 : a > b ? 1 : aa < bb ? -1 : aa > bb ? 1 : 0;
 }
 
-function defaultNameComparator(a: string | undefined, b: string | undefined) {
-  if (a === undefined) return b === undefined ? 0 : 1;
-  if (b === undefined) return -1;
-  return idComparator(a, b);
+function compareDefaultName(a: string | undefined, b: string | undefined) {
+  if (!a) return b ? 1 : 0;
+  if (!b) return -1;
+  return compareId(a, b);
 }
 
-function bindingComparator(a: Binding | undefined, b: Binding | undefined) {
-  if (a === undefined) return b === undefined ? 0 : -1;
-  if (b === undefined) return 1;
-  if (a.type === 'named' && b.type === 'named') return nameComparator(a.names[0], b.names[0]);
+function compareBinding(a: Binding | undefined, b: Binding | undefined) {
+  if (!a) return b ? -1 : 0;
+  if (!b) return 1;
+  if (a.type === 'named' && b.type === 'named') return compareBindingName(a.names[0], b.names[0]);
   if (a.type === 'named') return 1;
   if (b.type === 'named') return -1;
-  return idComparator(a.alias, b.alias);
+  return compareId(a.alias, b.alias);
 }
 
-function nameComparator(a: NameBinding | undefined, b: NameBinding | undefined) {
+function compareBindingName(a: NameBinding | undefined, b: NameBinding | undefined) {
   if (!a) return b ? -1 : 0;
   else if (!b) return 1;
   const { propertyName: pa, aliasName: aa } = a;
   const { propertyName: pb, aliasName: ab } = b;
-  return idComparator(pa, pb) || idComparator(aa, ab);
+  // Put 'default as X' in front of any other binding names to highlight.
+  return compareId(pa, pb, true) || compareId(aa, ab);
 }

@@ -28,6 +28,7 @@ function groupNodes(nodes: ImportNode[], config: Configuration) {
   });
   return {
     scripts: scripts.length ? scripts : undefined,
+    // Sort groups by level.
     groups: [...groups.entries()].sort(([a], [b]) => a - b).map(([_, n]) => n),
   };
 }
@@ -39,7 +40,7 @@ function addNode(node: ImportNode, level: number, groups: Map<number, ImportNode
 }
 
 function sortAndMergeNodes(nodes: ImportNode[]) {
-  return nodes
+  const merged = nodes
     .sort((a, b) => a.compare(b))
     .reduce((r, n) => {
       if (!r.length) return [n];
@@ -47,6 +48,9 @@ function sortAndMergeNodes(nodes: ImportNode[]) {
       if (last.merge(n)) return r;
       return [...r, n];
     }, [] as ImportNode[]);
+  merged.forEach(n => n.sortBindingNames());
+  // Sort nodes again because binding names may have changed.
+  return merged.sort((a, b) => a.compare(b));
 }
 
 function uniqueScripts(nodes: ImportNode[]) {
