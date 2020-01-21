@@ -1,17 +1,16 @@
 # TS Import Sorter
 
-Automatically sort imports for **TypeScript** source code. ([Install](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter))
-
-Based on [import-sorter](https://github.com/SoominHan/import-sorter). Thanks!
+Automatically sort imports for **JavaScript** and **TypeScript** source code. ([Install](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter))
 
 ## Features
 
-- Auto sort on save. No need for commands or clicks.
-- Auto merge imports, deduplicate names.
-- Auto delete unused names and handle `React` with JSX properly.
-- Group by customizable rules.
-- Preserve leading and trailing comments with imports.
-- Ignore files or import declarations.
+- Auto sort on save.
+- Auto merge imports, remove unused or duplicated names.
+- Recognize JSX element and keep `React` import.
+- Preserve `use strict`, leading and trailing comments.
+- Group React, Angular or Vue imports separately.
+- Customizable grouping rules.
+- Ignore specific files or imports.
 - Support config both in `package.json` and `import-sorter.json`.
 
 ## Extension Settings
@@ -28,8 +27,16 @@ All config and their default value:
 // Grouping rules for path patterns. Everything else has a default level of 20.
 "tsImportSorter.configuration.groupRules": [
   {
-    "regex": "^react$",
+    "regex": "^react(-dom)?$",
     "level": 10
+  },
+  {
+    "regex": "^@angular/",
+    "level": 11
+  },
+  {
+    "regex": "^vue$",
+    "level": 12
   },
   {
     "regex": "^[@]",
@@ -158,6 +165,10 @@ or
 ```ts
 import Excluded from 'import/sorter'; /* ts-import-sorter: disable */
 ```
+
+## Thanks
+
+The initiative came from [import-sorter](https://github.com/SoominHan/import-sorter).
 
 ## License
 

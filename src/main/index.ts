@@ -15,8 +15,8 @@ import {
   getEdits,
 } from '../edit';
 import {
-  parseSource,
   getInsertLine,
+  parseSource,
 } from '../parser';
 import sortImports from '../sort';
 import { assertNonNull } from '../utils';
@@ -51,8 +51,8 @@ export default function sortImportsBeforeSavingDocument(event: TextDocumentWillS
 }
 
 function isSupported(document: TextDocument) {
-  const { languageId } = document;
-  return languageId === 'typescript' || languageId === 'typescriptreact';
+  const SUPPORTED = new Set(['typescript', 'typescriptreact', 'javascript', 'javascriptreact']);
+  return SUPPORTED.has(document.languageId);
 }
 
 function isExcluded(fileName: string, config: Configuration) {
