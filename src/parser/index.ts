@@ -6,10 +6,6 @@ import {
   SyntaxKind,
 } from 'typescript';
 
-import {
-  assertNonNull,
-  assert,
-} from '../utils';
 import ImportNode from './ImportNode';
 import {
   parseLineRanges,
@@ -23,9 +19,9 @@ export { LineRange, RangeAndEmptyLines, NameBinding, NodeComment, InsertLine } f
 
 export function parseSource(sourceText: string, sourceFile: SourceFile) {
   const [syntaxList] = sourceFile.getChildren();
-  if (!syntaxList || syntaxList.kind !== SyntaxKind.SyntaxList) return;
   const allIds = new Set<string>();
   const importNodes: ImportNode[] = [];
+  if (!syntaxList || syntaxList.kind !== SyntaxKind.SyntaxList) return { allIds, importNodes };
   const parseId = (node: Node) => {
     switch (node.kind) {
       case SyntaxKind.Identifier:
@@ -59,8 +55,7 @@ export function getInsertLine(
 } {
   // Find first node that is NOT disabled.
   const [syntaxList] = sourceFile.getChildren();
-  assertNonNull(syntaxList);
-  assert(syntaxList.kind === SyntaxKind.SyntaxList);
+  if (!syntaxList || syntaxList.kind !== SyntaxKind.SyntaxList) return { isFileDisabled: true };
   for (const node of syntaxList.getChildren()) {
     const {
       fileComments,
