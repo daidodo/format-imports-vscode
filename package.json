@@ -1,7 +1,7 @@
 {
   "name": "tsimportsorter",
   "displayName": "TS Import Sorter",
-  "description": "Auto sort imports for TypeScript.",
+  "description": "Auto sort imports for JavaScript and TypeScript.",
   "icon": "assets/icons/main.jpg",
   "publisher": "dozerg",
   "version": "0.0.19",
@@ -57,8 +57,16 @@
           "type": "array",
           "default": [
             {
-              "regex": "^react$",
+              "regex": "^react(-dom)?$",
               "level": 10
+            },
+            {
+              "regex": "^@angular/",
+              "level": 11
+            },
+            {
+              "regex": "^vue$",
+              "level": 12
             },
             {
               "regex": "^[@]",
