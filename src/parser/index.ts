@@ -1,15 +1,17 @@
 import {
+  ExpressionStatement,
   ImportDeclaration,
   ImportEqualsDeclaration,
   Node,
   SourceFile,
+  StringLiteral,
   SyntaxKind,
 } from 'typescript';
 
 import ImportNode from './ImportNode';
 import {
-  parseLineRanges,
   isDisabled,
+  parseLineRanges,
 } from './lines';
 import { InsertLine } from './types';
 
@@ -28,6 +30,7 @@ export function parseSource(sourceText: string, sourceFile: SourceFile) {
         allIds.add(node.getText(sourceFile));
         break;
       case SyntaxKind.JsxElement:
+      case SyntaxKind.JsxSelfClosingElement:
       case SyntaxKind.JsxFragment:
         allIds.add('React');
         break;
@@ -57,6 +60,7 @@ export function getInsertLine(
   const [syntaxList] = sourceFile.getChildren();
   if (!syntaxList || syntaxList.kind !== SyntaxKind.SyntaxList) return { isFileDisabled: true };
   for (const node of syntaxList.getChildren()) {
+    if (isUseStrict(node)) continue;
     const {
       fileComments,
       disabled,
@@ -82,4 +86,11 @@ export function getInsertLine(
     return { insertLine: { line, leadingNewLines, needlessSpaces } };
   }
   return { isFileDisabled: true };
+}
+
+function isUseStrict(node: Node) {
+  if (node.kind !== SyntaxKind.ExpressionStatement) return false;
+  const { expression } = node as ExpressionStatement;
+  if (expression.kind !== SyntaxKind.StringLiteral) return false;
+  return (expression as StringLiteral).text === 'use strict';
 }
