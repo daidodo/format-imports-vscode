@@ -22,20 +22,12 @@ export { ImportNode };
 export { LineRange, RangeAndEmptyLines, NameBinding, NodeComment, InsertLine } from './types';
 
 export function parseSource(sourceText: string, sourceFile: SourceFile) {
+  const [syntaxList] = sourceFile.getChildren();
+  if (!syntaxList || syntaxList.kind !== SyntaxKind.SyntaxList) return;
   const allIds = new Set<string>();
   const importNodes: ImportNode[] = [];
-  const parseNode = (node: Node) => {
+  const parseId = (node: Node) => {
     switch (node.kind) {
-      case SyntaxKind.ImportDeclaration: {
-        const n = ImportNode.fromDecl(node as ImportDeclaration, sourceFile, sourceText);
-        if (n) importNodes.push(n);
-        return;
-      }
-      case SyntaxKind.ImportEqualsDeclaration: {
-        const n = ImportNode.fromEqDecl(node as ImportEqualsDeclaration, sourceFile, sourceText);
-        if (n) importNodes.push(n);
-        return;
-      }
       case SyntaxKind.Identifier:
         allIds.add(node.getText(sourceFile));
         break;
@@ -44,9 +36,17 @@ export function parseSource(sourceText: string, sourceFile: SourceFile) {
         allIds.add('React');
         break;
     }
-    node.forEachChild(parseNode);
+    node.forEachChild(parseId);
   };
-  parseNode(sourceFile);
+  for (const node of syntaxList.getChildren()) {
+    if (node.kind === SyntaxKind.ImportDeclaration) {
+      const n = ImportNode.fromDecl(node as ImportDeclaration, sourceFile, sourceText);
+      if (n) importNodes.push(n);
+    } else if (node.kind === SyntaxKind.ImportEqualsDeclaration) {
+      const n = ImportNode.fromEqDecl(node as ImportEqualsDeclaration, sourceFile, sourceText);
+      if (n) importNodes.push(n);
+    } else parseId(node);
+  }
   return { allIds, importNodes: importNodes.filter(n => !n.disabled) };
 }
 
