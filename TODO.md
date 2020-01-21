@@ -1,6 +1,5 @@
 ### Features
 
-- JavaScript support.
 - Deep dive on id reference.
 - Respect `formatOnSave` and other config, e.g. `tabSize`.
 - Sort exports.
@@ -12,6 +11,7 @@
 
 ### DONE
 
+- ~~JavaScript support.~~
 - ~~Wrap default import.([Link](https://github.com/SoominHan/import-sorter/issues/23))~~
 - ~~Support absolute config paths. ([Link](https://github.com/SoominHan/import-sorter/issues/26))~~
 - ~~Special comment to disable import sorter for a file or line.~~

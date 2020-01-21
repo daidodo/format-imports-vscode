@@ -6,8 +6,8 @@ Automatically sort imports for **JavaScript** and **TypeScript** source code. ([
 
 - Auto sort on save.
 - Auto merge imports, remove unused or duplicated names.
-- Recognize JSX element and keep `React` import.
-- Preserve `use strict`, leading and trailing comments.
+- Recognize JSX elements and keep `React` import.
+- Preserve `use strict` and comments.
 - Group React, Angular or Vue imports separately.
 - Customizable grouping rules.
 - Ignore specific files or imports.
@@ -15,7 +15,7 @@ Automatically sort imports for **JavaScript** and **TypeScript** source code. ([
 
 ## Extension Settings
 
-All config and their default value:
+All config and their default values:
 
 ```json
 // Configuration file name.
@@ -48,7 +48,7 @@ All config and their default value:
   }
 ],
 
-// Maximum line length before binding names are wrapped. 0 for no limit.
+// Maximum line length before import declarations are wrapped. 0 for no limit.
 "tsImportSorter.configuration.maximumLineLength": 100,
 
 // Maximum words per line before binding names are wrapped. 0 for no limit.
@@ -72,7 +72,7 @@ All config and their default value:
 
 ## Configuration
 
-TS Import Sorter can load configurations from both `package.json` and `import-sorter.json` (by default) automatically.
+TS Import Sorter can load configurations from both `package.json` and `import-sorter.json` (configurable) automatically.
 
 `package.json` example:
 
@@ -135,9 +135,11 @@ So if you want global settings, just put a `import-sorter.json` in your workspac
 There are a few ways to exclude files from inspection:
 
 - Add file path pattern to extension config in VSCode.
-  `"tsImportSorter.configuration.exclude": ["pathPattern"],`
+  ```json
+  "tsImportSorter.configuration.exclude": ["pathPattern"],
+  ```
 - Add file path pattern to `package.json` or `import-sorter.json`.
-- Add the following comment at the beginning of the file:
+- Add the following comment at the beginning of the source file and keep at least one empty line from the next statement:
 
 ```ts
 // ts-import-sorter: disable

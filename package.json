@@ -23,10 +23,9 @@
     "Formatters"
   ],
   "keywords": [
-    "Typescript",
-    "imports",
-    "sort",
-    "order",
+    "javascript",
+    "typescript",
+    "import sorter",
     "sort imports"
   ],
   "activationEvents": [
