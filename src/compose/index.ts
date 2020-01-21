@@ -39,13 +39,13 @@ export function composeNodeAsParts(parts: string[], from: string, config: Compos
   rest.forEach((p, i, a) => {
     const c = i + 1 < a.length ? ',' : '';
     const n = `${text} ${p}${c}`;
-    if (n.length > maxLength) {
+    if (n.length >= maxLength) {
       lines.push(text);
       text = tab + p + c;
     } else text = n;
   });
   const n = `${text} ${from}`;
-  if (n.length > maxLength) lines.push(text, tab + from);
+  if (n.length >= maxLength) lines.push(text, tab + from);
   else lines.push(n);
   return lines.join('\n');
 }
@@ -58,7 +58,7 @@ export function composeNodeAsNames(
 ) {
   const { maxLength } = config;
   const { text, canWrap } = composeNodeAsNamesImpl(defaultName, names, from, config, false);
-  if (maxLength >= text.length || !canWrap) return text;
+  if (maxLength > text.length || !canWrap) return text;
   return composeNodeAsNamesImpl(defaultName, names, from, config, true).text;
 }
 
@@ -118,7 +118,7 @@ function composeOneLineNames(words: string[], config: ComposeConfig) {
   for (let i = 0; i < rest.length; ++i) {
     const n = rest[i];
     const t = append(text, n, false, i + 1 >= rest.length);
-    if (i + 2 > maxWords || t.length > maxLength) return { text, left: rest.slice(i) };
+    if (i + 2 > maxWords || t.length >= maxLength) return { text, left: rest.slice(i) };
     text = t;
   }
   return { text, left: [] };
