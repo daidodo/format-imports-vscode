@@ -41,3 +41,8 @@ export interface InsertLine {
   leadingNewLines: number;
   needlessSpaces?: { start: LineAndCharacter; end: LineAndCharacter };
 }
+
+export interface UnusedId {
+  id: string;
+  pos: number;
+}

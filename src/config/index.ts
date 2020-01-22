@@ -11,16 +11,18 @@ import {
   findFileFromPathAndParents,
   isObject,
 } from '../utils';
+import { loadTsConfig } from './tsconfig';
 import { Configuration } from './types';
 
 export { Configuration };
 
-export default function loadConfig(fileUri: Uri): Configuration {
+export default function loadConfig(fileUri: Uri) {
   const wsConfig = workspaceConfig(fileUri);
   const { configurationFileName: fname } = wsConfig;
   const fConfig = fileConfig(fname, fileUri);
   const pkgConfig = packageConfig(fileUri);
-  return merge(wsConfig, fConfig, pkgConfig);
+  const tsConfig = loadTsConfig();
+  return { config: merge(wsConfig, fConfig, pkgConfig), tsConfig };
 }
 
 function workspaceConfig(fileUri: Uri) {

@@ -1,7 +1,4 @@
-import {
-  createSourceFile,
-  ScriptTarget,
-} from 'typescript';
+import ts, { ScriptTarget } from 'typescript';
 import {
   TextDocument,
   TextDocumentWillSaveEvent,
@@ -16,6 +13,7 @@ import {
 } from '../edit';
 import {
   getInsertLine,
+  getUnusedIds,
   parseSource,
 } from '../parser';
 import sortImports from '../sort';
@@ -29,16 +27,17 @@ export default function sortImportsBeforeSavingDocument(event: TextDocumentWillS
   const { fsPath: fileName } = fileUri;
   const sourceText = document.getText();
   try {
-    const config = loadConfig(fileUri);
+    const { config, tsConfig } = loadConfig(fileUri);
     if (isExcluded(fileName, config)) return;
-    const sourceFile = createSourceFile(fileName, sourceText, ScriptTarget.Latest);
+    const sourceFile = ts.createSourceFile(fileName, sourceText, ScriptTarget.Latest);
     const { insertLine, isFileDisabled } = getInsertLine(sourceFile, sourceText);
     if (isFileDisabled) return;
     assertNonNull(insertLine);
     const { allIds, importNodes } = parseSource(sourceText, sourceFile);
     if (!importNodes.length) return;
+    const unusedIds = getUnusedIds(fileName, sourceFile, sourceText, tsConfig);
     const { deleteEdits, noFinalNewLine } = getDeleteEdits(importNodes, insertLine);
-    const groups = sortImports(importNodes, allIds, config);
+    const groups = sortImports(importNodes, allIds, unusedIds, config);
     const insertSource = composeInsertSource(groups, config, noFinalNewLine);
     const edits = getEdits(deleteEdits, insertSource, insertLine.line);
     event.waitUntil(edits);

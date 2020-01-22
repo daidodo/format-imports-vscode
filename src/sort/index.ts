@@ -1,13 +1,17 @@
 import { Configuration } from '../config';
-import { ImportNode } from '../parser';
+import {
+  ImportNode,
+  UnusedId,
+} from '../parser';
 
 export default function sortImports(
   nodes: ImportNode[],
   usedIds: Set<string>,
+  unusedIds: UnusedId[],
   config: Configuration,
 ) {
   const usedNodes = nodes
-    .map(n => n.removeUnusedNames(usedIds))
+    .map(n => n.removeUnusedNames(usedIds, unusedIds))
     .filter((n): n is ImportNode => !!n);
   const { groups, scripts } = groupNodes(usedNodes, config);
   const sorted = groups.map(ns => sortAndMergeNodes(ns));

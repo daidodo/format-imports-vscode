@@ -17,7 +17,16 @@ import { InsertLine } from './types';
 
 export { ImportNode };
 
-export { LineRange, RangeAndEmptyLines, NameBinding, NodeComment, InsertLine } from './types';
+export {
+  LineRange,
+  RangeAndEmptyLines,
+  NameBinding,
+  NodeComment,
+  InsertLine,
+  UnusedId,
+} from './types';
+
+export { getUnusedIds } from './unused';
 
 export function parseSource(sourceText: string, sourceFile: SourceFile) {
   const [syntaxList] = sourceFile.getChildren();

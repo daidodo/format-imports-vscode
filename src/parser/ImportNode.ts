@@ -26,6 +26,7 @@ import {
   NodeComment,
   Pos,
   RangeAndEmptyLines,
+  UnusedId,
 } from './types';
 
 export default class ImportNode {
@@ -40,7 +41,7 @@ export default class ImportNode {
   private fullStart_: Pos;
   private leadingNewLines_: number;
   private leadingComments_?: NodeComment[];
-  // private declLineRange_: LineRange;
+  private declLineRange_: LineRange;
   // private trailingComments_?: NodeComment[];
   private trailingCommentsText_: string;
   private declAndCommentsLineRange_: LineRange;
@@ -96,14 +97,15 @@ export default class ImportNode {
     return this.disabled_;
   }
 
-  removeUnusedNames(allNames: Set<string>) {
+  removeUnusedNames(allNames: Set<string>, unusedIds: UnusedId[]) {
     if (this.isScript_) return this;
-    if (!isNameUsed(this.defaultName_, allNames)) this.defaultName_ = undefined;
+    const unusedNames = new Set(unusedIds.filter(r => this.withinDeclRange(r.pos)).map(r => r.id));
+    if (!isNameUsed(this.defaultName_, allNames, unusedNames)) this.defaultName_ = undefined;
     if (this.binding_) {
       if (this.binding_.type === 'named') {
-        this.binding_.names = this.binding_.names.filter(n => isNameUsed(n, allNames));
+        this.binding_.names = this.binding_.names.filter(n => isNameUsed(n, allNames, unusedNames));
         if (!this.binding_.names.length) this.binding_ = undefined;
-      } else if (!isNameUsed(this.binding_.alias, allNames)) this.binding_ = undefined;
+      } else if (!isNameUsed(this.binding_.alias, allNames, unusedNames)) this.binding_ = undefined;
     }
     return this.defaultName_ || this.binding_ ? this : undefined;
   }
@@ -182,7 +184,7 @@ export default class ImportNode {
       fullStart,
       leadingNewLines,
       leadingComments,
-      // declLineRange,
+      declLineRange,
       // trailingComments,
       trailingCommentsText,
       declAndCommentsLineRange,
@@ -193,7 +195,7 @@ export default class ImportNode {
     this.fullStart_ = fullStart;
     this.leadingNewLines_ = leadingNewLines;
     this.leadingComments_ = leadingComments;
-    // this.declLineRange_ = declLineRange;
+    this.declLineRange_ = declLineRange;
     // this.trailingComments_ = trailingComments;
     this.trailingCommentsText_ = trailingCommentsText;
     this.declAndCommentsLineRange_ = declAndCommentsLineRange;
@@ -209,6 +211,11 @@ export default class ImportNode {
 
   private get hasTrailingComments() {
     return !!this.trailingCommentsText_;
+  }
+
+  private withinDeclRange(pos: number) {
+    const { start, end } = this.declLineRange_;
+    return start.pos <= pos && pos < end.pos;
   }
 
   private mergeBinding(node: ImportNode) {
@@ -309,10 +316,14 @@ export default class ImportNode {
   }
 }
 
-function isNameUsed(name: NameBinding | string | undefined, allNames: Set<string>) {
+function isNameUsed(
+  name: NameBinding | string | undefined,
+  allNames: Set<string>,
+  unusedNames: Set<string>,
+) {
   if (!name) return false;
   const n = typeof name === 'string' ? name : name.aliasName ?? name.propertyName;
-  return !!n && allNames.has(n);
+  return !!n && allNames.has(n) && !unusedNames.has(n);
 }
 
 function getDefaultAndBinding(importClause: ImportClause) {
