@@ -15,7 +15,7 @@
 - ~~Wrap default import.([Link](https://github.com/SoominHan/import-sorter/issues/23))~~
 - ~~Support absolute config paths. ([Link](https://github.com/SoominHan/import-sorter/issues/26))~~
 - ~~Special comment to disable import sorter for a file or line.~~
-- ~~`exclude` should be merged instead of replaced.~~
+- ~~`exclude` should be replaced instead of merged.~~
 - ~~Handle implicit React.~~
 - ~~Preserve comments after sorting.~~
 - ~~Handle script imports.~~
