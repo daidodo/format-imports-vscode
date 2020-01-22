@@ -6,9 +6,10 @@ import {
 } from 'vscode';
 
 import {
+  assert,
   assertNonNull,
   findFileFromPathAndParents,
-  assert,
+  isObject,
 } from '../utils';
 import { Configuration } from './types';
 
@@ -55,8 +56,4 @@ function merge(...configs: Configuration[]) {
     const exclude = !e1 ? e2 : !e2 ? e1 : [...e1, ...e2];
     return { ...a, ...b, exclude };
   });
-}
-
-function isObject(v: any) {
-  return typeof v === 'object' && !Array.isArray(v) && v !== null;
 }

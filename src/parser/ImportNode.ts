@@ -1,18 +1,18 @@
 import {
+  ImportClause,
   ImportDeclaration,
   ImportEqualsDeclaration,
+  NamedImportBindings,
   SourceFile,
   StringLiteral,
   SyntaxKind,
-  NamedImportBindings,
-  ImportClause,
 } from 'typescript';
 
 import {
   composeComments,
   ComposeConfig,
-  composeNodeAsParts,
   composeNodeAsNames,
+  composeNodeAsParts,
 } from '../compose';
 import {
   assertNonNull,
@@ -20,12 +20,12 @@ import {
 } from '../utils';
 import { parseLineRanges } from './lines';
 import {
+  Binding,
   LineRange,
   NameBinding,
   NodeComment,
   Pos,
   RangeAndEmptyLines,
-  Binding,
 } from './types';
 
 export default class ImportNode {
@@ -101,7 +101,7 @@ export default class ImportNode {
     if (!isNameUsed(this.defaultName_, allNames)) this.defaultName_ = undefined;
     if (this.binding_) {
       if (this.binding_.type === 'named') {
-        this.binding_.names.filter(n => isNameUsed(n, allNames));
+        this.binding_.names = this.binding_.names.filter(n => isNameUsed(n, allNames));
         if (!this.binding_.names.length) this.binding_ = undefined;
       } else if (!isNameUsed(this.binding_.alias, allNames)) this.binding_ = undefined;
     }

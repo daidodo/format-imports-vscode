@@ -41,3 +41,7 @@ export function findFileFromPathAndParents(filename: string, path: string) {
 export function isRegularFile(path: string) {
   return fs.existsSync(path) && fs.statSync(path).isFile();
 }
+
+export function isObject(v: any) {
+  return typeof v === 'object' && !Array.isArray(v) && v !== null;
+}
