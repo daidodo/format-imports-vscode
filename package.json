@@ -200,7 +200,8 @@
         "warn",
         {
           "varsIgnorePattern": "^_",
-          "argsIgnorePattern": "^_"
+          "argsIgnorePattern": "^_",
+          "ignoreRestSiblings": true
         }
       ],
       "tsdoc/syntax": "warn"
