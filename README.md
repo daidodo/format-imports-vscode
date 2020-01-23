@@ -7,7 +7,8 @@ Automatically sort imports for **JavaScript** and **TypeScript** source code. ([
 - Auto sort on save.
 - Auto merge imports, remove unused or duplicated names.
 - Recognize JSX elements and keep `React` import.
-- Preserve `use strict` and comments.
+- Preserve `use strict` directive and global comments, e.g. license.
+- Keep comments with imports when sorting.
 - Group React, Angular or Vue imports separately.
 - Customizable grouping rules.
 - Ignore specific files or imports.
@@ -126,7 +127,9 @@ TS Import Sorter can load configurations from both `package.json` and `import-so
 
 If `tsImportSorter.configuration.configurationFileName` is an absolute path, e.g. `/path/to/import-sorter.json`, no search is needed.
 
-The configurations in both files will merge together, and `package.json` will win in any conflicts.
+The configurations will merge together, the precedence is:
+
+VS Code configuration < `import-sorter.json` < `package.json`
 
 So if you want global settings, just put a `import-sorter.json` in your workspace folder, and any rules in local `package.json` will still be respected.
 
@@ -138,7 +141,7 @@ There are a few ways to exclude files from inspection:
   ```json
   "tsImportSorter.configuration.exclude": ["pathPattern"],
   ```
-- Add file path pattern to `package.json` or `import-sorter.json`.
+- Add file path pattern to `package.json` or `import-sorter.json`. (Be aware of the config precedence.)
 - Add the following comment at the beginning of the source file and keep at least one empty line from the next statement:
 
 ```ts
