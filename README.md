@@ -4,11 +4,11 @@ Automatically sort imports for **JavaScript** and **TypeScript** source code. ([
 
 ## Features
 
-- Auto sort on save.
+- Auto sort on save, if `{"editor.formatOnSave": true}` is set.
 - Auto merge imports, remove unused or duplicated names.
-- Recognize JSX elements and keep `React` import.
-- Preserve `use strict` directive and global comments, e.g. license.
+- Preserve `'use strict'` directive and global comments, e.g. license.
 - Keep comments with imports when sorting.
+- Recognize JSX elements and keep `React` import.
 - Group React, Angular or Vue imports separately.
 - Customizable grouping rules.
 - Ignore specific files or imports.
@@ -55,12 +55,6 @@ All config and their default values:
 // Maximum words per line before binding names are wrapped. 0 for no limit.
 "tsImportSorter.configuration.maximumWordsPerLine": 1,
 
-// Number of spaces to replace a TAB.
-"tsImportSorter.configuration.tabSize": 2,
-
-// If set to "tab", TAB will be kept. If set to "space", TAB will be replaced by SPACEs.
-"tsImportSorter.configuration.tabType": "space",
-
 // If set to "single", 'path' will be used to quote paths. If set to "double", "path" will be used to quote paths.
 "tsImportSorter.configuration.quoteMark": "single",
 
@@ -96,7 +90,9 @@ TS Import Sorter can load configurations from both `package.json` and `import-so
   ],
   "maximumLineLength": 100,
   "maximumWordsPerLine": 1,
+  // Number of spaces to replace a TAB.
   "tabSize": 2,
+  // If set to "tab", TAB will be kept. If set to "space", TAB will be replaced by SPACEs.
   "tabType": "space",
   "quoteMark": "single",
   "trailingComma": "multiLine",
@@ -137,12 +133,14 @@ So if you want global settings, just put a `import-sorter.json` in your workspac
 
 There are a few ways to exclude files from inspection:
 
-- Add file path pattern to extension config in VSCode.
+- Add path patterns to extension config in VSCode.
   ```json
   "tsImportSorter.configuration.exclude": ["pathPattern"],
   ```
-- Add file path pattern to `package.json` or `import-sorter.json`. (Be aware of the config precedence.)
+- Add path patterns to `package.json` or `import-sorter.json`.
 - Add the following comment at the beginning of the source file and keep at least one empty line from the next statement:
+
+_Note: All path patterns are **merged** together instead of overwritten._
 
 ```ts
 // ts-import-sorter: disable

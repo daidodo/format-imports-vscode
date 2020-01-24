@@ -6,7 +6,7 @@ import {
 } from 'vscode';
 
 import composeInsertSource from '../compose';
-import loadConfig, { Configuration } from '../config';
+import loadConfig, { isExcluded } from '../config';
 import {
   getDeleteEdits,
   getEdits,
@@ -23,13 +23,14 @@ export default function sortImportsBeforeSavingDocument(event: TextDocumentWillS
   const { document } = event;
   if (!isSupported(document)) return;
 
-  const { uri: fileUri } = document;
+  const { uri: fileUri,languageId } = document;
   const { fsPath: fileName } = fileUri;
-  const sourceText = document.getText();
   try {
-    const { config, tsConfig } = loadConfig(fileUri);
+    const { config, tsConfig } = loadConfig(fileUri, languageId);
+    if (!config.formatOnSave) return;
     if (isExcluded(fileName, config)) return;
 
+    const sourceText = document.getText();
     const sourceFile = ts.createSourceFile(fileName, sourceText, ScriptTarget.Latest);
     const { insertLine, isFileDisabled } = getInsertLine(sourceFile, sourceText);
     if (isFileDisabled) return;
@@ -55,10 +56,4 @@ export default function sortImportsBeforeSavingDocument(event: TextDocumentWillS
 function isSupported(document: TextDocument) {
   const SUPPORTED = new Set(['typescript', 'typescriptreact', 'javascript', 'javascriptreact']);
   return SUPPORTED.has(document.languageId);
-}
-
-function isExcluded(fileName: string, config: Configuration) {
-  const { exclude } = config;
-  for (const p of exclude ?? []) if (new RegExp(p).test(fileName)) return true;
-  return false;
 }

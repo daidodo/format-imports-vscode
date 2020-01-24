@@ -1,6 +1,7 @@
 ### Features
 
 - Respect `formatOnSave` and other config, e.g. `tabSize`.
+- Newline: \n or \n\r
 - Sort exports.
 - Group level comments. ([Link](https://github.com/SoominHan/import-sorter/issues/46))
 - Support ESLint plugin import/order. ([Link](https://github.com/SoominHan/import-sorter/issues/43))
@@ -25,4 +26,4 @@
 
 - Use Immutable.js.
 - Unit tests.
-- Integration tests.
+- Integration tests. (prettier)

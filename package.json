@@ -99,19 +99,6 @@
           "default": 1,
           "description": "Maximum words per line before binding names are wrapped. 0 for no limit."
         },
-        "tsImportSorter.configuration.tabSize": {
-          "type": "number",
-          "default": 2,
-          "description": "Number of spaces to replace a TAB."
-        },
-        "tsImportSorter.configuration.tabType": {
-          "enum": [
-            "space",
-            "tab"
-          ],
-          "default": "space",
-          "description": "If set to \"tab\", TAB will be kept. If set to \"space\", TAB will be replaced by SPACEs."
-        },
         "tsImportSorter.configuration.quoteMark": {
           "enum": [
             "single",
@@ -155,6 +142,7 @@
     "glob": "^7.1.6",
     "mocha": "^6.2.2",
     "prettier": "^1.19.1",
+    "utility-types": "^3.10.0",
     "vscode-test": "^1.2.2"
   },
   "prettier": {

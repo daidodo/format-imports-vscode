@@ -16,6 +16,7 @@ export interface ComposeConfig {
   quote: (s: string) => string;
   comma: string;
   semi: string;
+  lastNewLine: boolean;
 }
 
 export default function composeInsertSource(
@@ -125,7 +126,7 @@ function composeOneLineNames(words: string[], config: ComposeConfig) {
 }
 
 function configForCompose(config: Configuration): ComposeConfig {
-  const { tabType, tabSize, quoteMark, trailingComma, hasSemicolon } = config;
+  const { tabType, tabSize, quoteMark, trailingComma, hasSemicolon, insertFinalNewline } = config;
   return {
     maxLength: config.maximumLineLength ?? Number.MAX_SAFE_INTEGER,
     maxWords: config.maximumWordsPerLine ?? Number.MAX_SAFE_INTEGER,
@@ -133,5 +134,6 @@ function configForCompose(config: Configuration): ComposeConfig {
     quote: quoteMark === 'double' ? (s: string) => `"${s}"` : (s: string) => `'${s}'`,
     comma: trailingComma === 'none' ? '' : ',',
     semi: hasSemicolon === false ? '' : ';',
+    lastNewLine: !!insertFinalNewline,
   };
 }
