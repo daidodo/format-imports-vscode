@@ -1,22 +1,14 @@
 import fs from 'fs';
-import { cloneDeep } from 'lodash';
-import {
-  Uri,
-  workspace,
-} from 'vscode';
+import cloneDeep from 'lodash.clonedeep';
+import { Uri, workspace } from 'vscode';
 
-import {
-  assert,
-  assertNonNull,
-  findFileFromPathAndParents,
-  isObject,
-} from '../utils';
+import { assert, assertNonNull, findFileFromPathAndParents, isObject } from '../utils';
 import { merge } from './helper';
 import { Configuration } from './types';
 import { loadVscConfig } from './vscode';
 
-export function loadIsConfig(fileUri: Uri, languageId:string) {
-  const vscConfig = loadVscConfig(fileUri,languageId);
+export function loadIsConfig(fileUri: Uri, languageId: string) {
+  const vscConfig = loadVscConfig(fileUri, languageId);
   const wsConfig = workspaceConfig(fileUri);
   const { configurationFileName: fname } = wsConfig;
   const fConfig = fileConfig(fname, fileUri);
@@ -49,4 +41,3 @@ function fileConfig(filename: string | undefined, fileUri: Uri) {
   assert(isObject(config), `Bad config in "${configFile}"`);
   return config as Configuration;
 }
-
