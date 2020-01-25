@@ -4,7 +4,7 @@
   "description": "Auto sort imports for JavaScript and TypeScript.",
   "icon": "assets/icons/main.jpg",
   "publisher": "dozerg",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
