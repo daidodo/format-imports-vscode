@@ -16,6 +16,7 @@ interface VscEditorConfig {
 
 interface VscFilesConfig {
   insertFinalNewline: boolean;
+  eol: '\n' | '\r\n' | 'auto';
 }
 
 export function loadVscConfig(fileUri: Uri, languageId: string): Configuration {
@@ -34,11 +35,12 @@ function transform(wsConfig: WorkspaceConfiguration) {
       : insertSpaces
       ? ('space' as const)
       : ('tab' as const);
-  const { insertFinalNewline } = wsConfig.get<VscFilesConfig>('files') ?? {};
+  const { insertFinalNewline, eol } = wsConfig.get<VscFilesConfig>('files') ?? {};
   return {
     formatOnSave,
     tabType,
     tabSize: detectIndentation ? undefined : tabSize,
     insertFinalNewline,
+    eof: eol === 'auto' ? undefined : eol,
   };
 }

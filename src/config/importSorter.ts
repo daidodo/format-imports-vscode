@@ -11,17 +11,18 @@ import {
   findFileFromPathAndParents,
   isObject,
 } from '../utils';
+import { loadEcConfig } from './editorconfig';
 import { merge } from './helper';
 import { Configuration } from './types';
 import { loadVscConfig } from './vscode';
 
 export function loadIsConfig(fileUri: Uri, languageId: string) {
-  const vscConfig = loadVscConfig(fileUri, languageId);
   const wsConfig = workspaceConfig(fileUri);
-  const { configurationFileName: fname } = wsConfig;
-  const fConfig = fileConfig(fname, fileUri);
+  const vscConfig = loadVscConfig(fileUri, languageId);
+  const ecConfig = loadEcConfig(fileUri.path);
+  const fConfig = fileConfig(wsConfig.configurationFileName, fileUri);
   const pkgConfig = packageConfig(fileUri);
-  return merge(wsConfig, vscConfig, fConfig, pkgConfig);
+  return merge(wsConfig, vscConfig, ecConfig, fConfig, pkgConfig);
 }
 
 function workspaceConfig(fileUri: Uri) {

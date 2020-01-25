@@ -17,5 +17,6 @@ export type Configuration = DeepReadonly<
     trailingComma: 'none' | 'multiLine';
     hasSemicolon: boolean;
     insertFinalNewline: boolean;
+    eol: '\n' | '\r\n';
   }>
 >;

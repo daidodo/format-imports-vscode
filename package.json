@@ -124,6 +124,7 @@
     }
   },
   "dependencies": {
+    "editorconfig": "^0.15.3",
     "lodash.clonedeep": "^4.5.0",
     "typescript": "^3.7.5"
   },
