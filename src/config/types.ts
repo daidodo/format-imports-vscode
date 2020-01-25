@@ -17,6 +17,7 @@ export type Configuration = DeepReadonly<
     trailingComma: 'none' | 'multiLine';
     hasSemicolon: boolean;
     insertFinalNewline: boolean;
+    bracketSpacing: boolean;
     eol: '\n' | '\r\n';
   }>
 >;

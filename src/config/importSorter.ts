@@ -13,16 +13,19 @@ import {
 } from '../utils';
 import { loadEcConfig } from './editorconfig';
 import { merge } from './helper';
+import { loadPretConfig } from './prettier';
 import { Configuration } from './types';
 import { loadVscConfig } from './vscode';
 
 export function loadIsConfig(fileUri: Uri, languageId: string) {
+  const { path: fileName } = fileUri;
   const wsConfig = workspaceConfig(fileUri);
   const vscConfig = loadVscConfig(fileUri, languageId);
-  const ecConfig = loadEcConfig(fileUri.path);
-  const fConfig = fileConfig(wsConfig.configurationFileName, fileUri);
-  const pkgConfig = packageConfig(fileUri);
-  return merge(wsConfig, vscConfig, ecConfig, fConfig, pkgConfig);
+  const ecConfig = loadEcConfig(fileName);
+  const pretConfig = loadPretConfig(fileName);
+  const fConfig = fileConfig(wsConfig.configurationFileName, fileName);
+  const pkgConfig = packageConfig(fileName);
+  return merge(wsConfig, vscConfig, ecConfig, pretConfig, fConfig, pkgConfig);
 }
 
 function workspaceConfig(fileUri: Uri) {
@@ -33,8 +36,8 @@ function workspaceConfig(fileUri: Uri) {
   return cloneDeep(config);
 }
 
-function packageConfig(fileUri: Uri) {
-  const [packageFile] = findFileFromPathAndParents('package.json', fileUri.path);
+function packageConfig(fileName: string) {
+  const [packageFile] = findFileFromPathAndParents('package.json', fileName);
   if (!packageFile) return {};
   const { importSorter: config } = JSON.parse(fs.readFileSync(packageFile, 'utf8'));
   if (!config) return {};
@@ -42,9 +45,9 @@ function packageConfig(fileUri: Uri) {
   return config as Configuration;
 }
 
-function fileConfig(filename: string | undefined, fileUri: Uri) {
+function fileConfig(filename: string | undefined, path: string) {
   if (!filename) return {};
-  const [configFile] = findFileFromPathAndParents(filename, fileUri.path);
+  const [configFile] = findFileFromPathAndParents(filename, path);
   if (!configFile) return {};
   const config = JSON.parse(fs.readFileSync(configFile, 'utf8'));
   assert(isObject(config), `Bad config in "${configFile}"`);
