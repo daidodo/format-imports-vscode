@@ -6,7 +6,7 @@ import { Configuration } from './types';
 
 export { Configuration };
 
-export default function loadConfig(fileUri: Uri, languageId:string) {
+export default function loadConfig(fileUri: Uri, languageId: string) {
   const config = loadIsConfig(fileUri, languageId);
   const tsConfig = loadTsConfig();
   return { config, tsConfig };
