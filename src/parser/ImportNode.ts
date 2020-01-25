@@ -3,7 +3,6 @@ import {
   ImportDeclaration,
   ImportEqualsDeclaration,
   NamedImportBindings,
-  SourceFile,
   StringLiteral,
   SyntaxKind,
 } from 'typescript';
@@ -18,13 +17,10 @@ import {
   assertNonNull,
   normalizePath,
 } from '../utils';
-import { parseLineRanges } from './lines';
 import {
   Binding,
-  LineRange,
   NameBinding,
   NodeComment,
-  Pos,
   RangeAndEmptyLines,
   UnusedId,
 } from './types';
@@ -32,73 +28,81 @@ import {
 export default class ImportNode {
   private readonly node_: ImportDeclaration | ImportEqualsDeclaration;
 
-  private moduleIdentifier_: string;
-  private isScript_: boolean;
+  private readonly moduleIdentifier_: string;
   private defaultName_?: string;
   private binding_?: Binding;
-  private disabled_: boolean; // Whether import sorting is disable for this node.
 
-  private fullStart_: Pos;
-  private leadingNewLines_: number;
+  readonly range: RangeAndEmptyLines;
   private leadingComments_?: NodeComment[];
-  private declLineRange_: LineRange;
-  // private trailingComments_?: NodeComment[];
   private trailingCommentsText_: string;
-  private declAndCommentsLineRange_: LineRange;
-  private trailingNewLines_: number;
-  private fullEnd_: Pos;
-  private eof_: boolean;
 
-  static fromDecl(node: ImportDeclaration, sourceFile: SourceFile, sourceText: string) {
+  static fromDecl(
+    node: ImportDeclaration,
+    range: RangeAndEmptyLines,
+    leadingComments: NodeComment[] | undefined,
+    trailingCommentsText: string,
+  ) {
     const { importClause, moduleSpecifier } = node;
     if (moduleSpecifier.kind !== SyntaxKind.StringLiteral) return undefined;
     const moduleIdentifier = (moduleSpecifier as StringLiteral).text;
-    // import 'some/scripts'
-    if (!importClause) return new ImportNode(node, sourceFile, sourceText, moduleIdentifier, true);
-
     const { defaultName, binding } = getDefaultAndBinding(importClause);
     return new ImportNode(
       node,
-      sourceFile,
-      sourceText,
       moduleIdentifier,
-      false,
+      range,
+      leadingComments,
+      trailingCommentsText,
       defaultName,
       binding,
     );
   }
 
-  static fromEqDecl(node: ImportEqualsDeclaration, sourceFile: SourceFile, sourceText: string) {
+  static fromEqDecl(
+    node: ImportEqualsDeclaration,
+    range: RangeAndEmptyLines,
+    leadingComments: NodeComment[] | undefined,
+    trailingCommentsText: string,
+  ) {
     const { moduleReference } = node;
     if (moduleReference.kind !== SyntaxKind.ExternalModuleReference) return undefined;
     const { expression } = moduleReference;
     if (expression.kind !== SyntaxKind.StringLiteral) return undefined;
     const moduleIdentifier = (expression as StringLiteral).text;
     const defaultName = node.name.text;
-    return new ImportNode(node, sourceFile, sourceText, moduleIdentifier, false, defaultName);
+    return new ImportNode(
+      node,
+      moduleIdentifier,
+      range,
+      leadingComments,
+      trailingCommentsText,
+      defaultName,
+    );
   }
 
-  get rangeAndEmptyLines(): RangeAndEmptyLines {
-    return {
-      ...this.declAndCommentsLineRange_,
-      fullStart: this.fullStart_,
-      leadingNewLines: this.leadingNewLines_,
-      trailingNewLines: this.trailingNewLines_,
-      fullEnd: this.fullEnd_,
-      eof: this.eof_,
-    };
+  private constructor(
+    node: ImportDeclaration | ImportEqualsDeclaration,
+    moduleIdentifier: string,
+    range: RangeAndEmptyLines,
+    leadingComments: NodeComment[] | undefined,
+    trailingCommentsText: string,
+    defaultName?: string,
+    binding?: Binding,
+  ) {
+    this.node_ = node;
+    this.moduleIdentifier_ = normalizePath(moduleIdentifier);
+    this.range = range;
+    this.leadingComments_ = leadingComments;
+    this.trailingCommentsText_ = trailingCommentsText;
+    this.defaultName_ = defaultName;
+    this.binding_ = binding;
   }
 
-  get isScriptImport() {
-    return this.isScript_;
-  }
-
-  get disabled() {
-    return this.disabled_;
+  get isScript() {
+    return !this.defaultName_ && !this.binding_;
   }
 
   removeUnusedNames(allNames: Set<string>, unusedIds: UnusedId[]) {
-    if (this.isScript_) return this;
+    if (this.isScript) return this;
     const unusedNames = new Set(unusedIds.filter(r => this.withinDeclRange(r.pos)).map(r => r.id));
     if (!isNameUsed(this.defaultName_, allNames, unusedNames)) this.defaultName_ = undefined;
     if (this.binding_) {
@@ -165,46 +169,6 @@ export default class ImportNode {
         }, [] as NameBinding[]);
   }
 
-  private constructor(
-    node: ImportDeclaration | ImportEqualsDeclaration,
-    sourceFile: SourceFile,
-    sourceText: string,
-    moduleIdentifier: string,
-    isScript: boolean,
-    defaultName?: string,
-    binding?: Binding,
-  ) {
-    this.node_ = node;
-    this.moduleIdentifier_ = normalizePath(moduleIdentifier);
-    this.isScript_ = isScript;
-    this.defaultName_ = defaultName;
-    this.binding_ = binding;
-    const {
-      disabled,
-      fullStart,
-      leadingNewLines,
-      leadingComments,
-      declLineRange,
-      // trailingComments,
-      trailingCommentsText,
-      declAndCommentsLineRange,
-      trailingNewLines,
-      fullEnd,
-      eof,
-    } = parseLineRanges(node, sourceFile, sourceText);
-    this.fullStart_ = fullStart;
-    this.leadingNewLines_ = leadingNewLines;
-    this.leadingComments_ = leadingComments;
-    this.declLineRange_ = declLineRange;
-    // this.trailingComments_ = trailingComments;
-    this.trailingCommentsText_ = trailingCommentsText;
-    this.declAndCommentsLineRange_ = declAndCommentsLineRange;
-    this.trailingNewLines_ = trailingNewLines;
-    this.fullEnd_ = fullEnd;
-    this.eof_ = eof;
-    this.disabled_ = disabled;
-  }
-
   private get hasLeadingComments() {
     return !!this.leadingComments_ && this.leadingComments_.length > 0;
   }
@@ -214,7 +178,7 @@ export default class ImportNode {
   }
 
   private withinDeclRange(pos: number) {
-    const { start, end } = this.declLineRange_;
+    const { start, end } = this.range;
     return start.pos <= pos && pos < end.pos;
   }
 
@@ -305,7 +269,7 @@ export default class ImportNode {
     const { quote, semi } = config;
     const path = this.moduleIdentifier_;
     const ending = quote(path) + semi;
-    if (this.isScript_) return `import ${ending}`;
+    if (this.isScript) return `import ${ending}`;
     const from = `from ${ending}`;
     if (this.binding_?.type === 'named')
       return composeNodeAsNames(this.defaultName_, this.binding_.names, from, config);
@@ -326,7 +290,8 @@ function isNameUsed(
   return !!n && allNames.has(n) && !unusedNames.has(n);
 }
 
-function getDefaultAndBinding(importClause: ImportClause) {
+function getDefaultAndBinding(importClause: ImportClause | undefined) {
+  if (!importClause) return {};
   const { name, namedBindings } = importClause;
   let defaultName = name && name.text;
   const binding = getBinding(namedBindings);
@@ -365,7 +330,7 @@ function compareId(aa: string | undefined, bb: string | undefined, def?: boolean
   }
   const a = aa.toLowerCase();
   const b = bb.toLowerCase();
-  return a < b ? -1 : a > b ? 1 : aa < bb ? -1 : aa > bb ? 1 : 0;
+  return a < b ? -1 : a > b ? 1 : aa < bb ? 1 : aa > bb ? -1 : 0;
 }
 
 function compareDefaultName(a: string | undefined, b: string | undefined) {

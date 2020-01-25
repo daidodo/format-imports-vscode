@@ -5,73 +5,87 @@ import {
   TextEdit,
 } from 'vscode';
 
+import { Configuration } from '../config';
 import {
   ImportNode,
-  InsertLine,
+  InsertRange,
+  LineRange,
   RangeAndEmptyLines,
 } from '../parser';
 
+interface InsertPos {
+  pos: LineAndCharacter;
+  leadingNewLines: number;
+  trailingNewLines: number;
+}
+
 // eslint-disable-next-line @typescript-eslint/require-await
-export async function getEdits(edits: TextEdit[], insertText: string, insertLine: number) {
+export async function getEdits(edits: TextEdit[], insertText: string, pos: LineAndCharacter) {
   const insertEdit = insertText
-    ? TextEdit.insert(new Position(insertLine, 0), insertText)
+    ? TextEdit.insert(new Position(pos.line, pos.character), insertText)
     : undefined;
   return insertEdit ? [...edits, insertEdit] : edits;
 }
 
-export function getDeleteEdits(nodes: ImportNode[], insertLine: InsertLine) {
-  const ranges = nodes.map(n => n.rangeAndEmptyLines);
-  const merged = mergeRanges(ranges);
-  const { line, leadingNewLines, needlessSpaces } = insertLine;
-  const insert = { line, character: 0 };
-  let noFinalNewLine = false;
-  let included = false;
-  const deleteEdits = merged.map(decideRange).map(({ start, end, emptyLines }) => {
-    if (compare(start, insert) <= 0) {
-      included = true;
-      noFinalNewLine = leadingNewLines < 2 && emptyLines > 0;
-    }
-    return TextEdit.delete(
+export function getDeleteEdits(
+  nodes: ImportNode[],
+  insertRange: InsertRange | undefined,
+  config: Configuration,
+) {
+  const [first, ...rest] = merge(nodes.map(n => n.range));
+  const { ranges: r1, insertPos } = decideDeleteAndInsert(first, insertRange, config);
+  const r2 = rest.map(decideDelete);
+  const deleteEdits = [...r1, ...r2].map(({ start, end }) =>
+    TextEdit.delete(
       new Range(new Position(start.line, start.character), new Position(end.line, end.character)),
-    );
-  });
-  if (included || !needlessSpaces) return { deleteEdits, noFinalNewLine };
-  const { start, end } = needlessSpaces;
-  const deleteSpaces = TextEdit.delete(
-    new Range(new Position(start.line, start.character), new Position(end.line, end.character)),
+    ),
   );
-  return { deleteEdits: [deleteSpaces, ...deleteEdits], noFinalNewLine };
+  return { deleteEdits, insertPos };
 }
 
-function mergeRanges(ranges: RangeAndEmptyLines[]) {
-  const merged: RangeAndEmptyLines[] = [];
-  ranges
-    .sort((a, b) => a.start.pos - b.start.pos)
-    .forEach(cur => {
-      if (!merged.length) merged.push(cur);
-      else {
-        const last = merged[merged.length - 1];
-        if (last.end.pos >= cur.fullStart.pos) {
-          last.end = cur.end;
-          last.trailingNewLines = cur.trailingNewLines;
-          last.fullEnd = cur.fullEnd;
-          last.eof = cur.eof;
-        } else merged.push(cur);
-      }
-    });
-  return merged;
+function merge(ranges: RangeAndEmptyLines[]) {
+  return ranges.reduce((r, c) => {
+    if (!r.length) return [c];
+    const last = r[r.length - 1];
+    const { fullStart, end, trailingNewLines, fullEnd, eof } = c;
+    if (last.end.pos >= fullStart.pos) {
+      r[r.length - 1] = { ...last, end, trailingNewLines, fullEnd, eof };
+      return r;
+    } else return [...r, c];
+  }, [] as RangeAndEmptyLines[]);
 }
 
-/**
- *
- * @returns
- *    * start: Start position to delete.
- *    * end: End position to delete.
- *    * emptyLines: Empty lines preserved after deletion.
- */
-function decideRange(
+function decideDeleteAndInsert(
   range: RangeAndEmptyLines,
-): { start: LineAndCharacter; end: LineAndCharacter; emptyLines: number } {
+  insertRange: InsertRange | undefined,
+  config: Configuration,
+) {
+  if (!insertRange) {
+    // Insert at 'range' (been deleted)
+    const EL = config.insertFinalNewline ? 1 : 0;
+    const { fullStart, leadingNewLines: ln, trailingNewLines: tn, fullEnd, eof } = range;
+    const leadingNewLines = !fullStart.pos ? 0 : Math.min(Math.max(ln, 1), 2);
+    const trailingNewLines = eof ? EL : Math.min(Math.max(tn, 1), 2);
+    return {
+      ranges: [{ start: fullStart, end: fullEnd }],
+      insertPos: { pos: fullStart, leadingNewLines, trailingNewLines },
+    };
+  }
+  const { ranges, ...rest } = decideInsert(insertRange);
+  const d = decideDelete(range);
+  return { ranges: [...ranges, d], ...rest };
+}
+
+function decideInsert(insertRange: InsertRange): { ranges: LineRange[]; insertPos: InsertPos } {
+  const { fullStart, leadingNewLines: ln, commentStart } = insertRange;
+  const ranges = fullStart.pos < commentStart.pos ? [{ start: fullStart, end: commentStart }] : [];
+  const leadingNewLines = !fullStart.pos ? 0 : Math.min(Math.max(ln, 1), 2);
+  return { ranges, insertPos: { pos: fullStart, leadingNewLines, trailingNewLines: 2 } };
+}
+
+function decideDelete(
+  range: RangeAndEmptyLines,
+): { start: LineAndCharacter; end: LineAndCharacter } {
   const {
     fullStart,
     leadingNewLines,
@@ -81,33 +95,29 @@ function decideRange(
     fullEnd,
     eof,
   } = range;
-  // No empty lines if there are no prev statements/comments.
-  if (!fullStart.pos) return { start: fullStart, end: fullEnd, emptyLines: 0 };
-  // Preserve one empty line between prev and next (if any) statements if there were empty line(s).
+  // Current statement is at the beginning of the file
+  if (!fullStart.pos) return { start: fullStart, end: fullEnd };
+  // Prev and current statements are in the same line
   if (!leadingNewLines) {
     const start = fullStart;
     const ends = eof
       ? [cmEnd, cmEnd, { line: fullEnd.line - 1, character: 0 }]
       : [cmEnd, cmEnd, cmEnd, { line: fullEnd.line - 2, character: 0 }];
-    const empties = eof ? [0, 1] : [0, 0, 1];
     const end = ends[Math.min(trailingNewLines, ends.length - 1)];
-    const emptyLines = empties[Math.min(trailingNewLines, empties.length - 1)];
-    return { start, end, emptyLines };
+    return { start, end };
   } else if (leadingNewLines === 1) {
+    // No empty lines are between prev and current statements
     const start = cmStart;
     const ends = eof ? [fullEnd] : [fullEnd, cmEnd, { line: fullEnd.line - 1, character: 0 }];
     const end = ends[Math.min(trailingNewLines, ends.length - 1)];
-    return { start, end, emptyLines: eof || trailingNewLines > 0 ? 1 : 0 };
+    return { start, end };
   } else if (leadingNewLines === 2) {
+    // One empty line is between prev and current statements
     const start = eof ? { line: cmStart.line - 1, character: 0 } : cmStart;
-    return { start, end: fullEnd, emptyLines: 1 };
+    return { start, end: fullEnd };
   } else {
+    // More than one empty lines are between prev and current statements
     const start = { line: fullStart.line + (eof ? 1 : 2), character: 0 };
-    return { start, end: fullEnd, emptyLines: 1 };
+    return { start, end: fullEnd };
   }
-}
-
-function compare(a: LineAndCharacter, b: LineAndCharacter) {
-  const l = a.line - b.line;
-  return l ? l : a.character - b.character;
 }

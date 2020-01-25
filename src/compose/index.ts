@@ -22,13 +22,14 @@ export interface ComposeConfig {
 export default function composeInsertSource(
   groups: ImportNode[][],
   config: Configuration,
-  noFinalNewLine: boolean,
+  leadingNewLines: number,
+  trailingNewLines: number,
 ) {
+  const h = '\n'.repeat(leadingNewLines);
+  const e = '\n'.repeat(trailingNewLines);
   const c = configForCompose(config);
-  return groups.length
-    ? groups.map(g => g.map(n => n.compose(c)).join('\n') + '\n').join('\n') +
-        (noFinalNewLine ? '' : '\n')
-    : '';
+  const text = groups.map(g => g.map(n => n.compose(c)).join('\n')).join('\n\n');
+  return h + text + e;
 }
 
 export function composeNodeAsParts(parts: string[], from: string, config: ComposeConfig) {
@@ -49,6 +50,11 @@ export function composeNodeAsParts(parts: string[], from: string, config: Compos
   if (n.length >= maxLength) lines.push(text, tab + from);
   else lines.push(n);
   return lines.join('\n');
+}
+
+export function composeComments(comments: NodeComment[] | undefined) {
+  if (!comments || !comments.length) return;
+  return comments.map(c => c.text).join('\n') + '\n';
 }
 
 export function composeNodeAsNames(
@@ -75,11 +81,7 @@ function composeNodeAsNamesImpl(
   return { text: `import ${all} ${from}`, canWrap };
 }
 
-export function composeNames(
-  names: NameBinding[] | undefined,
-  config: ComposeConfig,
-  forceWrap: boolean,
-) {
+function composeNames(names: NameBinding[] | undefined, config: ComposeConfig, forceWrap: boolean) {
   const { maxWords, maxLength } = config;
   const words = names?.map(composeName).filter((w): w is string => !!w);
   if (!words || !words.length) return {};
@@ -96,17 +98,12 @@ export function composeNames(
   return { text: `{\n${lines.join('\n')}\n}` };
 }
 
-export function composeName(name: NameBinding | undefined) {
+function composeName(name: NameBinding | undefined) {
   if (!name) return;
   const { propertyName, aliasName } = name;
   if (propertyName) return aliasName ? `${propertyName} as ${aliasName}` : propertyName;
   assertNonNull(aliasName);
   return `* as ${aliasName}`;
-}
-
-export function composeComments(comments: NodeComment[] | undefined) {
-  if (!comments || !comments.length) return;
-  return comments.map(c => c.text).join('\n') + '\n';
 }
 
 function composeOneLineNames(words: string[], config: ComposeConfig) {

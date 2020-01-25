@@ -25,7 +25,7 @@ function groupNodes(nodes: ImportNode[], config: Configuration) {
   const groups = new Map<number, ImportNode[]>();
   const scripts: ImportNode[] = [];
   nodes.forEach(n => {
-    if (n.isScriptImport) return scripts.push(n);
+    if (n.isScript) return scripts.push(n);
     if (groupRules)
       for (const r of groupRules) if (n.match(r.regex)) return addNode(n, r.level, groups);
     addNode(n, DEFAULT_LEVEL, groups);
@@ -59,6 +59,6 @@ function sortAndMergeNodes(nodes: ImportNode[]) {
 
 function uniqueScripts(nodes: ImportNode[]) {
   return nodes
-    .sort((a, b) => a.rangeAndEmptyLines.start.pos - b.rangeAndEmptyLines.start.pos)
+    .sort((a, b) => a.range.start.pos - b.range.start.pos)
     .filter((a, i, aa) => i === aa.findIndex(b => !a.compare(b)));
 }

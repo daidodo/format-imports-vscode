@@ -36,10 +36,10 @@ export interface RangeAndEmptyLines extends LineRange {
   eof: boolean;
 }
 
-export interface InsertLine {
-  line: number;
+export interface InsertRange {
+  fullStart: Pos;
   leadingNewLines: number;
-  needlessSpaces?: { start: LineAndCharacter; end: LineAndCharacter };
+  commentStart: Pos;
 }
 
 export interface UnusedId {
