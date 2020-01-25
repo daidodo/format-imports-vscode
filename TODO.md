@@ -10,6 +10,16 @@
 - Import namespace alias. ([Link](https://github.com/SoominHan/import-sorter/issues/29))
 - 'workspace.rootPath' is deprecated.
 
+### Implementation
+
+- Use Immutable.js.
+- Unit tests.
+- Integration tests. (prettier)
+
+### Bugs
+
+- Consider trailing comments when calc against max line length.
+
 ### DONE
 
 - ~~Deep dive on id reference.~~
@@ -22,9 +32,3 @@
 - ~~Preserve comments after sorting.~~
 - ~~Handle script imports.~~
 - ~~Format leading spaces anyway.~~
-
-### Implementation
-
-- Use Immutable.js.
-- Unit tests.
-- Integration tests. (prettier)

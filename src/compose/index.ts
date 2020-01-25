@@ -16,6 +16,7 @@ export interface ComposeConfig {
   quote: (s: string) => string;
   comma: string;
   semi: string;
+  bracket: (s: string) => string;
   lastNewLine: boolean;
 }
 
@@ -82,11 +83,11 @@ function composeNodeAsNamesImpl(
 }
 
 function composeNames(names: NameBinding[] | undefined, config: ComposeConfig, forceWrap: boolean) {
-  const { maxWords, maxLength } = config;
+  const { maxWords, maxLength, bracket } = config;
   const words = names?.map(composeName).filter((w): w is string => !!w);
   if (!words || !words.length) return {};
   if (!forceWrap && words.length <= maxWords) {
-    const text = `{ ${words.join(', ')} }`;
+    const text = bracket(words.join(', '));
     if (text.length + 15 < maxLength) return { text, canWrap: true };
   }
   const lines = [];
@@ -123,7 +124,15 @@ function composeOneLineNames(words: string[], config: ComposeConfig) {
 }
 
 function configForCompose(config: Configuration): ComposeConfig {
-  const { tabType, tabSize, quoteMark, trailingComma, hasSemicolon, insertFinalNewline } = config;
+  const {
+    tabType,
+    tabSize,
+    quoteMark,
+    trailingComma,
+    hasSemicolon,
+    bracketSpacing,
+    insertFinalNewline,
+  } = config;
   return {
     maxLength: config.maximumLineLength ?? Number.MAX_SAFE_INTEGER,
     maxWords: config.maximumWordsPerLine ?? Number.MAX_SAFE_INTEGER,
@@ -131,6 +140,7 @@ function configForCompose(config: Configuration): ComposeConfig {
     quote: quoteMark === 'double' ? (s: string) => `"${s}"` : (s: string) => `'${s}'`,
     comma: trailingComma === 'none' ? '' : ',',
     semi: hasSemicolon === false ? '' : ';',
+    bracket: bracketSpacing === false ? (s: string) => `{${s}}` : (s: string) => `{ ${s} }`,
     lastNewLine: !!insertFinalNewline,
   };
 }

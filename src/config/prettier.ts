@@ -4,7 +4,7 @@ import { Configuration } from './types';
 
 // https://prettier.io/docs/en/options.html
 export function loadPretConfig(fileName: string): Configuration {
-  const config = resolveConfig.sync(fileName);
+  const config = resolveConfig.sync(fileName, { useCache: false });
   if (!config) return {};
   const {
     printWidth,
