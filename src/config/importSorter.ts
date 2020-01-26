@@ -1,31 +1,21 @@
 import fs from 'fs';
 import cloneDeep from 'lodash.clonedeep';
-import {
-  Uri,
-  workspace,
-} from 'vscode';
+import { Uri, workspace } from 'vscode';
 
-import {
-  assert,
-  assertNonNull,
-  findFileFromPathAndParents,
-  isObject,
-} from '../utils';
-import { loadEcConfig } from './editorconfig';
+import { assert, assertNonNull, findFileFromPathAndParents, isObject } from '../utils';
 import { merge } from './helper';
 import { loadPretConfig } from './prettier';
 import { Configuration } from './types';
 import { loadVscConfig } from './vscode';
 
 export function loadIsConfig(fileUri: Uri, languageId: string) {
-  const { path: fileName } = fileUri;
+  const { fsPath: fileName } = fileUri;
   const wsConfig = workspaceConfig(fileUri);
   const vscConfig = loadVscConfig(fileUri, languageId);
-  const ecConfig = loadEcConfig(fileName);
   const pretConfig = loadPretConfig(fileName);
   const fConfig = fileConfig(wsConfig.configurationFileName, fileName);
   const pkgConfig = packageConfig(fileName);
-  return merge(wsConfig, vscConfig, ecConfig, pretConfig, fConfig, pkgConfig);
+  return merge(wsConfig, vscConfig, pretConfig, fConfig, pkgConfig);
 }
 
 function workspaceConfig(fileUri: Uri) {
