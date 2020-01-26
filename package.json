@@ -124,7 +124,8 @@
   "prettier": {
     "singleQuote": true,
     "trailingComma": "all",
-    "printWidth": 100
+    "printWidth": 100,
+    "endOfLine": "lf"
   },
   "eslintConfig": {
     "root": true,

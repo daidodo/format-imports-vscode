@@ -24,13 +24,14 @@ export function normalizePath(str: string) {
  */
 export function findFileFromPathAndParents(filename: string, path: string) {
   if (!filename) return [];
-  if (filename.startsWith(sep)) return [filename]; // Absolute path
+  // Absolute path: /path/to/file or C:\path\to\file
+  if (/^(\/|[a-zA-Z]:\\)/.test(filename)) return [filename];
   const comp = path.split(/\\|\//);
   if (isRegularFile(path)) comp.pop();
   const results = [];
   for (; comp.length > 0; comp.pop()) {
-    const p = `${comp.join(sep)}${sep}${filename}`;
-    if (isRegularFile(p)) results.push(p);
+    const n = `${comp.join(sep)}${sep}${filename}`;
+    if (isRegularFile(n)) results.push(n);
   }
   return results;
 }
