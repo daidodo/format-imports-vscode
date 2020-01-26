@@ -18,6 +18,7 @@ export interface ComposeConfig {
   semi: string;
   bracket: (s: string) => string;
   lastNewLine: boolean;
+  nl: string;
 }
 
 export default function composeInsertSource(
@@ -26,15 +27,16 @@ export default function composeInsertSource(
   leadingNewLines: number,
   trailingNewLines: number,
 ) {
-  const h = '\n'.repeat(leadingNewLines);
-  const e = '\n'.repeat(trailingNewLines);
   const c = configForCompose(config);
-  const text = groups.map(g => g.map(n => n.compose(c)).join('\n')).join('\n\n');
+  const { nl } = c;
+  const h = nl.repeat(leadingNewLines);
+  const e = nl.repeat(trailingNewLines);
+  const text = groups.map(g => g.map(n => n.compose(c)).join(nl)).join(nl + nl);
   return h + text + e;
 }
 
 export function composeNodeAsParts(parts: string[], from: string, config: ComposeConfig) {
-  const { maxLength, tab } = config;
+  const { maxLength, tab, nl } = config;
   const [first, ...rest] = parts;
   assert(first != undefined && first.length > 0);
   let text = `import ${first}` + (rest.length ? ',' : '');
@@ -50,12 +52,13 @@ export function composeNodeAsParts(parts: string[], from: string, config: Compos
   const n = `${text} ${from}`;
   if (n.length >= maxLength) lines.push(text, tab + from);
   else lines.push(n);
-  return lines.join('\n');
+  return lines.join(nl);
 }
 
-export function composeComments(comments: NodeComment[] | undefined) {
+export function composeComments(comments: NodeComment[] | undefined, config: ComposeConfig) {
+  const { nl } = config;
   if (!comments || !comments.length) return;
-  return comments.map(c => c.text).join('\n') + '\n';
+  return comments.map(c => c.text).join(nl) + nl;
 }
 
 export function composeNodeAsNames(
@@ -83,7 +86,7 @@ function composeNodeAsNamesImpl(
 }
 
 function composeNames(names: NameBinding[] | undefined, config: ComposeConfig, forceWrap: boolean) {
-  const { maxWords, maxLength, bracket } = config;
+  const { maxWords, maxLength, bracket, nl } = config;
   const words = names?.map(composeName).filter((w): w is string => !!w);
   if (!words || !words.length) return {};
   if (!forceWrap && words.length <= maxWords) {
@@ -96,7 +99,7 @@ function composeNames(names: NameBinding[] | undefined, config: ComposeConfig, f
     lines.push(text);
     n = left;
   }
-  return { text: `{\n${lines.join('\n')}\n}` };
+  return { text: `{${nl}${lines.join(nl)}${nl}}` };
 }
 
 function composeName(name: NameBinding | undefined) {
@@ -132,6 +135,7 @@ function configForCompose(config: Configuration): ComposeConfig {
     hasSemicolon,
     bracketSpacing,
     insertFinalNewline,
+    eol,
   } = config;
   return {
     maxLength: config.maximumLineLength ?? Number.MAX_SAFE_INTEGER,
@@ -142,5 +146,6 @@ function configForCompose(config: Configuration): ComposeConfig {
     semi: hasSemicolon === false ? '' : ';',
     bracket: bracketSpacing === false ? (s: string) => `{${s}}` : (s: string) => `{ ${s} }`,
     lastNewLine: !!insertFinalNewline,
+    nl: eol === 'CRLF' ? '\r\n' : '\n',
   };
 }

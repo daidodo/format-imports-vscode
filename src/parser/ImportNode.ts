@@ -127,7 +127,7 @@ export default class ImportNode {
   }
 
   compose(config: ComposeConfig) {
-    const leadingText = composeComments(this.leadingComments_) ?? '';
+    const leadingText = composeComments(this.leadingComments_, config) ?? '';
     const importText = this.composeImport(config);
     const trailingText = this.trailingCommentsText_;
     return leadingText + importText + trailingText;
