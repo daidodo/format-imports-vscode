@@ -148,7 +148,7 @@ Here are all config in `package.json` under `"importSorter"` section and their d
 
 `import-sorter.json` is searched in a similar way if it's a relative path.
 
-If `"tsImportSorter.configuration.configurationFileName"` is an absolute path, e.g. `/path/to/import-sorter.json`, no search is needed.
+If `"tsImportSorter.configuration.configurationFileName"` is an absolute path, e.g. `/path/to/import-sorter.json` or `C:\path\to\import-sorter.json`, no search is needed.
 
 ### Ignore files or import declarations
 
