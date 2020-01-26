@@ -26,7 +26,8 @@
     "javascript",
     "typescript",
     "import sorter",
-    "sort imports"
+    "sort imports",
+    "multi-root ready"
   ],
   "activationEvents": [
     "onLanguage:javascript",

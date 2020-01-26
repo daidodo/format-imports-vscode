@@ -8,7 +8,7 @@ export { Configuration };
 
 export default function loadConfig(fileUri: Uri, languageId: string) {
   const config = loadIsConfig(fileUri, languageId);
-  const tsConfig = loadTsConfig();
+  const tsConfig = loadTsConfig(fileUri.path);
   return { config, tsConfig };
 }
 

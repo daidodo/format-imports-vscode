@@ -1,14 +1,11 @@
 ### Features
 
-- Respect `formatOnSave` and other config, e.g. `tabSize`.
-- Newline: \n or \n\r
 - Sort exports.
 - Group level comments. ([Link](https://github.com/SoominHan/import-sorter/issues/46))
 - Support ESLint plugin import/order. ([Link](https://github.com/SoominHan/import-sorter/issues/43))
 - Folding imports. ([Link](https://github.com/SoominHan/import-sorter/pull/38))
 - Different word limit for one- and multi-line imports. ([Link](https://github.com/SoominHan/import-sorter/issues/31))
 - Import namespace alias. ([Link](https://github.com/SoominHan/import-sorter/issues/29))
-- 'workspace.rootPath' is deprecated.
 - Add schema.
 
 ### Implementation
@@ -23,6 +20,9 @@
 
 ### DONE
 
+- ~~Multi Root Workspace support.~~
+- ~~Newline: \n or \n\r~~
+- ~~Respect `formatOnSave` and other config, e.g. `tabSize`.~~
 - ~~Deep dive on id reference.~~
 - ~~JavaScript support.~~
 - ~~Wrap default import.([Link](https://github.com/SoominHan/import-sorter/issues/23))~~
