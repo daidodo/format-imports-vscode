@@ -128,8 +128,9 @@ export default class ImportNode {
 
   compose(config: ComposeConfig) {
     const leadingText = composeComments(this.leadingComments_, config) ?? '';
-    const importText = this.composeImport(config);
     const trailingText = this.trailingCommentsText_;
+    const cmLen = trailingText.split(/\r?\n/)?.[0]?.length ?? 0;
+    const importText = this.composeImport(cmLen, config);
     return leadingText + importText + trailingText;
   }
 
@@ -208,24 +209,24 @@ export default class ImportNode {
     return true;
   }
 
-  private composeImport(config: ComposeConfig) {
+  private composeImport(commentLength: number, config: ComposeConfig) {
     switch (this.node_.kind) {
       case SyntaxKind.ImportDeclaration:
-        return this.composeDecl(config);
+        return this.composeDecl(commentLength, config);
       case SyntaxKind.ImportEqualsDeclaration:
-        return this.composeEqDecl(config);
+        return this.composeEqDecl(commentLength, config);
     }
   }
 
   // import A = require('B');
-  private composeEqDecl(config: ComposeConfig) {
+  private composeEqDecl(commentLength: number, config: ComposeConfig) {
     const { quote, semi } = config;
     const path = this.moduleIdentifier_;
     const name = this.defaultName_;
     assertNonNull(name);
     const parts = [`${name} =`];
     const from = `require(${quote(path)})${semi}`;
-    return composeNodeAsParts(parts, from, config);
+    return composeNodeAsParts(parts, from, commentLength, config);
   }
 
   /**
@@ -265,18 +266,24 @@ export default class ImportNode {
    *    import A, { default as B, C, D } from 'E';
    * ```
    */
-  private composeDecl(config: ComposeConfig) {
+  private composeDecl(commentLength: number, config: ComposeConfig) {
     const { quote, semi } = config;
     const path = this.moduleIdentifier_;
     const ending = quote(path) + semi;
     if (this.isScript) return `import ${ending}`;
     const from = `from ${ending}`;
     if (this.binding_?.type === 'named')
-      return composeNodeAsNames(this.defaultName_, this.binding_.names, from, config);
+      return composeNodeAsNames(
+        this.defaultName_,
+        this.binding_.names,
+        from,
+        commentLength,
+        config,
+      );
     const parts = [];
     if (this.defaultName_) parts.push(this.defaultName_);
     if (this.binding_?.type === 'namespace') parts.push(`* as ${this.binding_.alias}`);
-    return composeNodeAsParts(parts, from, config);
+    return composeNodeAsParts(parts, from, commentLength, config);
   }
 }
 

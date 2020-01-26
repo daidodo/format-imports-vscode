@@ -35,10 +35,15 @@ export default function composeInsertSource(
   return h + text + e;
 }
 
-export function composeNodeAsParts(parts: string[], from: string, config: ComposeConfig) {
+export function composeNodeAsParts(
+  parts: string[],
+  from: string,
+  extraLength: number,
+  config: ComposeConfig,
+) {
   const { maxLength, tab, nl } = config;
   const [first, ...rest] = parts;
-  assert(first != undefined && first.length > 0);
+  assert(!!first);
   let text = `import ${first}` + (rest.length ? ',' : '');
   const lines = [];
   rest.forEach((p, i, a) => {
@@ -50,7 +55,7 @@ export function composeNodeAsParts(parts: string[], from: string, config: Compos
     } else text = n;
   });
   const n = `${text} ${from}`;
-  if (n.length >= maxLength) lines.push(text, tab + from);
+  if (n.length + extraLength >= maxLength) lines.push(text, tab + from);
   else lines.push(n);
   return lines.join(nl);
 }
@@ -65,11 +70,12 @@ export function composeNodeAsNames(
   defaultName: string | undefined,
   names: NameBinding[] | undefined,
   from: string,
+  extraLength: number,
   config: ComposeConfig,
 ) {
   const { maxLength } = config;
   const { text, canWrap } = composeNodeAsNamesImpl(defaultName, names, from, config, false);
-  if (maxLength > text.length || !canWrap) return text;
+  if (maxLength > text.length + extraLength || !canWrap) return text;
   return composeNodeAsNamesImpl(defaultName, names, from, config, true).text;
 }
 
@@ -91,7 +97,7 @@ function composeNames(names: NameBinding[] | undefined, config: ComposeConfig, f
   if (!words || !words.length) return {};
   if (!forceWrap && words.length <= maxWords) {
     const text = bracket(words.join(', '));
-    if (text.length + 15 < maxLength) return { text, canWrap: true };
+    if (text.length < maxLength) return { text, canWrap: true };
   }
   const lines = [];
   for (let n = words; n.length; ) {
