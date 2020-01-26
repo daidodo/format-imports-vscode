@@ -1,8 +1,16 @@
 import fs from 'fs';
 import cloneDeep from 'lodash.clonedeep';
-import { Uri, workspace } from 'vscode';
+import {
+  Uri,
+  workspace,
+} from 'vscode';
 
-import { assert, assertNonNull, findFileFromPathAndParents, isObject } from '../utils';
+import {
+  assert,
+  assertNonNull,
+  findFileFromPathAndParents,
+  isObject,
+} from '../utils';
 import { merge } from './helper';
 import { loadPretConfig } from './prettier';
 import { Configuration } from './types';
