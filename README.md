@@ -66,7 +66,7 @@ TS Import Sorter reads configurations from the following sources (in precedence 
 
 Here are all config in `package.json` under `"importSorter"` section and their default values:
 
-```json
+```
 "importSorter": {
   // Disable sorting for files matching regex expressions.
   "exclude": [],
@@ -124,7 +124,7 @@ Here are all config in `package.json` under `"importSorter"` section and their d
 
   // End of line characters. Valid values are 'LF' (\n) or 'CRLF' (\r\n).
   "eol": "LF"
-},
+}
 ```
 
 `import-sorter.json` has all config above, too. Example:
