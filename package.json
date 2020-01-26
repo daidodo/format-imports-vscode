@@ -4,7 +4,7 @@
   "description": "Auto sort imports for JavaScript and TypeScript.",
   "icon": "assets/icons/main.jpg",
   "publisher": "dozerg",
-  "version": "0.0.30",
+  "version": "0.0.31",
   "scripts": {
     "vscode:prepublish": "rm -rf out && npm run compile",
     "compile": "tsc -p ./",
@@ -55,7 +55,8 @@
         },
         "tsImportSorter.configuration.groupRules": {
           "type": "array",
-          "default": [{
+          "default": [
+            {
               "regex": "^react(-dom)?$",
               "level": 10
             },
