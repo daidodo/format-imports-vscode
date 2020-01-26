@@ -6,7 +6,7 @@
   "publisher": "dozerg",
   "version": "0.0.30",
   "scripts": {
-    "vscode:prepublish": "npm run compile",
+    "vscode:prepublish": "rm -rf out && npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile",
@@ -55,8 +55,7 @@
         },
         "tsImportSorter.configuration.groupRules": {
           "type": "array",
-          "default": [
-            {
+          "default": [{
               "regex": "^react(-dom)?$",
               "level": 10
             },
