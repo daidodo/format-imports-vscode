@@ -89,36 +89,10 @@
           },
           "description": "Grouping rules for path patterns. Everything else has a default level of 20."
         },
-        "tsImportSorter.configuration.maximumLineLength": {
-          "type": "number",
-          "default": 100,
-          "description": "Maximum line length before binding names are wrapped. 0 for no limit."
-        },
         "tsImportSorter.configuration.maximumWordsPerLine": {
           "type": "number",
           "default": 1,
-          "description": "Maximum words per line before binding names are wrapped. 0 for no limit."
-        },
-        "tsImportSorter.configuration.quoteMark": {
-          "enum": [
-            "single",
-            "double"
-          ],
-          "default": "single",
-          "description": "If set to \"single\", 'path' will be used to quote paths. If set to \"double\", \"path\" will be used to quote paths."
-        },
-        "tsImportSorter.configuration.trailingComma": {
-          "enum": [
-            "none",
-            "multiLine"
-          ],
-          "default": "multiLine",
-          "description": "If set to \"multiLine\", there will be a comma after the last binding name in a new line. Or \"none\" for no comma."
-        },
-        "tsImportSorter.configuration.hasSemicolon": {
-          "type": "boolean",
-          "default": true,
-          "description": "Whether there is a semicolon at the end of import declarations."
+          "description": "Max binding names per line before wrapping. 0 for no limit."
         }
       }
     }

@@ -50,7 +50,7 @@ All VS Code settings under `"tsImportSorter"` section and their default values:
   }
 ],
 
-// Maximum words per line before binding names are wrapped. 0 for no limit.
+// Max binding names per line before wrapping. 0 for no limit.
 "tsImportSorter.configuration.maximumWordsPerLine": 1,
 ```
 
