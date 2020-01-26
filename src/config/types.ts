@@ -18,6 +18,6 @@ export type Configuration = DeepReadonly<
     hasSemicolon: boolean;
     insertFinalNewline: boolean;
     bracketSpacing: boolean;
-    eol: '\n' | '\r\n';
+    eol: 'LF' | 'CRLF';
   }>
 >;

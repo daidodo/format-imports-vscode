@@ -24,6 +24,6 @@ export function loadPretConfig(fileName: string): Configuration {
     quoteMark: singleQuote ? 'single' : 'double',
     trailingComma: trailingComma === 'all' ? 'multiLine' : 'none',
     bracketSpacing: bracketSpacing ?? true,
-    eol: endOfLine === 'lf' ? '\n' : endOfLine === 'crlf' ? '\r\n' : undefined,
+    eol: endOfLine === 'lf' ? 'LF' : endOfLine === 'crlf' ? 'CRLF' : undefined,
   };
 }

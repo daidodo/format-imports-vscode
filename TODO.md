@@ -9,6 +9,7 @@
 - Different word limit for one- and multi-line imports. ([Link](https://github.com/SoominHan/import-sorter/issues/31))
 - Import namespace alias. ([Link](https://github.com/SoominHan/import-sorter/issues/29))
 - 'workspace.rootPath' is deprecated.
+- Add schema.
 
 ### Implementation
 

@@ -4,7 +4,7 @@ Automatically sort imports for **JavaScript** and **TypeScript** source code. ([
 
 ## Features
 
-- Auto sort on save, if `{"editor.formatOnSave": true}` is set.
+- Auto format on save when `"editor.formatOnSave"` is `true`.
 - Auto merge imports, remove unused or duplicated names.
 - Preserve `'use strict'` directive and global comments, e.g. license.
 - Keep comments with imports when sorting.
@@ -13,10 +13,11 @@ Automatically sort imports for **JavaScript** and **TypeScript** source code. ([
 - Customizable grouping rules.
 - Ignore specific files or imports.
 - Support config both in `package.json` and `import-sorter.json`.
+- Respect config from [Prettier](https://prettier.io), [EditorConfig](https://editorconfig.org) and VS Code user/workspace/folder settings.
 
 ## Extension Settings
 
-All config and their default values:
+All VS Code settings under `"tsImportSorter"` section and their default values:
 
 ```json
 // Configuration file name.
@@ -49,35 +50,40 @@ All config and their default values:
   }
 ],
 
-// Maximum line length before import declarations are wrapped. 0 for no limit.
-"tsImportSorter.configuration.maximumLineLength": 100,
-
 // Maximum words per line before binding names are wrapped. 0 for no limit.
 "tsImportSorter.configuration.maximumWordsPerLine": 1,
-
-// If set to "single", 'path' will be used to quote paths. If set to "double", "path" will be used to quote paths.
-"tsImportSorter.configuration.quoteMark": "single",
-
-// If set to "multiLine", there will be a comma after the last binding name in a new line. Or "none" for no comma.
-"tsImportSorter.configuration.trailingComma": "multiLine",
-
-// Whether there is a semicolon at the end of import declarations.
-"tsImportSorter.configuration.hasSemicolon": true,
 ```
 
 ## Configuration
 
-TS Import Sorter can load configurations from both `package.json` and `import-sorter.json` (configurable) automatically.
+TS Import Sorter reads configurations from the following sources (in precedence from high to low):
 
-`package.json` example:
+- `"importSorter"` section in `package.json`
+- `import-sorter.json` (configurable)
+- [Prettier configuration](https://github.com/prettier/prettier-vscode#configuration) if installed
+- `.editorconfig`
+- VS Code user/workspace/folder settings
+
+Here are all config in `package.json` under `"importSorter"` section and their default values:
 
 ```json
 "importSorter": {
-  "exclude": ["regexPattern"],
+  // Disable sorting for files matching regex expressions.
+  "exclude": [],
+
+  // Grouping rules for path patterns. Everything else has a default level of 20.
   "groupRules": [
     {
-      "regex": "^react$",
+      "regex": "^react(-dom)?$",
       "level": 10
+    },
+    {
+      "regex": "^@angular/",
+      "level": 11
+    },
+    {
+      "regex": "^vue$",
+      "level": 12
     },
     {
       "regex": "^[@]",
@@ -88,26 +94,47 @@ TS Import Sorter can load configurations from both `package.json` and `import-so
       "level": 40
     }
   ],
-  "maximumLineLength": 100,
+
+  // Max line length before wrapping. 0 for no limit.
+  "maximumLineLength": 80,
+
+  // Max binding names per line before wrapping. 0 for no limit.
   "maximumWordsPerLine": 1,
+
   // Number of spaces to replace a TAB.
   "tabSize": 2,
-  // If set to "tab", TAB will be kept. If set to "space", TAB will be replaced by SPACEs.
+
+  // Indent lines with tabs instead of spaces. Valid values are 'tab' or 'space'.
   "tabType": "space",
+
+  // Use single or double quotes. Valid values are 'single' or 'double'.
   "quoteMark": "single",
+
+  // Whether to add trailing commas when multi-line. Valid values are 'none' or 'multiLine'.
   "trailingComma": "multiLine",
-  "hasSemicolon": true
+
+  // Whether to add semicolons at the ends of statements.
+  "hasSemicolon": true,
+
+  // Whether to end files with a new line.
+  "insertFinalNewline": true,
+
+  // Whether to add spaces between brackets. true for '{ id }' and false for '{id}'.
+  "bracketSpacing": true,
+
+  // End of line characters. Valid values are 'LF' (\n) or 'CRLF' (\r\n).
+  "eol": "LF"
 },
 ```
 
-`import-sorter.json` example:
+`import-sorter.json` has all config above, too. Example:
 
 ```json
 {
   "maximumLineLength": 100,
-  "maximumWordsPerLine": 1,
-  "tabSize": 2,
-  "tabType": "space"
+  "maximumWordsPerLine": 3,
+  "tabSize": 4,
+  "insertFinalNewline": false
 }
 ```
 
@@ -121,19 +148,13 @@ TS Import Sorter can load configurations from both `package.json` and `import-so
 
 `import-sorter.json` is searched in a similar way if it's a relative path.
 
-If `tsImportSorter.configuration.configurationFileName` is an absolute path, e.g. `/path/to/import-sorter.json`, no search is needed.
-
-The configurations will merge together, the precedence is:
-
-VS Code configuration < `import-sorter.json` < `package.json`
-
-So if you want global settings, just put a `import-sorter.json` in your workspace folder, and any rules in local `package.json` will still be respected.
+If `"tsImportSorter.configuration.configurationFileName"` is an absolute path, e.g. `/path/to/import-sorter.json`, no search is needed.
 
 ### Ignore files or import declarations
 
 There are a few ways to exclude files from inspection:
 
-- Add path patterns to extension config in VSCode.
+- Add path patterns to user/workspace/folder settings in VSCode.
   ```json
   "tsImportSorter.configuration.exclude": ["pathPattern"],
   ```

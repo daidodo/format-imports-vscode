@@ -18,7 +18,7 @@ export function loadEcConfig(fileName: string): Configuration {
     tabType: st === 'unset' ? undefined : st,
     tabSize: getTabSize(sz, tw),
     insertFinalNewline: nl === 'unset' ? undefined : nl,
-    eol: el === 'lf' ? '\n' : el === 'crlf' ? '\r\n' : undefined,
+    eol: el === 'lf' ? 'LF' : el === 'crlf' ? 'CRLF' : undefined,
   };
 }
 
