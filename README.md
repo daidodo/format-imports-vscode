@@ -14,6 +14,43 @@ Automatically sort imports for **JavaScript** and **TypeScript** source code. ([
 - Keep comments with imports when sorting.
 - Respect config from [Prettier](https://prettier.io), [EditorConfig](https://editorconfig.org) and VS Code editor settings.
 
+### Example
+Before:
+
+```typescript
+import sortImports from '../sort';
+import { TextDocument, TextDocumentWillSaveEvent, window } from 'vscode';
+import { getDeleteEdits, getEdits } from '@edit';
+import { getUnusedIds, parseSource } from '../parser';
+import loadConfig from '@config';
+import ts from 'typescript';
+import composeInsertSource from '../compose';
+```
+
+After:
+
+```typescript
+import ts from 'typescript';
+import {
+  TextDocument,
+  TextDocumentWillSaveEvent,
+  window,
+} from 'vscode';
+
+import loadConfig from '@config';
+import {
+  getDeleteEdits,
+  getEdits,
+} from '@edit';
+
+import composeInsertSource from '../compose';
+import {
+  getUnusedIds,
+  parseSource,
+} from '../parser';
+import sortImports from '../sort';
+```
+
 ## Extension Settings
 
 All VS Code settings under `"tsImportSorter"` section and their default values:
