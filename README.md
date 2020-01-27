@@ -15,13 +15,19 @@ Automatically sort imports for **JavaScript** and **TypeScript** source code. ([
 - Respect config from [Prettier](https://prettier.io), [EditorConfig](https://editorconfig.org) and VS Code editor settings.
 
 ### Example
+
 Before:
 
 ```typescript
+import { window } from 'vscode';
 import sortImports from '../sort';
-import { TextDocument, TextDocumentWillSaveEvent, window } from 'vscode';
-import { getDeleteEdits, getEdits } from '@edit';
-import { getUnusedIds, parseSource } from '../parser';
+import { TextDocument } from 'vscode';
+import { getEdits
+ } from '@edit';
+import { getDeleteEdits } from '@edit';
+import { getUnusedIds
+, parseSource } from '../parser';
+import { TextDocumentWillSaveEvent, TextEditor, Workspace, ImportEqualsDeclaration } from 'vscode';
 import loadConfig from '@config';
 import ts from 'typescript';
 import composeInsertSource from '../compose';
@@ -34,7 +40,9 @@ import ts from 'typescript';
 import {
   TextDocument,
   TextDocumentWillSaveEvent,
+  TextEditor,
   window,
+  Workspace,
 } from 'vscode';
 
 import loadConfig from '@config';
@@ -163,7 +171,6 @@ Here are all config in `package.json` under `"importSorter"` section and their d
     "eol": "LF"
   }
 }
-
 ```
 
 `import-sorter.json` has all config above, too. Example:
