@@ -22,9 +22,11 @@ Before:
 import { window } from 'vscode';
 import sortImports from '../sort';
 import { TextDocument } from 'vscode';
-import { getEdits } from '@edit';
+import { getEdits
+ } from '@edit';
 import { getDeleteEdits } from '@edit';
-import { getUnusedIds, parseSource } from '../parser';
+import { getUnusedIds
+, parseSource } from '../parser';
 import { TextDocumentWillSaveEvent, TextEditor, Workspace, ImportEqualsDeclaration } from 'vscode';
 import loadConfig from '@config';
 import ts from 'typescript';
@@ -35,13 +37,25 @@ After:
 
 ```typescript
 import ts from 'typescript';
-import { TextDocument, TextDocumentWillSaveEvent, TextEditor, window, Workspace } from 'vscode';
+import {
+  TextDocument,
+  TextDocumentWillSaveEvent,
+  TextEditor,
+  window,
+  Workspace,
+} from 'vscode';
 
 import loadConfig from '@config';
-import { getDeleteEdits, getEdits } from '@edit';
+import {
+  getDeleteEdits,
+  getEdits,
+} from '@edit';
 
 import composeInsertSource from '../compose';
-import { getUnusedIds, parseSource } from '../parser';
+import {
+  getUnusedIds,
+  parseSource,
+} from '../parser';
 import sortImports from '../sort';
 ```
 
