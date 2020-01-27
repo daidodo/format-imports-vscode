@@ -6,14 +6,13 @@ Automatically sort imports for **JavaScript** and **TypeScript** source code. ([
 
 - Auto format on save when `"editor.formatOnSave"` is `true`.
 - Auto merge imports, remove unused or duplicated names.
-- Preserve `'use strict'` directive and global comments, e.g. license.
-- Keep comments with imports when sorting.
-- Recognize JSX elements and keep `React` import.
-- Group React, Angular or Vue imports separately.
-- Customizable grouping rules.
+- Group imports by customizable rules.
+- Support multi-root projects.
 - Ignore specific files or imports.
-- Support config both in `package.json` and `import-sorter.json`.
-- Respect config from [Prettier](https://prettier.io), [EditorConfig](https://editorconfig.org) and VS Code user/workspace/folder settings.
+- Preserve `'use strict'`, `///` directives and global comments, e.g. license.
+- Recognize JSX elements and keep `React` import.
+- Keep comments with imports when sorting.
+- Respect config from [Prettier](https://prettier.io), [EditorConfig](https://editorconfig.org) and VS Code editor settings.
 
 ## Extension Settings
 
@@ -62,69 +61,72 @@ TS Import Sorter reads configurations from the following sources (in precedence 
 - `import-sorter.json` (configurable)
 - [Prettier configuration](https://github.com/prettier/prettier-vscode#configuration) if installed
 - `.editorconfig`
-- VS Code user/workspace/folder settings
+- VS Code `"editor"` and `"files"` settings
 
 Here are all config in `package.json` under `"importSorter"` section and their default values:
 
-```
-"importSorter": {
-  // Disable sorting for files matching regex expressions.
-  "exclude": [],
+```json
+{
+  "importSorter": {
+    // Disable sorting for files matching regex expressions.
+    "exclude": [],
 
-  // Grouping rules for path patterns. Everything else has a default level of 20.
-  "groupRules": [
-    {
-      "regex": "^react(-dom)?$",
-      "level": 10
-    },
-    {
-      "regex": "^@angular/",
-      "level": 11
-    },
-    {
-      "regex": "^vue$",
-      "level": 12
-    },
-    {
-      "regex": "^[@]",
-      "level": 30
-    },
-    {
-      "regex": "^[.]",
-      "level": 40
-    }
-  ],
+    // Grouping rules for path patterns. Everything else has a default level of 20.
+    "groupRules": [
+      {
+        "regex": "^react(-dom)?$",
+        "level": 10
+      },
+      {
+        "regex": "^@angular/",
+        "level": 11
+      },
+      {
+        "regex": "^vue$",
+        "level": 12
+      },
+      {
+        "regex": "^[@]",
+        "level": 30
+      },
+      {
+        "regex": "^[.]",
+        "level": 40
+      }
+    ],
 
-  // Max line length before wrapping. 0 for no limit.
-  "maximumLineLength": 80,
+    // Max line length before wrapping. 0 for no limit.
+    "maximumLineLength": 80,
 
-  // Max binding names per line before wrapping. 0 for no limit.
-  "maximumWordsPerLine": 1,
+    // Max binding names per line before wrapping. 0 for no limit.
+    "maximumWordsPerLine": 1,
 
-  // Number of spaces to replace a TAB.
-  "tabSize": 2,
+    // Number of spaces to replace a TAB.
+    "tabSize": 2,
 
-  // Indent lines with tabs instead of spaces. Valid values are 'tab' or 'space'.
-  "tabType": "space",
+    // Indent lines with tabs instead of spaces. Valid values are 'tab' or 'space'.
+    "tabType": "space",
 
-  // Use single or double quotes. Valid values are 'single' or 'double'.
-  "quoteMark": "single",
+    // Use single or double quotes. Valid values are 'single' or 'double'.
+    "quoteMark": "single",
 
-  // Whether to add trailing commas when multi-line. Valid values are 'none' or 'multiLine'.
-  "trailingComma": "multiLine",
+    // Whether to add trailing commas when multi-line. Valid values are 'none' or 'multiLine'.
+    "trailingComma": "multiLine",
 
-  // Whether to add semicolons at the ends of statements.
-  "hasSemicolon": true,
+    // Whether to add semicolons at the ends of statements.
+    "hasSemicolon": true,
 
-  // Whether to end files with a new line.
-  "insertFinalNewline": true,
+    // Whether to end files with a new line.
+    "insertFinalNewline": true,
 
-  // Whether to add spaces between brackets. true for '{ id }' and false for '{id}'.
-  "bracketSpacing": true,
+    // Whether to add spaces between brackets. true for '{ id }' and false for '{id}'.
+    "bracketSpacing": true,
 
-  // End of line characters. Valid values are 'LF' (\n) or 'CRLF' (\r\n).
-  "eol": "LF"
+    // End of line characters. Valid values are 'LF' (\n) or 'CRLF' (\r\n).
+    "eol": "LF"
+  }
 }
+
 ```
 
 `import-sorter.json` has all config above, too. Example:
@@ -138,7 +140,7 @@ Here are all config in `package.json` under `"importSorter"` section and their d
 }
 ```
 
-### Search Order
+### Multi-root projects support
 
 `package.json` is searched in the following order:
 
