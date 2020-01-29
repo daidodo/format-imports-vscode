@@ -59,6 +59,8 @@ import {
 import sortImports from '../sort';
 ```
 
+_Code style is configurable._
+
 ## Extension Settings
 
 All VS Code settings under `"tsImportSorter"` section and their default values:
