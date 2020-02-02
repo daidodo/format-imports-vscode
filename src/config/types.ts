@@ -10,7 +10,9 @@ export type Configuration = DeepReadonly<
       level: number;
     }[];
     maximumLineLength: number;
-    maximumWordsPerLine: number;
+    maximumBindingNamesPerLine: number;
+    maximumDefaultAndBindingNamesPerLine: number;
+    maximumNamesPerWrappedLine: number;
     tabSize: number;
     tabType: 'space' | 'tab';
     quoteMark: 'single' | 'double';

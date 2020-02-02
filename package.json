@@ -90,10 +90,20 @@
           },
           "description": "Grouping rules for path patterns. Everything else has a default level of 20."
         },
-        "tsImportSorter.configuration.maximumWordsPerLine": {
+        "tsImportSorter.configuration.maximumBindingNamesPerLine": {
           "type": "number",
           "default": 1,
           "description": "Max binding names per line before wrapping. 0 for no limit."
+        },
+        "tsImportSorter.configuration.maximumDefaultAndBindingNamesPerLine": {
+          "type": "number",
+          "default": 2,
+          "description": "Max default and binding names per line before wrapping. 0 for no limit."
+        },
+        "tsImportSorter.configuration.maximumNamesPerWrappedLine": {
+          "type": "number",
+          "default": 1,
+          "description": "Max names on wrapped lines. 0 for no limit."
         }
       }
     }

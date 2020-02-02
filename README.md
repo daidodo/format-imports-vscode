@@ -97,7 +97,13 @@ All VS Code settings under `"tsImportSorter"` section and their default values:
 ],
 
 // Max binding names per line before wrapping. 0 for no limit.
-"tsImportSorter.configuration.maximumWordsPerLine": 1,
+"tsImportSorter.configuration.maximumBindingNamesPerLine": 1,
+
+// Max default and binding names per line before wrapping. 0 for no limit.
+"tsImportSorter.configuration.maximumDefaultAndBindingNamesPerLine": 2,
+
+// Max names on wrapped lines. 0 for no limit.
+"tsImportSorter.configuration.maximumNamesPerWrappedLine": 1,
 ```
 
 ## Configuration
@@ -146,7 +152,13 @@ Here are all config in `package.json` under `"importSorter"` section and their d
     "maximumLineLength": 80,
 
     // Max binding names per line before wrapping. 0 for no limit.
-    "maximumWordsPerLine": 1,
+    "maximumBindingNamesPerLine": 1,
+
+    // Max default and binding names per line before wrapping. 0 for no limit.
+    "maximumDefaultAndBindingNamesPerLine": 2,
+
+    // Max names on wrapped lines. 0 for no limit.
+    "maximumNamesPerWrappedLine": 1,
 
     // Number of spaces to replace a TAB.
     "tabSize": 2,
@@ -180,7 +192,7 @@ Here are all config in `package.json` under `"importSorter"` section and their d
 ```json
 {
   "maximumLineLength": 100,
-  "maximumWordsPerLine": 3,
+  "quoteMark": "double",
   "tabSize": 4,
   "insertFinalNewline": false
 }
@@ -236,6 +248,66 @@ or
 
 ```ts
 import Excluded from 'import/sorter'; /* ts-import-sorter: disable */
+```
+
+### Maximum names per line
+
+When deciding whether to wrap an import statement or not, TS Import Sorter looks up both `maximumLineLength` and the following values:
+
+
+#### `maximumBindingNamesPerLine`
+
+For a statement importing only *binding names*, this value determines how many names are allowed before wrapping.
+
+For example, if you set:
+```json
+"maximumBindingNamesPerLine": 2,
+```
+then
+```typescript
+import { A } from 'foo';    // No wrap as there is 1 name
+import { B, C } from 'bar'; // No wrap as there are 2 names
+
+import {
+  D,
+  E,
+  F,
+} from 'tea';   // Wrapped as there are more than 2 names
+```
+
+* `maximumDefaultAndBindingNamesPerLine`
+
+For a statement importing *default* and *binding names*, this value determines how many names are allowed before wrapping.
+
+For example, if you set:
+```json
+"maximumDefaultAndBindingNamesPerLine": 2,
+```
+then
+```typescript
+import A from 'foo';        // No wrap as there is 1 name
+import B, { C } from 'foo'; // No wrap as there are 2 names
+import D, {
+  E,
+  F,
+} from 'bar'; // Wrapped as there are more than 2 names
+```
+
+* `maximumNamesPerWrappedLine`
+
+If an import statement is wrapped, this values decides how many names there are per line.
+
+For example, if you set:
+```json
+"maximumNamesPerWrappedLine": 2,
+```
+then
+```typescript
+import {
+  A, B,
+  C, D,
+  E,
+} from 'bar'; // There are 2 names at most per wrapped line
 ```
 
 ## Thanks

@@ -11,7 +11,7 @@ import {
 
 export interface ComposeConfig {
   maxLength: number;
-  maxWords: number;
+  maxWords: { withDefault: number; withoutDefault: number; wrapped: number };
   tab: string;
   quote: (s: string) => string;
   comma: string;
@@ -86,13 +86,19 @@ function composeNodeAsNamesImpl(
   config: ComposeConfig,
   forceWrap: boolean,
 ) {
-  const { text, canWrap } = composeNames(names, config, forceWrap);
+  const { text, canWrap } = composeNames(!!defaultName, names, config, forceWrap);
   const all = [defaultName, text].filter(s => !!s).join(', ');
   return { text: `import ${all} ${from}`, canWrap };
 }
 
-function composeNames(names: NameBinding[] | undefined, config: ComposeConfig, forceWrap: boolean) {
-  const { maxWords, maxLength, bracket, nl } = config;
+function composeNames(
+  hasDefault: boolean,
+  names: NameBinding[] | undefined,
+  config: ComposeConfig,
+  forceWrap: boolean,
+) {
+  const { maxWords: mw, maxLength, bracket, nl } = config;
+  const maxWords = hasDefault ? mw.withDefault - 1 : mw.withoutDefault;
   const words = names?.map(composeName).filter((w): w is string => !!w);
   if (!words || !words.length) return {};
   if (!forceWrap && words.length <= maxWords) {
@@ -118,7 +124,8 @@ function composeName(name: NameBinding | undefined) {
 
 function composeOneLineNames(words: string[], config: ComposeConfig) {
   assert(words.length > 0);
-  const { tab, maxWords, maxLength, comma } = config;
+  const { tab, maxWords: mw, maxLength, comma } = config;
+  const maxWords = mw.wrapped;
   const append = (t: string, n: string, s: boolean, e: boolean) =>
     t + (s ? '' : ' ') + n + (e ? comma : ',');
   const [first, ...rest] = words;
@@ -144,8 +151,12 @@ function configForCompose(config: Configuration): ComposeConfig {
     eol,
   } = config;
   return {
-    maxLength: config.maximumLineLength ?? Number.MAX_SAFE_INTEGER,
-    maxWords: config.maximumWordsPerLine ?? Number.MAX_SAFE_INTEGER,
+    maxLength: config.maximumLineLength || Number.MAX_SAFE_INTEGER,
+    maxWords: {
+      withoutDefault: config.maximumBindingNamesPerLine || Number.MAX_SAFE_INTEGER,
+      withDefault: config.maximumDefaultAndBindingNamesPerLine || Number.MAX_SAFE_INTEGER,
+      wrapped: config.maximumNamesPerWrappedLine || Number.MAX_SAFE_INTEGER,
+    },
     tab: tabType === 'tab' ? '\t' : ' '.repeat(tabSize ?? 2),
     quote: quoteMark === 'double' ? (s: string) => `"${s}"` : (s: string) => `'${s}'`,
     comma: trailingComma === 'none' ? '' : ',',

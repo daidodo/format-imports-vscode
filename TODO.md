@@ -3,9 +3,8 @@
 - Sort exports.
 - Group level comments. ([Link](https://github.com/SoominHan/import-sorter/issues/46))
 - Support ESLint plugin import/order. ([Link](https://github.com/SoominHan/import-sorter/issues/43))
-- Different word limit for one- and multi-line imports. ([Link](https://github.com/SoominHan/import-sorter/issues/31))
 - Import namespace alias. ([Link](https://github.com/SoominHan/import-sorter/issues/29))
-- Add schema.
+- Add config json schema.
 
 ### Implementation
 
@@ -15,9 +14,9 @@
 
 ### Bugs
 
-
 ### DONE
 
+- ~~Different word limit for one- and multi-line imports. ([Link](https://github.com/SoominHan/import-sorter/issues/31))~~
 - ~~Consider trailing comments when calc against max line length.~~
 - ~~Multi Root Workspace support.~~
 - ~~Newline: \n or \n\r~~
@@ -34,4 +33,5 @@
 - ~~Format leading spaces anyway.~~
 
 ### CANCEL
+
 - ~~Folding imports. ([Link](https://github.com/SoominHan/import-sorter/pull/38))~~
