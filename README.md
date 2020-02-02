@@ -59,7 +59,7 @@ import {
 import sortImports from '../sort';
 ```
 
-_Code style is configurable._
+_Note: Code style is configurable._
 
 ## Extension Settings
 
@@ -69,7 +69,7 @@ All VS Code settings under `"tsImportSorter"` section and their default values:
 // Configuration file name.
 "tsImportSorter.configuration.configurationFileName": "import-sorter.json",
 
-// Disable sorting for files matching regex expressions.
+// Disable sorting for files matching regular expressions.
 "tsImportSorter.configuration.exclude": [],
 
 // Grouping rules for path patterns. Everything else has a default level of 20.
@@ -115,13 +115,14 @@ TS Import Sorter reads configurations from the following sources (in precedence 
 - [Prettier configuration](https://github.com/prettier/prettier-vscode#configuration) if installed
 - `.editorconfig`
 - VS Code `"editor"` and `"files"` settings
+- VS Code `"tsImportSorter"` settings
 
 Here are all config in `package.json` under `"importSorter"` section and their default values:
 
 ```json
 {
   "importSorter": {
-    // Disable sorting for files matching regex expressions.
+    // Disable sorting for files matching regular expressions.
     "exclude": [],
 
     // Grouping rules for path patterns. Everything else has a default level of 20.
@@ -163,7 +164,7 @@ Here are all config in `package.json` under `"importSorter"` section and their d
     // Number of spaces to replace a TAB.
     "tabSize": 2,
 
-    // Indent lines with tabs instead of spaces. Valid values are 'tab' or 'space'.
+    // Indent lines with tabs or spaces. Valid values are 'tab' or 'space'.
     "tabType": "space",
 
     // Use single or double quotes. Valid values are 'single' or 'double'.
@@ -200,6 +201,8 @@ Here are all config in `package.json` under `"importSorter"` section and their d
 
 ### Multi-root projects support
 
+TS Import Sorter respects [VS Code user and workspace settings](https://code.visualstudio.com/docs/getstarted/settings) and supports [multi-root workspaces](https://code.visualstudio.com/docs/editor/multi-root-workspaces).
+
 `package.json` is searched in the following order:
 
 - The same folder of the edited file.
@@ -214,7 +217,7 @@ If `"tsImportSorter.configuration.configurationFileName"` is an absolute path, e
 
 There are a few ways to exclude files from inspection:
 
-- Add path patterns to user/workspace/folder settings in VSCode.
+- Add path patterns to user or workspace settings in VSCode.
   ```json
   "tsImportSorter.configuration.exclude": ["pathPattern"],
   ```

@@ -51,7 +51,7 @@
           "items": {
             "type": "string"
           },
-          "description": "Disable sorting for files matching regex expressions."
+          "description": "Disable sorting for files matching regular expressions."
         },
         "tsImportSorter.configuration.groupRules": {
           "type": "array",
