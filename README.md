@@ -278,7 +278,7 @@ import {
 } from 'tea';   // Wrapped as there are more than 2 names
 ```
 
-* `maximumDefaultAndBindingNamesPerLine`
+#### `maximumDefaultAndBindingNamesPerLine`
 
 For a statement importing *default* and *binding names*, this value determines how many names are allowed before wrapping.
 
@@ -296,7 +296,7 @@ import D, {
 } from 'bar'; // Wrapped as there are more than 2 names
 ```
 
-* `maximumNamesPerWrappedLine`
+#### `maximumNamesPerWrappedLine`
 
 If an import statement is wrapped, this values decides how many names there are per line.
 
