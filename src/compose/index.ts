@@ -39,9 +39,8 @@ export function composeNodeAsParts(
   parts: string[],
   from: string,
   extraLength: number,
-  config: ComposeConfig,
+  { maxLength, tab, nl }: ComposeConfig,
 ) {
-  const { maxLength, tab, nl } = config;
   const [first, ...rest] = parts;
   assert(!!first);
   let text = `import ${first}` + (rest.length ? ',' : '');
@@ -60,8 +59,7 @@ export function composeNodeAsParts(
   return lines.join(nl);
 }
 
-export function composeComments(comments: NodeComment[] | undefined, config: ComposeConfig) {
-  const { nl } = config;
+export function composeComments(comments: NodeComment[] | undefined, { nl }: ComposeConfig) {
   if (!comments || !comments.length) return;
   return comments.map(c => c.text).join(nl) + nl;
 }
@@ -122,9 +120,11 @@ function composeName(name: NameBinding | undefined) {
   return `* as ${aliasName}`;
 }
 
-function composeOneLineNames(words: string[], config: ComposeConfig) {
+function composeOneLineNames(
+  words: string[],
+  { tab, maxWords: mw, maxLength, comma }: ComposeConfig,
+) {
   assert(words.length > 0);
-  const { tab, maxWords: mw, maxLength, comma } = config;
   const maxWords = mw.wrapped;
   const append = (t: string, n: string, s: boolean, e: boolean) =>
     t + (s ? '' : ' ') + n + (e ? comma : ',');
@@ -139,23 +139,26 @@ function composeOneLineNames(words: string[], config: ComposeConfig) {
   return { text, left: [] };
 }
 
-function configForCompose(config: Configuration): ComposeConfig {
-  const {
-    tabType,
-    tabSize,
-    quoteMark,
-    trailingComma,
-    hasSemicolon,
-    bracketSpacing,
-    insertFinalNewline,
-    eol,
-  } = config;
+function configForCompose({
+  maximumLineLength,
+  maximumBindingNamesPerLine,
+  maximumDefaultAndBindingNamesPerLine,
+  maximumNamesPerWrappedLine,
+  tabType,
+  tabSize,
+  quoteMark,
+  trailingComma,
+  hasSemicolon,
+  bracketSpacing,
+  insertFinalNewline,
+  eol,
+}: Configuration): ComposeConfig {
   return {
-    maxLength: config.maximumLineLength || Number.MAX_SAFE_INTEGER,
+    maxLength: maximumLineLength || Number.MAX_SAFE_INTEGER,
     maxWords: {
-      withoutDefault: config.maximumBindingNamesPerLine || Number.MAX_SAFE_INTEGER,
-      withDefault: config.maximumDefaultAndBindingNamesPerLine || Number.MAX_SAFE_INTEGER,
-      wrapped: config.maximumNamesPerWrappedLine || Number.MAX_SAFE_INTEGER,
+      withoutDefault: maximumBindingNamesPerLine || Number.MAX_SAFE_INTEGER,
+      withDefault: maximumDefaultAndBindingNamesPerLine || Number.MAX_SAFE_INTEGER,
+      wrapped: maximumNamesPerWrappedLine || Number.MAX_SAFE_INTEGER,
     },
     tab: tabType === 'tab' ? '\t' : ' '.repeat(tabSize ?? 2),
     quote: quoteMark === 'double' ? (s: string) => `"${s}"` : (s: string) => `'${s}'`,
