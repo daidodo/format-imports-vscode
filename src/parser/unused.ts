@@ -3,6 +3,7 @@ import ts, {
   CompilerOptions,
   SourceFile,
   sys,
+  TranspileOptions,
 } from 'typescript';
 
 import { UnusedId } from './types';
@@ -11,7 +12,7 @@ export function getUnusedIds(
   fileName: string,
   sourceFile: SourceFile,
   sourceText: string,
-  tsConfig: { compilerOptions?: CompilerOptions },
+  tsConfig: TranspileOptions,
 ) {
   const UNUSED_CODE = new Set([6133, 6196]);
   const options = prepareOptions(tsConfig);
@@ -26,7 +27,7 @@ export function getUnusedIds(
     .filter((r): r is UnusedId => !!r.id && r.pos !== undefined);
 }
 
-function prepareOptions(tsConfig: { compilerOptions?: CompilerOptions }) {
+function prepareOptions(tsConfig: TranspileOptions) {
   // Remove 'moduleResolution' to fix 'Unexpected moduleResolution: node' issue.
   const { moduleResolution, ...rest } = tsConfig.compilerOptions ?? {};
   return {

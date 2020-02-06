@@ -13,14 +13,15 @@ import {
   RangeAndEmptyLines,
 } from '../parser';
 
+export { apply } from './apply';
+
 interface InsertPos {
   pos: LineAndCharacter;
   leadingNewLines: number;
   trailingNewLines: number;
 }
 
-// eslint-disable-next-line @typescript-eslint/require-await
-export async function getEdits(edits: TextEdit[], insertText: string, pos: LineAndCharacter) {
+export function getEdits(edits: TextEdit[], insertText: string, pos: LineAndCharacter) {
   const insertEdit = insertText
     ? TextEdit.insert(new Position(pos.line, pos.character), insertText)
     : undefined;
