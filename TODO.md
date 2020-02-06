@@ -11,6 +11,8 @@
 - Use Immutable.js.
 - Unit tests.
 - Integration tests. (prettier)
+- [File System](https://code.visualstudio.com/api/references/vscode-api#FileSystem)
+- [TextDocument](https://code.visualstudio.com/api/references/vscode-api#TextDocument)
 
 ### Bugs
 

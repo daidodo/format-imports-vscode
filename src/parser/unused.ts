@@ -57,7 +57,7 @@ function mockHost(
 }
 
 function extractId(message: string) {
-  // 'Header' is declared but its value is never read.
+  // 'XXX' is declared but its value is never read.
   const r = /^'(\w+)' is declared but/.exec(message);
   return r?.[1];
 }
