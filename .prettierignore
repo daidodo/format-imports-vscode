@@ -1,2 +1,2 @@
-src/test/suite/examples
+src/test/suite/examples/**/*.ts
 /README.md

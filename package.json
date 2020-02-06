@@ -159,7 +159,7 @@
       "prettier/@typescript-eslint"
     ],
     "ignorePatterns": [
-      "*.spec.*"
+      "src/test/suite/examples/**/*.ts"
     ],
     "rules": {
       "@typescript-eslint/no-explicit-any": "off",
@@ -185,7 +185,7 @@
   },
   "importSorter": {
     "exclude": [
-      "src/test/suite/examples"
+      "src/test/suite/examples/.+/origin.ts$"
     ]
   }
 }

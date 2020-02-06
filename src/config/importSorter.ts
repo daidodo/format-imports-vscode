@@ -43,7 +43,8 @@ function packageConfig(fileName: string) {
   return config as Configuration;
 }
 
-function fileConfig(filename: string | undefined, path: string) {
+// Exported for testing purpose
+export function fileConfig(filename: string | undefined, path?: string) {
   if (!filename) return {};
   const [configFile] = findFileFromPathAndParents(filename, path);
   if (!configFile) return {};

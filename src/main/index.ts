@@ -19,8 +19,8 @@ import sortImports from '../sort';
 export default function formatSource(
   fileName: string,
   sourceText: string,
-  config: Configuration,
-  tsConfig: TranspileOptions,
+  config: Configuration = {},
+  tsConfig: TranspileOptions = {},
 ) {
   const sourceFile = ts.createSourceFile(fileName, sourceText, ScriptTarget.Latest);
   const { importNodes, allIds, insertPoint } = parseSource(sourceFile, sourceText);

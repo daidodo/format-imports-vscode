@@ -22,10 +22,11 @@ export function normalizePath(str: string) {
 /**
  * Search for `filename` from `path` and up to all its parents.
  */
-export function findFileFromPathAndParents(filename: string, path: string) {
+export function findFileFromPathAndParents(filename: string, path?: string) {
   if (!filename) return [];
   // Absolute path: /path/to/file or C:\path\to\file
   if (/^(\/|[a-zA-Z]:\\)/.test(filename)) return [filename];
+  assertNonNull(path);
   const comp = path.split(/\\|\//);
   if (isRegularFile(path)) comp.pop();
   const results = [];
