@@ -16,7 +16,7 @@ interface TestSuite {
 
 interface TestCase {
   name?: string;
-  origin: string;
+  origin?: string; // origin can be undefined in default case
   result?: string;
 }
 
@@ -61,17 +61,18 @@ function getTestSuite(dir: string, name: string): TestSuite | undefined {
 
 function runTestSuite(ts: TestSuite, preConfig?: Configuration, specific?: string) {
   const { name, config: curConfig, cases, suites } = ts;
+  const defResult = cases.find(c => !c.name)?.result;
   const config = curConfig && preConfig ? { ...preConfig, ...curConfig } : curConfig ?? preConfig;
   suite(name, () => {
     if (!specific) {
-      cases.forEach(c => runTestCase(c, config));
+      cases.forEach(c => runTestCase(c, defResult, config));
       suites.forEach(s => runTestSuite(s, config));
     } else {
       const [n, ...rest] = specific.split('/');
       if (!rest.length) {
         const c = cases.find(c => (c.name ?? 'default') === n);
         assertNonNull(c);
-        runTestCase(c, config);
+        runTestCase(c, defResult, config);
       } else {
         const s = suites.find(s => s.name === n);
         assertNonNull(s);
@@ -81,13 +82,20 @@ function runTestSuite(ts: TestSuite, preConfig?: Configuration, specific?: strin
   });
 }
 
-function runTestCase({ name, origin, result }: TestCase, config?: Configuration) {
+function runTestCase(
+  { name, origin, result }: TestCase,
+  defResult?: string,
+  config?: Configuration,
+) {
+  if (!name && !origin) return;
   test(name ?? 'default', () => {
+    assertNonNull(origin);
+    const res = result || defResult;
     const source = fs.readFileSync(origin).toString();
     const actual = formatSource(origin, source, config);
-    if (actual === undefined) assert.equal(result, undefined);
-    else if (result) {
-      const expected = fs.readFileSync(result).toString();
+    if (actual === undefined) assert.equal(res, undefined);
+    else if (res) {
+      const expected = fs.readFileSync(res).toString();
       assert.equal(actual, expected);
     } else assert.equal(source, actual);
   });
