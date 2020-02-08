@@ -62,7 +62,7 @@ function decideDeleteAndInsert(
   config: Configuration,
 ) {
   if (!insertRange) {
-    // Insert at 'range' (been deleted)
+    // Insert at 'range' (which will be deleted)
     const EL = config.insertFinalNewline ? 1 : 0;
     const { fullStart, leadingNewLines: ln, fullEnd, eof } = range;
     const leadingNewLines = !fullStart.pos ? 0 : Math.min(Math.max(ln, 1), 2);

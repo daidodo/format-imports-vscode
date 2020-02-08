@@ -1,11 +1,11 @@
 import assert from 'assert';
-import fs, { Dirent } from 'fs';
+import fs from 'fs';
 import path from 'path';
-import { window } from 'vscode';
 
 import { Configuration } from '../../config';
 import { fileConfig } from '../../config/importSorter';
 import formatSource from '../../main';
+import { assertNonNull } from '../../utils';
 
 interface TestSuite {
   name: string;
@@ -23,29 +23,22 @@ interface TestCase {
 const CONF = 'import-sorter.json';
 
 suite('Extension Test Suite', () => {
-  suite('Examples', () => {
-    window.showInformationMessage('Examples test started.');
-    getAllTestSuites().forEach(s => runTestSuite(s));
-  });
+  const dir = path.resolve(__dirname).replace(/\/out\//g, '/src/');
+  const examples = getTestSuite(dir, 'examples');
+  if (!examples) return;
+  // Run all tests
+  return runTestSuite(examples);
+  // Alternatively, you can run a specific test case
+  // return runTestSuite(examples, undefined, 'delete/tail/0-0');
 });
 
-function getAllTestSuites() {
-  const dir = path.resolve(__dirname, './examples').replace(/\/out\//g, '/src/');
-  return fs
-    .readdirSync(dir, { withFileTypes: true })
-    .map(e => getTestSuite(dir, e))
-    .filter((s): s is TestSuite => !!s);
-}
-
-function getTestSuite(dir: string, entry: Dirent): TestSuite | undefined {
-  if (!entry.isDirectory()) return;
-  const { name } = entry;
+function getTestSuite(dir: string, name: string): TestSuite | undefined {
   const path = `${dir}/${name}`;
   const entries = fs.readdirSync(path, { withFileTypes: true });
   const config = entries.find(({ name }) => name === CONF) && fileConfig(`${path}/${CONF}`);
   const suites = entries
     .filter(e => e.isDirectory())
-    .map(e => getTestSuite(path, e))
+    .map(({ name }) => getTestSuite(path, name))
     .filter((s): s is TestSuite => !!s);
   const map = new Map<string, TestCase>();
   entries
@@ -66,12 +59,25 @@ function getTestSuite(dir: string, entry: Dirent): TestSuite | undefined {
   return { name, config, suites, cases: [...map.values()] };
 }
 
-function runTestSuite(ts: TestSuite, preConfig?: Configuration) {
+function runTestSuite(ts: TestSuite, preConfig?: Configuration, specific?: string) {
   const { name, config: curConfig, cases, suites } = ts;
   const config = curConfig && preConfig ? { ...preConfig, ...curConfig } : curConfig ?? preConfig;
   suite(name, () => {
-    cases.forEach(c => runTestCase(c, config));
-    suites.forEach(s => runTestSuite(s, config));
+    if (!specific) {
+      cases.forEach(c => runTestCase(c, config));
+      suites.forEach(s => runTestSuite(s, config));
+    } else {
+      const [n, ...rest] = specific.split('/');
+      if (!rest.length) {
+        const c = cases.find(c => (c.name ?? 'default') === n);
+        assertNonNull(c);
+        runTestCase(c, config);
+      } else {
+        const s = suites.find(s => s.name === n);
+        assertNonNull(s);
+        runTestSuite(s, config, rest.join('/'));
+      }
+    }
   });
 }
 

@@ -32,7 +32,7 @@ export default function composeInsertSource(
   const h = nl.repeat(leadingNewLines);
   const e = nl.repeat(trailingNewLines);
   const text = groups.map(g => g.map(n => n.compose(c)).join(nl)).join(nl + nl);
-  return h + text + e;
+  return text ? h + text + e : e;
 }
 
 export function composeNodeAsParts(
