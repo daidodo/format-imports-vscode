@@ -35,7 +35,7 @@ function sortImportsBeforeSavingDocument(event: TextDocumentWillSaveEvent) {
     const { config, tsConfig } = loadConfig(fileUri, languageId);
     if (!config.formatOnSave) return;
     if (isExcluded(fileName, config)) return;
-    const newSourceText = formatSource(document.getText(), fileName, config, tsConfig);
+    const newSourceText = formatSource(fileName, document.getText(), config, tsConfig);
     if (newSourceText === undefined) return;
     event.waitUntil(Promise.resolve([TextEdit.replace(fullRange(document), newSourceText)]));
   } catch (e) {
