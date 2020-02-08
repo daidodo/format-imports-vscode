@@ -46,7 +46,7 @@ function getTestSuite(dir: string, name: string): TestSuite | undefined {
     .forEach(({ name }) => {
       const r = /^(.+\.)?(origin|result)\.ts$/.exec(name);
       if (!r) return;
-      const [_, n, t] = r;
+      const [, n, t] = r;
       const p = `${path}/${name}`;
       const k = n ? n.slice(0, n.length - 1) : '';
       const v = map.get(k) ?? { origin: '' };

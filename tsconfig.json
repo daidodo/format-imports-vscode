@@ -12,5 +12,5 @@
     "noUnusedLocals": true,
     "esModuleInterop": true
   },
-  "exclude": ["node_modules", ".vscode-test"]
+  "exclude": ["node_modules", ".vscode-test", "src/test/suite/examples"]
 }
