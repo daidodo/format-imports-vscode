@@ -185,7 +185,7 @@
   },
   "importSorter": {
     "exclude": [
-      "src/test/suite/examples/.+/origin.ts$"
+      "src/test/suite/examples/.+/(.+\\.)?origin\\.ts$"
     ]
   }
 }
