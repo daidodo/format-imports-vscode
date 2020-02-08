@@ -26,7 +26,7 @@
   "keywords": [
     "javascript",
     "typescript",
-    "import sorter",
+    "import sort",
     "sort imports",
     "multi-root ready"
   ],
@@ -56,8 +56,7 @@
         },
         "tsImportSorter.configuration.groupRules": {
           "type": "array",
-          "default": [
-            {
+          "default": [{
               "regex": "^react(-dom)?$",
               "level": 10
             },
