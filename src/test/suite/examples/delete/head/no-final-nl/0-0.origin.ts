@@ -1,1 +1,1 @@
-'use strict';  import A from 'a';  
+'use ';  import A from 'a';  
