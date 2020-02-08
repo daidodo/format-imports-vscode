@@ -23,3 +23,15 @@ export type Configuration = DeepReadonly<
     eol: 'LF' | 'CRLF';
   }>
 >;
+
+export interface ComposeConfig {
+  maxLength: number;
+  maxWords: { withDefault: number; withoutDefault: number; wrapped: number };
+  tab: string;
+  quote: (s: string) => string;
+  comma: string;
+  semi: string;
+  bracket: (s: string) => string;
+  lastNewLine: boolean;
+  nl: string;
+}

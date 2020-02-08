@@ -1,4 +1,5 @@
-import { Configuration } from '../config';
+import { ComposeConfig } from '../config';
+import { InsertPos } from '../edit';
 import {
   ImportNode,
   NameBinding,
@@ -9,29 +10,17 @@ import {
   assertNonNull,
 } from '../utils';
 
-export interface ComposeConfig {
-  maxLength: number;
-  maxWords: { withDefault: number; withoutDefault: number; wrapped: number };
-  tab: string;
-  quote: (s: string) => string;
-  comma: string;
-  semi: string;
-  bracket: (s: string) => string;
-  lastNewLine: boolean;
-  nl: string;
-}
-
 export default function composeInsertSource(
   groups: ImportNode[][],
-  config: Configuration,
-  leadingNewLines: number,
-  trailingNewLines: number,
+  insertPos: InsertPos,
+  config: ComposeConfig,
 ) {
-  const c = configForCompose(config);
-  const { nl } = c;
-  const h = nl.repeat(leadingNewLines);
-  const e = nl.repeat(trailingNewLines);
-  const text = groups.map(g => g.map(n => n.compose(c)).join(nl)).join(nl + nl);
+  if (!groups.length) return;
+  const { leadingNewLines, trailingNewLines } = insertPos;
+  const { nl } = config;
+  const h = nl.repeat(leadingNewLines ?? 0);
+  const e = nl.repeat(trailingNewLines ?? 0);
+  const text = groups.map(g => g.map(n => n.compose(config)).join(nl)).join(nl + nl);
   return text ? h + text + e : e;
 }
 
@@ -137,35 +126,4 @@ function composeOneLineNames(
     text = t;
   }
   return { text, left: [] };
-}
-
-function configForCompose({
-  maximumLineLength,
-  maximumBindingNamesPerLine,
-  maximumDefaultAndBindingNamesPerLine,
-  maximumNamesPerWrappedLine,
-  tabType,
-  tabSize,
-  quoteMark,
-  trailingComma,
-  hasSemicolon,
-  bracketSpacing,
-  insertFinalNewline,
-  eol,
-}: Configuration): ComposeConfig {
-  return {
-    maxLength: maximumLineLength || Number.MAX_SAFE_INTEGER,
-    maxWords: {
-      withoutDefault: maximumBindingNamesPerLine || Number.MAX_SAFE_INTEGER,
-      withDefault: maximumDefaultAndBindingNamesPerLine || Number.MAX_SAFE_INTEGER,
-      wrapped: maximumNamesPerWrappedLine || Number.MAX_SAFE_INTEGER,
-    },
-    tab: tabType === 'tab' ? '\t' : ' '.repeat(tabSize ?? 2),
-    quote: quoteMark === 'double' ? (s: string) => `"${s}"` : (s: string) => `'${s}'`,
-    comma: trailingComma === 'none' ? '' : ',',
-    semi: hasSemicolon === false ? '' : ';',
-    bracket: bracketSpacing === false ? (s: string) => `{${s}}` : (s: string) => `{ ${s} }`,
-    lastNewLine: !!insertFinalNewline,
-    nl: eol === 'CRLF' ? '\r\n' : '\n',
-  };
 }

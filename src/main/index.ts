@@ -4,7 +4,10 @@ import ts, {
 } from 'typescript';
 
 import composeInsertSource from '../compose';
-import { Configuration } from '../config';
+import {
+  configForCompose,
+  Configuration,
+} from '../config';
 import {
   apply,
   getDeleteEdits,
@@ -27,12 +30,12 @@ export default function formatSource(
   if (!insertPoint || !importNodes.length) return;
   const { range: insertRange } = insertPoint;
 
+  const composeConfig = configForCompose(config);
   const unusedIds = getUnusedIds(fileName, sourceFile, sourceText, tsConfig);
-  const { deleteEdits, insertPos } = getDeleteEdits(importNodes, insertRange, config);
+  const { deleteEdits, insertPos } = getDeleteEdits(importNodes, insertRange, composeConfig);
   const groups = sortImports(importNodes, allIds, unusedIds, config);
-  const { pos, leadingNewLines, trailingNewLines } = insertPos;
-  const insertSource = composeInsertSource(groups, config, leadingNewLines, trailingNewLines);
-  const edits = getEdits(deleteEdits, insertSource, pos);
+  const insertSource = composeInsertSource(groups, insertPos, composeConfig);
+  const edits = getEdits(deleteEdits, insertSource, insertPos.pos);
 
   return apply(sourceText, sourceFile, edits);
 }

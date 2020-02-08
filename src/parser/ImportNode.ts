@@ -9,10 +9,10 @@ import {
 
 import {
   composeComments,
-  ComposeConfig,
   composeNodeAsNames,
   composeNodeAsParts,
 } from '../compose';
+import { ComposeConfig } from '../config';
 import {
   assertNonNull,
   normalizePath,
@@ -167,7 +167,7 @@ export default class ImportNode {
           if (!r.length) return [a];
           const l = r[r.length - 1];
           return compareBindingName(l, a) ? [...r, a] : r;
-        }, [] as NameBinding[]);
+        }, new Array<NameBinding>());
   }
 
   private get hasLeadingComments() {

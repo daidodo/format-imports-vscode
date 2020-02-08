@@ -51,7 +51,7 @@ function sortAndMergeNodes(nodes: ImportNode[]) {
       const last = r[r.length - 1];
       if (last.merge(n)) return r;
       return [...r, n];
-    }, [] as ImportNode[]);
+    }, new Array<ImportNode>());
   merged.forEach(n => n.sortBindingNames());
   // Sort nodes again because binding names may have changed.
   return merged.sort((a, b) => a.compare(b));
