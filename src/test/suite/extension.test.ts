@@ -23,10 +23,9 @@ interface TestCase {
 const CONF = 'import-sorter.json';
 
 suite('Extension Test Suite', () => {
-  test('Examples test', () => {
+  suite('Examples', () => {
     window.showInformationMessage('Examples test started.');
-    const suites = getAllTestSuites();
-    suites.forEach(s => runTestSuite(s, 'examples'));
+    getAllTestSuites().forEach(s => runTestSuite(s));
   });
 });
 
@@ -67,20 +66,23 @@ function getTestSuite(dir: string, entry: Dirent): TestSuite | undefined {
   return { name, config, suites, cases: [...map.values()] };
 }
 
-function runTestSuite(suite: TestSuite, prefix: string, preConfig?: Configuration) {
-  const { name, config, cases, suites } = suite;
-  const n = `${prefix}/${name}`;
-  cases.forEach(c => runTestCase(c, n, { ...preConfig, ...config }));
-  suites.forEach(s => runTestSuite(s, n));
+function runTestSuite(ts: TestSuite, preConfig?: Configuration) {
+  const { name, config: curConfig, cases, suites } = ts;
+  const config = curConfig && preConfig ? { ...preConfig, ...curConfig } : curConfig ?? preConfig;
+  suite(name, () => {
+    cases.forEach(c => runTestCase(c, config));
+    suites.forEach(s => runTestSuite(s, config));
+  });
 }
 
-function runTestCase({ name, origin, result }: TestCase, prefix: string, config?: Configuration) {
-  const n = name ? `${prefix}/${name}` : prefix;
-  const source = fs.readFileSync(origin).toString();
-  const actual = formatSource(origin, source, config);
-  if (actual === undefined) assert.equal(result, undefined, n);
-  else if (result) {
-    const expected = fs.readFileSync(result).toString();
-    assert.equal(actual, expected, n);
-  } else assert.equal(source, actual, n);
+function runTestCase({ name, origin, result }: TestCase, config?: Configuration) {
+  test(name ?? 'default', () => {
+    const source = fs.readFileSync(origin).toString();
+    const actual = formatSource(origin, source, config);
+    if (actual === undefined) assert.equal(result, undefined);
+    else if (result) {
+      const expected = fs.readFileSync(result).toString();
+      assert.equal(actual, expected);
+    } else assert.equal(source, actual);
+  });
 }
