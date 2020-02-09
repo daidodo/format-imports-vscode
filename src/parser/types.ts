@@ -43,6 +43,7 @@ export interface InsertNodeRange {
 }
 
 export interface UnusedId {
-  id: string;
+  code: number;
+  id?: string;
   pos: number;
 }

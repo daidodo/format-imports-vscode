@@ -24,6 +24,7 @@ import {
   RangeAndEmptyLines,
   UnusedId,
 } from './types';
+import { UnusedCode } from './unused';
 
 export default class ImportNode {
   private readonly node_: ImportDeclaration | ImportEqualsDeclaration;
@@ -103,7 +104,9 @@ export default class ImportNode {
 
   removeUnusedNames(allNames: Set<string>, unusedIds: UnusedId[]) {
     if (this.isScript) return this;
-    const unusedNames = new Set(unusedIds.filter(r => this.withinDeclRange(r.pos)).map(r => r.id));
+    const withinRange = unusedIds.filter(r => this.withinDeclRange(r.pos));
+    if (withinRange.some(u => u.code === UnusedCode.ALL)) return undefined;
+    const unusedNames = new Set(withinRange.map(r => r.id).filter((id): id is string => !!id));
     if (!isNameUsed(this.defaultName_, allNames, unusedNames)) this.defaultName_ = undefined;
     if (this.binding_) {
       if (this.binding_.type === 'named') {
