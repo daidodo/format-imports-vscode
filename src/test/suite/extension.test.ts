@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 
 import { Configuration } from '../../config';
+import { merge } from '../../config/helper';
 import { fileConfig } from '../../config/importSorter';
 import formatSource from '../../main';
 import { assertNonNull } from '../../utils';
@@ -60,7 +61,7 @@ function getTestSuite(dir: string, name: string): TestSuite | undefined {
 function runTestSuite(ts: TestSuite, specific?: string, preConfig?: Configuration) {
   const { name, config: curConfig, cases, suites } = ts;
   const defResult = cases.find(c => !c.name)?.result;
-  const config = curConfig && preConfig ? { ...preConfig, ...curConfig } : curConfig ?? preConfig;
+  const config = curConfig && preConfig ? merge(preConfig, curConfig) : curConfig ?? preConfig;
   suite(name, () => {
     if (!specific) {
       cases.forEach(c => runTestCase(c, defResult, config));

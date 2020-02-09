@@ -1,0 +1,16 @@
+{
+  "groupRules": [
+    {
+      "regex": "^[a-zA-Z]",
+      "level": 10
+    },
+    {
+      "regex": "^\\.\\.",
+      "level": 30
+    },
+    {
+      "regex": "^\\.",
+      "level": 25
+    }
+  ]
+}
