@@ -13,10 +13,7 @@ export default function sortImports(
   const usedNodes = nodes
     .map(n => n.removeUnusedNames(usedIds, unusedIds))
     .filter((n): n is ImportNode => !!n);
-  const { groups, scripts } = groupNodes(usedNodes, config);
-  const sorted = groups.map(ns => sortAndMergeNodes(ns));
-  const unique = scripts && uniqueScripts(scripts);
-  return unique ? [unique, ...sorted] : sorted;
+  return groupNodes(usedNodes, config).map(g => sortAndMergeNodes(g));
 }
 
 function groupNodes(nodes: ImportNode[], config: Configuration) {
@@ -30,11 +27,11 @@ function groupNodes(nodes: ImportNode[], config: Configuration) {
       for (const r of groupRules) if (n.match(r.regex)) return addNode(n, r.level, groups);
     addNode(n, DEFAULT_LEVEL, groups);
   });
-  return {
-    scripts: scripts.length ? scripts : undefined,
+  return [
+    ...(scripts.length ? [scripts] : []),
     // Sort groups by level.
-    groups: [...groups.entries()].sort(([a], [b]) => a - b).map(([_, n]) => n),
-  };
+    ...[...groups.entries()].sort(([a], [b]) => a - b).map(([_, g]) => g),
+  ];
 }
 
 function addNode(node: ImportNode, level: number, groups: Map<number, ImportNode[]>) {
@@ -55,10 +52,4 @@ function sortAndMergeNodes(nodes: ImportNode[]) {
   merged.forEach(n => n.sortBindingNames());
   // Sort nodes again because binding names may have changed.
   return merged.sort((a, b) => a.compare(b));
-}
-
-function uniqueScripts(nodes: ImportNode[]) {
-  return nodes
-    .sort((a, b) => a.range.start.pos - b.range.start.pos)
-    .filter((a, i, aa) => i === aa.findIndex(b => !a.compare(b)));
 }

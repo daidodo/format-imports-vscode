@@ -138,7 +138,8 @@ export default class ImportNode {
   }
 
   /**
-   * @returns true if `node` is fully merged to `this`; Or false if `node` still has names thus can't be ignored.
+   * @returns true if `node` is fully merged to `this`;
+   *          Or false if `node` still has names thus can't be ignored.
    */
   merge(node: ImportNode) {
     const { moduleIdentifier_, node_ } = node;

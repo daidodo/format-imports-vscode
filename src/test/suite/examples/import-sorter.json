@@ -1,0 +1,24 @@
+{
+  "groupRules": [
+    {
+      "regex": "^react(-dom)?$",
+      "level": 10
+    },
+    {
+      "regex": "^@angular/",
+      "level": 11
+    },
+    {
+      "regex": "^vue$",
+      "level": 12
+    },
+    {
+      "regex": "^[@]",
+      "level": 30
+    },
+    {
+      "regex": "^[.]",
+      "level": 40
+    }
+  ]
+}
