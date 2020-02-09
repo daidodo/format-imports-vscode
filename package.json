@@ -1,6 +1,6 @@
 {
   "name": "tsimportsorter",
-  "displayName": "TS Import Sorter",
+  "displayName": "JS/TS Import Sorter",
   "description": "Auto sort imports for JavaScript and TypeScript.",
   "icon": "assets/icons/main.jpg",
   "publisher": "dozerg",
@@ -25,8 +25,9 @@
   "keywords": [
     "javascript",
     "typescript",
+    "import",
     "import sort",
-    "sort imports",
+    "sort import",
     "multi-root ready"
   ],
   "activationEvents": [
@@ -38,7 +39,7 @@
   "main": "./out/extension.js",
   "contributes": {
     "configuration": {
-      "title": "TS Import Sorter configuration",
+      "title": "JS/TS Import Sorter configuration",
       "properties": {
         "tsImportSorter.configuration.configurationFileName": {
           "type": "string",

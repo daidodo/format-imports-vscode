@@ -1,4 +1,4 @@
-# TS Import Sorter
+# JS/TS Import Sorter
 
 Automatically sort imports for **JavaScript** and **TypeScript** source code. ([Install](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter))
 
@@ -108,7 +108,7 @@ All VS Code settings under `"tsImportSorter"` section and their default values:
 
 ## Configuration
 
-TS Import Sorter reads configurations from the following sources (in precedence from high to low):
+JS/TS Import Sorter reads configurations from the following sources (in precedence from high to low):
 
 - `"importSorter"` section in `package.json`
 - `import-sorter.json` (configurable)
@@ -201,7 +201,7 @@ Here are all config in `package.json` under `"importSorter"` section and their d
 
 ### Multi-root projects support
 
-TS Import Sorter respects [VS Code user and workspace settings](https://code.visualstudio.com/docs/getstarted/settings) and supports [multi-root workspaces](https://code.visualstudio.com/docs/editor/multi-root-workspaces).
+JS/TS Import Sorter respects [VS Code user and workspace settings](https://code.visualstudio.com/docs/getstarted/settings) and supports [multi-root workspaces](https://code.visualstudio.com/docs/editor/multi-root-workspaces).
 
 `package.json` is searched in the following order:
 
@@ -255,7 +255,7 @@ import Excluded from 'import/sorter'; /* ts-import-sorter: disable */
 
 ### Maximum names per line
 
-When deciding whether to wrap an import statement or not, TS Import Sorter looks up both `maximumLineLength` and the following values:
+When deciding whether to wrap an import statement or not, JS/TS Import Sorter looks up both `maximumLineLength` and the following values:
 
 
 #### `maximumBindingNamesPerLine`
