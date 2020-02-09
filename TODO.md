@@ -10,7 +10,7 @@
 
 - Use Immutable.js.
 - Unit tests.
-- Integration tests. (prettier)
+- Write Integration tests.
 - [File System](https://code.visualstudio.com/api/references/vscode-api#FileSystem)
 - [TextDocument](https://code.visualstudio.com/api/references/vscode-api#TextDocument)
 
@@ -18,6 +18,7 @@
 
 ### DONE
 
+- ~~Build Integration test mechanism.~~
 - ~~Different word limit for one- and multi-line imports. ([Link](https://github.com/SoominHan/import-sorter/issues/31))~~
 - ~~Consider trailing comments when calc against max line length.~~
 - ~~Multi Root Workspace support.~~
