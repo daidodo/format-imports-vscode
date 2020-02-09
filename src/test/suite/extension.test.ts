@@ -28,8 +28,8 @@ suite('Extension Test Suite', () => {
   if (!examples) return;
   // Run all tests
   return runTestSuite(examples);
-  // Alternatively, you can run a specific test case
-  // return runTestSuite(examples, undefined, 'delete/tail/0-0');
+  // Or, run a specific test case
+  // return runTestSuite(examples, 'delete/tail/0-0');
 });
 
 function getTestSuite(dir: string, name: string): TestSuite | undefined {
@@ -49,24 +49,22 @@ function getTestSuite(dir: string, name: string): TestSuite | undefined {
       const [, n, t] = r;
       const p = `${path}/${name}`;
       const k = n ? n.slice(0, n.length - 1) : '';
-      const v = map.get(k) ?? { origin: '' };
-      if (t === 'origin') {
-        v.origin = p;
-        v.name = k ? k : undefined;
-      } else v.result = p;
+      const v = map.get(k) ?? { origin: '', name: k ? k : undefined };
+      if (t === 'origin') v.origin = p;
+      else v.result = p;
       map.set(k, v);
     });
   return { name, config, suites, cases: [...map.values()] };
 }
 
-function runTestSuite(ts: TestSuite, preConfig?: Configuration, specific?: string) {
+function runTestSuite(ts: TestSuite, specific?: string, preConfig?: Configuration) {
   const { name, config: curConfig, cases, suites } = ts;
   const defResult = cases.find(c => !c.name)?.result;
   const config = curConfig && preConfig ? { ...preConfig, ...curConfig } : curConfig ?? preConfig;
   suite(name, () => {
     if (!specific) {
       cases.forEach(c => runTestCase(c, defResult, config));
-      suites.forEach(s => runTestSuite(s, config));
+      suites.forEach(s => runTestSuite(s, undefined, config));
     } else {
       const [n, ...rest] = specific.split('/');
       if (!rest.length) {
@@ -76,7 +74,7 @@ function runTestSuite(ts: TestSuite, preConfig?: Configuration, specific?: strin
       } else {
         const s = suites.find(s => s.name === n);
         assertNonNull(s);
-        runTestSuite(s, config, rest.join('/'));
+        runTestSuite(s, rest.join('/'), config);
       }
     }
   });
