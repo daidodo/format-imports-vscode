@@ -69,11 +69,11 @@ function runTestSuite(ts: TestSuite, specific?: string, preConfig?: Configuratio
       const [n, ...rest] = specific.split('/');
       if (!rest.length) {
         const c = cases.find(c => (c.name ?? 'default') === n);
-        assertNonNull(c);
+        assertNonNull(c, `Test case ${n} not found in suite ${name}`);
         runTestCase(c, defResult, config);
       } else {
         const s = suites.find(s => s.name === n);
-        assertNonNull(s);
+        assertNonNull(s, `Test suite ${n} not found in suite ${name}`);
         runTestSuite(s, rest.join('/'), config);
       }
     }
@@ -87,7 +87,7 @@ function runTestCase(
 ) {
   if (!name && !origin) return;
   test(name ?? 'default', () => {
-    assertNonNull(origin);
+    assertNonNull(origin, `Missing origin in test case ${name ?? 'default'}`);
     const res = result || defResult;
     const source = fs.readFileSync(origin).toString();
     const actual = formatSource(origin, source, config);

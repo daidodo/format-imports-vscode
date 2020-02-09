@@ -14,7 +14,7 @@ import {
   parseLineRanges,
 } from './lines';
 import {
-  InsertRange,
+  InsertNodeRange,
   RangeAndEmptyLines,
 } from './types';
 
@@ -24,7 +24,7 @@ interface Params {
   importNodes: ImportNode[];
   allIds: Set<string>;
   // If 'range' is undefined, insert before the first ImportNode.
-  insertPoint?: { range?: InsertRange };
+  insertPoint?: { range?: InsertNodeRange };
 }
 
 export function parseSource(sourceFile: SourceFile, sourceText: string) {
@@ -50,7 +50,7 @@ function process(node: Node, p: Params) {
     fullEnd,
     eof,
   } = parseLineRanges(node, sourceFile, sourceText);
-  if (isDisabled(fileComments)) return false; // File is excluded
+  if (isDisabled(fileComments)) return false; // File is disabled
   if (isUseStrict(node)) return true; // Skip 'use strict' directive
   const range: RangeAndEmptyLines = {
     ...declAndCommentsLineRange,
@@ -61,8 +61,7 @@ function process(node: Node, p: Params) {
     eof,
   };
   const disabled = isDisabled(leadingComments) || isDisabled(trailingComments);
-  const { kind } = node;
-  if (kind === SyntaxKind.ImportDeclaration) {
+  if (node.kind === SyntaxKind.ImportDeclaration) {
     if (disabled) return true;
     const n = ImportNode.fromDecl(
       node as ImportDeclaration,
@@ -72,7 +71,7 @@ function process(node: Node, p: Params) {
     );
     if (n) importNodes.push(n);
     findInsertPoint(p, range, n);
-  } else if (kind === SyntaxKind.ImportEqualsDeclaration) {
+  } else if (node.kind === SyntaxKind.ImportEqualsDeclaration) {
     if (disabled) return false;
     const n = ImportNode.fromEqDecl(
       node as ImportEqualsDeclaration,

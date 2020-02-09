@@ -1,5 +1,4 @@
 import { ComposeConfig } from '../config';
-import { InsertPos } from '../edit';
 import {
   ImportNode,
   NameBinding,
@@ -12,11 +11,11 @@ import {
 
 export default function composeInsertSource(
   groups: ImportNode[][],
-  insertPos: InsertPos,
+  insertLines: { leadingNewLines?: number; trailingNewLines?: number },
   config: ComposeConfig,
 ) {
   if (!groups.length) return;
-  const { leadingNewLines, trailingNewLines } = insertPos;
+  const { leadingNewLines, trailingNewLines } = insertLines;
   const { nl } = config;
   const h = nl.repeat(leadingNewLines ?? 0);
   const e = nl.repeat(trailingNewLines ?? 0);

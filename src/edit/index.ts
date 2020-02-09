@@ -8,7 +8,7 @@ import {
 import { ComposeConfig } from '../config';
 import {
   ImportNode,
-  InsertRange,
+  InsertNodeRange,
   RangeAndEmptyLines,
 } from '../parser';
 
@@ -16,6 +16,7 @@ export { apply } from './apply';
 
 export interface InsertPos {
   pos: LineAndCharacter;
+  end: LineAndCharacter;
   leadingNewLines?: number;
   trailingNewLines?: number;
 }
@@ -26,21 +27,31 @@ interface DeleteRange {
   text?: string; // Text to replace
 }
 
-export function getEdits(edits: TextEdit[], insertText: string | undefined, pos: LineAndCharacter) {
-  return insertText
-    ? [...edits, TextEdit.insert(new Position(pos.line, pos.character), insertText)]
-    : edits;
+export function getEdits(
+  edits: TextEdit[],
+  insertText: string | undefined,
+  insertPos: { pos: LineAndCharacter; end: LineAndCharacter },
+) {
+  if (!insertText) return edits;
+  const { pos, end } = insertPos;
+  return [
+    TextEdit.replace(
+      new Range(new Position(pos.line, pos.character), new Position(end.line, end.character)),
+      insertText,
+    ),
+    ...edits, // Deletions must be after insertion
+  ];
 }
 
 export function getDeleteEdits(
   nodes: ImportNode[],
-  insertRange: InsertRange | undefined,
+  insertRange: InsertNodeRange | undefined,
   config: ComposeConfig,
 ) {
   const [first, ...rest] = merge(nodes.map(n => n.range));
-  const { ranges: r1, insertPos } = decideInsert(first, insertRange, config);
+  const { deleteRange, insertPos } = decideInsert(first, insertRange, config);
   const r2 = rest.map(r => decideDelete(r, config));
-  const deleteEdits = [...r1, ...r2].map(({ start: s, end: e, text }) => {
+  const deleteEdits = [deleteRange, ...r2].map(({ start: s, end: e, text }) => {
     const r = new Range(new Position(s.line, s.character), new Position(e.line, e.character));
     return text ? TextEdit.replace(r, text) : TextEdit.delete(r);
   });
@@ -61,30 +72,29 @@ function merge(ranges: RangeAndEmptyLines[]) {
 
 function decideInsert(
   range: RangeAndEmptyLines,
-  insertRange: InsertRange | undefined,
+  insertRange: InsertNodeRange | undefined,
   config: ComposeConfig,
-): { ranges: DeleteRange[]; insertPos: InsertPos } {
+): { deleteRange: DeleteRange; insertPos: InsertPos } {
   if (insertRange) {
     const { fullStart: fs, leadingNewLines: ln, commentStart: cs } = insertRange;
-    const ext = fs.pos < cs.pos ? [{ start: fs, end: cs }] : [];
     const leadingNewLines = !fs.pos ? 0 : Math.min(Math.max(ln, 1), 2);
     return {
-      ranges: [decideDelete(range, config), ...ext],
-      insertPos: { pos: fs, leadingNewLines, trailingNewLines: 2 },
+      deleteRange: decideDelete(range, config),
+      insertPos: { pos: fs, end: cs, leadingNewLines, trailingNewLines: 2 },
     };
   }
   // Insert at 'range' (which will be deleted)
-  const { leadingNewLines, trailingNewLines, ...rest } = decideDelete(range, config, true);
+  const { leadingNewLines, trailingNewLines, ...deleteRange } = decideDelete(range, config);
+  const { fullStart: pos, fullEnd: end } = range;
   return {
-    ranges: [rest],
-    insertPos: { pos: range.fullStart, leadingNewLines, trailingNewLines },
+    deleteRange,
+    insertPos: { pos, end, leadingNewLines, trailingNewLines },
   };
 }
 
 function decideDelete(
   range: RangeAndEmptyLines,
   config: ComposeConfig,
-  insert = false,
 ): DeleteRange & {
   leadingNewLines?: number; // Leading new lines if insert at fullStart
   trailingNewLines?: number; // Trailing new lines if insert at fullStart
@@ -103,32 +113,21 @@ function decideDelete(
       text: lastNewLine ? nl : undefined,
       leadingNewLines: ln,
     };
-  // Current statement is also the insert point
-  if (insert)
-    return {
-      start: fullStart,
-      end: fullEnd,
-      leadingNewLines: ln,
-      trailingNewLines: 2,
-    };
   // Prev and current statements are in the same line
   if (!leadingNewLines) {
     const ends = [cmEnd, fullEnd];
     const nls = [0, 1, 2];
     const end = ends[Math.min(trailingNewLines, ends.length - 1)];
-    const text = nl.repeat(nls[Math.min(trailingNewLines, nls.length - 1)]);
-    return { start: fullStart, end, text };
+    const tn = nls[Math.min(trailingNewLines, nls.length - 1)];
+    const text = nl.repeat(tn);
+    return { start: fullStart, end, text, leadingNewLines: ln, trailingNewLines: 2 - tn };
   } else if (leadingNewLines === 1) {
     // No empty lines are between prev and current statements
     const nls = [1, 2];
-    const text = nl.repeat(nls[Math.min(trailingNewLines, nls.length - 1)]);
-    return { start: fullStart, end: fullEnd, text };
-  } else if (leadingNewLines === 2) {
-    // One empty line is between prev and current statements
-    return { start: fullStart, end: fullEnd, text: nl.repeat(2) };
-  } else {
-    // More than one empty lines are between prev and current statements
-    const start = { line: fullStart.line + 2, character: 0 };
-    return { start, end: fullEnd };
+    const tn = nls[Math.min(trailingNewLines, nls.length - 1)];
+    const text = nl.repeat(tn);
+    return { start: fullStart, end: fullEnd, text, leadingNewLines: ln, trailingNewLines: 2 - tn };
   }
+  // One or more empty lines are between prev and current statements
+  return { start: fullStart, end: fullEnd, text: nl.repeat(2), leadingNewLines: 2 };
 }

@@ -35,7 +35,7 @@ export default function formatSource(
   const { deleteEdits, insertPos } = getDeleteEdits(importNodes, insertRange, composeConfig);
   const groups = sortImports(importNodes, allIds, unusedIds, config);
   const insertSource = composeInsertSource(groups, insertPos, composeConfig);
-  const edits = getEdits(deleteEdits, insertSource, insertPos.pos);
+  const edits = getEdits(deleteEdits, insertSource, insertPos);
 
   return apply(sourceText, sourceFile, edits);
 }

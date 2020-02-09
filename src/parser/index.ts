@@ -7,7 +7,7 @@ export {
   RangeAndEmptyLines,
   NameBinding,
   NodeComment,
-  InsertRange,
+  InsertNodeRange,
   UnusedId,
 } from './types';
 
