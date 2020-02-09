@@ -15,6 +15,7 @@ import {
 } from './lines';
 import {
   InsertNodeRange,
+  Pos,
   RangeAndEmptyLines,
 } from './types';
 
@@ -25,6 +26,7 @@ interface Params {
   allIds: Set<string>;
   // If 'range' is undefined, insert before the first ImportNode.
   insertPoint?: { range?: InsertNodeRange };
+  lastCommentEnd?: Pos;
 }
 
 export function parseSource(sourceFile: SourceFile, sourceText: string) {
@@ -36,7 +38,7 @@ export function parseSource(sourceFile: SourceFile, sourceText: string) {
 }
 
 function process(node: Node, p: Params) {
-  const { sourceFile, sourceText, importNodes } = p;
+  const { sourceFile, sourceText, importNodes, lastCommentEnd } = p;
   const {
     fileComments,
     fullStart,
@@ -49,8 +51,9 @@ function process(node: Node, p: Params) {
     trailingNewLines,
     fullEnd,
     eof,
-  } = parseLineRanges(node, sourceFile, sourceText);
+  } = parseLineRanges(node, sourceFile, sourceText, lastCommentEnd);
   if (isDisabled(fileComments)) return false; // File is disabled
+  p.lastCommentEnd = declAndCommentsLineRange.end;
   if (isUseStrict(node)) return true; // Skip 'use strict' directive
   const range: RangeAndEmptyLines = {
     ...declAndCommentsLineRange,
