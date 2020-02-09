@@ -89,15 +89,7 @@ function decideDelete(
   leadingNewLines?: number; // Leading new lines if insert at fullStart
   trailingNewLines?: number; // Trailing new lines if insert at fullStart
 } {
-  const {
-    fullStart,
-    leadingNewLines,
-    start: cmStart,
-    trailingNewLines,
-    end: cmEnd,
-    fullEnd,
-    eof,
-  } = range;
+  const { fullStart, leadingNewLines, trailingNewLines, end: cmEnd, fullEnd, eof } = range;
   const ln = Math.min(Math.max(leadingNewLines, 1), 2);
   const { nl, lastNewLine } = config;
   // Current statement is at the beginning of the file
@@ -121,17 +113,19 @@ function decideDelete(
     };
   // Prev and current statements are in the same line
   if (!leadingNewLines) {
-    const ends = [cmEnd, cmEnd, cmEnd, { line: fullEnd.line - 2, character: 0 }];
+    const ends = [cmEnd, fullEnd];
+    const nls = [0, 1, 2];
     const end = ends[Math.min(trailingNewLines, ends.length - 1)];
-    return { start: fullStart, end };
+    const text = nl.repeat(nls[Math.min(trailingNewLines, nls.length - 1)]);
+    return { start: fullStart, end, text };
   } else if (leadingNewLines === 1) {
     // No empty lines are between prev and current statements
-    const ends = [fullEnd, cmEnd, { line: fullEnd.line - 1, character: 0 }];
-    const end = ends[Math.min(trailingNewLines, ends.length - 1)];
-    return { start: cmStart, end };
+    const nls = [1, 2];
+    const text = nl.repeat(nls[Math.min(trailingNewLines, nls.length - 1)]);
+    return { start: fullStart, end: fullEnd, text };
   } else if (leadingNewLines === 2) {
     // One empty line is between prev and current statements
-    return { start: cmStart, end: fullEnd };
+    return { start: fullStart, end: fullEnd, text: nl.repeat(2) };
   } else {
     // More than one empty lines are between prev and current statements
     const start = { line: fullStart.line + 2, character: 0 };
