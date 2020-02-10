@@ -13,14 +13,14 @@ export type Configuration = DeepReadonly<
     maximumBindingNamesPerLine: number;
     maximumDefaultAndBindingNamesPerLine: number;
     maximumNamesPerWrappedLine: number;
-    tabSize: number;
     tabType: 'space' | 'tab';
+    tabSize: number;
     quoteMark: 'single' | 'double';
     trailingComma: 'none' | 'multiLine';
     hasSemicolon: boolean;
     insertFinalNewline: boolean;
     bracketSpacing: boolean;
-    eol: 'LF' | 'CRLF';
+    // eol: 'LF' | 'CRLF';  // VS Code will format eol anyway.
   }>
 >;
 

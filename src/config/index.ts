@@ -33,7 +33,6 @@ export function configForCompose({
   hasSemicolon,
   bracketSpacing,
   insertFinalNewline,
-  eol,
 }: Configuration): ComposeConfig {
   return {
     maxLength: (maximumLineLength ?? 80) || Number.MAX_SAFE_INTEGER,
@@ -42,12 +41,14 @@ export function configForCompose({
       withDefault: (maximumDefaultAndBindingNamesPerLine ?? 2) || Number.MAX_SAFE_INTEGER,
       wrapped: (maximumNamesPerWrappedLine ?? 1) || Number.MAX_SAFE_INTEGER,
     },
-    tab: tabType === 'tab' ? '\t' : ' '.repeat(tabSize ?? 2),
-    quote: quoteMark === 'double' ? (s: string) => `"${s}"` : (s: string) => `'${s}'`,
-    comma: trailingComma === 'none' ? '' : ',',
+    tab: tabType?.toLowerCase() === 'tab' ? '\t' : ' '.repeat(tabSize ?? 2),
+    quote:
+      quoteMark?.toLowerCase() === 'double' ? (s: string) => `"${s}"` : (s: string) => `'${s}'`,
+    comma: trailingComma?.toLowerCase() === 'none' ? '' : ',',
     semi: hasSemicolon === false ? '' : ';',
     bracket: bracketSpacing === false ? (s: string) => `{${s}}` : (s: string) => `{ ${s} }`,
     lastNewLine: insertFinalNewline !== false,
-    nl: eol === 'CRLF' ? '\r\n' : '\n',
+    // nl: eol === 'CRLF' ? '\r\n' : '\n',
+    nl: '\n', // Always be LF as VS Code will format it.
   };
 }

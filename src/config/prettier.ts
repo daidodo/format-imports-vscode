@@ -1,10 +1,10 @@
-import { resolveConfig } from 'prettier';
+import pt from 'prettier';
 
 import { Configuration } from './types';
 
 // https://prettier.io/docs/en/options.html
 export function loadPretConfig(fileName: string): Configuration {
-  const config = resolveConfig.sync(fileName, { useCache: false, editorconfig: true });
+  const config = pt.resolveConfig.sync(fileName, { useCache: false, editorconfig: true });
   if (!config) return {};
   const {
     printWidth,
@@ -14,7 +14,7 @@ export function loadPretConfig(fileName: string): Configuration {
     singleQuote,
     trailingComma,
     bracketSpacing,
-    endOfLine,
+    // endOfLine,
   } = config;
   return {
     maximumLineLength: printWidth ?? 80,
@@ -24,6 +24,7 @@ export function loadPretConfig(fileName: string): Configuration {
     quoteMark: singleQuote ? 'single' : 'double',
     trailingComma: trailingComma === 'all' ? 'multiLine' : 'none',
     bracketSpacing: bracketSpacing ?? true,
-    eol: endOfLine === 'lf' ? 'LF' : endOfLine === 'crlf' ? 'CRLF' : undefined,
+    // eol: endOfLine === 'lf' ? 'LF' : endOfLine === 'crlf' ? 'CRLF' : undefined,
+    insertFinalNewline: true, // Prettier always enables it.
   };
 }

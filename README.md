@@ -181,9 +181,6 @@ Here are all config in `package.json` under `"importSorter"` section and their d
 
     // Whether to add spaces between brackets. true for '{ id }' and false for '{id}'.
     "bracketSpacing": true,
-
-    // End of line characters. Valid values are 'LF' (\n) or 'CRLF' (\r\n).
-    "eol": "LF"
   }
 }
 ```
