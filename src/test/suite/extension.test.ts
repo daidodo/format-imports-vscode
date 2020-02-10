@@ -45,7 +45,7 @@ function getTestSuite(dir: string, name: string): TestSuite | undefined {
   entries
     .filter(e => e.isFile())
     .forEach(({ name }) => {
-      const r = /^(.+\.)?(origin|result)\.ts$/.exec(name);
+      const r = /^(.+\.)?(origin|result)\.tsx?$/.exec(name);
       if (!r) return;
       const [, n, t] = r;
       const p = `${path}/${name}`;
@@ -60,7 +60,7 @@ function getTestSuite(dir: string, name: string): TestSuite | undefined {
 
 function runTestSuite(ts: TestSuite, specific?: string, preConfig?: Configuration) {
   const { name, config: curConfig, cases, suites } = ts;
-  const defResult = cases.find(c => !c.name)?.result;
+  const defResult = cases.find(c => !c.name && !c.origin)?.result;
   const config = curConfig && preConfig ? merge(preConfig, curConfig) : curConfig ?? preConfig;
   suite(name, () => {
     if (!specific) {
