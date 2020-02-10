@@ -30,7 +30,7 @@ suite('Extension Test Suite', () => {
   // Run all tests
   return runTestSuite(examples);
   // Or, run a specific test case
-  // return runTestSuite(examples, 'delete/tail/0-0');
+  // return runTestSuite(examples, 'compose/max-binding-names/');
 });
 
 function getTestSuite(dir: string, name: string): TestSuite | undefined {

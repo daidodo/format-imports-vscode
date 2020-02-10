@@ -36,11 +36,11 @@ export function configForCompose({
   eol,
 }: Configuration): ComposeConfig {
   return {
-    maxLength: maximumLineLength || Number.MAX_SAFE_INTEGER,
+    maxLength: (maximumLineLength ?? 80) || Number.MAX_SAFE_INTEGER,
     maxWords: {
-      withoutDefault: maximumBindingNamesPerLine || Number.MAX_SAFE_INTEGER,
-      withDefault: maximumDefaultAndBindingNamesPerLine || Number.MAX_SAFE_INTEGER,
-      wrapped: maximumNamesPerWrappedLine || Number.MAX_SAFE_INTEGER,
+      withoutDefault: (maximumBindingNamesPerLine ?? 1) || Number.MAX_SAFE_INTEGER,
+      withDefault: (maximumDefaultAndBindingNamesPerLine ?? 2) || Number.MAX_SAFE_INTEGER,
+      wrapped: (maximumNamesPerWrappedLine ?? 1) || Number.MAX_SAFE_INTEGER,
     },
     tab: tabType === 'tab' ? '\t' : ' '.repeat(tabSize ?? 2),
     quote: quoteMark === 'double' ? (s: string) => `"${s}"` : (s: string) => `'${s}'`,
