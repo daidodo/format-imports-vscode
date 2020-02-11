@@ -1,6 +1,6 @@
 import assert from 'assert';
 import fs from 'fs';
-import path from 'path';
+import path, { sep } from 'path';
 
 import { Configuration } from '../../config';
 import { merge } from '../../config/helper';
@@ -24,17 +24,17 @@ interface TestCase {
 const CONF = 'import-sorter.json';
 
 suite('Extension Test Suite', () => {
-  const dir = path.resolve(__dirname).replace(/\/out\//g, '/src/');
+  const dir = path.resolve(__dirname).replace(/(\\|\/)out(\\|\/)/g, `${sep}src${sep}`);
   const examples = getTestSuite(dir, 'examples');
   if (!examples) return;
   // Run all tests
   return runTestSuite(examples);
   // Or, run a specific test case
-  // return runTestSuite(examples, 'compose/max-binding-names/');
+  // return runTestSuite(examples, 'unused/jsx');
 });
 
 function getTestSuite(dir: string, name: string): TestSuite | undefined {
-  const path = `${dir}/${name}`;
+  const path = dir + sep + name;
   const entries = fs.readdirSync(path, { withFileTypes: true });
   const config = entries.find(({ name }) => name === CONF) && fileConfig(`${path}/${CONF}`);
   const suites = entries
@@ -48,7 +48,7 @@ function getTestSuite(dir: string, name: string): TestSuite | undefined {
       const r = /^(.+\.)?(origin|result)\.tsx?$/.exec(name);
       if (!r) return;
       const [, n, t] = r;
-      const p = `${path}/${name}`;
+      const p = path + sep + name;
       const k = n ? n.slice(0, n.length - 1) : '';
       const v = map.get(k) ?? { origin: '', name: k ? k : undefined };
       if (t === 'origin') v.origin = p;
@@ -63,13 +63,13 @@ function runTestSuite(ts: TestSuite, specific?: string, preConfig?: Configuratio
   const defResult = cases.find(c => !c.name && !c.origin)?.result;
   const config = curConfig && preConfig ? merge(preConfig, curConfig) : curConfig ?? preConfig;
   suite(name, () => {
-    if (!specific) {
+    if (specific === undefined) {
       cases.forEach(c => runTestCase(c, defResult, config));
       suites.forEach(s => runTestSuite(s, undefined, config));
     } else {
       const [n, ...rest] = specific.split('/');
       if (!rest.length) {
-        const c = cases.find(c => (c.name ?? 'default') === n);
+        const c = cases.find(({ name }) => (name ?? 'default') === n);
         assertNonNull(c, `Test case ${n} not found in suite ${name}`);
         runTestCase(c, defResult, config);
       } else {
@@ -96,6 +96,6 @@ function runTestCase(
     else if (res) {
       const expected = fs.readFileSync(res).toString();
       assert.equal(actual, expected);
-    } else assert.equal(source, actual);
+    } else assert.equal(actual, source);
   });
 }

@@ -17,7 +17,11 @@ export default function loadConfig(fileUri: Uri, languageId: string) {
 
 export function isExcluded(fileName: string, config: Configuration) {
   const { exclude } = config;
-  for (const p of exclude ?? []) if (new RegExp(p).test(fileName)) return true;
+  const normalized = fileName.replace(/\\/g, '/');
+  for (const p of exclude ?? []) {
+    const r = new RegExp(p);
+    if (r.test(fileName) || r.test(normalized)) return true;
+  }
   return false;
 }
 
