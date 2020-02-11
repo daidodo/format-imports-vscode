@@ -30,7 +30,7 @@ suite('Extension Test Suite', () => {
   // Run all tests
   return runTestSuite(examples);
   // Or, run a specific test case
-  // return runTestSuite(examples, 'unused/jsx');
+  // return runTestSuite(examples, 'unused/default');
 });
 
 function getTestSuite(dir: string, name: string): TestSuite | undefined {
@@ -70,11 +70,11 @@ function runTestSuite(ts: TestSuite, specific?: string, preConfig?: Configuratio
       const [n, ...rest] = specific.split('/');
       if (!rest.length) {
         const c = cases.find(({ name }) => (name ?? 'default') === n);
-        assertNonNull(c, `Test case ${n} not found in suite ${name}`);
+        assertNonNull(c, `Test case '${n}' not found in suite ${name}`);
         runTestCase(c, defResult, config);
       } else {
         const s = suites.find(s => s.name === n);
-        assertNonNull(s, `Test suite ${n} not found in suite ${name}`);
+        assertNonNull(s, `Test suite '${n}' not found in suite ${name}`);
         runTestSuite(s, rest.join('/'), config);
       }
     }
@@ -88,7 +88,7 @@ function runTestCase(
 ) {
   if (!name && !origin) return;
   test(name ?? 'default', () => {
-    assertNonNull(origin, `Missing origin in test case ${name ?? 'default'}`);
+    assertNonNull(origin, `Missing origin in test case '${name ?? 'default'}'`);
     const res = result || defResult;
     const source = fs.readFileSync(origin).toString();
     const actual = formatSource(origin, source, config);
