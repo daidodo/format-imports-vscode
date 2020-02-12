@@ -1,6 +1,10 @@
 import assert from 'assert';
 import fs from 'fs';
 import path, { sep } from 'path';
+import {
+  EndOfLine,
+  workspace,
+} from 'vscode';
 
 import { Configuration } from '../../config';
 import { merge } from '../../config/helper';
@@ -87,15 +91,22 @@ function runTestCase(
   config?: Configuration,
 ) {
   if (!name && !origin) return;
-  test(name ?? 'default', () => {
+  test(name ?? 'default', async () => {
     assertNonNull(origin, `Missing origin in test case '${name ?? 'default'}'`);
     const res = result || defResult;
-    const source = fs.readFileSync(origin).toString();
-    const actual = formatSource(origin, source, config);
+    const doc = await workspace.openTextDocument(origin);
+    const c = updateEol(config, doc.eol);
+    const source = doc.getText();
+    const actual = formatSource(origin, source, c);
     if (actual === undefined) assert.equal(res, undefined);
     else if (res) {
       const expected = fs.readFileSync(res).toString();
       assert.equal(actual, expected);
     } else assert.equal(actual, source);
   });
+}
+
+function updateEol(config: Configuration | undefined, eol: EndOfLine) {
+  const c: Configuration = { eol: eol === EndOfLine.CRLF ? 'CRLF' : 'LF' };
+  return config ? merge(config, c) : c;
 }
