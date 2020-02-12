@@ -29,10 +29,10 @@ function sortImportsBeforeSavingDocument(event: TextDocumentWillSaveEvent) {
   const { document } = event;
   if (!isSupported(document)) return;
 
-  const { uri: fileUri, languageId } = document;
+  const { uri: fileUri, languageId, eol } = document;
   const { fsPath: fileName } = fileUri;
   try {
-    const { config, tsConfig } = loadConfig(fileUri, languageId);
+    const { config, tsConfig } = loadConfig(fileUri, languageId, eol);
     if (!config.formatOnSave) return;
     if (isExcluded(fileName, config)) return;
     const newSourceText = formatSource(fileName, document.getText(), config, tsConfig);

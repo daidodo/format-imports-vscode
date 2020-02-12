@@ -20,7 +20,7 @@ export type Configuration = DeepReadonly<
     hasSemicolon: boolean;
     insertFinalNewline: boolean;
     bracketSpacing: boolean;
-    // eol: 'LF' | 'CRLF';  // VS Code will format eol anyway.
+    eol: 'LF' | 'CRLF'; // This is not configurable because VS Code will format the file anyway.
   }>
 >;
 

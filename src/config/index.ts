@@ -1,6 +1,9 @@
-import { Uri } from 'vscode';
+import {
+  EndOfLine,
+  Uri,
+} from 'vscode';
 
-import { loadIsConfig } from './importSorter';
+import { loadImportSorterConfig } from './importSorter';
 import { loadTsConfig } from './tsconfig';
 import {
   ComposeConfig,
@@ -9,8 +12,8 @@ import {
 
 export { Configuration, ComposeConfig };
 
-export default function loadConfig(fileUri: Uri, languageId: string) {
-  const config = loadIsConfig(fileUri, languageId);
+export default function loadConfig(fileUri: Uri, languageId: string, eol: EndOfLine) {
+  const config = loadImportSorterConfig(fileUri, languageId, eol);
   const tsConfig = loadTsConfig(fileUri.fsPath);
   return { config, tsConfig };
 }
@@ -37,6 +40,7 @@ export function configForCompose({
   hasSemicolon,
   bracketSpacing,
   insertFinalNewline,
+  eol,
 }: Configuration): ComposeConfig {
   return {
     maxLength: (maximumLineLength ?? 80) || Number.MAX_SAFE_INTEGER,
@@ -52,7 +56,6 @@ export function configForCompose({
     semi: hasSemicolon === false ? '' : ';',
     bracket: bracketSpacing === false ? (s: string) => `{${s}}` : (s: string) => `{ ${s} }`,
     lastNewLine: insertFinalNewline !== false,
-    // nl: eol === 'CRLF' ? '\r\n' : '\n',
-    nl: '\n', // Always be LF as VS Code will format it.
+    nl: eol === 'CRLF' ? '\r\n' : '\n',
   };
 }
