@@ -265,14 +265,14 @@ For example, if you set:
 ```
 then
 ```typescript
-import { A } from 'foo';    // No wrap as there is 1 name
-import { B, C } from 'bar'; // No wrap as there are 2 names
+import { A } from 'a';    // No wrap as there is 1 name
+import { B, C } from 'b'; // No wrap as there are 2 names
 
 import {
   D,
   E,
   F,
-} from 'tea';   // Wrapped as there are more than 2 names
+} from 'c';   // Wrapped as there are more than 2 names
 ```
 
 #### `maximumDefaultAndBindingNamesPerLine`
@@ -285,12 +285,12 @@ For example, if you set:
 ```
 then
 ```typescript
-import A from 'foo';        // No wrap as there is 1 name
-import B, { C } from 'foo'; // No wrap as there are 2 names
+import A from 'a';        // No wrap as there is 1 name
+import B, { C } from 'b'; // No wrap as there are 2 names
 import D, {
   E,
   F,
-} from 'bar'; // Wrapped as there are more than 2 names
+} from 'c'; // Wrapped as there are more than 2 names
 ```
 
 #### `maximumNamesPerWrappedLine`
@@ -307,7 +307,7 @@ import {
   A, B,
   C, D,
   E,
-} from 'bar'; // There are 2 names at most per wrapped line
+} from 'a'; // There are 2 names at most per wrapped line
 ```
 
 ## Thanks
