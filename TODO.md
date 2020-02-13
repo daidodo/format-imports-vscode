@@ -16,6 +16,8 @@
 
 ### Bugs
 
+- Test `unused/deep` fails on Windows 10 + VS Code 1.42.1.
+
 ### DONE
 
 - ~~Build Integration test mechanism.~~
