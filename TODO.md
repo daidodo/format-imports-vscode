@@ -5,12 +5,12 @@
 - Support ESLint plugin import/order. ([Link](https://github.com/SoominHan/import-sorter/issues/43))
 - Import namespace alias. ([Link](https://github.com/SoominHan/import-sorter/issues/29))
 - Add config json schema.
+- Support glob in group rule and exclude path pattern.
 
 ### Implementation
 
 - Use Immutable.js.
 - Unit tests.
-- Write Integration tests.
 - [File System](https://code.visualstudio.com/api/references/vscode-api#FileSystem)
 - [TextDocument](https://code.visualstudio.com/api/references/vscode-api#TextDocument)
 
@@ -20,6 +20,7 @@
 
 ### DONE
 
+- ~~Write Integration tests.~~
 - ~~Build Integration test mechanism.~~
 - ~~Different word limit for one- and multi-line imports. ([Link](https://github.com/SoominHan/import-sorter/issues/31))~~
 - ~~Consider trailing comments when calc against max line length.~~
@@ -37,6 +38,6 @@
 - ~~Handle script imports.~~
 - ~~Format leading spaces anyway.~~
 
-### CANCEL
+### CANCELLED
 
 - ~~Folding imports. ([Link](https://github.com/SoominHan/import-sorter/pull/38))~~
