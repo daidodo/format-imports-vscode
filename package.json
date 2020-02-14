@@ -52,7 +52,15 @@
           "items": {
             "type": "string"
           },
-          "description": "Disable sorting for files matching regular expressions."
+          "description": "Disable formatting for files matching regular expressions."
+        },
+        "tsImportSorter.configuration.excludeGlob": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "description": "Disable formatting for files matching glob patterns."
         },
         "tsImportSorter.configuration.groupRules": {
           "type": "array",
@@ -112,6 +120,7 @@
   "dependencies": {
     "editorconfig": "^0.15.3",
     "lodash.clonedeep": "^4.5.0",
+    "minimatch": "^3.0.4",
     "prettier": "^1.19.1",
     "typescript": "^3.7.5"
   },

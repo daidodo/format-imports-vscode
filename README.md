@@ -72,6 +72,9 @@ All VS Code settings under `"tsImportSorter"` section and their default values:
 // Disable sorting for files matching regular expressions.
 "tsImportSorter.configuration.exclude": [],
 
+// Disable formatting for files matching glob patterns.
+"tsImportSorter.configuration.excludeGlob": [],
+
 // Grouping rules for path patterns. Everything else has a default level of 20.
 "tsImportSorter.configuration.groupRules": [
   {
@@ -124,6 +127,9 @@ Here are all config in `package.json` under `"importSorter"` section and their d
   "importSorter": {
     // Disable sorting for files matching regular expressions.
     "exclude": [],
+
+    // Disable formatting for files matching glob patterns.
+    "excludeGlob": [],
 
     // Grouping rules for path patterns. Everything else has a default level of 20.
     "groupRules": [
@@ -214,23 +220,23 @@ If `"tsImportSorter.configuration.configurationFileName"` is an absolute path, e
 
 There are a few ways to exclude files from inspection:
 
-- Add path patterns to user or workspace settings in VSCode.
+1. Add path patterns to `exclude` or `excludeGlob` in user or workspace settings in VSCode.
   ```json
-  "tsImportSorter.configuration.exclude": ["pathPattern"],
+  "tsImportSorter.configuration.exclude": ["regexPattern"],
+  "tsImportSorter.configuration.excludeGlob": ["globPattern"],
   ```
-- Add path patterns to `package.json` or `import-sorter.json`.
-- Add the following comment at the beginning of the source file and keep at least one empty line from the next statement:
 
-_Note: All path patterns are **merged** together instead of overwritten._
+2. Add path patterns to `package.json` or `import-sorter.json`.
+  - _All path patterns are **merged** together instead of overwritten._
+  - _Use forward-slash (`/`) as path separator no matter in MacOS, *nix or Windows._
 
+3. Add the following comment at the beginning of the source file and keep at least one empty line from the next statement:
 ```ts
 // ts-import-sorter: disable
 
 [Other code]
 ```
-
 or
-
 ```ts
 /* ts-import-sorter: disable */
 

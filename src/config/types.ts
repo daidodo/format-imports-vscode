@@ -5,6 +5,7 @@ export type Configuration = DeepReadonly<
     configurationFileName: string;
     formatOnSave: boolean;
     exclude: string[];
+    excludeGlob: string[];
     groupRules: {
       regex: string;
       level: number;

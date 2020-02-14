@@ -5,7 +5,6 @@
 - Support ESLint plugin import/order. ([Link](https://github.com/SoominHan/import-sorter/issues/43))
 - Import namespace alias. ([Link](https://github.com/SoominHan/import-sorter/issues/29))
 - Add config json schema.
-- Support glob in group rule and exclude path pattern.
 
 ### Implementation
 
@@ -20,6 +19,7 @@
 
 ### DONE
 
+- ~~Support glob in exclude path pattern.~~
 - ~~Write Integration tests.~~
 - ~~Build Integration test mechanism.~~
 - ~~Different word limit for one- and multi-line imports. ([Link](https://github.com/SoominHan/import-sorter/issues/31))~~

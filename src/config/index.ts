@@ -1,3 +1,4 @@
+import minimatch from 'minimatch';
 import {
   EndOfLine,
   Uri,
@@ -19,7 +20,10 @@ export default function loadConfig(fileUri: Uri, languageId: string, eol: EndOfL
 }
 
 export function isExcluded(fileName: string, config: Configuration) {
-  const { exclude } = config;
+  const { exclude, excludeGlob } = config;
+  // glob
+  for (const p of excludeGlob ?? []) if (minimatch(fileName, p, { matchBase: true })) return true;
+  // regex
   const normalized = fileName.replace(/\\/g, '/');
   for (const p of exclude ?? []) {
     const r = new RegExp(p);
