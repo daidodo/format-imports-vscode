@@ -228,7 +228,7 @@ There are a few ways to exclude files from inspection:
 
 2. Add path patterns to `package.json` or `import-sorter.json`.
   - _All path patterns are **merged** together instead of overwritten._
-  - _Use forward-slash (`/`) as path separator no matter in MacOS, *nix or Windows._
+  - _Use **forward-slash** (`/`) as path separator no matter in MacOS, *nix or Windows._
 
 3. Add the following comment at the beginning of the source file and keep at least one empty line from the next statement:
 ```ts
