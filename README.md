@@ -301,7 +301,7 @@ import D, {
 
 #### `maximumNamesPerWrappedLine`
 
-If an import statement is wrapped, this values decides how many names there are per line.
+If an import statement is wrapped, this value decides how many names there are per line.
 
 For example, if you set:
 ```json
