@@ -5,6 +5,7 @@
 - Support ESLint plugin import/order. ([Link](https://github.com/SoominHan/import-sorter/issues/43))
 - Import namespace alias. ([Link](https://github.com/SoominHan/import-sorter/issues/29))
 - Add config json schema.
+- Feature Request - Standalone CLI version. ([Link](https://github.com/SoominHan/import-sorter/issues/57))
 
 ### Implementation
 
