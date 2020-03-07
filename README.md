@@ -231,12 +231,15 @@ There are a few ways to exclude files from inspection:
   - _Use **forward-slash** (`/`) as path separator no matter in MacOS, *nix or Windows._
 
 3. Add the following comment at the beginning of the source file and keep at least one empty line from the next statement:
+
 ```ts
 // ts-import-sorter: disable
 
 [Other code]
 ```
+
 or
+
 ```ts
 /* ts-import-sorter: disable */
 
