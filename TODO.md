@@ -1,5 +1,6 @@
 ### Features
 
+- Support TSLint plugin import order. ([Link](https://github.com/SoominHan/import-sorter/issues/60))
 - Sort exports.
 - Group level comments. ([Link](https://github.com/SoominHan/import-sorter/issues/46))
 - Support ESLint plugin import/order. ([Link](https://github.com/SoominHan/import-sorter/issues/43))
@@ -20,6 +21,7 @@
 
 ### DONE
 
+- ~~Useless alias (renaming). ([Link](https://eslint.org/docs/rules/no-useless-rename))~~
 - ~~Support glob in exclude path pattern.~~
 - ~~Write Integration tests.~~
 - ~~Build Integration test mechanism.~~
