@@ -17,6 +17,9 @@
     "type": "git",
     "url": "https://github.com/daidodo/tsimportsorter"
   },
+  "bugs": {
+    "url": "https://github.com/daidodo/tsimportsorter/issues"
+  },
   "engines": {
     "vscode": "^1.43.0"
   },
