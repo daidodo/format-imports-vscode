@@ -12,9 +12,13 @@
     "pretest": "npm run compile",
     "test": "node ./out/test/runTest.js"
   },
+  "homepage": "https://github.com/daidodo/tsimportsorter",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/daidodo/tsimportsorter.git"
+    "url": "https://github.com/daidodo/tsimportsorter"
+  },
+  "bugs": {
+    "url": "https://github.com/daidodo/tsimportsorter/issues"
   },
   "engines": {
     "vscode": "^1.42.0"
