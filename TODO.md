@@ -7,6 +7,7 @@
 - Import namespace alias. ([Link](https://github.com/SoominHan/import-sorter/issues/29))
 - Add config json schema.
 - Feature Request - Standalone CLI version. ([Link](https://github.com/SoominHan/import-sorter/issues/57))
+- Add a "sort-imports.on-focus-change" sorting option. ([Link](https://github.com/amatiasq/vsc-sort-imports/issues/30))
 
 ### Implementation
 

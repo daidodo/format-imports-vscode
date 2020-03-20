@@ -46,6 +46,7 @@ export default class ImportNode {
     const { importClause, moduleSpecifier } = node;
     if (moduleSpecifier.kind !== SyntaxKind.StringLiteral) return undefined;
     const moduleIdentifier = (moduleSpecifier as StringLiteral).text;
+    if (!moduleIdentifier.trim()) return undefined;
     const { defaultName, binding } = getDefaultAndBinding(importClause);
     return new ImportNode(
       node,
