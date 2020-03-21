@@ -64,8 +64,8 @@ export function isDisabled(comments: NodeComment[] | undefined) {
     // ts-import-sorter: disable
     /* ts-import-sorter: disable */
     if (
-      /^\s*\/\/\s*ts-import-sorter:\s*disable\s*$/.test(c.text) ||
-      /^\s*\/\*\s*ts-import-sorter:\s*disable\s*\*\/$/.test(c.text)
+      /^\s*\/\/\s*ts-import-sorter\s*:\s*disable\s*$/.test(c.text) ||
+      /^\s*\/\*\s*ts-import-sorter\s*:\s*disable\s*\*\/$/.test(c.text)
     )
       return true;
   }

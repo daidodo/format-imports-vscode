@@ -5,7 +5,7 @@ export { X };
 import X from 'x';
 
 
-import {D} from 'd';  /*   ts-import-sorter:
+import {D} from 'd';  /*   ts-import-sorter   :
   disable
 */
 
@@ -14,7 +14,7 @@ import {D} from 'd';  /*   ts-import-sorter:
 import {C} from 'c';  //ts-import-sorter:disable
 
 
-/*ts-import-sorter:disable*/
+/*ts-import-sorter   :disable*/
 import B from 'b';
 
 
