@@ -1,6 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import {
+  commands,
   ExtensionContext,
   Range,
   TextDocument,
@@ -13,37 +14,57 @@ import {
 import loadConfig, { isExcluded } from './config';
 import formatSource from './main';
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
+// This method is called when your extension is activated.
+// Your extension is activated the very first time the command is executed.
 export function activate(context: ExtensionContext) {
+  const sortCommand = commands.registerCommand(
+    'tsImportSorter.command.sortImports',
+    sortImportsByCommand,
+  );
   const beforeSave = workspace.onWillSaveTextDocument(event =>
     sortImportsBeforeSavingDocument(event),
   );
-  context.subscriptions.push(beforeSave);
+  context.subscriptions.push(sortCommand, beforeSave);
 }
 
 // this method is called when your extension is deactivated
 // export function deactivate() {}
 
+function sortImportsByCommand() {
+  const { activeTextEditor: editor } = window;
+  if (!editor) return;
+  const { document } = editor;
+  if (!document) return;
+  const newSourceText = formatDocument(document, true);
+  if (newSourceText === undefined) return;
+  editor.edit(builder => builder.replace(fullRange(document), newSourceText));
+}
+
 function sortImportsBeforeSavingDocument(event: TextDocumentWillSaveEvent) {
   const { document } = event;
-  if (!isSupported(document)) return;
+  const newSourceText = formatDocument(document);
+  if (newSourceText === undefined) return;
+  event.waitUntil(Promise.resolve([TextEdit.replace(fullRange(document), newSourceText)]));
+}
 
+function formatDocument(document: TextDocument, force?: boolean) {
+  if (!isSupported(document)) return undefined;
   const { uri: fileUri, languageId, eol } = document;
   const { fsPath: fileName } = fileUri;
   try {
     const { config, tsConfig } = loadConfig(fileUri, languageId, eol);
-    if (!config.formatOnSave) return;
-    if (isExcluded(fileName, config)) return;
-    const newSourceText = formatSource(fileName, document.getText(), config, tsConfig);
-    if (newSourceText === undefined) return;
-    event.waitUntil(Promise.resolve([TextEdit.replace(fullRange(document), newSourceText)]));
+    if (!force && (config.autoFormat !== 'onSave' || isExcluded(fileName, config)))
+      return undefined;
+    const sourceText = document.getText();
+    const newText = formatSource(fileName, sourceText, config, tsConfig);
+    return newText === sourceText ? undefined : newText;
   } catch (e) {
     window.showErrorMessage(
       `Error found: ${e.message}.
       If you believe this is a bug, please report on https://github.com/daidodo/tsimportsorter`,
     );
   }
+  return undefined;
 }
 
 function isSupported(document: TextDocument) {
