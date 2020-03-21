@@ -38,10 +38,32 @@
     "onLanguage:javascript",
     "onLanguage:javascriptreact",
     "onLanguage:typescript",
-    "onLanguage:typescriptreact"
+    "onLanguage:typescriptreact",
+    "onCommand:tsImportSorter.command.sortImports"
   ],
   "main": "./out/extension.js",
   "contributes": {
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "tsImportSorter.command.sortImports",
+          "when": "editorLangId==javascript || editorLangId==javascriptreact || editorLangId==typescript || editorLangId==typescriptreact"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "tsImportSorter.command.sortImports",
+        "key": "ctrl+s ctrl+i",
+        "when": "editorTextFocus"
+      }
+    ],
+    "commands": [
+      {
+        "command": "tsImportSorter.command.sortImports",
+        "title": "Sort Imports"
+      }
+    ],
     "configuration": {
       "title": "JS/TS Import Sorter configuration",
       "properties": {
@@ -49,6 +71,19 @@
           "type": "string",
           "default": "import-sorter.json",
           "description": "Configuration file name."
+        },
+        "tsImportSorter.configuration.autoFormat": {
+          "type": "string",
+          "enum": [
+            "off",
+            "onSave"
+          ],
+          "default": "onSave",
+          "description": "When to auto format imports.",
+          "enumDescriptions": [
+            "Never auto format imports.",
+            "Auto format imports on save."
+          ]
         },
         "tsImportSorter.configuration.exclude": {
           "type": "array",
