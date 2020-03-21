@@ -4,7 +4,7 @@ Automatically sort imports for **JavaScript** and **TypeScript** source code. ([
 
 ## Features
 
-- Auto format on save when `"editor.formatOnSave"` is `true`.
+- Auto format on save, or manually format with command/shortcut/context menu.
 - Auto merge imports, remove unused or duplicated names.
 - Group imports by customizable rules.
 - Support multi-root projects.
@@ -61,6 +61,20 @@ import sortImports from '../sort';
 
 _Note: Code style is configurable._
 
+## How to use
+* Auto format on save when `autoFormat` is set to `onSave` (this is default).
+* Use `Sort Imports` command in the Command Palette (`Ctrl+Shift+P`).
+
+<img width="600" alt="1" src="https://user-images.githubusercontent.com/8170176/77234449-674c0580-6ba6-11ea-84f4-5e02ef88a8f3.png">
+
+* Right click on editor content and select `Sort Imports`.
+
+<img width="300" alt="3" src="https://user-images.githubusercontent.com/8170176/77234533-1c7ebd80-6ba7-11ea-9bed-dcfadaea9bdf.png">
+
+* Press shortcut keys, default `Alt+Shift+S`.
+
+
+
 ## Extension Settings
 
 All VS Code settings under `"tsImportSorter"` section and their default values:
@@ -68,6 +82,9 @@ All VS Code settings under `"tsImportSorter"` section and their default values:
 ```json
 // Configuration file name.
 "tsImportSorter.configuration.configurationFileName": "import-sorter.json",
+
+// When to auto format imports. Valid values are 'off' or 'onSave'.
+"tsImportSorter.configuration.autoFormat": "onSave",
 
 // Disable sorting for files matching regular expressions.
 "tsImportSorter.configuration.exclude": [],
@@ -125,6 +142,9 @@ Here are all config in `package.json` under `"importSorter"` section and their d
 ```json
 {
   "importSorter": {
+    // When to auto format imports. Valid values are 'off' or 'onSave'.
+    "autoFormat": "onSave",
+
     // Disable sorting for files matching regular expressions.
     "exclude": [],
 
@@ -245,6 +265,8 @@ or
 
 [Other code]
 ```
+
+_Note: Exclude paths and file disable-comments are **ignored** if the formation is triggered manually, i.e. from Command Palette, editor context menu or shortcut._
 
 To exclude a specific `import` declaration from sorting, please add the following as its leading or trailing comments:
 
