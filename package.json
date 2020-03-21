@@ -49,12 +49,19 @@
           "command": "tsImportSorter.command.sortImports",
           "when": "editorLangId==javascript || editorLangId==javascriptreact || editorLangId==typescript || editorLangId==typescriptreact"
         }
+      ],
+      "editor/context": [
+        {
+          "command": "tsImportSorter.command.sortImports",
+          "group": "1_modification",
+          "when": "resourceLangId==javascript || resourceLangId==javascriptreact || resourceLangId==typescript || resourceLangId==typescriptreact"
+        }
       ]
     },
     "keybindings": [
       {
         "command": "tsImportSorter.command.sortImports",
-        "key": "ctrl+s ctrl+i",
+        "key": "alt+shift+s",
         "when": "editorTextFocus"
       }
     ],
