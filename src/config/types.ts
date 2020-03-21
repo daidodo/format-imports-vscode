@@ -3,7 +3,7 @@ import { DeepReadonly } from 'utility-types';
 export type Configuration = DeepReadonly<
   Partial<{
     configurationFileName: string;
-    formatOnSave: boolean;
+    autoFormat: 'off' | 'onSave';
     exclude: string[];
     excludeGlob: string[];
     groupRules: {

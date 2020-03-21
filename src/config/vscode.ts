@@ -8,7 +8,6 @@ import { merge } from './helper';
 import { Configuration } from './types';
 
 interface VscEditorConfig {
-  formatOnSave: boolean;
   detectIndentation: boolean;
   insertSpaces: boolean;
   tabSize: number;
@@ -26,7 +25,7 @@ export function loadVscConfig(fileUri: Uri, languageId: string): Configuration {
 }
 
 function transform(wsConfig: WorkspaceConfiguration) {
-  const { formatOnSave, detectIndentation, insertSpaces, tabSize } =
+  const { detectIndentation, insertSpaces, tabSize } =
     wsConfig.get<VscEditorConfig>('editor') ?? {};
   // if 'detectIndentation' is true, indentation is detected instead of from settings.
   const tabType =
@@ -37,7 +36,6 @@ function transform(wsConfig: WorkspaceConfiguration) {
       : ('tab' as const);
   const { insertFinalNewline, eol } = wsConfig.get<VscFilesConfig>('files') ?? {};
   return {
-    formatOnSave,
     tabType,
     tabSize: detectIndentation ? undefined : tabSize,
     insertFinalNewline,
