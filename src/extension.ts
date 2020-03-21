@@ -7,6 +7,7 @@ import {
   TextDocument,
   TextDocumentWillSaveEvent,
   TextEdit,
+  TextEditor,
   window,
   workspace,
 } from 'vscode';
@@ -17,7 +18,7 @@ import formatSource from './main';
 // This method is called when your extension is activated.
 // Your extension is activated the very first time the command is executed.
 export function activate(context: ExtensionContext) {
-  const sortCommand = commands.registerCommand(
+  const sortCommand = commands.registerTextEditorCommand(
     'tsImportSorter.command.sortImports',
     sortImportsByCommand,
   );
@@ -25,19 +26,29 @@ export function activate(context: ExtensionContext) {
     sortImportsBeforeSavingDocument(event),
   );
   context.subscriptions.push(sortCommand, beforeSave);
+
+  // let lastActiveDocument: TextDocument | undefined;
+  // const editorChanged = window.onDidChangeActiveTextEditor(event => {
+  //   window.showInformationMessage(lastActiveDocument?.fileName ?? 'nil');
+  //   lastActiveDocument = event?.document;
+  // });
+  // const focusChanged = window.onDidChangeWindowState(event => {
+  //   if (event.focused) return;
+  //   window.showInformationMessage('Focus changed: ' + lastActiveDocument?.fileName);
+  // });
+  // context.subscriptions.push(editorChanged, focusChanged);
 }
 
 // this method is called when your extension is deactivated
 // export function deactivate() {}
 
-function sortImportsByCommand() {
-  const { activeTextEditor: editor } = window;
+function sortImportsByCommand(editor: TextEditor) {
   if (!editor) return;
   const { document } = editor;
   if (!document) return;
   const newSourceText = formatDocument(document, true);
   if (newSourceText === undefined) return;
-  editor.edit(builder => builder.replace(fullRange(document), newSourceText));
+  editor.edit(edit => edit.replace(fullRange(document), newSourceText));
 }
 
 function sortImportsBeforeSavingDocument(event: TextDocumentWillSaveEvent) {
