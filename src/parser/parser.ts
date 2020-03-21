@@ -8,6 +8,7 @@ import {
   SyntaxKind,
 } from 'typescript';
 
+import { Configuration } from '../config';
 import ImportNode from './ImportNode';
 import {
   isDisabled,
@@ -29,16 +30,17 @@ interface Params {
   lastCommentEnd?: Pos;
 }
 
-export function parseSource(sourceFile: SourceFile, sourceText: string) {
+export function parseSource(sourceFile: SourceFile, sourceText: string, config: Configuration) {
   const p: Params = { sourceFile, sourceText, importNodes: [], allIds: new Set<string>() };
   const [syntaxList] = sourceFile.getChildren();
   if (syntaxList && syntaxList.kind === SyntaxKind.SyntaxList)
-    for (const node of syntaxList.getChildren()) if (!process(node, p)) break;
+    for (const node of syntaxList.getChildren()) if (!process(node, p, config)) break;
   return p;
 }
 
-function process(node: Node, p: Params) {
+function process(node: Node, p: Params, config: Configuration) {
   const { sourceFile, sourceText, importNodes, lastCommentEnd } = p;
+  const { force } = config;
   const {
     fileComments,
     fullStart,
@@ -52,7 +54,7 @@ function process(node: Node, p: Params) {
     fullEnd,
     eof,
   } = parseLineRanges(node, sourceFile, sourceText, lastCommentEnd);
-  if (isDisabled(fileComments)) return false; // File is disabled
+  if (!force && isDisabled(fileComments)) return false; // File is disabled
   p.lastCommentEnd = declAndCommentsLineRange.end;
   if (isUseStrict(node)) return true; // Skip 'use strict' directive
   const range: RangeAndEmptyLines = {

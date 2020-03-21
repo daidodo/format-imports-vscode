@@ -26,8 +26,8 @@ export default function formatSource(
   tsConfig: TranspileOptions = {},
 ) {
   const sourceFile = ts.createSourceFile(fileName, sourceText, ScriptTarget.Latest);
-  const { importNodes, allIds, insertPoint } = parseSource(sourceFile, sourceText);
-  if (!insertPoint || !importNodes.length) return;
+  const { importNodes, allIds, insertPoint } = parseSource(sourceFile, sourceText, config);
+  if (!insertPoint || !importNodes.length) return undefined;
   const { range: insertRange } = insertPoint;
 
   const composeConfig = configForCompose(config);

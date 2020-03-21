@@ -4,6 +4,7 @@ import {
   Uri,
 } from 'vscode';
 
+import { merge } from './helper';
 import { loadImportSorterConfig } from './importSorter';
 import { loadTsConfig } from './tsconfig';
 import {
@@ -13,14 +14,23 @@ import {
 
 export { Configuration, ComposeConfig };
 
-export default function loadConfig(fileUri: Uri, languageId: string, eol: EndOfLine) {
-  const config = loadImportSorterConfig(fileUri, languageId, eol);
+export default function loadConfig(
+  fileUri: Uri,
+  languageId: string,
+  eol: EndOfLine,
+  force?: boolean,
+) {
+  const config = merge(loadImportSorterConfig(fileUri, languageId), {
+    eol: eol === EndOfLine.CRLF ? 'CRLF' : 'LF',
+    force,
+  });
   const tsConfig = loadTsConfig(fileUri.fsPath);
   return { config, tsConfig };
 }
 
 export function isExcluded(fileName: string, config: Configuration) {
-  const { exclude, excludeGlob } = config;
+  const { exclude, excludeGlob, force } = config;
+  if (force) return false;
   // glob
   for (const p of excludeGlob ?? []) if (minimatch(fileName, p, { matchBase: true })) return true;
   // regex

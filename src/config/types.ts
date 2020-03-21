@@ -22,6 +22,7 @@ export type Configuration = DeepReadonly<
     insertFinalNewline: boolean;
     bracketSpacing: boolean;
     eol: 'LF' | 'CRLF'; // This is not configurable because VS Code will format the file anyway.
+    force: boolean; // Ignore exclude paths and file disable-comment.
   }>
 >;
 

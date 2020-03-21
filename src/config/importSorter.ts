@@ -1,7 +1,6 @@
 import fs from 'fs';
 import cloneDeep from 'lodash.clonedeep';
 import {
-  EndOfLine,
   Uri,
   workspace,
 } from 'vscode';
@@ -17,16 +16,14 @@ import { loadPretConfig } from './prettier';
 import { Configuration } from './types';
 import { loadVscConfig } from './vscode';
 
-export function loadImportSorterConfig(fileUri: Uri, languageId: string, eol: EndOfLine) {
+export function loadImportSorterConfig(fileUri: Uri, languageId: string) {
   const { fsPath: fileName } = fileUri;
   const wsConfig = workspaceConfig(fileUri);
   const vscConfig = loadVscConfig(fileUri, languageId);
   const pretConfig = loadPretConfig(fileName);
   const fConfig = fileConfig(wsConfig.configurationFileName, fileName);
   const pkgConfig = packageConfig(fileName);
-  return merge(wsConfig, vscConfig, pretConfig, fConfig, pkgConfig, {
-    eol: eol === EndOfLine.CRLF ? 'CRLF' : 'LF',
-  });
+  return merge(wsConfig, vscConfig, pretConfig, fConfig, pkgConfig);
 }
 
 function workspaceConfig(fileUri: Uri) {

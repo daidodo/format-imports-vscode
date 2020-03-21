@@ -63,9 +63,9 @@ function formatDocument(document: TextDocument, force?: boolean) {
   const { uri: fileUri, languageId, eol } = document;
   const { fsPath: fileName } = fileUri;
   try {
-    const { config, tsConfig } = loadConfig(fileUri, languageId, eol);
-    if (!force && (config.autoFormat !== 'onSave' || isExcluded(fileName, config)))
-      return undefined;
+    const { config, tsConfig } = loadConfig(fileUri, languageId, eol, force);
+    if (!force && config.autoFormat !== 'onSave') return undefined;
+    if (isExcluded(fileName, config)) return undefined;
     const sourceText = document.getText();
     const newText = formatSource(fileName, sourceText, config, tsConfig);
     return newText === sourceText ? undefined : newText;

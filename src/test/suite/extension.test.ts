@@ -34,7 +34,7 @@ suite('Extension Test Suite', () => {
   // Run all tests
   return runTestSuite(examples);
   // Or, run a specific test case
-  // return runTestSuite(examples, 'unused/default');
+  // return runTestSuite(examples, 'disable/force/default');
 });
 
 function getTestSuite(dir: string, name: string): TestSuite | undefined {
@@ -97,12 +97,9 @@ function runTestCase(
     const doc = await workspace.openTextDocument(origin);
     const c = updateEol(config, doc.eol);
     const source = doc.getText();
-    const actual = formatSource(origin, source, c);
-    if (actual === undefined) assert.equal(res, undefined);
-    else if (res) {
-      const expected = fs.readFileSync(res).toString();
-      assert.equal(actual, expected);
-    } else assert.equal(actual, source);
+    const expected = res ? fs.readFileSync(res).toString() : source;
+    const actual = formatSource(origin, source, c) ?? source;
+    assert.equal(actual, expected);
   });
 }
 
