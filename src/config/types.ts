@@ -1,15 +1,18 @@
 import { DeepReadonly } from 'utility-types';
 
+export interface GroupRule {
+  regex: string;
+  leadingEmptyLines?: number;
+  trailingEmptyLines?: number;
+}
+
 export type Configuration = DeepReadonly<
   Partial<{
     configurationFileName: string;
     autoFormat: 'off' | 'onSave';
     exclude: string[];
     excludeGlob: string[];
-    groupRules: {
-      regex: string;
-      level: number;
-    }[];
+    groupRules: (string | GroupRule)[];
     maximumLineLength: number;
     maximumBindingNamesPerLine: number;
     maximumDefaultAndBindingNamesPerLine: number;

@@ -17,27 +17,29 @@ export default function sortImports(
 }
 
 function groupNodes(nodes: ImportNode[], config: Configuration) {
-  const DEFAULT_LEVEL = 20;
-  const { groupRules } = config;
-  const groups = new Map<number, ImportNode[]>();
   const scripts: ImportNode[] = [];
+  const { groups, fallBackGroup } = groupsFromConfig(config);
   nodes.forEach(n => {
     if (n.isScript) return scripts.push(n);
-    if (groupRules)
-      for (const r of groupRules) if (n.match(r.regex)) return addNode(n, r.level, groups);
-    addNode(n, DEFAULT_LEVEL, groups);
+    if (groups) for (const g of groups) if (g.regex && n.match(g.regex)) return g.nodes.push(n);
+    return fallBackGroup.nodes.push(n);
   });
-  return [
-    ...(scripts.length ? [scripts] : []),
-    // Sort groups by level.
-    ...[...groups.entries()].sort(([a], [b]) => a - b).map(([_, g]) => g),
-  ];
+  return [scripts, ...groups.map(g => g.nodes)].filter(g => g.length > 0);
 }
 
-function addNode(node: ImportNode, level: number, groups: Map<number, ImportNode[]>) {
-  const g = groups.get(level) ?? [];
-  g.push(node);
-  groups.set(level, g);
+function groupsFromConfig(config: Configuration) {
+  const fallBackGroup = { regex: '', nodes: Array<ImportNode>() };
+  const { groupRules } = config;
+  if (!groupRules) return { groups: [fallBackGroup], fallBackGroup };
+  const groups = groupRules.map(r =>
+    typeof r === 'string'
+      ? { regex: r, nodes: Array<ImportNode>() }
+      : { ...r, nodes: Array<ImportNode>() },
+  );
+  const fbGroup = groups.find(g => !g.regex);
+  return fbGroup
+    ? { groups, fallBackGroup: fbGroup }
+    : { groups: [...groups, fallBackGroup], fallBackGroup };
 }
 
 function sortAndMergeNodes(nodes: ImportNode[]) {
