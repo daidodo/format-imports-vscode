@@ -1,27 +1,27 @@
-import 'aaaaaaa';   // comment
-import 'aaaaaaaaaaaaaaaaaaaa';
+import 'aaaaaaaa';   // comment
+import 'aaaaaaaaaaaaaaaaaaaaa';
 
 import A
-  from 'a';   //comment
-import AAA from 'aaaaaaaaaa';
+  from 'aa';   //comment
+import AAA from 'aaaaaaaaaaa';
 import AA
-  from 'aaaaaaaaaaaa';
+  from 'aaaaaaaaaaaaa';
 import {
   B,
-} from 'b';//commnt
-import { BBB } from 'bbbbbb';
+} from 'bb';//commnt
+import { BBB } from 'bbbbbbb';
 import {
   BB,
-} from 'bbbbbbbb';
+} from 'bbbbbbbbb';
 import C =
-  require('c');//cmmt
-import CCC = require('cccc');
+  require('cc');//cmmt
+import CCC = require('ccccc');
 import CC =
-  require('cccccc');
+  require('ccccccc');
 import * as D
-  from 'd'; //cmmt
-import * as DDD from 'ddddd';
+  from 'dd'; //cmmt
+import * as DDD from 'dddddd';
 import * as DD
-  from 'ddddddd';
+  from 'dddddddd';
 
 export {A,AA,AAA,B,BB,BBB,C,CC,CCC,D,DD,DDD}

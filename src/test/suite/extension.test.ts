@@ -34,7 +34,7 @@ suite('Extension Test Suite', () => {
   // Run all tests
   return runTestSuite(examples);
   // Or, run a specific test case
-  // return runTestSuite(examples, 'disable/force/default');
+  // return runTestSuite(examples, 'compose/max-line-length/default');
 });
 
 function getTestSuite(dir: string, name: string): TestSuite | undefined {

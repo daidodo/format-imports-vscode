@@ -42,7 +42,7 @@ export function composeNodeAsParts(
     } else text = n;
   });
   const n = `${text} ${from}`;
-  if (n.length + extraLength >= maxLength) lines.push(text, tab + from);
+  if (n.length + extraLength > maxLength) lines.push(text, tab + from);
   else lines.push(n);
   return lines.join(nl);
 }
@@ -61,7 +61,7 @@ export function composeNodeAsNames(
 ) {
   const { maxLength } = config;
   const { text, canWrap } = composeNodeAsNamesImpl(defaultName, names, from, config, false);
-  if (maxLength > text.length + extraLength || !canWrap) return text;
+  if (maxLength >= text.length + extraLength || !canWrap) return text;
   return composeNodeAsNamesImpl(defaultName, names, from, config, true).text;
 }
 
@@ -89,7 +89,7 @@ function composeNames(
   if (!words || !words.length) return {};
   if (!forceWrap && words.length <= maxWords) {
     const text = bracket(words.join(', '));
-    if (text.length < maxLength) return { text, canWrap: true };
+    if (text.length <= maxLength) return { text, canWrap: true };
   }
   const lines = [];
   for (let n = words; n.length; ) {
@@ -124,7 +124,7 @@ function composeOneLineNames(
   for (let i = 0; i < rest.length; ++i) {
     const n = rest[i];
     const t = append(text, n, false, i + 1 >= rest.length);
-    if (i + 2 > maxWords || t.length >= maxLength) return { text, left: rest.slice(i) };
+    if (i + 2 > maxWords || t.length > maxLength) return { text, left: rest.slice(i) };
     text = t;
   }
   return { text, left: [] };
