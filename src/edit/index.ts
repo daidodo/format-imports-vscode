@@ -76,6 +76,7 @@ function decideInsert(
   config: ComposeConfig,
 ): { deleteRange: DeleteRange; insertPos: InsertPos } {
   if (insertRange) {
+    // Will insert result before 'insertRange'
     const { fullStart: fs, leadingNewLines: ln, commentStart: cs } = insertRange;
     const leadingNewLines = !fs.pos ? 0 : Math.min(Math.max(ln, 1), 2);
     return {

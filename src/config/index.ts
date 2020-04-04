@@ -10,9 +10,10 @@ import { loadTsConfig } from './tsconfig';
 import {
   ComposeConfig,
   Configuration,
+  GroupRule,
 } from './types';
 
-export { Configuration, ComposeConfig };
+export { Configuration, ComposeConfig, GroupRule };
 
 export default function loadConfig(
   fileUri: Uri,

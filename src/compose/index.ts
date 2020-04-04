@@ -1,16 +1,16 @@
 import { ComposeConfig } from '../config';
 import {
-  ImportNode,
   NameBinding,
   NodeComment,
 } from '../parser';
+import { SortGroup } from '../sort';
 import {
   assert,
   assertNonNull,
 } from '../utils';
 
 export default function composeInsertSource(
-  groups: ImportNode[][],
+  groups: SortGroup[],
   insertLines: { leadingNewLines?: number; trailingNewLines?: number },
   config: ComposeConfig,
 ) {
@@ -19,7 +19,7 @@ export default function composeInsertSource(
   const { nl } = config;
   const h = nl.repeat(leadingNewLines ?? 0);
   const e = nl.repeat(trailingNewLines ?? 0);
-  const text = groups.map(g => g.map(n => n.compose(config)).join(nl)).join(nl + nl);
+  const text = groups.map(g => g.nodes.map(n => n.compose(config)).join(nl)).join(nl + nl);
   return text ? h + text + e : e;
 }
 

@@ -111,39 +111,33 @@
         "tsImportSorter.configuration.groupRules": {
           "type": "array",
           "default": [
-            {
-              "regex": "^react(-dom)?$",
-              "level": 10
-            },
-            {
-              "regex": "^@angular/",
-              "level": 11
-            },
-            {
-              "regex": "^vue$",
-              "level": 12
-            },
-            {
-              "regex": "^[@]",
-              "level": 30
-            },
-            {
-              "regex": "^[.]",
-              "level": 40
-            }
+            "^react(-dom)?$",
+            "^@angular/",
+            "^vue$",
+            "",
+            "^[@]",
+            "^[.]"
           ],
           "items": {
-            "type": "object",
+            "type": [
+              "string",
+              "object"
+            ],
             "properties": {
+              "flag": {
+                "type": "string",
+                "enum": [
+                  "scripts",
+                  "fall-back",
+                  "regex"
+                ]
+              },
               "regex": {
                 "type": "string"
-              },
-              "level": {
-                "type": "integer"
               }
             }
           },
-          "description": "Grouping rules for path patterns. Everything else has a default level of 20."
+          "description": "Grouping rules for path patterns. \"\" is the fall-back group."
         },
         "tsImportSorter.configuration.maximumBindingNamesPerLine": {
           "type": "number",

@@ -1,9 +1,8 @@
 import { DeepReadonly } from 'utility-types';
 
 export interface GroupRule {
-  regex: string;
-  leadingEmptyLines?: number;
-  trailingEmptyLines?: number;
+  flag?: 'scripts' | 'regex' | 'fall-back';
+  regex?: string;
 }
 
 export type Configuration = DeepReadonly<
