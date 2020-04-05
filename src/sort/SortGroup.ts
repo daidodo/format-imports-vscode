@@ -17,15 +17,10 @@ export default class SortGroup {
     this.regex_ = regex || regex === '' ? RegExp(regex) : undefined;
     this.subGroups_ = subGroups
       ?.map(r => {
-        const f =
-          flag === 'all'
-            ? typeof r === 'string'
-              ? undefined
-              : r.flag
-            : typeof r === 'string'
-            ? flag
-            : r.flag ?? flag;
-        return typeof r === 'string' ? { flag: f, regex: r } : { ...r, flag: f };
+        if (typeof r === 'string') return flag === 'all' ? { regex: r } : { flag, regex: r };
+        if (Array.isArray(r)) return flag === 'all' ? { subGroups: r } : { flag, subGroups: r };
+        const f = r.flag ?? (flag === 'all' ? undefined : flag);
+        return { ...r, flag: f };
       })
       .map(r => new SortGroup(r));
   }

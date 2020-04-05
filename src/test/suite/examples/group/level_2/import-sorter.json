@@ -1,0 +1,11 @@
+{
+  "groupRules": [
+    { "subGroups": ["^j", {}] },
+    { "regex": "^[gh]", "subGroups": [{}, "^g"] },
+    [{}],
+    { "flag": null, "regex": "^[ef]", "subGroups": ["^f"] },
+    {},
+    { "regex": null, "subGroups": [{ "regex": "^d" }, "^c"] },
+    [{ "regex": "^b" }, "^a"]
+  ]
+}

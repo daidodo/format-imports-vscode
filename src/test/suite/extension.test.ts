@@ -34,7 +34,7 @@ suite('Extension Test Suite', () => {
   // Run all tests
   return runTestSuite(examples);
   // Or, run a specific test case
-  // return runTestSuite(examples, 'group/default');
+  // return runTestSuite(examples, 'group');
 });
 
 function getTestSuite(dir: string, name: string): TestSuite | undefined {

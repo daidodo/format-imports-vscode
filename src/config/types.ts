@@ -14,10 +14,10 @@ export interface GroupRule {
   regex?: string;
   /**
    * Sub-groups and rules. Imports will be sorted as the same order as sub groups defined.
-   *
-   * `string` elems will be expanded to `{ regex: elem }`.
+   * - `string` elems will be expanded to `{ regex: elem }`.
+   * - `string[]` elems will be expanded to `{ subGroups: elem }`.
    */
-  subGroups?: (string | GroupRule)[];
+  subGroups?: (string | string[] | GroupRule)[];
 }
 
 export type Configuration = Readonly<
@@ -26,7 +26,7 @@ export type Configuration = Readonly<
     autoFormat: 'off' | 'onSave';
     exclude: string[];
     excludeGlob: string[];
-    groupRules: (string | GroupRule)[];
+    groupRules: (string | string[] | GroupRule)[];
     maximumLineLength: number;
     maximumBindingNamesPerLine: number;
     maximumDefaultAndBindingNamesPerLine: number;
