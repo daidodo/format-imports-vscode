@@ -14,7 +14,7 @@ export default class SortGroup {
   constructor(rule: GroupRule) {
     const { flag, regex, subGroups } = rule;
     this.flag_ = flag;
-    this.regex_ = regex !== undefined ? RegExp(regex) : undefined;
+    this.regex_ = regex || regex === '' ? RegExp(regex) : undefined;
     this.subGroups_ = subGroups
       ?.map(r => {
         const f =
