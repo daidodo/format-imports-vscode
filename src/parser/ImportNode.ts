@@ -103,6 +103,10 @@ export default class ImportNode {
     return !this.defaultName_ && !this.binding_;
   }
 
+  get moduleIdentifier() {
+    return this.moduleIdentifier_;
+  }
+
   removeUnusedNames(allNames: Set<string>, unusedIds: UnusedId[]) {
     if (this.isScript) return this;
     const withinRange = unusedIds.filter(r => this.withinDeclRange(r.pos));
@@ -116,10 +120,6 @@ export default class ImportNode {
       } else if (!isNameUsed(this.binding_.alias, allNames, unusedNames)) this.binding_ = undefined;
     }
     return this.defaultName_ || this.binding_ ? this : undefined;
-  }
-
-  match(regex: string) {
-    return new RegExp(regex).test(this.moduleIdentifier_);
   }
 
   compare(node: ImportNode) {

@@ -10,17 +10,17 @@ import {
 } from '../utils';
 
 export default function composeInsertSource(
-  groups: SortGroup[],
+  group: SortGroup,
   insertLines: { leadingNewLines?: number; trailingNewLines?: number },
   config: ComposeConfig,
 ) {
-  if (!groups.length) return;
-  const { leadingNewLines, trailingNewLines } = insertLines;
   const { nl } = config;
+  const text = group.compose(config, nl + nl);
+  if (!text) return;
+  const { leadingNewLines, trailingNewLines } = insertLines;
   const h = nl.repeat(leadingNewLines ?? 0);
   const e = nl.repeat(trailingNewLines ?? 0);
-  const text = groups.map(g => g.nodes.map(n => n.compose(config)).join(nl)).join(nl + nl);
-  return text ? h + text + e : e;
+  return h + text + e;
 }
 
 export function composeNodeAsParts(
