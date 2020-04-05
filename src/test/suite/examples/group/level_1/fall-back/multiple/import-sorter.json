@@ -1,0 +1,9 @@
+{
+  "groupRules": [
+    { "flag": null, "regex": "^c" },
+    { "flag": null, "regex": null },
+    { "regex": "^b" },
+    {},
+    "^a"
+  ]
+}
