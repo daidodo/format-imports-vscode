@@ -34,7 +34,7 @@ suite('Extension Test Suite', () => {
   // Run all tests
   return runTestSuite(examples);
   // Or, run a specific test case
-  // return runTestSuite(examples, 'compose/max-line-length/default');
+  // return runTestSuite(examples, 'group/default');
 });
 
 function getTestSuite(dir: string, name: string): TestSuite | undefined {
@@ -67,20 +67,18 @@ function runTestSuite(ts: TestSuite, specific?: string, preConfig?: Configuratio
   const defResult = cases.find(c => !c.name && !c.origin)?.result;
   const config = curConfig && preConfig ? merge(preConfig, curConfig) : curConfig ?? preConfig;
   suite(name, () => {
-    if (specific === undefined) {
+    if (!specific) {
       cases.forEach(c => runTestCase(c, defResult, config));
       suites.forEach(s => runTestSuite(s, undefined, config));
     } else {
-      const [n, ...rest] = specific.split('/');
+      const [n, ...rest] = specific.split('/').filter(s => !!s);
       if (!rest.length) {
-        const c = cases.find(({ name }) => (name ?? 'default') === n);
-        assertNonNull(c, `Test case '${n}' not found in suite ${name}`);
-        runTestCase(c, defResult, config);
-      } else {
-        const s = suites.find(s => s.name === n);
-        assertNonNull(s, `Test suite '${n}' not found in suite ${name}`);
-        runTestSuite(s, rest.join('/'), config);
+        const c = cases.find(c => (c.name ?? 'default') === n);
+        if (c) return runTestCase(c, defResult, config);
       }
+      const s = suites.find(s => s.name === n);
+      assertNonNull(s, `Test case/suite '${n}' not found in suite '${name}'`);
+      runTestSuite(s, rest.join('/'), config);
     }
   });
 }
