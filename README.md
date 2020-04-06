@@ -1,17 +1,17 @@
 # JS/TS Import Sorter
 
-Automatically sort imports for **JavaScript** and **TypeScript** source code. ([Install](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter))
+Automatically format imports for **JavaScript** and **TypeScript** source code. ([Install](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter))
 
 ## Features
 
 - Auto format on save, or manually format with command/shortcut/context menu.
 - Auto merge imports, remove unused or duplicated names.
-- Group imports by customizable rules.
+- Group and sort imports by customizable rules.
 - Support multi-root projects.
 - Ignore specific files or imports.
 - Preserve `'use strict'`, `///` directives and global comments, e.g. license.
 - Recognize JSX elements and keep `React` import.
-- Keep comments with imports when sorting.
+- Keep comments with imports when reordering.
 - Respect config from [Prettier](https://prettier.io), [EditorConfig](https://editorconfig.org) and VS Code editor settings.
 
 ### Example
@@ -92,28 +92,14 @@ All VS Code settings under `"tsImportSorter"` section and their default values:
 // Disable formatting for files matching glob patterns.
 "tsImportSorter.configuration.excludeGlob": [],
 
-// Grouping rules for path patterns. Everything else has a default level of 20.
+// Grouping rules for path patterns. {} is the fall-back group.
 "tsImportSorter.configuration.groupRules": [
-  {
-    "regex": "^react(-dom)?$",
-    "level": 10
-  },
-  {
-    "regex": "^@angular/",
-    "level": 11
-  },
-  {
-    "regex": "^vue$",
-    "level": 12
-  },
-  {
-    "regex": "^[@]",
-    "level": 30
-  },
-  {
-    "regex": "^[.]",
-    "level": 40
-  }
+  "^react(-dom)?$",
+  "^@angular/",
+  "^vue$",
+  {},
+  "^[@]",
+  "^[.]"
 ],
 
 // Max binding names per line before wrapping. 0 for no limit.
@@ -151,28 +137,14 @@ Here are all config in `package.json` under `"importSorter"` section and their d
     // Disable formatting for files matching glob patterns.
     "excludeGlob": [],
 
-    // Grouping rules for path patterns. Everything else has a default level of 20.
+    // Grouping rules for path patterns. {} is the fall-back group.
     "groupRules": [
-      {
-        "regex": "^react(-dom)?$",
-        "level": 10
-      },
-      {
-        "regex": "^@angular/",
-        "level": 11
-      },
-      {
-        "regex": "^vue$",
-        "level": 12
-      },
-      {
-        "regex": "^[@]",
-        "level": 30
-      },
-      {
-        "regex": "^[.]",
-        "level": 40
-      }
+      "^react(-dom)?$",
+      "^@angular/",
+      "^vue$",
+      {},
+      "^[@]",
+      "^[.]"
     ],
 
     // Max line length before wrapping. 0 for no limit.
@@ -340,6 +312,86 @@ import {
   E,
 } from 'a'; // There are 2 names at most per wrapped line
 ```
+
+### Grouping Rules
+JS/TS Import Sorter uses import path for grouping.
+
+More details can be found [here](https://github.com/daidodo/tsimportsorter/wiki/Grouping-Rules).
+#### Ex. 1: All in one group
+```json
+"groupRules": []  // or null
+```
+#### Ex. 2: Custom groups
+```json
+"groupRules": ["^b", "^a"]
+```
+Will produce:
+```typescript
+import B from 'bxx';  // Group "^b"
+
+import A from 'axx';  // Group "^a"
+
+import C from 'cxx';  // Fall-back group
+```
+_Note: Fall-back group is at the end by default._
+#### Ex. 3: Reorder fall-back group
+```json
+"groupRules": ["^b", {}, "^a"]
+```
+Will produce:
+```typescript
+import B from 'bxx';  // Group "^b"
+
+import C from 'cxx';  // Fall-back group
+
+import A from 'axx';  // Group "^a"
+```
+#### Ex. 4: Sub-groups
+You can adjust the order of imports within a group via sub-groups.
+```json
+"groupRules": [["^b", "^a"], "^c"]
+```
+Will produce:
+```typescript
+// Group ["^b", "^a"]
+import B from 'bxx';  // Sub-group "^b"
+import A from 'axx';  // Sub-group "^a"
+
+import C from 'cxx';  // Group "^c"
+```
+#### Ex. 5: Fall-back sub-group
+```json
+"groupRules": [
+  { "regex": "^[ab]", "subGroups":["^b"] },
+]
+```
+Will produce:
+```typescript
+// Group "^[ab]"
+import B from 'bxx';  // Sub-group "^b"
+import A from 'axx';  // Fall-back sub-group
+
+import C from 'cxx';  // Fall-back group
+```
+_Note:_
+- _Fall-back sub-group is at the end of the parent group by default._
+- _Fall-back group is at the end by default._
+#### Ex. 6: Reorder fall-back sub-group
+```json
+"groupRules": [
+  { "regex": "^[abc]", "subGroups":["^b", {}, "^a"] },
+]
+```
+Will produce:
+```typescript
+// Group "^[abc]"
+import B from 'bxx';  // Sub-group "^b"
+import C from 'cxx';  // Fall-back sub-group
+import A from 'axx';  // Sub-group "^a"
+
+import D from 'dxx';  // Fall-back group
+```
+_Note: Fall-back group is at the end by default._
 
 ## Thanks
 
