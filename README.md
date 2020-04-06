@@ -213,6 +213,7 @@ If `"tsImportSorter.configuration.configurationFileName"` is an absolute path, e
 There are a few ways to exclude files from inspection:
 
 1. Add path patterns to `exclude` or `excludeGlob` in user or workspace settings in VSCode.
+  
   ```json
   "tsImportSorter.configuration.exclude": ["regexPattern"],
   "tsImportSorter.configuration.excludeGlob": ["globPattern"],
@@ -263,10 +264,13 @@ When deciding whether to wrap an import statement or not, JS/TS Import Sorter lo
 For a statement importing only *binding names*, this value determines how many names are allowed before wrapping.
 
 For example, if you set:
+
 ```json
 "maximumBindingNamesPerLine": 2,
 ```
+
 then
+
 ```typescript
 import { A } from 'a';    // No wrap as there is 1 name
 import { B, C } from 'b'; // No wrap as there are 2 names
@@ -283,10 +287,13 @@ import {
 For a statement importing *default* and *binding names*, this value determines how many names are allowed before wrapping.
 
 For example, if you set:
+
 ```json
 "maximumDefaultAndBindingNamesPerLine": 2,
 ```
+
 then
+
 ```typescript
 import A from 'a';        // No wrap as there is 1 name
 import B, { C } from 'b'; // No wrap as there are 2 names
@@ -301,10 +308,13 @@ import D, {
 If an import statement is wrapped, this value decides how many names there are per line.
 
 For example, if you set:
+
 ```json
 "maximumNamesPerWrappedLine": 2,
 ```
+
 then
+
 ```typescript
 import {
   A, B,
@@ -318,14 +328,19 @@ JS/TS Import Sorter uses import path for grouping.
 
 More details can be found [here](https://github.com/daidodo/tsimportsorter/wiki/Grouping-Rules).
 #### Ex. 1: All in one group
+
 ```json
 "groupRules": []  // or null
 ```
+
 #### Ex. 2: Custom groups
+
 ```json
 "groupRules": ["^b", "^a"]
 ```
+
 Will produce:
+
 ```typescript
 import B from 'bxx';  // Group "^b"
 
@@ -333,12 +348,17 @@ import A from 'axx';  // Group "^a"
 
 import C from 'cxx';  // Fall-back group
 ```
+
 _Note: Fall-back group is at the end by default._
+
 #### Ex. 3: Reorder fall-back group
+
 ```json
 "groupRules": ["^b", {}, "^a"]
 ```
+
 Will produce:
+
 ```typescript
 import B from 'bxx';  // Group "^b"
 
@@ -346,12 +366,17 @@ import C from 'cxx';  // Fall-back group
 
 import A from 'axx';  // Group "^a"
 ```
+
 #### Ex. 4: Sub-groups
+
 You can adjust the order of imports within a group via sub-groups.
+
 ```json
 "groupRules": [["^b", "^a"], "^c"]
 ```
+
 Will produce:
+
 ```typescript
 // Group ["^b", "^a"]
 import B from 'bxx';  // Sub-group "^b"
@@ -359,13 +384,17 @@ import A from 'axx';  // Sub-group "^a"
 
 import C from 'cxx';  // Group "^c"
 ```
+
 #### Ex. 5: Fall-back sub-group
+
 ```json
 "groupRules": [
   { "regex": "^[ab]", "subGroups":["^b"] },
 ]
 ```
+
 Will produce:
+
 ```typescript
 // Group "^[ab]"
 import B from 'bxx';  // Sub-group "^b"
@@ -373,16 +402,21 @@ import A from 'axx';  // Fall-back sub-group
 
 import C from 'cxx';  // Fall-back group
 ```
+
 _Note:_
 - _Fall-back sub-group is at the end of the parent group by default._
 - _Fall-back group is at the end by default._
+
 #### Ex. 6: Reorder fall-back sub-group
+
 ```json
 "groupRules": [
   { "regex": "^[abc]", "subGroups":["^b", {}, "^a"] },
 ]
 ```
+
 Will produce:
+
 ```typescript
 // Group "^[abc]"
 import B from 'bxx';  // Sub-group "^b"
@@ -391,6 +425,7 @@ import A from 'axx';  // Sub-group "^a"
 
 import D from 'dxx';  // Fall-back group
 ```
+
 _Note: Fall-back group is at the end by default._
 
 ## Thanks
