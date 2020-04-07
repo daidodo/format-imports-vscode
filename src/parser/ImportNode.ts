@@ -107,6 +107,14 @@ export default class ImportNode {
     return this.moduleIdentifier_;
   }
 
+  get defaultName() {
+    return this.defaultName_;
+  }
+
+  get binding() {
+    return this.binding_;
+  }
+
   removeUnusedNames(allNames: Set<string>, unusedIds: UnusedId[]) {
     if (this.isScript) return this;
     const withinRange = unusedIds.filter(r => this.withinDeclRange(r.pos));
@@ -120,14 +128,6 @@ export default class ImportNode {
       } else if (!isNameUsed(this.binding_.alias, allNames, unusedNames)) this.binding_ = undefined;
     }
     return this.defaultName_ || this.binding_ ? this : undefined;
-  }
-
-  compare(node: ImportNode) {
-    return (
-      compareId(this.moduleIdentifier_, node.moduleIdentifier_) ||
-      compareDefaultName(this.defaultName_, node.defaultName_) ||
-      compareBinding(this.binding_, node.binding_)
-    );
   }
 
   compose(config: ComposeConfig) {
@@ -162,17 +162,6 @@ export default class ImportNode {
       node.trailingCommentsText_ = '';
     }
     return r;
-  }
-
-  sortBindingNames() {
-    if (this.binding_?.type === 'named')
-      this.binding_.names = this.binding_.names
-        .sort((a, b) => compareBindingName(a, b))
-        .reduce((r, a) => {
-          if (!r.length) return [a];
-          const l = r[r.length - 1];
-          return compareBindingName(l, a) ? [...r, a] : r; // Remove duplicates
-        }, new Array<NameBinding>());
   }
 
   private get hasLeadingComments() {
@@ -328,43 +317,4 @@ function getBinding(nb: NamedImportBindings | undefined): Binding | undefined {
       : { propertyName: name.text };
   });
   return { type: 'named', names };
-}
-
-/**
- * @param def - If true, 'default' is less than any other non-empty strings
- */
-function compareId(aa: string | undefined, bb: string | undefined, def?: boolean) {
-  if (!aa) return bb ? -1 : 0;
-  if (!bb) return 1;
-  if (def) {
-    if (aa === 'default') return bb === 'default' ? 0 : -1;
-    if (bb === 'default') return 1;
-  }
-  const a = aa.toLowerCase();
-  const b = bb.toLowerCase();
-  return a < b ? -1 : a > b ? 1 : aa < bb ? 1 : aa > bb ? -1 : 0;
-}
-
-function compareDefaultName(a: string | undefined, b: string | undefined) {
-  if (!a) return b ? 1 : 0;
-  if (!b) return -1;
-  return compareId(a, b);
-}
-
-function compareBindingName(a: NameBinding | undefined, b: NameBinding | undefined) {
-  if (!a) return b ? -1 : 0;
-  else if (!b) return 1;
-  const { propertyName: pa, aliasName: aa } = a;
-  const { propertyName: pb, aliasName: ab } = b;
-  // Put 'default as X' in front of any other binding names to highlight.
-  return compareId(pa, pb, true) || compareId(aa, ab);
-}
-
-function compareBinding(a: Binding | undefined, b: Binding | undefined) {
-  if (!a) return b ? -1 : 0;
-  if (!b) return 1;
-  if (a.type === 'named' && b.type === 'named') return compareBindingName(a.names[0], b.names[0]);
-  if (a.type === 'named') return 1;
-  if (b.type === 'named') return -1;
-  return compareId(a.alias, b.alias);
 }

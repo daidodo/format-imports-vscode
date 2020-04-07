@@ -19,5 +19,5 @@ export default function sortImports(
     .map(n => n.removeUnusedNames(usedIds, unusedIds))
     .filter((n): n is ImportNode => !!n)
     .forEach(n => group.add(n));
-  return group.sortAndMerge();
+  return group.sortAndMerge(config);
 }

@@ -5,6 +5,7 @@ export { ImportNode };
 export {
   LineRange,
   RangeAndEmptyLines,
+  Binding,
   NameBinding,
   NodeComment,
   InsertNodeRange,
