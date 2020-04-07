@@ -3,6 +3,7 @@ import { SortRule } from './sorting';
 
 export type Configuration = Readonly<
   Partial<{
+    // From VS Code "tsImportSorter" settings
     configurationFileName: string;
     autoFormat: 'off' | 'onSave';
     exclude: string[];
@@ -13,6 +14,7 @@ export type Configuration = Readonly<
     maximumBindingNamesPerLine: number;
     maximumDefaultAndBindingNamesPerLine: number;
     maximumNamesPerWrappedLine: number;
+    // From other configs
     tabType: 'space' | 'tab';
     tabSize: number;
     quoteMark: 'single' | 'double';
@@ -20,8 +22,9 @@ export type Configuration = Readonly<
     hasSemicolon: boolean;
     insertFinalNewline: boolean;
     bracketSpacing: boolean;
+    // Internal or not configurable
     eol: 'LF' | 'CRLF'; // This is not configurable because VS Code will format the file anyway.
-    force: boolean; // Ignore exclude paths and file disable-comment.
+    force: boolean; // Internal. Ignore exclude paths and file disable-comment.
   }>
 >;
 

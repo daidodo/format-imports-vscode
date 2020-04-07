@@ -123,22 +123,45 @@
               "string",
               "array",
               "object"
-            ],
-            "properties": {
-              "flag": {
-                "type": "string",
-                "enum": [
-                  "scripts",
-                  "fall-back",
-                  "regex"
-                ]
-              },
-              "regex": {
-                "type": "string"
-              }
-            }
+            ]
           },
-          "description": "Grouping rules for path patterns. {} is the fall-back group."
+          "markdownDescription": "Grouping rules for path patterns. See [wiki](https://github.com/daidodo/tsimportsorter/wiki/Grouping-Rules) for more details."
+        },
+        "tsImportSorter.configuration.sortRule.paths": {
+          "type": "array",
+          "default": [
+            "_",
+            "aA"
+          ],
+          "items": {
+            "type": "string",
+            "enum": [
+              "az",
+              "AZ",
+              "aA",
+              "Aa",
+              "_"
+            ]
+          },
+          "markdownDescription": "Sorting rule for import paths. See [wiki](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules) for more details."
+        },
+        "tsImportSorter.configuration.sortRule.names": {
+          "type": "array",
+          "default": [
+            "_",
+            "aA"
+          ],
+          "items": {
+            "type": "string",
+            "enum": [
+              "az",
+              "AZ",
+              "aA",
+              "Aa",
+              "_"
+            ]
+          },
+          "markdownDescription": "Sorting rule for imported names. See [wiki](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules) for more details."
         },
         "tsImportSorter.configuration.maximumBindingNamesPerLine": {
           "type": "number",

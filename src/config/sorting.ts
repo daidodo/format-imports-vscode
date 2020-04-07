@@ -18,7 +18,7 @@ export interface SortRule {
   paths: Segment[];
 
   /**
-   * Sorting rule for import names.
+   * Sorting rule for imported names.
    */
   names: Segment[];
 }
