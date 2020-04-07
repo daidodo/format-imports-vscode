@@ -336,17 +336,17 @@ More details can be found [here](https://github.com/daidodo/tsimportsorter/wiki/
 #### Ex. 2: Custom groups
 
 ```json
-"groupRules": ["^b", "^a"]
+"groupRules": ["^a", "^b"]
 ```
 
 Will produce:
 
 ```typescript
-import B from 'bxx';  // Group "^b"
-
 import A from 'axx';  // Group "^a"
 
-import C from 'cxx';  // Fall-back group
+import B from 'bxx';  // Group "^b"
+
+import X from 'xxx';  // Fall-back group
 ```
 
 _Note: Fall-back group is at the end by default._
@@ -354,17 +354,17 @@ _Note: Fall-back group is at the end by default._
 #### Ex. 3: Reorder fall-back group
 
 ```json
-"groupRules": ["^b", {}, "^a"]
+"groupRules": ["^a", {}, "^b"]
 ```
 
 Will produce:
 
 ```typescript
-import B from 'bxx';  // Group "^b"
-
-import C from 'cxx';  // Fall-back group
-
 import A from 'axx';  // Group "^a"
+
+import X from 'xxx';  // Fall-back group
+
+import B from 'bxx';  // Group "^b"
 ```
 
 #### Ex. 4: Sub-groups
@@ -383,6 +383,8 @@ import B from 'bxx';  // Sub-group "^b"
 import A from 'axx';  // Sub-group "^a"
 
 import C from 'cxx';  // Group "^c"
+
+import X from 'xxx';  // Fall-back group
 ```
 
 #### Ex. 5: Fall-back sub-group
@@ -400,7 +402,7 @@ Will produce:
 import B from 'bxx';  // Sub-group "^b"
 import A from 'axx';  // Fall-back sub-group
 
-import C from 'cxx';  // Fall-back group
+import X from 'xxx';  // Fall-back group
 ```
 
 _Note:_
@@ -411,7 +413,7 @@ _Note:_
 
 ```json
 "groupRules": [
-  { "regex": "^[abc]", "subGroups":["^b", {}, "^a"] },
+  { "regex": "^[abc]", "subGroups":["^a", {}, "^b"] },
 ]
 ```
 
@@ -419,11 +421,11 @@ Will produce:
 
 ```typescript
 // Group "^[abc]"
-import B from 'bxx';  // Sub-group "^b"
-import C from 'cxx';  // Fall-back sub-group
 import A from 'axx';  // Sub-group "^a"
+import C from 'cxx';  // Fall-back sub-group
+import B from 'bxx';  // Sub-group "^b"
 
-import D from 'dxx';  // Fall-back group
+import X from 'xxx';  // Fall-back group
 ```
 
 _Note: Fall-back group is at the end by default._
