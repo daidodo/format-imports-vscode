@@ -4,13 +4,13 @@ import {
   Uri,
 } from 'vscode';
 
+import { GroupRule } from './grouping';
 import { merge } from './helper';
 import { loadImportSorterConfig } from './importSorter';
 import { loadTsConfig } from './tsconfig';
 import {
   ComposeConfig,
   Configuration,
-  GroupRule,
 } from './types';
 
 export { Configuration, ComposeConfig, GroupRule };

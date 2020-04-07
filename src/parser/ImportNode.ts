@@ -171,7 +171,7 @@ export default class ImportNode {
         .reduce((r, a) => {
           if (!r.length) return [a];
           const l = r[r.length - 1];
-          return compareBindingName(l, a) ? [...r, a] : r;
+          return compareBindingName(l, a) ? [...r, a] : r; // Remove duplicates
         }, new Array<NameBinding>());
   }
 
@@ -351,15 +351,6 @@ function compareDefaultName(a: string | undefined, b: string | undefined) {
   return compareId(a, b);
 }
 
-function compareBinding(a: Binding | undefined, b: Binding | undefined) {
-  if (!a) return b ? -1 : 0;
-  if (!b) return 1;
-  if (a.type === 'named' && b.type === 'named') return compareBindingName(a.names[0], b.names[0]);
-  if (a.type === 'named') return 1;
-  if (b.type === 'named') return -1;
-  return compareId(a.alias, b.alias);
-}
-
 function compareBindingName(a: NameBinding | undefined, b: NameBinding | undefined) {
   if (!a) return b ? -1 : 0;
   else if (!b) return 1;
@@ -367,4 +358,13 @@ function compareBindingName(a: NameBinding | undefined, b: NameBinding | undefin
   const { propertyName: pb, aliasName: ab } = b;
   // Put 'default as X' in front of any other binding names to highlight.
   return compareId(pa, pb, true) || compareId(aa, ab);
+}
+
+function compareBinding(a: Binding | undefined, b: Binding | undefined) {
+  if (!a) return b ? -1 : 0;
+  if (!b) return 1;
+  if (a.type === 'named' && b.type === 'named') return compareBindingName(a.names[0], b.names[0]);
+  if (a.type === 'named') return 1;
+  if (b.type === 'named') return -1;
+  return compareId(a.alias, b.alias);
 }
