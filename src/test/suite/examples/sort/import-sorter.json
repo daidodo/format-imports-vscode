@@ -1,0 +1,6 @@
+{
+  "sortRules": {
+    "paths": ["_", "aA"],
+    "name": ["_", "aA"]
+  }
+}

@@ -32,9 +32,9 @@ suite('Extension Test Suite', () => {
   const examples = getTestSuite(dir, 'examples');
   if (!examples) return;
   // Run all tests
-  return runTestSuite(examples);
+  // return runTestSuite(examples);
   // Or, run a specific test case
-  // return runTestSuite(examples, 'group');
+  return runTestSuite(examples, 'sort');
 });
 
 function getTestSuite(dir: string, name: string): TestSuite | undefined {
