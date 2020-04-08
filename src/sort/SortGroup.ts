@@ -10,8 +10,8 @@ import {
 import {
   compareBindingName,
   compareNodes,
+  SortConfig,
 } from './compare';
-import { SortConfig } from './config';
 
 export default class SortGroup {
   private readonly flag_: GroupRule['flag'];

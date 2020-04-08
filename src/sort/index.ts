@@ -3,7 +3,7 @@ import {
   ImportNode,
   UnusedId,
 } from '../parser';
-import { configForSort } from './config';
+import { configForSort } from './compare';
 import SortGroup from './SortGroup';
 
 export { SortGroup };
