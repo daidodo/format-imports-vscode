@@ -115,7 +115,7 @@ function comparatorFromRule(rule: SortRule | undefined): Comparator {
           if (n1 === n2) continue;
           const s1 = map.get(n1);
           const s2 = map.get(n2);
-          if (!s1 || !s2) return a.charAt(i).localeCompare(b.charAt(i));
+          if (!s1 || !s2) return COMPARE_DEF(a.charAt(i), b.charAt(i));
           if (s1 !== s2) return s1.rank - s2.rank;
           return s1.compare(n1, n2);
         }
