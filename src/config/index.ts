@@ -4,7 +4,6 @@ import {
   Uri,
 } from 'vscode';
 
-import { GroupRule } from './grouping';
 import { merge } from './helper';
 import { loadImportSorterConfig } from './importSorter';
 import { loadTsConfig } from './tsconfig';
@@ -13,7 +12,9 @@ import {
   Configuration,
 } from './types';
 
-export { Configuration, ComposeConfig, GroupRule };
+export { GroupRule } from './grouping';
+export { SortRule } from './sorting';
+export { Configuration, ComposeConfig };
 
 export default function loadConfig(
   fileUri: Uri,

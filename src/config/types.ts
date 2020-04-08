@@ -1,5 +1,5 @@
 import { GroupRule } from './grouping';
-import { SortRule } from './sorting';
+import { SortRules } from './sorting';
 
 export type Configuration = Readonly<
   Partial<{
@@ -9,7 +9,7 @@ export type Configuration = Readonly<
     exclude: string[];
     excludeGlob: string[];
     groupRules: (string | string[] | GroupRule)[];
-    sortRule: SortRule;
+    sortRules: SortRules;
     maximumLineLength: number;
     maximumBindingNamesPerLine: number;
     maximumDefaultAndBindingNamesPerLine: number;
@@ -27,6 +27,11 @@ export type Configuration = Readonly<
     force: boolean; // Internal. Ignore exclude paths and file disable-comment.
   }>
 >;
+
+/**
+ * Properties in `Configuration` that need to be merged instead of replaced.
+ */
+export const KEYS_TO_MERGE = ['exclude' as const, 'excludeGlob' as const, 'sortRules' as const];
 
 export interface ComposeConfig {
   maxLength: number;

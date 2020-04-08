@@ -9,18 +9,18 @@
  * * 'Aa' - Both case letters and upper case first, i.e. [a-zA-Z] and `'A' < 'a' < 'B' < 'b' < ...`
  * * '_' - Chars with ASCII from 91 to 96, i.e. `[`, `\`, `]`, `^`, `_`, `` ` ``(backtick).
  */
-type Segment = 'az' | 'AZ' | 'aA' | 'Aa' | '_';
+export type SortRule = ('az' | 'AZ' | 'aA' | 'Aa' | '_')[];
 
-export interface SortRule {
+export interface SortRules {
   /**
    * Sorting rule for import paths.
    */
-  paths: Segment[];
+  paths: SortRule;
 
   /**
    * Sorting rule for imported names.
    */
-  names: Segment[];
+  names: SortRule;
 }
 
 /*
