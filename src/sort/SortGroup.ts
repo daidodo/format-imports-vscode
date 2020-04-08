@@ -2,7 +2,16 @@ import {
   ComposeConfig,
   GroupRule,
 } from '../config';
-import { ImportNode } from '../parser';
+import {
+  Binding,
+  ImportNode,
+  NameBinding,
+} from '../parser';
+import {
+  compareBindingName,
+  compareNodes,
+} from './compare';
+import { SortConfig } from './config';
 
 export default class SortGroup {
   private readonly flag_: GroupRule['flag'];
@@ -48,10 +57,10 @@ export default class SortGroup {
     return false;
   }
 
-  sortAndMerge() {
-    this.nodes_ = sortAndMergeNodes(this.nodes_);
-    this.scripts_ = sortAndMergeNodes(this.scripts_);
-    this.subGroups_?.forEach(g => g.sortAndMerge());
+  sortAndMerge(config: SortConfig) {
+    this.nodes_ = sortAndMergeNodes(this.nodes_, config);
+    this.scripts_ = sortAndMergeNodes(this.scripts_, config);
+    this.subGroups_?.forEach(g => g.sortAndMerge(config));
     return this;
   }
 
@@ -67,16 +76,28 @@ export default class SortGroup {
   }
 }
 
-function sortAndMergeNodes(nodes: ImportNode[]) {
+function sortAndMergeNodes(nodes: ImportNode[], config: SortConfig) {
   const merged = nodes
-    .sort((a, b) => a.compare(b))
+    .sort((a, b) => compareNodes(a, b, config))
     .reduce((r, n) => {
       if (!r.length) return [n];
       const last = r[r.length - 1];
       if (last.merge(n)) return r;
       return [...r, n];
     }, new Array<ImportNode>());
-  merged.forEach(n => n.sortBindingNames());
+  merged.forEach(n => sortBindingNames(n.binding, config));
   // Sort nodes again because binding names may have changed.
-  return merged.sort((a, b) => a.compare(b));
+  return merged.sort((a, b) => compareNodes(a, b, config));
+}
+
+function sortBindingNames(binding: Binding | undefined, config: SortConfig) {
+  if (binding?.type === 'named')
+    binding.names = binding.names
+      .sort((a, b) => compareBindingName(a, b, config))
+      .reduce((r, a) => {
+        // Remove duplicates
+        if (!r.length) return [a];
+        const l = r[r.length - 1];
+        return compareBindingName(l, a, config) ? [...r, a] : r;
+      }, new Array<NameBinding>());
 }
