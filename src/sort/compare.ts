@@ -126,17 +126,16 @@ function checkAndComplete(p: { map: Map<number, Segment>; mask: number }, nextIn
   // The rule is a no-op, e.g. [], ['az'].
   if (!m || !(m & (m - 1))) return false;
   // If the rule is incomplete, append the missing segment.
-  if (m !== 0b111)
-    switch (0b111 - m) {
-      case 0b1:
-        new Segment('az', nextIndex, p);
-        return true;
-      case 0b10:
-        new Segment('AZ', nextIndex, p);
-        return true;
-      case 0b100:
-        new Segment('_', nextIndex, p);
-        return true;
-    }
-  return false; // Something is wrong, fall back to default.
+  switch (0b111 - m) {
+    case 0b1:
+      new Segment('az', nextIndex, p);
+      break;
+    case 0b10:
+      new Segment('AZ', nextIndex, p);
+      break;
+    case 0b100:
+      new Segment('_', nextIndex, p);
+      break;
+  }
+  return true;
 }

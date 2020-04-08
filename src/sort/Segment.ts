@@ -25,6 +25,7 @@ export default class Segment {
     const z = 'z'.charCodeAt(0);
     const A = 'A'.charCodeAt(0);
     const Z = 'Z'.charCodeAt(0);
+    const lower = (i: number) => (A <= i && i <= Z ? i + a - A : i);
     switch (id) {
       case 'az':
         p.mask |= 0b1;
@@ -42,15 +43,19 @@ export default class Segment {
         p.mask |= 0b11;
         this.setMap(map, A, Z);
         this.setMap(map, a, z);
-        return (a, b) => a - b;
+        return (i, j) => {
+          const ii = lower(i);
+          const jj = lower(j);
+          return ii !== jj ? ii - jj : i - j;
+        };
       case 'aA':
         p.mask |= 0b11;
         this.setMap(map, A, Z);
         this.setMap(map, a, z);
         return (i, j) => {
-          if (A <= i && i <= Z) i += z;
-          if (A <= j && j <= Z) j += z;
-          return i - j;
+          const ii = lower(i);
+          const jj = lower(j);
+          return ii !== jj ? ii - jj : j - i;
         };
     }
   }
