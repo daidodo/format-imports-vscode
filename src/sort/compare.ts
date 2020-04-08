@@ -92,12 +92,19 @@ export function configForSort(config: Configuration): SortConfig {
   };
 }
 
+// Default comparator
+const COMPARE_DEF: Comparator = (a, b) => {
+  if (!a) return !b ? 0 : -1;
+  if (!b) return 1;
+  return a < b ? -1 : a > b ? 1 : 0;
+};
+
 function comparatorFromRule(rule: SortRule | undefined): Comparator {
   const map = new Map<number, Segment>();
   const p = { map, mask: 0 };
   rule?.forEach((s, i) => new Segment(s, i, p));
   return !checkAndComplete(p, rule?.length ?? 0)
-    ? (a, b) => (a ?? '').localeCompare(b ?? '')
+    ? COMPARE_DEF
     : (a, b) => {
         if (!a) return !b ? 0 : -1;
         if (!b) return 1;
