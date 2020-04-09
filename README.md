@@ -448,7 +448,7 @@ _Note:_
 
 ### Sorting Rules
 
-The sorting rules for import paths and imported names are also adjustable. You can decide:
+The sorting rules for import paths and imported names *within a group/sub-group* are also adjustable. You can decide:
 * Whether to compare letters case-sensitively or case-insensitively;
 * The rank among lower-case letters, upper-case letters and `'_'`;
 
