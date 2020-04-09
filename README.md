@@ -102,6 +102,12 @@ All VS Code settings under `"tsImportSorter"` section and their default values:
   "^[.]"
 ],
 
+// Sorting rule for import paths.
+"tsImportSorter.configuration.sortRules.paths": ["_", "aA"],
+
+// Sorting rule for imported names.
+"tsImportSorter.configuration.sortRules.names": ["_", "aA"],
+
 // Max binding names per line before wrapping. 0 for no limit.
 "tsImportSorter.configuration.maximumBindingNamesPerLine": 1,
 
@@ -137,7 +143,7 @@ Here are all config in `package.json` under `"importSorter"` section and their d
     // Disable formatting for files matching glob patterns.
     "excludeGlob": [],
 
-    // Grouping rules for path patterns. {} is the fall-back group.
+    // Grouping rules for path patterns.
     "groupRules": [
       "^react(-dom)?$",
       "^@angular/",
@@ -146,6 +152,14 @@ Here are all config in `package.json` under `"importSorter"` section and their d
       "^[@]",
       "^[.]"
     ],
+
+    "sortRules": {
+      // Sorting rule for import paths.
+      "paths": ["_", "aA"],
+
+      // Sorting rule for imported names.
+      "names": ["_", "aA"],
+    }
 
     // Max line length before wrapping. 0 for no limit.
     "maximumLineLength": 80,
@@ -349,7 +363,8 @@ import B from 'bxx';  // Group "^b"
 import X from 'xxx';  // Fall-back group
 ```
 
-_Note: Fall-back group is at the end by default._
+_Note:_
+* _Fall-back group is at the end by default._
 
 #### Ex. 3: Reorder fall-back group
 
@@ -428,7 +443,32 @@ import B from 'bxx';  // Sub-group "^b"
 import X from 'xxx';  // Fall-back group
 ```
 
-_Note: Fall-back group is at the end by default._
+_Note:_
+* _Fall-back group is at the end by default._
+
+### Sorting Rules
+
+The sorting rules for import paths and imported names are also adjustable. You can decide:
+* Whether to compare letters case-sensitively or case-insensitively;
+* The rank among lower-case letters, upper-case letters and `'_'`;
+
+Here is an example:
+
+```json
+"sortRules": {
+  "paths": ["_", "aA"],
+  "names": ["_", "aA"]
+}
+```
+
+The above `["_", "aA"]` means:
+* `[`, `\`, `]`, `^`, `_` and `` ` ``(backtick) are in front of letters (`[a-zA-Z]`).
+* Letters are compared case-insensitive, and lower-case is in front of upper-case.
+
+A sorted array might be `['_', 'a', 'A', 'b', 'B']`.
+
+For more details and how to construct your own rules, please read [wiki](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules).
+
 
 ## Thanks
 
