@@ -1,6 +1,6 @@
 # JS/TS Import Sorter
 
-Automatically format imports for **JavaScript** and **TypeScript** source code. ([Install](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter))
+Automatically format imports for **JavaScript** and **TypeScript**. ([Install](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter))
 
 ## Features
 
