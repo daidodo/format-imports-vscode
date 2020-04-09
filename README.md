@@ -340,7 +340,7 @@ import {
 ### Grouping Rules
 JS/TS Import Sorter uses import path for grouping.
 
-More details can be found [here](https://github.com/daidodo/tsimportsorter/wiki/Grouping-Rules).
+More details can be found in the [wiki](https://github.com/daidodo/tsimportsorter/wiki/Grouping-Rules).
 #### Ex. 1: All in one group
 
 ```json
@@ -467,7 +467,7 @@ The above `["_", "aA"]` means:
 
 A sorted array might be `['_', 'a', 'A', 'b', 'B']`.
 
-For more details and how to construct your own rules, please read [wiki](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules).
+For more details and how to construct your own rules, please read the [wiki](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules).
 
 
 ## Thanks

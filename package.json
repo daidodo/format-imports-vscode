@@ -125,7 +125,7 @@
               "object"
             ]
           },
-          "markdownDescription": "Grouping rules for path patterns. See [wiki](https://github.com/daidodo/tsimportsorter/wiki/Grouping-Rules) for more details."
+          "markdownDescription": "Grouping rules for path patterns. See the [wiki](https://github.com/daidodo/tsimportsorter/wiki/Grouping-Rules) for more details."
         },
         "tsImportSorter.configuration.sortRules.paths": {
           "type": "array",
@@ -143,7 +143,7 @@
               "_"
             ]
           },
-          "markdownDescription": "Sorting rule for import paths. See [wiki](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules) for more details."
+          "markdownDescription": "Sorting rule for import paths. See the [wiki](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules) for more details."
         },
         "tsImportSorter.configuration.sortRules.names": {
           "type": "array",
@@ -161,7 +161,7 @@
               "_"
             ]
           },
-          "markdownDescription": "Sorting rule for imported names. See [wiki](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules) for more details."
+          "markdownDescription": "Sorting rule for imported names. See the [wiki](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules) for more details."
         },
         "tsImportSorter.configuration.maximumBindingNamesPerLine": {
           "type": "number",
