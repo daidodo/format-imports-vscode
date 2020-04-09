@@ -144,22 +144,15 @@ Here are all config in `package.json` under `"importSorter"` section and their d
     "excludeGlob": [],
 
     // Grouping rules for path patterns.
-    "groupRules": [
-      "^react(-dom)?$",
-      "^@angular/",
-      "^vue$",
-      {},
-      "^[@]",
-      "^[.]"
-    ],
+    "groupRules": ["^react(-dom)?$", "^@angular/", "^vue$", {}, "^[@]", "^[.]"],
 
     "sortRules": {
       // Sorting rule for import paths.
       "paths": ["_", "aA"],
 
       // Sorting rule for imported names.
-      "names": ["_", "aA"],
-    }
+      "names": ["_", "aA"]
+    },
 
     // Max line length before wrapping. 0 for no limit.
     "maximumLineLength": 80,
@@ -192,7 +185,7 @@ Here are all config in `package.json` under `"importSorter"` section and their d
     "insertFinalNewline": true,
 
     // Whether to add spaces between brackets. true for '{ id }' and false for '{id}'.
-    "bracketSpacing": true,
+    "bracketSpacing": true
   }
 }
 ```
