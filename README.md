@@ -143,7 +143,7 @@ Here are all config in `package.json` under `"importSorter"` section and their d
     // Disable formatting for files matching glob patterns.
     "excludeGlob": [],
 
-    // Grouping rules for path patterns.
+    // Grouping rules for path patterns. {} is the fall-back group.
     "groupRules": ["^react(-dom)?$", "^@angular/", "^vue$", {}, "^[@]", "^[.]"],
 
     "sortRules": {
