@@ -1,3 +1,3 @@
-import {B, BB,A, AA} from 'a';
+import {B, BB,A,AB, AA} from 'a';
 
-export {B, BB,A, AA};
+export {B, BB,A, AB, AA};

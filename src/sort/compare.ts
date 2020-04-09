@@ -7,9 +7,10 @@ import {
   ImportNode,
   NameBinding,
 } from '../parser';
-import Segment from './Segment';
+import Segment, { Params } from './Segment';
 
 type Comparator = (a: string | undefined, b: string | undefined) => number;
+type InnerComparator = (a: string | undefined, b: string | undefined, c: boolean) => number;
 
 export interface SortConfig {
   comparePaths: Comparator;
@@ -101,26 +102,36 @@ const COMPARE_DEF: Comparator = (a, b) => {
 
 function comparatorFromRule(rule: SortRule | undefined): Comparator {
   const map = new Map<number, Segment>();
-  const p = { map, mask: 0 };
+  const p: Params = { map };
   rule?.forEach((s, i) => new Segment(s, i, p));
-  return !checkAndComplete(p, rule?.length ?? 0)
-    ? COMPARE_DEF
-    : (a, b) => {
-        if (!a) return !b ? 0 : -1;
-        if (!b) return 1;
-        let i = 0;
-        for (; i < a.length && i < b.length; ++i) {
-          const n1 = a.charCodeAt(i);
-          const n2 = b.charCodeAt(i);
-          if (n1 === n2) continue;
-          const s1 = map.get(n1);
-          const s2 = map.get(n2);
-          if (!s1 || !s2) return COMPARE_DEF(a.charAt(i), b.charAt(i));
-          if (s1 !== s2) return s1.rank - s2.rank;
-          return s1.compare(n1, n2);
-        }
-        return i < a.length ? 1 : i < b.length ? -1 : 0;
-      };
+  return !checkAndComplete(p, rule?.length ?? 0) ? COMPARE_DEF : comparatorFromP(p);
+}
+
+function comparatorFromP(p: Params): Comparator {
+  const { map, sensitive } = p;
+  const c = comparatorFromMap(map);
+  if (sensitive) return (a, b) => c(a, b, true);
+  return (a, b) => c(a, b, false) || c(a, b, true);
+}
+
+function comparatorFromMap(map: Map<number, Segment>): InnerComparator {
+  return (a, b, c) => {
+    if (!a) return !b ? 0 : -1;
+    if (!b) return 1;
+    let i = 0;
+    for (; i < a.length && i < b.length; ++i) {
+      const n1 = a.charCodeAt(i);
+      const n2 = b.charCodeAt(i);
+      if (n1 === n2) continue;
+      const s1 = map.get(n1);
+      const s2 = map.get(n2);
+      if (!s1 || !s2) return COMPARE_DEF(a.charAt(i), b.charAt(i));
+      if (s1 !== s2) return s1.rank - s2.rank;
+      const r = s1.compare(n1, n2, c);
+      if (r) return r;
+    }
+    return i < a.length ? 1 : i < b.length ? -1 : 0;
+  };
 }
 
 /**
@@ -128,8 +139,8 @@ function comparatorFromRule(rule: SortRule | undefined): Comparator {
  *
  * @returns false - The rule is a no-op; true - The rule is completed.
  */
-function checkAndComplete(p: { map: Map<number, Segment>; mask: number }, nextIndex: number) {
-  const m = p.mask & 0b111;
+function checkAndComplete(p: Params, nextIndex: number) {
+  const m = (p.mask ?? 0) & 0b111;
   // The rule is a no-op, e.g. [], ['az'].
   if (!m || !(m & (m - 1))) return false;
   // If the rule is incomplete, append the missing segment.

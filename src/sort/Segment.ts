@@ -1,12 +1,18 @@
 import { SortRule } from '../config';
 
-type Comparator = (a: number, b: number) => number;
+type Comparator = (a: number, b: number, c: boolean) => number;
+
+export interface Params {
+  map: Map<number, Segment>;
+  mask?: number;
+  sensitive?: boolean;
+}
 
 export default class Segment {
   private rank_: number;
   private compare_: Comparator;
 
-  constructor(id: SortRule[number], rank: number, p: { map: Map<number, Segment>; mask: number }) {
+  constructor(id: SortRule[number], rank: number, p: Params) {
     this.rank_ = rank;
     this.compare_ = this.init(id, p);
   }
@@ -19,8 +25,7 @@ export default class Segment {
     return this.rank_;
   }
 
-  private init(id: SortRule[number], p: { map: Map<number, Segment>; mask: number }): Comparator {
-    const { map } = p;
+  private init(id: SortRule[number], p: Params): Comparator {
     const a = 'a'.charCodeAt(0);
     const z = 'z'.charCodeAt(0);
     const A = 'A'.charCodeAt(0);
@@ -28,39 +33,35 @@ export default class Segment {
     const lower = (i: number) => (A <= i && i <= Z ? i + a - A : i);
     switch (id) {
       case 'az':
-        p.mask |= 0b1;
-        this.setMap(map, a, z);
+        this.setP(p, a, z, 0b1, true);
         return (a, b) => a - b;
       case 'AZ':
-        p.mask |= 0b10;
-        this.setMap(map, A, Z);
+        this.setP(p, A, Z, 0b10, true);
         return (a, b) => a - b;
       case '_':
-        p.mask |= 0b100;
-        this.setMap(map, '['.charCodeAt(0), '`'.charCodeAt(0));
+        this.setP(p, '['.charCodeAt(0), '`'.charCodeAt(0), 0b100);
         return (a, b) => a - b;
       case 'Aa':
-        p.mask |= 0b11;
-        this.setMap(map, A, Z);
-        this.setMap(map, a, z);
-        return (i, j) => {
-          const ii = lower(i);
-          const jj = lower(j);
-          return ii !== jj ? ii - jj : i - j;
+        this.setP(p, A, Z, 0b11, false);
+        this.setP(p, a, z);
+        return (i, j, c) => {
+          const ii = lower(i) - lower(j);
+          return !c ? ii : ii || i - j;
         };
       case 'aA':
-        p.mask |= 0b11;
-        this.setMap(map, A, Z);
-        this.setMap(map, a, z);
-        return (i, j) => {
-          const ii = lower(i);
-          const jj = lower(j);
-          return ii !== jj ? ii - jj : j - i;
+        this.setP(p, A, Z, 0b11, false);
+        this.setP(p, a, z);
+        return (i, j, c) => {
+          const ii = lower(i) - lower(j);
+          return !c ? ii : ii || j - i;
         };
     }
   }
 
-  private setMap(map: Map<number, Segment>, a: number, b: number) {
+  private setP(p: Params, a: number, b: number, mask?: number, sensitive?: boolean) {
+    const { map, mask: m } = p;
     for (let i = a; i <= b; ++i) if (!map.has(i)) map.set(i, this);
+    if (mask) p.mask = mask | (m ?? 0);
+    if (sensitive !== undefined && p.sensitive === undefined) p.sensitive = sensitive;
   }
 }
