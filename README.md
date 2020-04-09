@@ -463,7 +463,7 @@ Here is an example:
 
 The above `["_", "aA"]` means:
 * `[`, `\`, `]`, `^`, `_` and `` ` ``(backtick) are in front of letters (`[a-zA-Z]`).
-* Letters are compared case-insensitive, and lower-case is in front of upper-case.
+* Letters are compared case-insensitively, and lower-case is in front of upper-case.
 
 A sorted array might be `['_', 'a', 'A', 'b', 'B']`.
 
