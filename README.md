@@ -331,113 +331,39 @@ import {
 ```
 
 ### Grouping Rules
-JS/TS Import Sorter uses import path for grouping.
 
-More details can be found in the [wiki](https://github.com/daidodo/tsimportsorter/wiki/Grouping-Rules).
-#### Ex. 1: All in one group
+JS/TS Import Sorter can put imports into different groups separated by a blank line, based on the rules defined in `groupRules`.
 
-```json
-"groupRules": []  // or null
+Each grouping rule applies to either:
+
+- Script imports, e.g. `import 'some/scripts'`, or
+- Non-script imports, e.g. `import React, { FC } from 'react'`.
+
+A grouping rule defines:
+- Type of imports to apply: Script or non-script imports.
+- Path pattern to match.
+- Sub-groups to further adjust the order of imports on top of [Sorting Rules](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules).
+
+For example, `"groupRules": ["^react$", {}, "^[.]"]` defines 3 grouping rules and their order:
+- `"^react$"`: matches any *non-script* imports from exact path `"react"`, no sub-groups.
+- `{}`: is the fall-back group, i.e. any imports that don't match any other groups will fall into this group.
+- `"^[.]"`: matches any *non-script* imports from paths starting with `"."`, no sub-groups.
+
+The following is an example of the results:
+
+```ts
+import React from 'react';
+
+import { TextDocument } from 'vscode';
+
+import MyInput from './MyInput';
 ```
 
-#### Ex. 2: Custom groups
+_Notes:_
+- _By default, script imports are in the first group if you don't explicitly define rules for them in `groupRules`._
+- _You can define a grouping rule for script imports via, e.g. `{"flag": "scripts", "regex": "\.css$"}`._
 
-```json
-"groupRules": ["^a", "^b"]
-```
-
-Will produce:
-
-```typescript
-import A from 'axx';  // Group "^a"
-
-import B from 'bxx';  // Group "^b"
-
-import X from 'xxx';  // Fall-back group
-```
-
-_Note:_
-* _Fall-back group is at the end by default._
-
-#### Ex. 3: Reorder fall-back group
-
-```json
-"groupRules": ["^a", {}, "^b"]
-```
-
-Will produce:
-
-```typescript
-import A from 'axx';  // Group "^a"
-
-import X from 'xxx';  // Fall-back group
-
-import B from 'bxx';  // Group "^b"
-```
-
-#### Ex. 4: Sub-groups
-
-You can adjust the order of imports within a group via sub-groups.
-
-```json
-"groupRules": [["^b", "^a"], "^c"]
-```
-
-Will produce:
-
-```typescript
-// Group ["^b", "^a"]
-import B from 'bxx';  // Sub-group "^b"
-import A from 'axx';  // Sub-group "^a"
-
-import C from 'cxx';  // Group "^c"
-
-import X from 'xxx';  // Fall-back group
-```
-
-#### Ex. 5: Fall-back sub-group
-
-```json
-"groupRules": [
-  { "regex": "^[ab]", "subGroups":["^b"] },
-]
-```
-
-Will produce:
-
-```typescript
-// Group "^[ab]"
-import B from 'bxx';  // Sub-group "^b"
-import A from 'axx';  // Fall-back sub-group
-
-import X from 'xxx';  // Fall-back group
-```
-
-_Note:_
-- _Fall-back sub-group is at the end of the parent group by default._
-- _Fall-back group is at the end by default._
-
-#### Ex. 6: Reorder fall-back sub-group
-
-```json
-"groupRules": [
-  { "regex": "^[abc]", "subGroups":["^a", {}, "^b"] },
-]
-```
-
-Will produce:
-
-```typescript
-// Group "^[abc]"
-import A from 'axx';  // Sub-group "^a"
-import C from 'cxx';  // Fall-back sub-group
-import B from 'bxx';  // Sub-group "^b"
-
-import X from 'xxx';  // Fall-back group
-```
-
-_Note:_
-* _Fall-back group is at the end by default._
+For a complete guide, please refer to [the wiki](https://github.com/daidodo/tsimportsorter/wiki/Grouping-Rules).
 
 ### Sorting Rules
 
