@@ -22,6 +22,7 @@
 
 ### DONE
 
+- ~~Option to ignore `node_modules`. ([Link](https://github.com/amatiasq/vsc-sort-imports/issues/38))~~
 - ~~Support TSLint plugin import order. ([Link](https://github.com/SoominHan/import-sorter/issues/60))~~
 - ~~Useless alias (renaming). ([Link](https://eslint.org/docs/rules/no-useless-rename))~~
 - ~~Support glob in exclude path pattern.~~

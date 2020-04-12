@@ -87,7 +87,7 @@ All VS Code settings under `"tsImportSorter"` section and their default values:
 "tsImportSorter.configuration.autoFormat": "onSave",
 
 // Disable sorting for files matching regular expressions.
-"tsImportSorter.configuration.exclude": [],
+"tsImportSorter.configuration.exclude": ["node_modules"],
 
 // Disable formatting for files matching glob patterns.
 "tsImportSorter.configuration.excludeGlob": [],
@@ -138,7 +138,7 @@ Here are all config in `package.json` under `"importSorter"` section and their d
     "autoFormat": "onSave",
 
     // Disable sorting for files matching regular expressions.
-    "exclude": [],
+    "exclude": ["node_modules"],
 
     // Disable formatting for files matching glob patterns.
     "excludeGlob": [],

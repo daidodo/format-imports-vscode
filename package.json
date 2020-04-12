@@ -94,7 +94,9 @@
         },
         "tsImportSorter.configuration.exclude": {
           "type": "array",
-          "default": [],
+          "default": [
+            "node_modules"
+          ],
           "items": {
             "type": "string"
           },
