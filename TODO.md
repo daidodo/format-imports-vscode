@@ -1,6 +1,5 @@
 ### Features
 
-- Shebangs are moved after imports. ([Link](https://github.com/MLoughry/sort-typescript-imports/issues/37))
 - Sort css imports to the bottom by default. ([Link](https://github.com/zeilmannnoah/orion-import-sorter/issues/1), [Ref](https://raygun.com/blog/css-preprocessors-examples/)).
 - Write CONTRIBUTING.md.
 - Sort exports.
@@ -28,6 +27,7 @@
 
 ### DONE
 
+- ~~Shebangs are moved after imports. ([Link](https://github.com/MLoughry/sort-typescript-imports/issues/37))~~
 - ~~Option to ignore `node_modules`. ([Link](https://github.com/amatiasq/vsc-sort-imports/issues/38))~~
 - ~~Support TSLint plugin import order. ([Link](https://github.com/SoominHan/import-sorter/issues/60))~~
 - ~~Useless alias (renaming). ([Link](https://eslint.org/docs/rules/no-useless-rename))~~
