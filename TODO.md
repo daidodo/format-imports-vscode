@@ -1,5 +1,8 @@
 ### Features
 
+- Shebangs are moved after imports. ([Link](https://github.com/MLoughry/sort-typescript-imports/issues/37))
+- Sort css imports to the bottom by default. ([Link](https://github.com/zeilmannnoah/orion-import-sorter/issues/1), [Ref](https://raygun.com/blog/css-preprocessors-examples/)).
+- Write CONTRIBUTING.md.
 - Sort exports.
 - Group level comments. ([Link](https://github.com/SoominHan/import-sorter/issues/46))
 - Support ESLint plugin import/order. ([Link](https://github.com/SoominHan/import-sorter/issues/43))
@@ -8,6 +11,8 @@
 - Feature Request - Standalone CLI version. ([Link](https://github.com/SoominHan/import-sorter/issues/57))
 - Add a "sort-imports.on-focus-change" sorting option. ([Link](https://github.com/amatiasq/vsc-sort-imports/issues/30))
 - Format files within a directory.
+- Organize Imports should sort by import name instead path. ([Link](https://github.com/microsoft/TypeScript/issues/23279))
+- Support for .vue files. ([Link](https://github.com/MLoughry/sort-typescript-imports/issues/31))
 
 ### Implementation
 
@@ -19,6 +24,7 @@
 ### Bugs
 
 - Test `unused/deep` fails on Windows 10 + VS Code 1.42.1.
+- Inner comments are removed after formatting.
 
 ### DONE
 
