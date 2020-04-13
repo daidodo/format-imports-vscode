@@ -86,7 +86,7 @@ All VS Code settings under `"tsImportSorter"` section and their default values:
 // When to auto format imports. Valid values are 'off' or 'onSave'.
 "tsImportSorter.configuration.autoFormat": "onSave",
 
-// Disable sorting for files matching regular expressions.
+// Disable formatting for files matching regular expressions.
 "tsImportSorter.configuration.exclude": ["node_modules"],
 
 // Disable formatting for files matching glob patterns.
@@ -137,7 +137,7 @@ Here are all config in `package.json` under `"importSorter"` section and their d
     // When to auto format imports. Valid values are 'off' or 'onSave'.
     "autoFormat": "onSave",
 
-    // Disable sorting for files matching regular expressions.
+    // Disable formatting for files matching regular expressions.
     "exclude": ["node_modules"],
 
     // Disable formatting for files matching glob patterns.
@@ -213,7 +213,7 @@ JS/TS Import Sorter respects [VS Code user and workspace settings](https://code.
 
 `import-sorter.json` is searched in a similar way if it's a relative path.
 
-If `"tsImportSorter.configuration.configurationFileName"` is an absolute path, e.g. `/path/to/import-sorter.json` or `C:\path\to\import-sorter.json`, no search is needed.
+No search is needed if `"tsImportSorter.configuration.configurationFileName"` is an absolute path, e.g. `/path/to/import-sorter.json` or `C:\path\to\import-sorter.json`.
 
 ### Ignore files or import declarations
 
@@ -246,7 +246,8 @@ or
 [Other code]
 ```
 
-_Note: Exclude paths and file disable-comments are **ignored** if the formation is triggered manually, i.e. from Command Palette, editor context menu or shortcut._
+_Note:_
+* _Excluded paths and file disable-comments are **ignored** if the formatting is triggered manually, i.e. from Command Palette, editor context menu or shortcut._
 
 To exclude a specific `import` declaration from sorting, please add the following as its leading or trailing comments:
 
@@ -342,9 +343,12 @@ Each grouping rule applies to either:
 A grouping rule defines:
 - Type of imports to apply: Script or non-script imports.
 - Path pattern to match.
-- Sub-groups to further adjust the order of imports on top of [Sorting Rules](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules).
+- Sub-groups to further adjust the order of imports within the group, in addition to [Sorting Rules](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules).
 
-For example, `"groupRules": ["^react$", {}, "^[.]"]` defines 3 grouping rules and their order:
+_Note:_
+* _There is NO blank lines between sub-groups._
+
+For example, `"groupRules": ["^react$", {}, "^[.]"]` defines 3 grouping rules (and their order):
 - `"^react$"`: matches any *non-script* imports from exact path `"react"`, no sub-groups.
 - `{}`: is the fall-back group, i.e. any imports that don't match any other groups will fall into this group.
 - `"^[.]"`: matches any *non-script* imports from paths starting with `"."`, no sub-groups.
@@ -361,14 +365,14 @@ import MyInput from './MyInput';
 
 _Notes:_
 - _By default, script imports are in the first group if you don't explicitly define rules for them in `groupRules`._
-- _You can define a grouping rule for script imports via, e.g. `{"flag": "scripts", "regex": "\.css$"}`._
+- _You can define a grouping rule for script imports via, e.g. `{"flag": "scripts", "regex": "[.]css$"}`._
 
-For a complete guide, please refer to [the wiki](https://github.com/daidodo/tsimportsorter/wiki/Grouping-Rules).
+For a complete guide, please refer to [the Wiki](https://github.com/daidodo/tsimportsorter/wiki/Grouping-Rules).
 
 ### Sorting Rules
 
 The sorting rules for import paths and imported names *within a group/sub-group* are also adjustable. You can decide:
-* Whether to compare letters case-sensitively or case-insensitively;
+* Whether to compare letters case-sensitively or -insensitively;
 * The rank among lower-case letters, upper-case letters and `'_'`;
 
 Here is an example:
@@ -386,7 +390,7 @@ The above `["_", "aA"]` means:
 
 A sorted array might be `['_', 'a', 'A', 'b', 'B']`.
 
-For more details and how to construct your own rules, please read the [wiki](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules).
+For more details and how to construct your own rules, please read [the Wiki](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules).
 
 
 ## Thanks
