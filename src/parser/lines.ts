@@ -15,7 +15,8 @@ export function parseLineRanges(
   node: Node,
   sourceFile: SourceFile,
   sourceText: string,
-  lastCommentEnd?: Pos,
+  lastCommentEnd: Pos | undefined,
+  checkFileComments: boolean,
 ) {
   const declEnd = node.getEnd();
   const declLineRange = transformRange(
@@ -28,7 +29,14 @@ export function parseLineRanges(
     leadingNewLines,
     commentsStart,
     leadingComments,
-  } = parseLeadingComments(node, declLineRange, sourceFile, sourceText, lastCommentEnd);
+  } = parseLeadingComments(
+    node,
+    declLineRange,
+    sourceFile,
+    sourceText,
+    lastCommentEnd,
+    checkFileComments,
+  );
   const trailingComments = ts
     .getTrailingCommentRanges(sourceText, declEnd)
     ?.map(transformComment.bind(undefined, sourceFile, sourceText));
@@ -88,7 +96,8 @@ function parseLeadingComments(
   declLineRange: LineRange,
   sourceFile: SourceFile,
   sourceText: string,
-  lastCommentEnd?: Pos,
+  lastCommentEnd: Pos | undefined,
+  checkFileComments: boolean,
 ) {
   const fullStart = lastCommentEnd ?? transformPos(node.getFullStart(), sourceFile);
   const comments = ts
@@ -96,7 +105,7 @@ function parseLeadingComments(
     ?.map(transformComment.bind(undefined, sourceFile, sourceText));
   // Skip initial comments that separated by empty line(s) or triple-slash comment(s)
   // from the first import statement.
-  if (fullStart.pos === 0 && comments && comments.length > 0) {
+  if (checkFileComments && comments && comments.length > 0) {
     const results = [];
     let nextStartLine = declLineRange.start.line;
     for (let i = comments.length - 1; i >= 0; --i) {

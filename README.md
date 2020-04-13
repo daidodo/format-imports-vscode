@@ -9,7 +9,7 @@ Automatically format imports for **JavaScript** and **TypeScript**. ([Install](h
 - Group and sort imports by customizable rules.
 - Support multi-root projects.
 - Ignore specific files or imports.
-- Preserve `'use strict'`, `///` directives and global comments, e.g. license.
+- Preserve `'use strict'`, `///` directives, shebang (`#!`) and global comments, e.g. license.
 - Recognize JSX elements and keep `React` import.
 - Keep comments with imports when reordering.
 - Respect config from [Prettier](https://prettier.io), [EditorConfig](https://editorconfig.org) and VS Code editor settings.

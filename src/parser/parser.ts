@@ -1,4 +1,4 @@
-import {
+import ts, {
   ExpressionStatement,
   ImportDeclaration,
   ImportEqualsDeclaration,
@@ -28,18 +28,33 @@ interface Params {
   // If 'range' is undefined, insert before the first ImportNode.
   insertPoint?: { range?: InsertNodeRange };
   lastCommentEnd?: Pos;
+  checkFileComments: boolean;
 }
 
 export function parseSource(sourceFile: SourceFile, sourceText: string, config: Configuration) {
-  const p: Params = { sourceFile, sourceText, importNodes: [], allIds: new Set<string>() };
+  const p: Params = {
+    sourceFile,
+    sourceText,
+    importNodes: [],
+    allIds: new Set<string>(),
+    lastCommentEnd: shebangEnd(sourceFile, sourceText),
+    checkFileComments: true,
+  };
   const [syntaxList] = sourceFile.getChildren();
   if (syntaxList && syntaxList.kind === SyntaxKind.SyntaxList)
     for (const node of syntaxList.getChildren()) if (!process(node, p, config)) break;
   return p;
 }
 
+function shebangEnd(sourceFile: SourceFile, sourceText: string) {
+  const shebang = ts.getShebang(sourceText);
+  if (!shebang) return undefined;
+  const pos = shebang.length;
+  return { pos, ...sourceFile.getLineAndCharacterOfPosition(pos) };
+}
+
 function process(node: Node, p: Params, config: Configuration) {
-  const { sourceFile, sourceText, importNodes, lastCommentEnd } = p;
+  const { sourceFile, sourceText, importNodes, lastCommentEnd, checkFileComments } = p;
   const { force } = config;
   const {
     fileComments,
@@ -53,10 +68,11 @@ function process(node: Node, p: Params, config: Configuration) {
     trailingNewLines,
     fullEnd,
     eof,
-  } = parseLineRanges(node, sourceFile, sourceText, lastCommentEnd);
+  } = parseLineRanges(node, sourceFile, sourceText, lastCommentEnd, checkFileComments);
   if (!force && isDisabled(fileComments)) return false; // File is disabled
   p.lastCommentEnd = declAndCommentsLineRange.end;
   if (isUseStrict(node)) return true; // Skip 'use strict' directive
+  p.checkFileComments = false; // No more checks for file comments after non-'use strict' statement
   const range: RangeAndEmptyLines = {
     ...declAndCommentsLineRange,
     fullStart,
