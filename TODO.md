@@ -1,7 +1,10 @@
 ### Features
 
+- Provide an option to not sort "Plain import". ([Link](https://gitlab.com/smartive-private/christoph/typescript-hero/-/issues/454))
 - Sort css imports to the bottom by default. ([Link](https://github.com/zeilmannnoah/orion-import-sorter/issues/1), [Ref](https://raygun.com/blog/css-preprocessors-examples/)).
+- Required `h` import missing (StencilJS). ([Link](https://gitlab.com/smartive-private/christoph/typescript-hero/-/issues/488))
 - Write CONTRIBUTING.md.
+- Option to not normalize `"."` and `".."`. ([Link](https://github.com/SoominHan/import-sorter/issues/48))
 - Sort exports.
 - Group level comments. ([Link](https://github.com/SoominHan/import-sorter/issues/46))
 - Support ESLint plugin import/order. ([Link](https://github.com/SoominHan/import-sorter/issues/43))
@@ -12,6 +15,10 @@
 - Format files within a directory.
 - Organize Imports should sort by import name instead path. ([Link](https://github.com/microsoft/TypeScript/issues/23279))
 - Support for .vue files. ([Link](https://github.com/MLoughry/sort-typescript-imports/issues/31))
+- Do not remove imports of commented code. ([Link](https://gitlab.com/smartive-private/christoph/typescript-hero/-/issues/460))
+- Prevent organize import on parse error. ([Link](https://gitlab.com/smartive-private/christoph/typescript-hero/-/issues/406))
+- Add setting for one import per line. ([Link](https://gitlab.com/smartive-private/christoph/typescript-hero/-/issues/351))
+- Provide sub sort option. ([Link](https://github.com/neilsoult/typescript-imports-sort/issues/3))
 
 ### Implementation
 
@@ -23,7 +30,7 @@
 ### Bugs
 
 - Test `unused/deep` fails on Windows 10 + VS Code 1.42.1.
-- Inner comments are removed after formatting.
+- Inner comments are removed after formatting. E.g. `import A /*inner comment*/ from 'a'`.
 
 ### DONE
 
