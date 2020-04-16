@@ -13,7 +13,7 @@ import {
 } from './types';
 
 export { GroupRule } from './grouping';
-export { SortRule } from './sorting';
+export { SortRule, SortRules } from './sorting';
 export { Configuration, ComposeConfig };
 
 export default function loadConfig(

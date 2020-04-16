@@ -10,20 +10,23 @@ import {
 import {
   compareBindingName,
   compareNodes,
-  SortConfig,
+  Sorter,
+  sorterFromRule,
 } from './compare';
 
 export default class SortGroup {
   private readonly flag_: GroupRule['flag'];
   private readonly regex_: RegExp | undefined;
+  private readonly sorter_: Sorter;
   private readonly subGroups_?: SortGroup[];
   private nodes_: ImportNode[] = [];
   private scripts_: ImportNode[] = [];
 
-  constructor(rule: GroupRule) {
-    const { flag, regex, subGroups } = rule;
+  constructor(rule: GroupRule, sorter: Sorter) {
+    const { flag, regex, sort, subGroups } = rule;
     this.flag_ = flag;
     this.regex_ = regex || regex === '' ? RegExp(regex) : undefined;
+    this.sorter_ = sort ? sorterFromRule(sort) : sorter;
     this.subGroups_ = subGroups
       ?.map(r => {
         if (typeof r === 'string') return flag === 'all' ? { regex: r } : { flag, regex: r };
@@ -31,7 +34,7 @@ export default class SortGroup {
         const f = r.flag ?? (flag === 'all' ? undefined : flag);
         return { ...r, flag: f };
       })
-      .map(r => new SortGroup(r));
+      .map(r => new SortGroup(r, this.sorter_));
   }
 
   add(node: ImportNode, fallBack = false) {
@@ -57,10 +60,10 @@ export default class SortGroup {
     return false;
   }
 
-  sortAndMerge(config: SortConfig) {
-    this.nodes_ = sortAndMergeNodes(this.nodes_, config);
-    this.scripts_ = sortAndMergeNodes(this.scripts_, config);
-    this.subGroups_?.forEach(g => g.sortAndMerge(config));
+  sortAndMerge() {
+    this.nodes_ = sortAndMergeNodes(this.nodes_, this.sorter_);
+    this.scripts_ = sortAndMergeNodes(this.scripts_, this.sorter_);
+    this.subGroups_?.forEach(g => g.sortAndMerge());
     return this;
   }
 
@@ -76,28 +79,28 @@ export default class SortGroup {
   }
 }
 
-function sortAndMergeNodes(nodes: ImportNode[], config: SortConfig) {
+function sortAndMergeNodes(nodes: ImportNode[], sorter: Sorter) {
   const merged = nodes
-    .sort((a, b) => compareNodes(a, b, config))
+    .sort((a, b) => compareNodes(a, b, sorter))
     .reduce((r, n) => {
       if (!r.length) return [n];
       const last = r[r.length - 1];
       if (last.merge(n)) return r;
       return [...r, n];
     }, new Array<ImportNode>());
-  merged.forEach(n => sortBindingNames(n.binding, config));
+  merged.forEach(n => sortBindingNames(n.binding, sorter));
   // Sort nodes again because binding names may have changed.
-  return merged.sort((a, b) => compareNodes(a, b, config));
+  return merged.sort((a, b) => compareNodes(a, b, sorter));
 }
 
-function sortBindingNames(binding: Binding | undefined, config: SortConfig) {
+function sortBindingNames(binding: Binding | undefined, sorter: Sorter) {
   if (binding?.type === 'named')
     binding.names = binding.names
-      .sort((a, b) => compareBindingName(a, b, config))
+      .sort((a, b) => compareBindingName(a, b, sorter))
       .reduce((r, a) => {
         // Remove duplicates
         if (!r.length) return [a];
         const l = r[r.length - 1];
-        return compareBindingName(l, a, config) ? [...r, a] : r;
+        return compareBindingName(l, a, sorter) ? [...r, a] : r;
       }, new Array<NameBinding>());
 }

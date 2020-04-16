@@ -1,3 +1,5 @@
+import { SortRules } from './sorting';
+
 export interface GroupRule {
   /**
    * - "all": This group is for all imports.
@@ -16,6 +18,12 @@ export interface GroupRule {
    * i.e. any cases don't match any other groups (within the parent) will fall into this group.
    */
   regex?: string;
+
+  /**
+   * Sorting rules for this group.
+   * If it's `undefined`, or either `paths` or `names` is `undefined`, then inherit from the parent.
+   */
+  sort?: SortRules;
 
   /**
    * Sub-groups and rules. Imports will be sorted as the same order as sub groups defined.

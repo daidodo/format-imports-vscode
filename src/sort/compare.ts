@@ -1,6 +1,6 @@
 import {
-  Configuration,
   SortRule,
+  SortRules,
 } from '../config';
 import {
   Binding,
@@ -12,15 +12,16 @@ import Segment, { Params } from './Segment';
 type Comparator = (a: string | undefined, b: string | undefined) => number;
 type InnerComparator = (a: string | undefined, b: string | undefined, c: boolean) => number;
 
-export interface SortConfig {
+export interface Sorter {
   comparePaths: Comparator;
   compareNames: Comparator;
 }
-export function compareNodes(a: ImportNode, b: ImportNode, config: SortConfig) {
+
+export function compareNodes(a: ImportNode, b: ImportNode, sorter: Sorter) {
   return (
-    config.comparePaths(a.moduleIdentifier, b.moduleIdentifier) ||
-    compareDefaultName(a.defaultName, b.defaultName, config) ||
-    compareBinding(a.binding, b.binding, config)
+    sorter.comparePaths(a.moduleIdentifier, b.moduleIdentifier) ||
+    compareDefaultName(a.defaultName, b.defaultName, sorter) ||
+    compareBinding(a.binding, b.binding, sorter)
   );
 }
 
@@ -33,10 +34,10 @@ export function compareNodes(a: ImportNode, b: ImportNode, config: SortConfig) {
  * import { B, C } from './a';  // named binding import
  * ```
  */
-function compareDefaultName(a: string | undefined, b: string | undefined, config: SortConfig) {
+function compareDefaultName(a: string | undefined, b: string | undefined, sorter: Sorter) {
   if (!a) return b ? 1 : 0;
   if (!b) return -1;
-  return config.compareNames(a, b);
+  return sorter.compareNames(a, b);
 }
 
 /**
@@ -49,23 +50,23 @@ function compareDefaultName(a: string | undefined, b: string | undefined, config
  * import { A, B } from './a';  // named binding import
  * ```
  */
-function compareBinding(a: Binding | undefined, b: Binding | undefined, config: SortConfig) {
+function compareBinding(a: Binding | undefined, b: Binding | undefined, sorter: Sorter) {
   if (!a) return b ? -1 : 0;
   if (!b) return 1;
   if (a.type === 'named' && b.type === 'named')
-    return compareBindingName(a.names[0], b.names[0], config);
+    return compareBindingName(a.names[0], b.names[0], sorter);
   // Put namespace binding in front of named bindings.
   if (a.type === 'named') return 1;
   if (b.type === 'named') return -1;
-  return config.compareNames(a.alias, b.alias);
+  return sorter.compareNames(a.alias, b.alias);
 }
 
-export function compareBindingName(a: NameBinding, b: NameBinding, config: SortConfig) {
+export function compareBindingName(a: NameBinding, b: NameBinding, sorter: Sorter) {
   if (!a) return b ? -1 : 0;
   else if (!b) return 1;
   const { propertyName: pa, aliasName: aa } = a;
   const { propertyName: pb, aliasName: ab } = b;
-  return comparePropertyName(pa, pb, config) || config.compareNames(aa, ab);
+  return comparePropertyName(pa, pb, sorter) || sorter.compareNames(aa, ab);
 }
 
 /**
@@ -77,19 +78,19 @@ export function compareBindingName(a: NameBinding, b: NameBinding, config: SortC
  * import { default as C, A, B } from './a';
  * ```
  */
-function comparePropertyName(a: string, b: string, config: SortConfig) {
+function comparePropertyName(a: string, b: string, sorter: Sorter) {
   if (!a) return b ? -1 : 0;
   if (!b) return 1;
   // Put 'default as X' in front of any other binding names to highlight.
   if (a === 'default') return b === 'default' ? 0 : -1;
   if (b === 'default') return 1;
-  return config.compareNames(a, b);
+  return sorter.compareNames(a, b);
 }
 
-export function configForSort(config: Configuration): SortConfig {
+export function sorterFromRule(rules: SortRules | undefined): Sorter {
   return {
-    comparePaths: comparatorFromRule(config.sortRules?.paths),
-    compareNames: comparatorFromRule(config.sortRules?.names),
+    comparePaths: comparatorFromRule(rules?.paths),
+    compareNames: comparatorFromRule(rules?.names),
   };
 }
 
@@ -101,8 +102,7 @@ const COMPARE_DEF: Comparator = (a, b) => {
 };
 
 function comparatorFromRule(rule: SortRule | undefined): Comparator {
-  const map = new Map<number, Segment>();
-  const p: Params = { map };
+  const p = { map: new Map<number, Segment>() };
   rule?.forEach((s, i) => new Segment(s, i, p));
   return !checkAndComplete(p, rule?.length ?? 0) ? COMPARE_DEF : comparatorFromP(p);
 }
