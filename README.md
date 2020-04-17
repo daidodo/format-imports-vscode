@@ -350,9 +350,9 @@ _Note:_
 * _There is NO blank lines between sub-groups._
 
 For example, `"groupRules": ["^react$", {}, "^[.]"]` defines 3 grouping rules (and their order):
-- `"^react$"`: matches any *non-script* imports from exact path `"react"`, no sub-groups.
+- `"^react$"`: matches any *non-script* imports from exact path `"react"`.
 - `{}`: is the fall-back group, i.e. any imports that don't match any other groups will fall into this group.
-- `"^[.]"`: matches any *non-script* imports from paths starting with `"."`, no sub-groups.
+- `"^[.]"`: matches any *non-script* imports from paths starting with `"."`.
 
 The following is an example of the results:
 
