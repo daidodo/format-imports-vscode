@@ -1,0 +1,4 @@
+{
+  "sortRules": { "paths": ["Aa", "_"] },
+  "groupRules": [{ "regex": "^[a-zA-Z]", "sort": { "names": ["az", "AZ"] } }]
+}

@@ -343,6 +343,7 @@ Each grouping rule applies to either:
 A grouping rule defines:
 - Type of imports to apply: Script or non-script imports.
 - Path pattern to match.
+- Sorting rules for paths and names within the group.
 - Sub-groups to further adjust the order of imports within the group, in addition to [Sorting Rules](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules).
 
 _Note:_
@@ -364,7 +365,7 @@ import MyInput from './MyInput';
 ```
 
 _Notes:_
-- _By default, script imports are in the first group if you don't explicitly define rules for them in `groupRules`._
+- _By default, script imports are in the first group if you don't explicitly define rules for them._
 - _You can define a grouping rule for script imports via, e.g. `{"flag": "scripts", "regex": "[.]css$"}`._
 
 For a complete guide, please refer to [the Wiki](https://github.com/daidodo/tsimportsorter/wiki/Grouping-Rules).

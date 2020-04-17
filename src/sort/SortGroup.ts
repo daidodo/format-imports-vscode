@@ -11,7 +11,8 @@ import {
   compareBindingName,
   compareNodes,
   Sorter,
-  sorterFromRule,
+  sorterFromRules,
+  updateSorterWithRules,
 } from './compare';
 
 export default class SortGroup {
@@ -22,11 +23,11 @@ export default class SortGroup {
   private nodes_: ImportNode[] = [];
   private scripts_: ImportNode[] = [];
 
-  constructor(rule: GroupRule, sorter: Sorter) {
+  constructor(rule: GroupRule, parentSorter?: Sorter) {
     const { flag, regex, sort, subGroups } = rule;
     this.flag_ = flag;
     this.regex_ = regex || regex === '' ? RegExp(regex) : undefined;
-    this.sorter_ = sort ? sorterFromRule(sort) : sorter;
+    this.sorter_ = parentSorter ? updateSorterWithRules(parentSorter, sort) : sorterFromRules(sort);
     this.subGroups_ = subGroups
       ?.map(r => {
         if (typeof r === 'string') return flag === 'all' ? { regex: r } : { flag, regex: r };

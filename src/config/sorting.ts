@@ -15,12 +15,12 @@ export interface SortRules {
   /**
    * Sorting rule for import paths.
    */
-  paths: SortRule;
+  paths?: SortRule;
 
   /**
    * Sorting rule for imported names.
    */
-  names: SortRule;
+  names?: SortRule;
 }
 
 /*

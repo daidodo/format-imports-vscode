@@ -12,9 +12,32 @@ import Segment, { Params } from './Segment';
 type Comparator = (a: string | undefined, b: string | undefined) => number;
 type InnerComparator = (a: string | undefined, b: string | undefined, c: boolean) => number;
 
-export interface Sorter {
+export interface Sorter extends SortRules {
   comparePaths: Comparator;
   compareNames: Comparator;
+}
+
+export function sorterFromRules(rules: SortRules | undefined): Sorter {
+  return {
+    ...rules,
+    comparePaths: comparatorFromRule(rules?.paths),
+    compareNames: comparatorFromRule(rules?.names),
+  };
+}
+
+export function updateSorterWithRules(sorter: Sorter, rules: SortRules | undefined) {
+  if (!rules) return sorter;
+  const r = { ...sorter };
+  const { paths, names } = rules;
+  if (paths && paths !== r.paths) {
+    r.paths = paths;
+    r.comparePaths = comparatorFromRule(paths);
+  }
+  if (names && names !== r.names) {
+    r.names = names;
+    r.compareNames = comparatorFromRule(names);
+  }
+  return r;
 }
 
 export function compareNodes(a: ImportNode, b: ImportNode, sorter: Sorter) {
@@ -85,13 +108,6 @@ function comparePropertyName(a: string, b: string, sorter: Sorter) {
   if (a === 'default') return b === 'default' ? 0 : -1;
   if (b === 'default') return 1;
   return sorter.compareNames(a, b);
-}
-
-export function sorterFromRule(rules: SortRules | undefined): Sorter {
-  return {
-    comparePaths: comparatorFromRule(rules?.paths),
-    compareNames: comparatorFromRule(rules?.names),
-  };
 }
 
 // Default comparator

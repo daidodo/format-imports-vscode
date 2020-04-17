@@ -3,7 +3,6 @@ import {
   ImportNode,
   UnusedId,
 } from '../parser';
-import { sorterFromRule } from './compare';
 import SortGroup from './SortGroup';
 
 export { SortGroup };
@@ -14,9 +13,9 @@ export default function sortImports(
   unusedIds: UnusedId[],
   config: Configuration,
 ) {
-  const sorter = sorterFromRule(config.sortRules);
+  const { sortRules: sort, groupRules: subGroups } = config;
   // The top group must be a match-all group.
-  const group = new SortGroup({ flag: 'all', regex: '', subGroups: config.groupRules }, sorter);
+  const group = new SortGroup({ flag: 'all', regex: '', sort, subGroups });
   nodes
     .map(n => n.removeUnusedNames(usedIds, unusedIds))
     .filter((n): n is ImportNode => !!n)
