@@ -1,15 +1,17 @@
 /* eslint-disable tsdoc/syntax */
 
 /**
- * Char segments used in the sorting rules.
+ * Sorting rule, which can be:
  *
- * * 'az' - Lower case letters, i.e. [a-z].
- * * 'AZ' - Upper case letters, i.e. [A-Z].
- * * 'aA' - Both case letters and lower case first, i.e. [a-zA-Z] and `'a' < 'A' < 'b' < 'B' < ...`
- * * 'Aa' - Both case letters and upper case first, i.e. [a-zA-Z] and `'A' < 'a' < 'B' < 'b' < ...`
- * * '_' - Chars with ASCII from 91 to 96, i.e. `[`, `\`, `]`, `^`, `_`, `` ` ``(backtick).
+ * * 'none' - No sorting at all.
+ * * Array of char segments. Valid segments are:
+ *   * 'az' - Lower case letters, i.e. [a-z].
+ *   * 'AZ' - Upper case letters, i.e. [A-Z].
+ *   * 'aA' - Both case letters and lower case first, i.e. [a-zA-Z] and `'a' < 'A' < 'b' < 'B' < ...`
+ *   * 'Aa' - Both case letters and upper case first, i.e. [a-zA-Z] and `'A' < 'a' < 'B' < 'b' < ...`
+ *   * '_' - Chars with ASCII from 91 to 96, i.e. `[`, `\`, `]`, `^`, `_`, `` ` ``(backtick).
  */
-export type SortRule = ('az' | 'AZ' | 'aA' | 'Aa' | '_')[];
+export type SortRule = ('az' | 'AZ' | 'aA' | 'Aa' | '_')[] | 'none';
 
 export interface SortRules {
   /**

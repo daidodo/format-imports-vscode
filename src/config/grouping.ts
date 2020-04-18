@@ -21,9 +21,13 @@ export interface GroupRule {
 
   /**
    * Sorting rules for this group.
-   * If it's `undefined`, or either `paths` or `names` is `undefined`, then inherit from the parent.
+   *
+   * If it's `undefined`, or either `paths` or `names` is `undefined`, then inherit
+   * either or both of them from the parent.
+   *
+   * If it's "none", or either `paths` or `names` is "none", then don't sort either or both of them.
    */
-  sort?: SortRules;
+  sort?: 'none' | SortRules;
 
   /**
    * Sub-groups and rules. Imports will be sorted as the same order as sub groups defined.
