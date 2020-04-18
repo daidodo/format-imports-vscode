@@ -1,4 +1,4 @@
-import { SortRule } from '../config';
+import { SegSymbol } from '../config';
 
 type Comparator = (a: number, b: number, c: boolean) => number;
 
@@ -12,7 +12,7 @@ export default class Segment {
   private rank_: number;
   private compare_: Comparator;
 
-  constructor(id: SortRule[number], rank: number, p: Params) {
+  constructor(id: SegSymbol, rank: number, p: Params) {
     this.rank_ = rank;
     this.compare_ = this.init(id, p);
   }
@@ -25,7 +25,7 @@ export default class Segment {
     return this.rank_;
   }
 
-  private init(id: SortRule[number], p: Params): Comparator {
+  private init(id: SegSymbol, p: Params): Comparator {
     const a = 'a'.charCodeAt(0);
     const z = 'z'.charCodeAt(0);
     const A = 'A'.charCodeAt(0);

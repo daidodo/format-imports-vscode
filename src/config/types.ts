@@ -9,7 +9,7 @@ export type Configuration = Readonly<
     exclude: string[];
     excludeGlob: string[];
     groupRules: (string | string[] | GroupRule)[];
-    sortRules: 'none' | SortRules;
+    sortRules: SortRules;
     maximumLineLength: number;
     maximumBindingNamesPerLine: number;
     maximumDefaultAndBindingNamesPerLine: number;
