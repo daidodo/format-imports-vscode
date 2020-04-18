@@ -14,53 +14,6 @@ Automatically format imports for **JavaScript** and **TypeScript**. ([Install](h
 - Recognize JSX elements and keep `React` ([React](https://reactjs.org)) or `h` ([Stencil](https://stenciljs.com/)) imports.
 - Respect config from [Prettier](https://prettier.io), [EditorConfig](https://editorconfig.org) and VS Code editor settings.
 
-### Example
-
-Before:
-
-```typescript
-import { window } from 'vscode';
-import sortImports from '../sort';
-import { TextDocument } from 'vscode';
-import { getEdits
- } from '@edit';
-import { getDeleteEdits } from '@edit';
-import { getUnusedIds
-, parseSource } from '../parser';
-import { TextDocumentWillSaveEvent, TextEditor, Workspace, ImportEqualsDeclaration } from 'vscode';
-import loadConfig from '@config';
-import ts from 'typescript';
-import composeInsertSource from '../compose';
-```
-
-After:
-
-```typescript
-import ts from 'typescript';
-import {
-  TextDocument,
-  TextDocumentWillSaveEvent,
-  TextEditor,
-  window,
-  Workspace,
-} from 'vscode';
-
-import loadConfig from '@config';
-import {
-  getDeleteEdits,
-  getEdits,
-} from '@edit';
-
-import composeInsertSource from '../compose';
-import {
-  getUnusedIds,
-  parseSource,
-} from '../parser';
-import sortImports from '../sort';
-```
-
-_Note: Code style is configurable._
-
 ## How to use
 * Auto format on save when `autoFormat` is set to `onSave` (this is default).
 * Use `Sort Imports` command in the Command Palette (`Ctrl+Shift+P`).
@@ -72,8 +25,6 @@ _Note: Code style is configurable._
 <img width="300" alt="3" src="https://user-images.githubusercontent.com/8170176/77234533-1c7ebd80-6ba7-11ea-9bed-dcfadaea9bdf.png">
 
 * Press shortcut keys, default `Alt+Shift+S`.
-
-
 
 ## Extension Settings
 
@@ -343,8 +294,8 @@ Each grouping rule applies to either:
 A grouping rule defines:
 - Type of imports to apply: Script or non-script imports.
 - Path pattern to match.
-- Sorting rules for paths and names within the group.
-- Sub-groups to further adjust the order of imports within the group, in addition to [Sorting Rules](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules).
+- [Sorting Rules](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules) for paths and names within the group.
+- Sub-groups to further adjust the order of imports.
 
 _Note:_
 * _There is NO blank lines between sub-groups._
@@ -372,7 +323,7 @@ For a complete guide, please refer to [the Wiki](https://github.com/daidodo/tsim
 
 ### Sorting Rules
 
-The sorting rules for import paths and imported names *within a group/sub-group* are also adjustable. You can decide:
+You can customize sorting rules for all imports, or imports within a group. You can decide:
 * Whether to compare letters case-sensitively or -insensitively;
 * The rank among lower-case letters, upper-case letters and `'_'`;
 
@@ -391,7 +342,7 @@ The above `["_", "aA"]` means:
 
 A sorted array might be `['_', 'a', 'A', 'b', 'B']`.
 
-You can disable sorting by specifying `"none"` in `sortRules`, e.g.:
+You can also disable sorting by specifying `"none"` in `sortRules`, e.g.:
 
 ```json
 "sortRules": {
@@ -400,12 +351,11 @@ You can disable sorting by specifying `"none"` in `sortRules`, e.g.:
 }
 ```
 
-If you set `paths` to `"none"`, import statements will not be sorted by paths.
+If you set `paths` to `"none"`, import statements will not be sorted.
 
 If you set `names` to `"none"`, names will not be sorted within an import statement.
 
 For more details and how to construct your own rules, please read [the Wiki](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules).
-
 
 ## Thanks
 
