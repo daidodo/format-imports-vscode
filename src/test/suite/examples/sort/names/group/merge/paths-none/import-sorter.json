@@ -1,0 +1,6 @@
+{
+  "sortRules": { "names": ["Aa", "_"] },
+  "groupRules": [{ "regex": "^[a-z]", "sort": { "paths": "none" } }],
+  "maximumBindingNamesPerLine": 0,
+  "maximumDefaultAndBindingNamesPerLine": 0
+}

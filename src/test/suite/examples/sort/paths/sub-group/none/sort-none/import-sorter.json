@@ -1,0 +1,10 @@
+{
+  "sortRules": { "paths": ["Aa", "_"] },
+  "groupRules": [
+    {
+      "regex": "^[a-zA-Z]",
+      "sort": { "paths": ["az", "AZ"] },
+      "subGroups": [{ "regex": "^x", "sort": "none" }]
+    }
+  ]
+}
