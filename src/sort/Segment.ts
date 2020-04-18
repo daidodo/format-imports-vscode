@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
+/* eslint-disable @typescript-eslint/camelcase */
+
 import { SegSymbol } from '../config';
 
 type Comparator = (a: number, b: number, c: boolean) => number;
@@ -26,35 +29,25 @@ export default class Segment {
   }
 
   private init(id: SegSymbol, p: Params): Comparator {
-    const a = 'a'.charCodeAt(0);
-    const z = 'z'.charCodeAt(0);
-    const A = 'A'.charCodeAt(0);
-    const Z = 'Z'.charCodeAt(0);
-    const lower = (i: number) => (A <= i && i <= Z ? i + a - A : i);
+    const { a, z, A, Z } = G;
     switch (id) {
       case 'az':
         this.setP(p, a, z, 0b1, true);
-        return (a, b) => a - b;
+        return COMPARE;
       case 'AZ':
         this.setP(p, A, Z, 0b10, true);
-        return (a, b) => a - b;
+        return COMPARE;
       case '_':
         this.setP(p, '['.charCodeAt(0), '`'.charCodeAt(0), 0b100);
-        return (a, b) => a - b;
+        return COMPARE;
       case 'Aa':
         this.setP(p, A, Z, 0b11, false);
         this.setP(p, a, z);
-        return (i, j, c) => {
-          const ii = lower(i) - lower(j);
-          return !c ? ii : ii || i - j;
-        };
+        return COMPARE_Aa;
       case 'aA':
         this.setP(p, A, Z, 0b11, false);
         this.setP(p, a, z);
-        return (i, j, c) => {
-          const ii = lower(i) - lower(j);
-          return !c ? ii : ii || j - i;
-        };
+        return COMPARE_aA;
     }
   }
 
@@ -65,3 +58,27 @@ export default class Segment {
     if (sensitive !== undefined && p.sensitive === undefined) p.sensitive = sensitive;
   }
 }
+
+// The following global variables are used to avoid duplicated small objects,
+// though they break 'no-use-before-define' and 'camelcase' rules from eslint.
+
+const G = {
+  a: 'a'.charCodeAt(0),
+  z: 'z'.charCodeAt(0),
+  A: 'A'.charCodeAt(0),
+  Z: 'Z'.charCodeAt(0),
+};
+
+const LOWER = (i: number) => (G.A <= i && i <= G.Z ? i + G.a - G.A : i);
+
+const COMPARE_Aa: Comparator = (i, j, c) => {
+  const ii = LOWER(i) - LOWER(j);
+  return !c ? ii : ii || i - j;
+};
+
+const COMPARE_aA: Comparator = (i, j, c) => {
+  const ii = LOWER(i) - LOWER(j);
+  return !c ? ii : ii || j - i;
+};
+
+const COMPARE: Comparator = (a, b) => a - b;
