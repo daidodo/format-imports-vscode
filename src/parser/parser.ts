@@ -103,7 +103,7 @@ function process(node: Node, p: Params, config: Configuration) {
     if (n) importNodes.push(n);
     findInsertPoint(p, range, n);
   } else {
-    parseId(node, p);
+    // parseId(node, p);
     findInsertPoint(p, range);
   }
   return true;
@@ -115,6 +115,17 @@ function findInsertPoint(p: Params, range: RangeAndEmptyLines, node?: ImportNode
   p.insertPoint = node ? {} : { range: { fullStart, leadingNewLines, commentStart: start } };
 }
 
+/**
+ * Traverse node and find out all referenced names.
+ * The result is used only in removing unused names.
+ *
+ * This function is deprecated because it's less accurate and reliable
+ * compared to TS compiler error/warning messages.
+ *
+ * Keep the code just for regression purposes.
+ *
+ * @deprecated In favor to TS compiler error/warning messages.
+ */
 function parseId(node: Node, p: Params) {
   const { sourceFile, allIds } = p;
   switch (node.kind) {
@@ -124,6 +135,8 @@ function parseId(node: Node, p: Params) {
     case SyntaxKind.JsxElement:
     case SyntaxKind.JsxSelfClosingElement:
     case SyntaxKind.JsxFragment:
+      // This is NOT always true with StencilJS.
+      // See: https://github.com/ionic-team/stencil/blob/master/BREAKING_CHANGES.md#import--h--is-required
       allIds.add('React');
       break;
   }

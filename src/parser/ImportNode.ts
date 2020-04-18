@@ -288,7 +288,10 @@ function isNameUsed(
 ) {
   if (!name) return false;
   const n = typeof name === 'string' ? name : name.aliasName ?? name.propertyName;
-  return !!n && allNames.has(n) && !unusedNames.has(n);
+  // `unusedNames` (from TS compiler) gives more accurate results
+  // than `allNames` (from manual parsing).
+  return !!n && !unusedNames.has(n);
+  // return !!n && allNames.has(n) && !unusedNames.has(n);
 }
 
 function getDefaultAndBinding(importClause: ImportClause | undefined) {
