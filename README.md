@@ -10,8 +10,8 @@ Automatically format imports for **JavaScript** and **TypeScript**. ([Install](h
 - Support multi-root projects.
 - Ignore specific files or imports.
 - Preserve `'use strict'`, `///` directives, shebang (`#!`) and global comments, e.g. license.
-- Recognize JSX elements and keep `React` import.
 - Keep comments with imports when reordering.
+- Recognize JSX elements and keep `React` ([React](https://reactjs.org)) or `h` ([Stencil](https://stenciljs.com/)) imports.
 - Respect config from [Prettier](https://prettier.io), [EditorConfig](https://editorconfig.org) and VS Code editor settings.
 
 ### Example
