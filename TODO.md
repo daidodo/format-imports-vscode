@@ -1,7 +1,5 @@
 ### Features
 
-- Provide an option to not sort "Plain import". ([Link](https://gitlab.com/smartive-private/christoph/typescript-hero/-/issues/454))
-- Sort css imports to the bottom by default. ([Link](https://github.com/zeilmannnoah/orion-import-sorter/issues/1), [Ref](https://raygun.com/blog/css-preprocessors-examples/)).
 - Required `h` import missing (StencilJS). ([Link](https://gitlab.com/smartive-private/christoph/typescript-hero/-/issues/488))
 - Write CONTRIBUTING.md.
 - Option to not normalize `"."` and `".."`. ([Link](https://github.com/SoominHan/import-sorter/issues/48))
@@ -14,11 +12,12 @@
 - Add a "sort-imports.on-focus-change" sorting option. ([Link](https://github.com/amatiasq/vsc-sort-imports/issues/30))
 - Format files within a directory.
 - Organize Imports should sort by import name instead path. ([Link](https://github.com/microsoft/TypeScript/issues/23279))
+- Sort by file name instead of full path. ([Link](https://github.com/neilsoult/typescript-imports-sort/issues/3))
 - Support for .vue files. ([Link](https://github.com/MLoughry/sort-typescript-imports/issues/31))
 - Do not remove imports of commented code. ([Link](https://gitlab.com/smartive-private/christoph/typescript-hero/-/issues/460))
 - Prevent organize import on parse error. ([Link](https://gitlab.com/smartive-private/christoph/typescript-hero/-/issues/406))
 - Add setting for one import per line. ([Link](https://gitlab.com/smartive-private/christoph/typescript-hero/-/issues/351))
-- Provide sub sort option. ([Link](https://github.com/neilsoult/typescript-imports-sort/issues/3))
+- Sort css imports to the bottom by default. ([Link](https://github.com/zeilmannnoah/orion-import-sorter/issues/1), [Ref](https://raygun.com/blog/css-preprocessors-examples/)).
 
 ### Implementation
 
@@ -34,6 +33,7 @@
 
 ### DONE
 
+- ~~Provide an option to not sort "Plain import". ([Link](https://gitlab.com/smartive-private/christoph/typescript-hero/-/issues/454))~~
 - ~~Shebangs are moved after imports. ([Link](https://github.com/MLoughry/sort-typescript-imports/issues/37))~~
 - ~~Option to ignore `node_modules`. ([Link](https://github.com/amatiasq/vsc-sort-imports/issues/38))~~
 - ~~Support TSLint plugin import order. ([Link](https://github.com/SoominHan/import-sorter/issues/60))~~
