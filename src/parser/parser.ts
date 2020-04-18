@@ -123,9 +123,7 @@ function findInsertPoint(p: Params, range: RangeAndEmptyLines, node?: ImportNode
  * compared to TS compiler error/warning messages.
  *
  * Keep the code just for regression purposes.
- *
  * @deprecated In favor to TS compiler error/warning messages.
- */
 function parseId(node: Node, p: Params) {
   const { sourceFile, allIds } = p;
   switch (node.kind) {
@@ -142,6 +140,7 @@ function parseId(node: Node, p: Params) {
   }
   node.forEachChild(n => parseId(n, p));
 }
+ */
 
 function isUseStrict(node: Node) {
   if (node.kind !== SyntaxKind.ExpressionStatement) return false;
