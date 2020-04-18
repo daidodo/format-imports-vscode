@@ -391,6 +391,19 @@ The above `["_", "aA"]` means:
 
 A sorted array might be `['_', 'a', 'A', 'b', 'B']`.
 
+You can disable sorting by specifying `"none"` in `sortRules`, e.g.:
+
+```json
+"sortRules": {
+  "paths": "none",
+  "names": "none"
+}
+```
+
+If you set `paths` to `"none"`, import statements will not be sorted by paths.
+
+If you set `names` to `"none"`, names will not be sorted within an import statement.
+
 For more details and how to construct your own rules, please read [the Wiki](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules).
 
 

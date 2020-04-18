@@ -130,7 +130,10 @@
           "markdownDescription": "Grouping rules for path patterns. See the [wiki](https://github.com/daidodo/tsimportsorter/wiki/Grouping-Rules) for more details."
         },
         "tsImportSorter.configuration.sortRules.paths": {
-          "type": "array",
+          "type": [
+            "string",
+            "array"
+          ],
           "default": [
             "_",
             "aA"
@@ -148,7 +151,10 @@
           "markdownDescription": "Sorting rule for import paths. See the [wiki](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules) for more details."
         },
         "tsImportSorter.configuration.sortRules.names": {
-          "type": "array",
+          "type": [
+            "string",
+            "array"
+          ],
           "default": [
             "_",
             "aA"
