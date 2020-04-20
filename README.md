@@ -1,21 +1,24 @@
 # JS/TS Import Sorter
 
-Automatically format imports for **JavaScript** and **TypeScript**. ([Install](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter))
+Automatically format imports for **JavaScript** and **TypeScript** in VSCode.
+- [Install Plugin](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter)
+- [Open Issues](https://github.com/daidodo/tsimportsorter/issues)
 
 ## Features
 
-- Auto format on save, or manually format with command/shortcut/context menu.
-- Auto merge imports, remove unused or duplicated names.
+- Auto format on save, or manually format with command / shortcut / context menu.
+- Merge imports and remove duplicated names.
+- Delete unused names, but keep `React` ([React](https://reactjs.org)) or `h` ([Stencil](https://stenciljs.com/)) if used.
 - Group and sort imports by customizable rules.
 - Support multi-root projects.
 - Ignore specific files or imports.
 - Preserve `'use strict'`, `///` directives, shebang (`#!`) and global comments, e.g. license.
 - Keep comments with imports when reordering.
-- Recognize JSX elements and keep `React` ([React](https://reactjs.org)) or `h` ([Stencil](https://stenciljs.com/)) imports.
-- Respect config from [Prettier](https://prettier.io), [EditorConfig](https://editorconfig.org) and VS Code editor settings.
+- Respect configs from [Prettier](https://prettier.io), [EditorConfig](https://editorconfig.org) and VS Code editor settings.
 
 ## How to use
-* Auto format on save when `autoFormat` is set to `onSave` (this is default).
+* Auto format on save when `autoFormat` is set to `onSave` (this is the default).
+* Press shortcut keys, default to `Alt+Shift+S`.
 * Use `Sort Imports` command in the Command Palette (`Ctrl+Shift+P`).
 
 <img width="600" alt="1" src="https://user-images.githubusercontent.com/8170176/77234449-674c0580-6ba6-11ea-84f4-5e02ef88a8f3.png">
@@ -24,7 +27,6 @@ Automatically format imports for **JavaScript** and **TypeScript**. ([Install](h
 
 <img width="300" alt="3" src="https://user-images.githubusercontent.com/8170176/77234533-1c7ebd80-6ba7-11ea-9bed-dcfadaea9bdf.png">
 
-* Press shortcut keys, default `Alt+Shift+S`.
 
 ## Extension Settings
 
@@ -53,10 +55,10 @@ All VS Code settings under `"tsImportSorter"` section and their default values:
   "^[.]"
 ],
 
-// Sorting rule for import paths.
+// Sorting rule for import paths. Valid values are 'none' or string array.
 "tsImportSorter.configuration.sortRules.paths": ["_", "aA"],
 
-// Sorting rule for imported names.
+// Sorting rule for imported names. Valid values are 'none' or string array.
 "tsImportSorter.configuration.sortRules.names": ["_", "aA"],
 
 // Max binding names per line before wrapping. 0 for no limit.
@@ -80,7 +82,7 @@ JS/TS Import Sorter reads configurations from the following sources (in preceden
 - VS Code `"editor"` and `"files"` settings
 - VS Code `"tsImportSorter"` settings
 
-Here are all config in `package.json` under `"importSorter"` section and their default values:
+Here are all configs in `package.json` under `"importSorter"` section and their default values:
 
 ```json
 {
@@ -98,10 +100,10 @@ Here are all config in `package.json` under `"importSorter"` section and their d
     "groupRules": ["^react(-dom)?$", "^@angular/", "^vue$", {}, "^[@]", "^[.]"],
 
     "sortRules": {
-      // Sorting rule for import paths.
+      // Sorting rule for import paths. Valid values are 'none' or string array.
       "paths": ["_", "aA"],
 
-      // Sorting rule for imported names.
+      // Sorting rule for imported names. Valid values are 'none' or string array.
       "names": ["_", "aA"]
     },
 
@@ -141,7 +143,7 @@ Here are all config in `package.json` under `"importSorter"` section and their d
 }
 ```
 
-`import-sorter.json` has all config above, too. Example:
+`import-sorter.json` has all configs above. Example:
 
 ```json
 {
