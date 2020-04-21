@@ -1,7 +1,6 @@
 ### Features
 
 - Write CONTRIBUTING.md.
-- Option to not normalize `"."` and `".."`. ([Link](https://github.com/SoominHan/import-sorter/issues/48))
 - Sort exports.
 - Group level comments. ([Link](https://github.com/SoominHan/import-sorter/issues/46))
 - Support ESLint plugin import/order. ([Link](https://github.com/SoominHan/import-sorter/issues/43))
@@ -59,4 +58,5 @@
 
 ### CANCELLED
 
+- ~~Option to not normalize `"."` and `".."`. ([Link](https://github.com/SoominHan/import-sorter/issues/48))~~
 - ~~Folding imports. ([Link](https://github.com/SoominHan/import-sorter/pull/38))~~
