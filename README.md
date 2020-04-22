@@ -325,7 +325,11 @@ For a complete guide, please refer to [the Wiki](https://github.com/daidodo/tsim
 
 ### Sorting Rules
 
-You can customize sorting rules for all imports, or imports within a group. You can decide:
+You can customize sorting rules for all imports, or imports within a group, on:
+* How to compare import paths;
+* How to compare imported names;
+
+You can decide:
 * Whether to compare letters case-sensitively or -insensitively;
 * The rank among lower-case letters, upper-case letters and `'_'`;
 
