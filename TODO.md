@@ -1,5 +1,6 @@
 ### Features
 
+- Missing Option to turn off blank line after group. ([Link](https://github.com/daidodo/tsimportsorter/issues/6))
 - Write CONTRIBUTING.md.
 - Sort exports.
 - Group level comments. ([Link](https://github.com/SoominHan/import-sorter/issues/46))
