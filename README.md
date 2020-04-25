@@ -301,6 +301,7 @@ A grouping rule defines:
 
 _Note:_
 * _There is NO blank lines between sub-groups._
+* _If you don't want blank lines between groups, the right way is to move groups to sub-groups._
 
 For example, `"groupRules": ["^react$", {}, "^[.]"]` defines 3 grouping rules (and their order):
 - `"^react$"`: matches any *non-script* imports from exact path `"react"`.
