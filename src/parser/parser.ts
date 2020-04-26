@@ -93,7 +93,7 @@ function process(node: Node, p: Params, config: Configuration) {
     if (n) importNodes.push(n);
     findInsertPoint(p, range, n);
   } else if (node.kind === SyntaxKind.ImportEqualsDeclaration) {
-    if (disabled) return false;
+    if (disabled) return true;
     const n = ImportNode.fromEqDecl(
       node as ImportEqualsDeclaration,
       range,
