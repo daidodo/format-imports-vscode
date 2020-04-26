@@ -5,19 +5,15 @@ import ts, {
   TextRange,
 } from 'typescript';
 
+import ParseParams from './ParseParams';
 import {
   LineRange,
   NodeComment,
   Pos,
 } from './types';
 
-export function parseLineRanges(
-  node: Node,
-  sourceFile: SourceFile,
-  sourceText: string,
-  lastCommentEnd: Pos | undefined,
-  checkFileComments: boolean,
-) {
+export function parseLineRanges(node: Node, p: ParseParams) {
+  const { sourceFile, sourceText } = p;
   const declEnd = node.getEnd();
   const declLineRange = transformRange(
     { pos: node.getStart(sourceFile), end: declEnd },
@@ -29,14 +25,7 @@ export function parseLineRanges(
     leadingNewLines,
     commentsStart,
     leadingComments,
-  } = parseLeadingComments(
-    node,
-    declLineRange,
-    sourceFile,
-    sourceText,
-    lastCommentEnd,
-    checkFileComments,
-  );
+  } = parseLeadingComments(node, declLineRange, p);
   const trailingComments = ts
     .getTrailingCommentRanges(sourceText, declEnd)
     ?.map(transformComment.bind(undefined, sourceFile, sourceText));
@@ -48,6 +37,7 @@ export function parseLineRanges(
     { pos: commentsStart, end: commentsEnd },
     sourceFile,
   );
+  p.prevCommentEnd = declAndCommentsLineRange.end; // Save comment end pos for the next statement.
   const { trailingNewLines, fullEnd: fullEndPos, eof } = getTrailingNewLines(
     sourceText,
     commentsEnd,
@@ -91,21 +81,14 @@ function transformPos(pos: number, sourceFile: SourceFile): Pos {
   return { pos, ...sourceFile.getLineAndCharacterOfPosition(pos) };
 }
 
-function parseLeadingComments(
-  node: Node,
-  declLineRange: LineRange,
-  sourceFile: SourceFile,
-  sourceText: string,
-  lastCommentEnd: Pos | undefined,
-  checkFileComments: boolean,
-) {
-  const fullStart = lastCommentEnd ?? transformPos(node.getFullStart(), sourceFile);
+function parseLeadingComments(node: Node, declLineRange: LineRange, p: ParseParams) {
+  const { sourceFile, sourceText, prevCommentEnd, checkFileComments } = p;
+  const fullStart = prevCommentEnd ?? transformPos(node.getFullStart(), sourceFile);
   const comments = ts
     .getLeadingCommentRanges(sourceText, fullStart.pos)
     ?.map(transformComment.bind(undefined, sourceFile, sourceText));
-  // Skip initial comments that separated by empty line(s) or triple-slash comment(s)
-  // from the first import statement.
   if (checkFileComments && comments && comments.length > 0) {
+    // Skip global comments that separated by empty line(s) or triple-slash comment(s)
     const results = [];
     let nextStartLine = declLineRange.start.line;
     for (let i = comments.length - 1; i >= 0; --i) {
@@ -131,7 +114,6 @@ function parseLeadingComments(
   // Find out leading empty lines
   const commentsStart = comments?.[0]?.start.pos ?? declLineRange.start.pos;
   const leadingNewLines = sourceText.slice(fullStart.pos, commentsStart).match(/\n/g)?.length ?? 0;
-
   return { fullStart, leadingNewLines, commentsStart, leadingComments: comments };
 }
 

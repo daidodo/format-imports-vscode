@@ -1,4 +1,4 @@
-import ts, {
+import {
   ExpressionStatement,
   ImportDeclaration,
   ImportEqualsDeclaration,
@@ -14,47 +14,18 @@ import {
   isDisabled,
   parseLineRanges,
 } from './lines';
-import {
-  InsertNodeRange,
-  Pos,
-  RangeAndEmptyLines,
-} from './types';
-
-interface Params {
-  sourceFile: SourceFile;
-  sourceText: string;
-  importNodes: ImportNode[];
-  allIds: Set<string>;
-  // If 'range' is undefined, insert before the first ImportNode.
-  insertPoint?: { range?: InsertNodeRange };
-  lastCommentEnd?: Pos;
-  checkFileComments: boolean;
-}
+import ParseParams from './ParseParams';
+import { RangeAndEmptyLines } from './types';
 
 export function parseSource(sourceFile: SourceFile, sourceText: string, config: Configuration) {
-  const p: Params = {
-    sourceFile,
-    sourceText,
-    importNodes: [],
-    allIds: new Set<string>(),
-    lastCommentEnd: shebangEnd(sourceFile, sourceText),
-    checkFileComments: true,
-  };
+  const p = new ParseParams(sourceFile, sourceText);
   const [syntaxList] = sourceFile.getChildren();
   if (syntaxList && syntaxList.kind === SyntaxKind.SyntaxList)
     for (const node of syntaxList.getChildren()) if (!process(node, p, config)) break;
   return p;
 }
 
-function shebangEnd(sourceFile: SourceFile, sourceText: string) {
-  const shebang = ts.getShebang(sourceText);
-  if (!shebang) return undefined;
-  const pos = shebang.length;
-  return { pos, ...sourceFile.getLineAndCharacterOfPosition(pos) };
-}
-
-function process(node: Node, p: Params, config: Configuration) {
-  const { sourceFile, sourceText, importNodes, lastCommentEnd, checkFileComments } = p;
+function process(node: Node, p: ParseParams, config: Configuration) {
   const { force } = config;
   const {
     fileComments,
@@ -68,11 +39,10 @@ function process(node: Node, p: Params, config: Configuration) {
     trailingNewLines,
     fullEnd,
     eof,
-  } = parseLineRanges(node, sourceFile, sourceText, lastCommentEnd, checkFileComments);
+  } = parseLineRanges(node, p);
   if (!force && isDisabled(fileComments)) return false; // File is disabled
-  p.lastCommentEnd = declAndCommentsLineRange.end;
   if (isUseStrict(node)) return true; // Skip 'use strict' directive
-  p.checkFileComments = false; // No more checks for file comments after non-'use strict' statement
+  p.checkFileComments = false; // No more checks for global comments after non-'use strict' statement
   const range: RangeAndEmptyLines = {
     ...declAndCommentsLineRange,
     fullStart,
@@ -90,8 +60,8 @@ function process(node: Node, p: Params, config: Configuration) {
       leadingComments,
       trailingCommentsText,
     );
-    if (n) importNodes.push(n);
-    findInsertPoint(p, range, n);
+    p.addImport(n);
+    p.findInsertPointForImports(p, range, n);
   } else if (node.kind === SyntaxKind.ImportEqualsDeclaration) {
     if (disabled) return false;
     const n = ImportNode.fromEqDecl(
@@ -100,19 +70,13 @@ function process(node: Node, p: Params, config: Configuration) {
       leadingComments,
       trailingCommentsText,
     );
-    if (n) importNodes.push(n);
-    findInsertPoint(p, range, n);
+    p.addImport(n);
+    p.findInsertPointForImports(p, range, n);
   } else {
     // parseId(node, p);
-    findInsertPoint(p, range);
+    p.findInsertPointForImports(p, range);
   }
   return true;
-}
-
-function findInsertPoint(p: Params, range: RangeAndEmptyLines, node?: ImportNode) {
-  if (p.insertPoint) return;
-  const { fullStart, leadingNewLines, start } = range;
-  p.insertPoint = node ? {} : { range: { fullStart, leadingNewLines, commentStart: start } };
 }
 
 /**

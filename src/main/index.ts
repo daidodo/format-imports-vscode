@@ -26,14 +26,14 @@ export default function formatSource(
   tsConfig: TranspileOptions = {},
 ) {
   const sourceFile = ts.createSourceFile(fileName, sourceText, ScriptTarget.Latest);
-  const { importNodes, allIds, insertPoint } = parseSource(sourceFile, sourceText, config);
+  const { importNodes, insertPoint } = parseSource(sourceFile, sourceText, config);
   if (!insertPoint || !importNodes.length) return undefined;
   const { range: insertRange } = insertPoint;
 
   const composeConfig = configForCompose(config);
   const unusedIds = getUnusedIds(fileName, sourceFile, sourceText, tsConfig);
   const { deleteEdits, insertPos } = getDeleteEdits(importNodes, insertRange, composeConfig);
-  const groups = sortImports(importNodes, allIds, unusedIds, config);
+  const groups = sortImports(importNodes, unusedIds, config);
   const insertSource = composeInsertSource(groups, insertPos, composeConfig);
   const edits = getEdits(deleteEdits, insertSource, insertPos);
 

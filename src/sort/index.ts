@@ -9,7 +9,7 @@ export { SortGroup };
 
 export default function sortImports(
   nodes: ImportNode[],
-  usedIds: Set<string>,
+  // usedIds: Set<string>,
   unusedIds: UnusedId[],
   config: Configuration,
 ) {
@@ -17,7 +17,7 @@ export default function sortImports(
   // The top group must be a match-all group.
   const group = new SortGroup({ flag: 'all', regex: '', sort, subGroups });
   nodes
-    .map(n => n.removeUnusedNames(usedIds, unusedIds))
+    .map(n => n.removeUnusedNames(unusedIds))
     .filter((n): n is ImportNode => !!n)
     .forEach(n => group.add(n));
   return group.sortAndMerge();

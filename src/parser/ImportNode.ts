@@ -115,17 +115,20 @@ export default class ImportNode {
     return this.binding_;
   }
 
-  removeUnusedNames(allNames: Set<string>, unusedIds: UnusedId[]) {
+  removeUnusedNames(
+    //allNames: Set<string>,
+    unusedIds: UnusedId[],
+  ) {
     if (this.isScript) return this;
     const withinRange = unusedIds.filter(r => this.withinDeclRange(r.pos));
     if (withinRange.some(u => u.code === UnusedCode.ALL)) return undefined;
     const unusedNames = new Set(withinRange.map(r => r.id).filter((id): id is string => !!id));
-    if (!isNameUsed(this.defaultName_, allNames, unusedNames)) this.defaultName_ = undefined;
+    if (!isNameUsed(this.defaultName_, unusedNames)) this.defaultName_ = undefined;
     if (this.binding_) {
       if (this.binding_.type === 'named') {
-        this.binding_.names = this.binding_.names.filter(n => isNameUsed(n, allNames, unusedNames));
+        this.binding_.names = this.binding_.names.filter(n => isNameUsed(n, unusedNames));
         if (!this.binding_.names.length) this.binding_ = undefined;
-      } else if (!isNameUsed(this.binding_.alias, allNames, unusedNames)) this.binding_ = undefined;
+      } else if (!isNameUsed(this.binding_.alias, unusedNames)) this.binding_ = undefined;
     }
     return this.defaultName_ || this.binding_ ? this : undefined;
   }
@@ -283,15 +286,15 @@ export default class ImportNode {
 
 function isNameUsed(
   name: NameBinding | string | undefined,
-  allNames: Set<string>,
+  // allNames: Set<string>,
   unusedNames: Set<string>,
 ) {
   if (!name) return false;
   const n = typeof name === 'string' ? name : name.aliasName ?? name.propertyName;
   // `unusedNames` (from TS compiler) gives more accurate results
   // than `allNames` (from manual parsing).
-  return !!n && !unusedNames.has(n);
   // return !!n && allNames.has(n) && !unusedNames.has(n);
+  return !!n && !unusedNames.has(n);
 }
 
 function getDefaultAndBinding(importClause: ImportClause | undefined) {
