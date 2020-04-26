@@ -54,36 +54,22 @@ function process(node: Node, p: ParseParams, config: Configuration) {
     eof,
   };
   const disabled = isDisabled(leadingComments) || isDisabled(trailingComments);
+  const a = { range, leadingComments, trailingCommentsText };
   if (node.kind === SyntaxKind.ImportDeclaration) {
     if (disabled) return true;
-    const n = ImportNode.fromDecl(
-      node as ImportDeclaration,
-      range,
-      leadingComments,
-      trailingCommentsText,
-    );
+    const n = ImportNode.fromDecl(node as ImportDeclaration, a);
     p.addImport(n);
     p.findInsertPointForImports(p, range, n);
   } else if (node.kind === SyntaxKind.ImportEqualsDeclaration) {
     if (disabled) return true;
-    const n = ImportNode.fromEqDecl(
-      node as ImportEqualsDeclaration,
-      range,
-      leadingComments,
-      trailingCommentsText,
-    );
+    const n = ImportNode.fromEqDecl(node as ImportEqualsDeclaration, a);
     p.addImport(n);
     p.findInsertPointForImports(p, range, n);
   } else {
     // parseId(node, p);
     p.findInsertPointForImports(p, range);
     if (formatExports && node.kind === SyntaxKind.ExportDeclaration) {
-      const n = ExportNode.fromDecl(
-        node as ExportDeclaration,
-        range,
-        leadingComments,
-        trailingCommentsText,
-      );
+      const n = ExportNode.fromDecl(node as ExportDeclaration, a);
       p.addExport(n);
     }
   }

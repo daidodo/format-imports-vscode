@@ -16,12 +16,10 @@ import {
   assertNonNull,
   normalizePath,
 } from '../utils';
-import Statement from './Statement';
+import Statement, { StatementArgs } from './Statement';
 import {
   Binding,
   NameBinding,
-  NodeComment,
-  RangeAndEmptyLines,
   UnusedId,
 } from './types';
 import { UnusedCode } from './unused';
@@ -33,60 +31,33 @@ export default class ImportNode extends Statement {
   private defaultName_?: string;
   private binding_?: Binding;
 
-  static fromDecl(
-    node: ImportDeclaration,
-    range: RangeAndEmptyLines,
-    leadingComments: NodeComment[] | undefined,
-    trailingCommentsText: string,
-  ) {
+  static fromDecl(node: ImportDeclaration, args: StatementArgs) {
     const { importClause, moduleSpecifier } = node;
     if (moduleSpecifier.kind !== SyntaxKind.StringLiteral) return undefined;
     const moduleIdentifier = (moduleSpecifier as StringLiteral).text;
     if (!moduleIdentifier.trim()) return undefined;
     const { defaultName, binding } = getDefaultAndBinding(importClause);
-    return new ImportNode(
-      node,
-      moduleIdentifier,
-      range,
-      leadingComments,
-      trailingCommentsText,
-      defaultName,
-      binding,
-    );
+    return new ImportNode(node, moduleIdentifier, args, defaultName, binding);
   }
 
-  static fromEqDecl(
-    node: ImportEqualsDeclaration,
-    range: RangeAndEmptyLines,
-    leadingComments: NodeComment[] | undefined,
-    trailingCommentsText: string,
-  ) {
+  static fromEqDecl(node: ImportEqualsDeclaration, args: StatementArgs) {
     const { moduleReference } = node;
     if (moduleReference.kind !== SyntaxKind.ExternalModuleReference) return undefined;
     const { expression } = moduleReference;
     if (expression.kind !== SyntaxKind.StringLiteral) return undefined;
     const moduleIdentifier = (expression as StringLiteral).text;
     const defaultName = node.name.text;
-    return new ImportNode(
-      node,
-      moduleIdentifier,
-      range,
-      leadingComments,
-      trailingCommentsText,
-      defaultName,
-    );
+    return new ImportNode(node, moduleIdentifier, args, defaultName);
   }
 
   private constructor(
     node: ImportDeclaration | ImportEqualsDeclaration,
     moduleIdentifier: string,
-    range: RangeAndEmptyLines,
-    leadingComments: NodeComment[] | undefined,
-    trailingCommentsText: string,
+    args: StatementArgs,
     defaultName?: string,
     binding?: Binding,
   ) {
-    super(range, leadingComments, trailingCommentsText);
+    super(args);
     this.node_ = node;
     this.moduleIdentifier = normalizePath(moduleIdentifier);
     this.defaultName_ = defaultName;
@@ -142,9 +113,7 @@ export default class ImportNode extends Statement {
       !this.canMerge(node)
     )
       return false;
-    const r = this.mergeBinding(node) && this.mergeDefaultName(node);
-    if (r) this.mergeComments(node); // Take comments if mergeable
-    return r;
+    return this.mergeBinding(node) && this.mergeDefaultName(node) && this.mergeComments(node);
   }
 
   private withinDeclRange(pos: number) {
