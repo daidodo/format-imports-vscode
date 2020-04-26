@@ -39,6 +39,10 @@ export default class ParseParams {
     const { fullStart, leadingNewLines, start } = range;
     p.insertPoint_ = node ? {} : { range: { fullStart, leadingNewLines, commentStart: start } };
   }
+
+  addExport(node: ExportNode | undefined) {
+    if (node) this.exportNodes.push(node);
+  }
 }
 
 function shebangEnd(sourceFile: SourceFile, sourceText: string) {

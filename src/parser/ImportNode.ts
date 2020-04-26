@@ -29,7 +29,7 @@ import { UnusedCode } from './unused';
 export default class ImportNode extends Statement {
   private readonly node_: ImportDeclaration | ImportEqualsDeclaration;
 
-  private readonly moduleIdentifier_: string;
+  readonly moduleIdentifier: string;
   private defaultName_?: string;
   private binding_?: Binding;
 
@@ -88,17 +88,13 @@ export default class ImportNode extends Statement {
   ) {
     super(range, leadingComments, trailingCommentsText);
     this.node_ = node;
-    this.moduleIdentifier_ = normalizePath(moduleIdentifier);
+    this.moduleIdentifier = normalizePath(moduleIdentifier);
     this.defaultName_ = defaultName;
     this.binding_ = binding;
   }
 
   get isScript() {
     return !this.defaultName_ && !this.binding_;
-  }
-
-  get moduleIdentifier() {
-    return this.moduleIdentifier_;
   }
 
   get defaultName() {
@@ -139,9 +135,9 @@ export default class ImportNode extends Statement {
    *          false if `node` still has names thus can't be ignored.
    */
   merge(node: ImportNode) {
-    const { moduleIdentifier_, node_ } = node;
+    const { moduleIdentifier, node_ } = node;
     if (
-      this.moduleIdentifier_ !== moduleIdentifier_ ||
+      this.moduleIdentifier !== moduleIdentifier ||
       this.node_.kind !== node_.kind ||
       !this.canMerge(node)
     )
@@ -194,7 +190,7 @@ export default class ImportNode extends Statement {
   // import A = require('B');
   private composeEqDecl(commentLength: number, config: ComposeConfig) {
     const { quote, semi } = config;
-    const path = this.moduleIdentifier_;
+    const path = this.moduleIdentifier;
     const name = this.defaultName_;
     assertNonNull(name);
     const parts = [`${name} =`];
@@ -241,7 +237,7 @@ export default class ImportNode extends Statement {
    */
   private composeDecl(commentLength: number, config: ComposeConfig) {
     const { quote, semi } = config;
-    const path = this.moduleIdentifier_;
+    const path = this.moduleIdentifier;
     const ending = quote(path) + semi;
     if (this.isScript) return `import ${ending}`;
     const from = `from ${ending}`;

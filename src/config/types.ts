@@ -6,6 +6,7 @@ export type Configuration = Readonly<
     // From VS Code "tsImportSorter" settings
     configurationFileName: string;
     autoFormat: 'off' | 'onSave';
+    formatExports: boolean;
     exclude: string[];
     excludeGlob: string[];
     groupRules: (string | string[] | GroupRule)[];

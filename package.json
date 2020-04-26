@@ -1,7 +1,7 @@
 {
   "name": "tsimportsorter",
   "displayName": "JS/TS Import Sorter",
-  "description": "Auto format imports for JavaScript and TypeScript.",
+  "description": "Auto format imports/exports for JavaScript and TypeScript.",
   "icon": "assets/icons/main.jpg",
   "publisher": "dozerg",
   "version": "1.2.11",
@@ -30,8 +30,9 @@
     "javascript",
     "typescript",
     "import",
-    "import sort",
-    "sort import",
+    "export",
+    "sort imports",
+    "format exports",
     "multi-root ready"
   ],
   "activationEvents": [
@@ -91,6 +92,11 @@
             "Never auto format imports.",
             "Auto format imports on save."
           ]
+        },
+        "tsImportSorter.configuration.formatExports": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to format exports as well."
         },
         "tsImportSorter.configuration.exclude": {
           "type": "array",

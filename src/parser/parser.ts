@@ -1,4 +1,5 @@
 import {
+  ExportDeclaration,
   ExpressionStatement,
   ImportDeclaration,
   ImportEqualsDeclaration,
@@ -9,6 +10,7 @@ import {
 } from 'typescript';
 
 import { Configuration } from '../config';
+import ExportNode from './ExportNode';
 import ImportNode from './ImportNode';
 import {
   isDisabled,
@@ -26,7 +28,7 @@ export function parseSource(sourceFile: SourceFile, sourceText: string, config: 
 }
 
 function process(node: Node, p: ParseParams, config: Configuration) {
-  const { force } = config;
+  const { force, formatExports } = config;
   const {
     fileComments,
     fullStart,
@@ -75,6 +77,15 @@ function process(node: Node, p: ParseParams, config: Configuration) {
   } else {
     // parseId(node, p);
     p.findInsertPointForImports(p, range);
+    if (formatExports && node.kind === SyntaxKind.ExportDeclaration) {
+      const n = ExportNode.fromDecl(
+        node as ExportDeclaration,
+        range,
+        leadingComments,
+        trailingCommentsText,
+      );
+      p.addExport(n);
+    }
   }
   return true;
 }
