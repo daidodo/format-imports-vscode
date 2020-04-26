@@ -136,7 +136,7 @@ export default class ImportNode extends Statement {
 
   /**
    * @returns true if `node` is fully merged to `this`;
-   *          Or false if `node` still has names thus can't be ignored.
+   *          false if `node` still has names thus can't be ignored.
    */
   merge(node: ImportNode) {
     const { moduleIdentifier_, node_ } = node;
@@ -146,9 +146,7 @@ export default class ImportNode extends Statement {
       !this.canMerge(node)
     )
       return false;
-    const r1 = this.mergeBinding(node);
-    const r2 = this.mergeDefaultName(node);
-    const r = r1 && r2;
+    const r = this.mergeBinding(node) && this.mergeDefaultName(node);
     if (r) this.mergeComments(node); // Take comments if mergeable
     return r;
   }
