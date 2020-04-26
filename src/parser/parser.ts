@@ -63,7 +63,7 @@ function process(node: Node, p: ParseParams, config: Configuration) {
     p.addImport(n);
     p.findInsertPointForImports(p, range, n);
   } else if (node.kind === SyntaxKind.ImportEqualsDeclaration) {
-    if (disabled) return false;
+    if (disabled) return true;
     const n = ImportNode.fromEqDecl(
       node as ImportEqualsDeclaration,
       range,
