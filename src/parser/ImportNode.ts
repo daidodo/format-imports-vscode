@@ -8,7 +8,6 @@ import {
 } from 'typescript';
 
 import {
-  composeComments,
   composeNodeAsNames,
   composeNodeAsParts,
 } from '../compose';
@@ -17,6 +16,7 @@ import {
   assertNonNull,
   normalizePath,
 } from '../utils';
+import Statement from './Statement';
 import {
   Binding,
   NameBinding,
@@ -26,16 +26,12 @@ import {
 } from './types';
 import { UnusedCode } from './unused';
 
-export default class ImportNode {
+export default class ImportNode extends Statement {
   private readonly node_: ImportDeclaration | ImportEqualsDeclaration;
 
   private readonly moduleIdentifier_: string;
   private defaultName_?: string;
   private binding_?: Binding;
-
-  readonly range: RangeAndEmptyLines;
-  private leadingComments_?: NodeComment[];
-  private trailingCommentsText_: string;
 
   static fromDecl(
     node: ImportDeclaration,
@@ -90,11 +86,9 @@ export default class ImportNode {
     defaultName?: string,
     binding?: Binding,
   ) {
+    super(range, leadingComments, trailingCommentsText);
     this.node_ = node;
     this.moduleIdentifier_ = normalizePath(moduleIdentifier);
-    this.range = range;
-    this.leadingComments_ = leadingComments;
-    this.trailingCommentsText_ = trailingCommentsText;
     this.defaultName_ = defaultName;
     this.binding_ = binding;
   }
@@ -134,8 +128,7 @@ export default class ImportNode {
   }
 
   compose(config: ComposeConfig) {
-    const leadingText = composeComments(this.leadingComments_, config) ?? '';
-    const trailingText = this.trailingCommentsText_;
+    const { leadingText, trailingText } = this.composeComments(config);
     const cmLen = trailingText.split(/\r?\n/)?.[0]?.length ?? 0;
     const importText = this.composeImport(cmLen, config);
     return leadingText + importText + trailingText;
@@ -150,29 +143,14 @@ export default class ImportNode {
     if (
       this.moduleIdentifier_ !== moduleIdentifier_ ||
       this.node_.kind !== node_.kind ||
-      (this.hasLeadingComments && node.hasLeadingComments) ||
-      (this.hasTrailingComments && node.hasTrailingComments)
+      !this.canMerge(node)
     )
       return false;
     const r1 = this.mergeBinding(node);
     const r2 = this.mergeDefaultName(node);
     const r = r1 && r2;
-    // Take comments if can merge
-    if (r) {
-      if (!this.leadingComments_) this.leadingComments_ = node.leadingComments_;
-      if (!this.trailingCommentsText_) this.trailingCommentsText_ = node.trailingCommentsText_;
-      node.leadingComments_ = undefined;
-      node.trailingCommentsText_ = '';
-    }
+    if (r) this.mergeComments(node); // Take comments if mergeable
     return r;
-  }
-
-  private get hasLeadingComments() {
-    return !!this.leadingComments_ && this.leadingComments_.length > 0;
-  }
-
-  private get hasTrailingComments() {
-    return !!this.trailingCommentsText_;
   }
 
   private withinDeclRange(pos: number) {

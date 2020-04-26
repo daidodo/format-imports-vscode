@@ -9,31 +9,21 @@ import {
 } from './types';
 
 export default class ParseParams {
-  private readonly sourceFile_: SourceFile;
-  private readonly sourceText_: string;
-  private readonly importNodes_: ImportNode[] = [];
-  private readonly exportNodes_: ExportNode[] = [];
+  readonly sourceFile: SourceFile;
+  readonly sourceText: string;
+
+  readonly importNodes: ImportNode[] = [];
   // If 'range' is undefined, insert imports before the first ImportNode.
   private insertPoint_?: { range?: InsertNodeRange };
   prevCommentEnd?: Pos;
   checkFileComments = true;
 
+  readonly exportNodes: ExportNode[] = [];
+
   constructor(sourceFile: SourceFile, sourceText: string) {
-    this.sourceFile_ = sourceFile;
-    this.sourceText_ = sourceText;
+    this.sourceFile = sourceFile;
+    this.sourceText = sourceText;
     this.prevCommentEnd = shebangEnd(sourceFile, sourceText);
-  }
-
-  get sourceFile() {
-    return this.sourceFile_;
-  }
-
-  get sourceText() {
-    return this.sourceText_;
-  }
-
-  get importNodes() {
-    return this.importNodes_;
   }
 
   get insertPoint() {
@@ -41,7 +31,7 @@ export default class ParseParams {
   }
 
   addImport(node: ImportNode | undefined) {
-    if (node) this.importNodes_.push(node);
+    if (node) this.importNodes.push(node);
   }
 
   findInsertPointForImports(p: ParseParams, range: RangeAndEmptyLines, node?: ImportNode) {
