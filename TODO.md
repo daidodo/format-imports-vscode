@@ -2,7 +2,7 @@
 
 - Missing Option to turn off blank line after group. ([Link](https://github.com/daidodo/tsimportsorter/issues/6))
 - Write CONTRIBUTING.md.
-- Sort exports.
+- Sort exports. ([Link](https://github.com/daidodo/tsimportsorter/issues/6#issuecomment-619185391), [Doc](https://github.com/tc39/proposal-export-ns-from))
 - Group level comments. ([Link](https://github.com/SoominHan/import-sorter/issues/46))
 - Support ESLint plugin import/order. ([Link](https://github.com/SoominHan/import-sorter/issues/43))
 - Import namespace alias. ([Link](https://github.com/SoominHan/import-sorter/issues/29))
