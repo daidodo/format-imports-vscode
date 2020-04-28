@@ -2,7 +2,7 @@ import { SourceFile } from 'typescript';
 import { TextEdit } from 'vscode';
 
 export function apply(sourceText: string, sourceFile: SourceFile, edits: TextEdit[]) {
-  if (edits.length < 1) return sourceText;
+  if (edits.length < 1) return undefined;
   const sortedEdits = edits.sort(({ range: r1 }, { range: r2 }) => r1.start.compareTo(r2.start));
   let text = '';
   let cur = 0;

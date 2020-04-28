@@ -14,7 +14,7 @@ export default class ParseParams {
 
   readonly importNodes: ImportNode[] = [];
   // If 'range' is undefined, insert imports before the first ImportNode.
-  private insertPoint_?: { range?: InsertNodeRange };
+  private importsInsertPoint_?: { range?: InsertNodeRange };
   prevCommentEnd?: Pos;
   checkFileComments = true;
 
@@ -26,8 +26,8 @@ export default class ParseParams {
     this.prevCommentEnd = shebangEnd(sourceFile, sourceText);
   }
 
-  get insertPoint() {
-    return this.insertPoint_;
+  get importsInsertPoint() {
+    return this.importsInsertPoint_;
   }
 
   addImport(node: ImportNode | undefined) {
@@ -35,9 +35,11 @@ export default class ParseParams {
   }
 
   findInsertPointForImports(p: ParseParams, range: RangeAndEmptyLines, node?: ImportNode) {
-    if (p.insertPoint_) return;
+    if (p.importsInsertPoint_) return;
     const { fullStart, leadingNewLines, start } = range;
-    p.insertPoint_ = node ? {} : { range: { fullStart, leadingNewLines, commentStart: start } };
+    p.importsInsertPoint_ = node
+      ? {}
+      : { range: { fullStart, leadingNewLines, commentStart: start } };
   }
 
   addExport(node: ExportNode | undefined) {
