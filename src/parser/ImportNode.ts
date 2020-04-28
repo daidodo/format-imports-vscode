@@ -110,7 +110,7 @@ export default class ImportNode extends Statement {
     if (
       this.moduleIdentifier !== moduleIdentifier ||
       this.node_.kind !== node_.kind ||
-      !this.canMerge(node)
+      !this.canMergeComments(node)
     )
       return false;
     return this.mergeBinding(node) && this.mergeDefaultName(node) && this.mergeComments(node);
@@ -134,7 +134,7 @@ export default class ImportNode extends Statement {
       }
       return false;
     } else if (node.binding_.type === 'namespace') return false;
-    this.binding_.names = [...this.binding_.names, ...node.binding_.names];
+    this.binding_.names = this.binding_.names.concat(node.binding_.names);
     node.binding_ = undefined;
     return true;
   }

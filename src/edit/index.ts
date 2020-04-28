@@ -27,7 +27,7 @@ interface DeleteRange {
   text?: string; // Text to replace
 }
 
-export function getEdits(
+export function getEditsForImports(
   edits: TextEdit[],
   insertText: string | undefined,
   insertPos: { pos: LineAndCharacter; end: LineAndCharacter },
@@ -43,7 +43,7 @@ export function getEdits(
   ];
 }
 
-export function getDeleteEdits(
+export function getDeleteEditsForImports(
   nodes: ImportNode[],
   insertRange: InsertNodeRange | undefined,
   config: ComposeConfig,

@@ -9,8 +9,8 @@ import Statement, { StatementArgs } from './Statement';
 import { NameBinding } from './types';
 
 export default class ExportNode extends Statement {
-  readonly moduleIdentifier?: string;
-  private readonly names_: NameBinding[];
+  private readonly moduleIdentifier_?: string;
+  names: NameBinding[];
 
   static fromDecl(node: ExportDeclaration, args: StatementArgs) {
     const { exportClause, moduleSpecifier } = node;
@@ -33,7 +33,15 @@ export default class ExportNode extends Statement {
     args: StatementArgs,
   ) {
     super(args);
-    this.moduleIdentifier = moduleIdentifier && normalizePath(moduleIdentifier);
-    this.names_ = names;
+    this.moduleIdentifier_ = moduleIdentifier && normalizePath(moduleIdentifier);
+    this.names = names;
+  }
+
+  merge(node: ExportNode) {
+    if (this.moduleIdentifier_ !== node.moduleIdentifier_ || !this.canMergeComments(node))
+      return false;
+    this.names.concat(node.names);
+    node.names = [];
+    return this.mergeComments(node);
   }
 }

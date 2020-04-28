@@ -35,7 +35,7 @@ export default class Statement {
     return { leadingText, trailingText: this.trailingCommentsText_ };
   }
 
-  protected canMerge(node: Statement) {
+  protected canMergeComments(node: Statement) {
     return !(
       (this.hasLeadingComments && node.hasLeadingComments) ||
       (this.hasTrailingComments && node.hasTrailingComments)
@@ -43,7 +43,7 @@ export default class Statement {
   }
 
   protected mergeComments(node: Statement) {
-    if (!this.canMerge(node)) return false;
+    if (!this.canMergeComments(node)) return false;
     if (!this.leadingComments_) this.leadingComments_ = node.leadingComments_;
     if (!this.trailingCommentsText_) this.trailingCommentsText_ = node.trailingCommentsText_;
     node.leadingComments_ = undefined;

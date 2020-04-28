@@ -124,7 +124,7 @@ const COMPARE_DEF: Comparator = (a, b) => {
   return a < b ? -1 : a > b ? 1 : 0;
 };
 
-function comparatorFromRule(rule: SortRule | undefined) {
+export function comparatorFromRule(rule: SortRule | undefined) {
   if (rule === 'none') return undefined;
   const p = { map: new Map<number, Segment>() };
   rule?.forEach((s, i) => new Segment(s, i, p));
