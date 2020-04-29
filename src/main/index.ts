@@ -3,25 +3,29 @@ import ts, {
   TranspileOptions,
 } from 'typescript';
 
-import composeInsertSource from '../compose';
 import {
+  ComposeConfig,
   configForCompose,
   Configuration,
 } from '../config';
 import {
   apply,
-  getDeleteEdits,
-  getEdits,
+  getEditsForExports,
+  getEditsForImports,
 } from '../edit';
 import {
+  ExportNode,
   getUnusedIds,
   ImportNode,
   InsertNodeRange,
   parseSource,
   UnusedId,
 } from '../parser';
-import ExportNode from '../parser/ExportNode';
-import sortImports from '../sort';
+import {
+  Sorter,
+  sortExports,
+  sortImports,
+} from '../sort';
 
 export default function formatSource(
   fileName: string,
@@ -36,10 +40,13 @@ export default function formatSource(
     sourceText,
     config,
   );
-  const edits = [
-    ...formatImports(importNodes, importsInsertPoint, unusedIds, config),
-    ...formatExports(exportNodes, config),
-  ];
+  const { edits, sorter, composeConfig } = formatImports(
+    importNodes,
+    importsInsertPoint,
+    unusedIds,
+    config,
+  );
+  formatExports(exportNodes, config, sorter, composeConfig);
   return apply(sourceText, sourceFile, edits);
 }
 
@@ -49,16 +56,20 @@ function formatImports(
   unusedIds: () => UnusedId[],
   config: Configuration,
 ) {
-  if (!insertPoint || !importNodes.length) return [];
+  if (!insertPoint || !importNodes.length) return { edits: [] };
   const composeConfig = configForCompose(config);
-  const { range: insertRange } = insertPoint;
-  const { deleteEdits, insertPos } = getDeleteEdits(importNodes, insertRange, composeConfig);
-  const groups = sortImports(importNodes, unusedIds(), config);
-  const insertSource = composeInsertSource(groups, insertPos, composeConfig);
-  return getEdits(deleteEdits, insertSource, insertPos);
+  const { groups, sorter } = sortImports(importNodes, unusedIds(), config);
+  const edits = getEditsForImports(importNodes, groups, composeConfig, insertPoint.range);
+  return { edits, sorter, composeConfig };
 }
 
-function formatExports(exportNodes: ExportNode[], config: Configuration) {
-  // TODO
-  return [];
+function formatExports(
+  exportNodes: ExportNode[],
+  config: Configuration,
+  sorter?: Sorter,
+  composeConfig?: ComposeConfig,
+) {
+  if (!exportNodes.length) return [];
+  sortExports(exportNodes, config, sorter);
+  return getEditsForExports(exportNodes, composeConfig ?? configForCompose(config));
 }
