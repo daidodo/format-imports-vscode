@@ -1,7 +1,8 @@
+import ExportNode from './ExportNode';
 import ImportNode from './ImportNode';
 
 export { ImportNode };
-
+export { ExportNode };
 export {
   LineRange,
   RangeAndEmptyLines,

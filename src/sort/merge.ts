@@ -2,6 +2,7 @@ import {
   ImportNode,
   NameBinding,
 } from '../parser';
+import ExportNode from '../parser/ExportNode';
 import {
   Comparator,
   compareBindingName,
@@ -24,6 +25,13 @@ export function sortAndMergeImportNodes(
     : merged;
 }
 
+export function sortAndMergeExportNodes(nodes: ExportNode[], compareNames?: Comparator) {
+  nodes
+    .reverse() // Merge exports to the last to avoid 'used before defined' error.
+    .reduce((r, n) => (r.some(a => a.merge(n)) ? r : [...r, n]), Array<ExportNode>())
+    .forEach(n => (n.names = mergeNames(n.names, compareNames)));
+}
+
 function mergeImportNodes(
   nodes: ImportNode[],
   comparePaths?: Comparator,
@@ -41,7 +49,7 @@ function mergeImportNodes(
     : nodes.reduce((r, n) => (r.some(e => e.merge(n)) ? r : [...r, n]), new Array<ImportNode>());
 }
 
-export function mergeNames(names: NameBinding[], compareNames?: Comparator) {
+function mergeNames(names: NameBinding[], compareNames?: Comparator) {
   return compareNames
     ? names
         .sort((a, b) => compareBindingName(a, b, compareNames))
