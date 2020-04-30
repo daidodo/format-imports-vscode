@@ -27,14 +27,14 @@ interface TestCase {
 
 const CONF = 'import-sorter.json';
 
-suite('Extension Test Suite', () => {
+suite('Integration Test Suite', () => {
   const dir = path.resolve(__dirname).replace(/(\\|\/)out(\\|\/)/g, `${sep}src${sep}`);
   const examples = getTestSuite(dir, 'examples');
   if (!examples) return;
   // Run all tests
   return runTestSuite(examples);
   // Or, run a specific test case
-  // return runTestSuite(examples, 'sort');
+  // return runTestSuite(examples, 'unused');
 });
 
 function getTestSuite(dir: string, name: string): TestSuite | undefined {
