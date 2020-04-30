@@ -4,7 +4,6 @@ import ts, {
   Diagnostic,
   SourceFile,
   sys,
-  TranspileOptions,
 } from 'typescript';
 
 import { UnusedId } from './types';
@@ -19,28 +18,29 @@ export function getUnusedIds(
   fileName: string,
   sourceFile: SourceFile,
   sourceText: string,
-  tsConfig: TranspileOptions,
+  tsCompilerOptions?: CompilerOptions,
 ) {
   const UNUSED_CODE = new Set(
     Object.values(UnusedCode).filter((v): v is number => typeof v === 'number'),
   );
-  const options = prepareOptions(tsConfig);
+  const options = prepareOptions(tsCompilerOptions);
   const host = mockHost(fileName, sourceFile, sourceText, options);
   const program = ts.createProgram([fileName], options, host);
-  const semanticDiagnostic = ts.getPreEmitDiagnostics(program);
-  return semanticDiagnostic
+  // https://github.com/microsoft/TypeScript/wiki/API-Breaking-Changes#program-interface-changes
+  return program
+    .getSemanticDiagnostics(sourceFile)
     .filter(m => m.file === sourceFile && UNUSED_CODE.has(m.code))
     .map(transform)
     .filter((r): r is UnusedId => !!r);
 }
 
-function prepareOptions(tsConfig: TranspileOptions) {
-  // Remove 'moduleResolution' to fix 'Unexpected moduleResolution: node' issue.
-  const { moduleResolution, ...rest } = tsConfig.compilerOptions ?? {};
+function prepareOptions(options?: CompilerOptions): CompilerOptions {
   return {
-    ...(rest ?? {}),
+    ...(options ?? {}),
     noEmit: true,
     noUnusedLocals: true,
+    allowJs: true,
+    checkJs: true,
   };
 }
 

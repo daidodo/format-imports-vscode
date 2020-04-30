@@ -1,6 +1,6 @@
 import ts, {
+  CompilerOptions,
   ScriptTarget,
-  TranspileOptions,
 } from 'typescript';
 
 import composeInsertSource from '../compose';
@@ -22,8 +22,8 @@ import sortImports from '../sort';
 export default function formatSource(
   fileName: string,
   sourceText: string,
-  config: Configuration = {},
-  tsConfig: TranspileOptions = {},
+  config: Configuration,
+  tsCompilerOptions?: CompilerOptions,
 ) {
   const sourceFile = ts.createSourceFile(fileName, sourceText, ScriptTarget.Latest);
   const { importNodes, allIds, insertPoint } = parseSource(sourceFile, sourceText, config);
@@ -31,7 +31,7 @@ export default function formatSource(
   const { range: insertRange } = insertPoint;
 
   const composeConfig = configForCompose(config);
-  const unusedIds = getUnusedIds(fileName, sourceFile, sourceText, tsConfig);
+  const unusedIds = getUnusedIds(fileName, sourceFile, sourceText, tsCompilerOptions);
   const { deleteEdits, insertPos } = getDeleteEdits(importNodes, insertRange, composeConfig);
   const groups = sortImports(importNodes, allIds, unusedIds, config);
   const insertSource = composeInsertSource(groups, insertPos, composeConfig);
