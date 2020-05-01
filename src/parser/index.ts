@@ -9,7 +9,6 @@ export {
   Binding,
   NameBinding,
   NodeComment,
-  InsertNodeRange,
   UnusedId,
 } from './types';
 

@@ -3,7 +3,6 @@ import ts, { SourceFile } from 'typescript';
 import ExportNode from './ExportNode';
 import ImportNode from './ImportNode';
 import {
-  InsertNodeRange,
   Pos,
   RangeAndEmptyLines,
 } from './types';
@@ -14,7 +13,7 @@ export default class ParseParams {
 
   readonly importNodes: ImportNode[] = [];
   // If 'range' is undefined, insert imports before the first ImportNode.
-  private importsInsertPoint_?: { range?: InsertNodeRange };
+  private importsInsertPoint_?: RangeAndEmptyLines;
   prevCommentEnd?: Pos;
   checkFileComments = true;
 
@@ -34,12 +33,9 @@ export default class ParseParams {
     if (node) this.importNodes.push(node);
   }
 
-  findInsertPointForImports(p: ParseParams, range: RangeAndEmptyLines, node?: ImportNode) {
-    if (p.importsInsertPoint_) return;
-    const { fullStart, leadingNewLines, start } = range;
-    p.importsInsertPoint_ = node
-      ? {}
-      : { range: { fullStart, leadingNewLines, commentStart: start } };
+  updateImportInsertPoint(range: RangeAndEmptyLines) {
+    if (this.importsInsertPoint_) return;
+    this.importsInsertPoint_ = range;
   }
 
   addExport(node: ExportNode | undefined) {

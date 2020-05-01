@@ -10,15 +10,14 @@ import {
 } from '../config';
 import {
   apply,
-  getEditsForExports,
-  getEditsForImports,
+  EditManager,
 } from '../edit';
 import {
   ExportNode,
   getUnusedIds,
   ImportNode,
-  InsertNodeRange,
   parseSource,
+  RangeAndEmptyLines,
   UnusedId,
 } from '../parser';
 import {
@@ -34,42 +33,46 @@ export default function formatSource(
   tsCompilerOptions?: CompilerOptions,
 ) {
   const sourceFile = ts.createSourceFile(fileName, sourceText, ScriptTarget.Latest);
-  const unusedIds = () => getUnusedIds(fileName, sourceFile, sourceText, tsCompilerOptions);
-  const { importNodes, importsInsertPoint, exportNodes } = parseSource(
+  const { importNodes, importsInsertPoint: point, exportNodes } = parseSource(
     sourceFile,
     sourceText,
     config,
   );
-  const { edits, sorter, composeConfig } = formatImports(
-    importNodes,
-    importsInsertPoint,
-    unusedIds,
-    config,
-  );
-  formatExports(exportNodes, config, sorter, composeConfig);
-  return apply(sourceText, sourceFile, edits);
+  const editManager = new EditManager([...importNodes, ...exportNodes]);
+  if (editManager.empty()) return undefined;
+  const composeConfig = configForCompose(config);
+  const unusedIds = () => getUnusedIds(fileName, sourceFile, sourceText, tsCompilerOptions);
+  const { text, sorter } = formatImports(importNodes, point, unusedIds, config, composeConfig);
+  if (text && point) editManager.insert({ range: point, text, trailingNewLines: 2 });
+  const edits = formatExports(exportNodes, config, composeConfig, sorter);
+  edits.forEach(e => editManager.insert(e));
+
+  return apply(sourceText, sourceFile, editManager.generateEdits(composeConfig));
 }
 
 function formatImports(
   importNodes: ImportNode[],
-  insertPoint: { range?: InsertNodeRange } | undefined,
+  insertPoint: RangeAndEmptyLines | undefined,
   unusedIds: () => UnusedId[],
   config: Configuration,
+  composeConfig: ComposeConfig,
 ) {
-  if (!insertPoint || !importNodes.length) return { edits: [] };
-  const composeConfig = configForCompose(config);
+  if (!insertPoint || !importNodes.length) return {};
   const { groups, sorter } = sortImports(importNodes, unusedIds(), config);
-  const edits = getEditsForImports(importNodes, groups, composeConfig, insertPoint.range);
-  return { edits, sorter, composeConfig };
+  const { nl } = composeConfig;
+  const text = groups.compose(composeConfig, nl + nl);
+  return { text, sorter, composeConfig };
 }
 
 function formatExports(
   exportNodes: ExportNode[],
   config: Configuration,
+  composeConfig: ComposeConfig,
   sorter?: Sorter,
-  composeConfig?: ComposeConfig,
 ) {
   if (!exportNodes.length) return [];
   sortExports(exportNodes, config, sorter);
-  return getEditsForExports(exportNodes, composeConfig ?? configForCompose(config));
+  return exportNodes
+    .filter(n => !n.empty())
+    .map(n => ({ range: n.range, text: n.compose(composeConfig) }));
 }

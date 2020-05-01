@@ -36,12 +36,6 @@ export interface RangeAndEmptyLines extends LineRange {
   eof: boolean;
 }
 
-export interface InsertNodeRange {
-  fullStart: Pos;
-  leadingNewLines: number;
-  commentStart: Pos;
-}
-
 export interface UnusedId {
   code: number;
   id?: string;

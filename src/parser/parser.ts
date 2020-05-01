@@ -59,15 +59,15 @@ function process(node: Node, p: ParseParams, config: Configuration) {
     if (disabled) return true;
     const n = ImportNode.fromDecl(node as ImportDeclaration, a);
     p.addImport(n);
-    p.findInsertPointForImports(p, range, n);
+    p.updateImportInsertPoint(range);
   } else if (node.kind === SyntaxKind.ImportEqualsDeclaration) {
     if (disabled) return true;
     const n = ImportNode.fromEqDecl(node as ImportEqualsDeclaration, a);
     p.addImport(n);
-    p.findInsertPointForImports(p, range, n);
+    p.updateImportInsertPoint(range);
   } else {
     // parseId(node, p);
-    p.findInsertPointForImports(p, range);
+    p.updateImportInsertPoint(range);
     if (formatExports && node.kind === SyntaxKind.ExportDeclaration) {
       const n = ExportNode.fromDecl(node as ExportDeclaration, a);
       p.addExport(n);

@@ -3,25 +3,10 @@ import {
   NameBinding,
   NodeComment,
 } from '../parser';
-import { SortGroup } from '../sort';
 import {
   assert,
   assertNonNull,
 } from '../utils';
-
-export default function composeInsertSource(
-  group: SortGroup,
-  insertLines: { leadingNewLines?: number; trailingNewLines?: number },
-  config: ComposeConfig,
-) {
-  const { nl } = config;
-  const text = group.compose(config, nl + nl);
-  if (!text) return;
-  const { leadingNewLines, trailingNewLines } = insertLines;
-  const h = nl.repeat(leadingNewLines ?? 0);
-  const e = nl.repeat(trailingNewLines ?? 0);
-  return h + text + e;
-}
 
 export function composeNodeAsParts(
   parts: string[],
