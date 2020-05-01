@@ -63,11 +63,11 @@ function formatDocument(document: TextDocument, force?: boolean) {
   const { uri: fileUri, languageId, eol } = document;
   const { fsPath: fileName } = fileUri;
   try {
-    const { config, tsConfig } = loadConfig(fileUri, languageId, eol, force);
+    const { config, tsCompilerOptions } = loadConfig(fileUri, languageId, eol, force);
     if (!force && config.autoFormat !== 'onSave') return undefined;
     if (isExcluded(fileName, config)) return undefined;
     const sourceText = document.getText();
-    const newText = formatSource(fileName, sourceText, config, tsConfig);
+    const newText = formatSource(fileName, sourceText, config, tsCompilerOptions);
     return newText === sourceText ? undefined : newText;
   } catch (e) {
     window.showErrorMessage(

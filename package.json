@@ -4,7 +4,7 @@
   "description": "Auto format imports/exports for JavaScript and TypeScript.",
   "icon": "assets/icons/main.jpg",
   "publisher": "dozerg",
-  "version": "1.2.11",
+  "version": "1.2.12",
   "scripts": {
     "vscode:prepublish": "rm -rf out && git pull && npm run compile",
     "compile": "tsc -p ./",
@@ -271,7 +271,8 @@
   },
   "importSorter": {
     "excludeGlob": [
-      "**/test/suite/examples/**/?(*.)origin.ts?(x)"
+      "**/test/suite/examples/**/?(*.)origin.ts?(x)",
+      "**/test/suite/examples/**/?(*.)origin.js?(x)"
     ]
   }
 }

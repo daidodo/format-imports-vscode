@@ -26,8 +26,8 @@ export default function loadConfig(
     eol: eol === EndOfLine.CRLF ? 'CRLF' : 'LF',
     force,
   });
-  const tsConfig = loadTsConfig(fileUri.fsPath);
-  return { config, tsConfig };
+  const tsCompilerOptions = loadTsConfig(fileUri.fsPath);
+  return { config, tsCompilerOptions };
 }
 
 export function isExcluded(fileName: string, config: Configuration) {

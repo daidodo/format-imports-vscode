@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react-native",
+    "jsxFactory": "h",
+    "moduleResolution": "node"
+  }
+}

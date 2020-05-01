@@ -1,6 +1,6 @@
 import ts, {
+  CompilerOptions,
   ScriptTarget,
-  TranspileOptions,
 } from 'typescript';
 
 import {
@@ -30,11 +30,11 @@ import {
 export default function formatSource(
   fileName: string,
   sourceText: string,
-  config: Configuration = {},
-  tsConfig: TranspileOptions = {},
+  config: Configuration,
+  tsCompilerOptions?: CompilerOptions,
 ) {
   const sourceFile = ts.createSourceFile(fileName, sourceText, ScriptTarget.Latest);
-  const unusedIds = () => getUnusedIds(fileName, sourceFile, sourceText, tsConfig);
+  const unusedIds = () => getUnusedIds(fileName, sourceFile, sourceText, tsCompilerOptions);
   const { importNodes, importsInsertPoint, exportNodes } = parseSource(
     sourceFile,
     sourceText,

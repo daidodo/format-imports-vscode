@@ -1,10 +1,12 @@
 import ts, { sys } from 'typescript';
 
-import { findFileFromPathAndParents } from '../utils';
+import { parentFolder } from '../utils';
 
 export function loadTsConfig(fileName: string) {
-  const [configFile] = findFileFromPathAndParents('tsconfig.json', fileName);
-  if (!configFile) return {};
+  const configFile = ts.findConfigFile(fileName, sys.fileExists.bind(sys));
+  if (!configFile) return undefined;
   const { config } = ts.readConfigFile(configFile, sys.readFile.bind(sys));
-  return config ?? {};
+  const path = parentFolder(configFile);
+  const { options } = ts.parseJsonConfigFileContent(config, sys, path);
+  return options;
 }
