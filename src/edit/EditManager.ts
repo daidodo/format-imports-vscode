@@ -96,7 +96,7 @@ function joinInserts(inserts: InsertText[], config: ComposeConfig) {
   });
   const { leadingNewLines } = inserts[0];
   const { trailingNewLines } = inserts[inserts.length - 1];
-  return { text: t.join(), leadingNewLines, trailingNewLines };
+  return { text: t.join(''), leadingNewLines, trailingNewLines };
 }
 
 function ensure(...n: (number | undefined)[]) {
