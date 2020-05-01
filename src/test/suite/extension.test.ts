@@ -1,6 +1,7 @@
 import assert from 'assert';
 import fs from 'fs';
 import path, { sep } from 'path';
+import { CompilerOptions } from 'typescript';
 import {
   EndOfLine,
   workspace,
@@ -9,12 +10,14 @@ import {
 import { Configuration } from '../../config';
 import { merge } from '../../config/helper';
 import { fileConfig } from '../../config/importSorter';
+import { loadTsConfig } from '../../config/tsconfig';
 import formatSource from '../../main';
 import { assertNonNull } from '../../utils';
 
 interface TestSuite {
   name: string;
   config?: Configuration;
+  tsCompOpt?: CompilerOptions;
   cases: TestCase[];
   suites: TestSuite[];
 }
@@ -26,6 +29,7 @@ interface TestCase {
 }
 
 const CONF = 'import-sorter.json';
+const TS_CONF = 'tsconfig.json';
 
 suite('Integration Test Suite', () => {
   const dir = path.resolve(__dirname).replace(/(\\|\/)out(\\|\/)/g, `${sep}src${sep}`);
@@ -34,13 +38,15 @@ suite('Integration Test Suite', () => {
   // Run all tests
   return runTestSuite(examples);
   // Or, run a specific test case
-  // return runTestSuite(examples, 'unused');
+  // return runTestSuite(examples, 'js');
 });
 
 function getTestSuite(dir: string, name: string): TestSuite | undefined {
   const path = dir + sep + name;
   const entries = fs.readdirSync(path, { withFileTypes: true });
-  const config = entries.find(({ name }) => name === CONF) && fileConfig(`${path}/${CONF}`);
+  const config = entries.find(({ name }) => name === CONF) && fileConfig(`${path}${sep}${CONF}`);
+  const tsCompOpt =
+    entries.find(({ name }) => name === TS_CONF) && loadTsConfig(`${path}${sep}${TS_CONF}`);
   const suites = entries
     .filter(e => e.isDirectory())
     .map(({ name }) => getTestSuite(path, name))
@@ -49,7 +55,7 @@ function getTestSuite(dir: string, name: string): TestSuite | undefined {
   entries
     .filter(e => e.isFile())
     .forEach(({ name }) => {
-      const r = /^(.+\.)?(origin|result)\.tsx?$/.exec(name);
+      const r = /^(.+\.)?(origin|result)\.[jt]sx?$/.exec(name);
       if (!r) return;
       const [, n, t] = r;
       const p = path + sep + name;
@@ -59,22 +65,22 @@ function getTestSuite(dir: string, name: string): TestSuite | undefined {
       else v.result = p;
       map.set(k, v);
     });
-  return { name, config, suites, cases: [...map.values()] };
+  return { name, config, tsCompOpt, suites, cases: [...map.values()] };
 }
 
 function runTestSuite(ts: TestSuite, specific?: string, preConfig?: Configuration) {
-  const { name, config: curConfig, cases, suites } = ts;
+  const { name, config: curConfig, tsCompOpt, cases, suites } = ts;
   const defResult = cases.find(c => !c.name && !c.origin)?.result;
   const config = curConfig && preConfig ? merge(preConfig, curConfig) : curConfig ?? preConfig;
   suite(name, () => {
     if (!specific) {
-      cases.forEach(c => runTestCase(c, defResult, config));
+      cases.forEach(c => runTestCase(c, defResult, config, tsCompOpt));
       suites.forEach(s => runTestSuite(s, undefined, config));
     } else {
       const [n, ...rest] = specific.split('/').filter(s => !!s);
       if (!rest.length) {
         const c = cases.find(c => (c.name ?? 'default') === n);
-        if (c) return runTestCase(c, defResult, config);
+        if (c) return runTestCase(c, defResult, config, tsCompOpt);
       }
       const s = suites.find(s => s.name === n);
       assertNonNull(s, `Test case/suite '${n}' not found in suite '${name}'`);
@@ -87,6 +93,7 @@ function runTestCase(
   { name, origin, result }: TestCase,
   defResult?: string,
   config?: Configuration,
+  tsCompOpt?: CompilerOptions,
 ) {
   if (!name && !origin) return;
   test(name ?? 'default', async () => {
@@ -96,7 +103,7 @@ function runTestCase(
     const c = updateEol(config, doc.eol);
     const source = doc.getText();
     const expected = res ? fs.readFileSync(res).toString() : source;
-    const actual = formatSource(origin, source, c) ?? source;
+    const actual = formatSource(origin, source, c, tsCompOpt) ?? source;
     assert.equal(actual, expected);
   });
 }
