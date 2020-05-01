@@ -95,9 +95,8 @@ export default class ImportNode extends Statement {
   }
 
   compose(config: ComposeConfig) {
-    const { leadingText, trailingText } = this.composeComments(config);
-    const cmLen = trailingText.split(/\r?\n/)?.[0]?.length ?? 0;
-    const importText = this.composeImport(cmLen, config);
+    const { leadingText, trailingText, tailingLength } = this.composeComments(config);
+    const importText = this.composeImport(tailingLength, config);
     return leadingText + importText + trailingText;
   }
 
@@ -148,22 +147,23 @@ export default class ImportNode extends Statement {
   }
 
   private composeImport(commentLength: number, config: ComposeConfig) {
+    const { semi } = config;
     switch (this.node_.kind) {
       case SyntaxKind.ImportDeclaration:
-        return this.composeDecl(commentLength, config);
+        return this.composeDecl(commentLength, config) + semi;
       case SyntaxKind.ImportEqualsDeclaration:
-        return this.composeEqDecl(commentLength, config);
+        return this.composeEqDecl(commentLength, config) + semi;
     }
   }
 
   // import A = require('B');
   private composeEqDecl(commentLength: number, config: ComposeConfig) {
-    const { quote, semi } = config;
+    const { quote } = config;
     const path = this.moduleIdentifier;
     const name = this.defaultName_;
     assertNonNull(name);
     const parts = [`${name} =`];
-    const from = `require(${quote(path)})${semi}`;
+    const from = `require(${quote(path)})`;
     return composeNodeAsParts(parts, from, commentLength, config);
   }
 
@@ -205,13 +205,14 @@ export default class ImportNode extends Statement {
    * ```
    */
   private composeDecl(commentLength: number, config: ComposeConfig) {
-    const { quote, semi } = config;
+    const { quote } = config;
     const path = this.moduleIdentifier;
-    const ending = quote(path) + semi;
+    const ending = quote(path);
     if (this.isScript) return `import ${ending}`;
     const from = `from ${ending}`;
     if (this.binding_?.type === 'named')
       return composeNodeAsNames(
+        'import',
         this.defaultName_,
         this.binding_.names,
         from,

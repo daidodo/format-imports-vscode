@@ -4,6 +4,8 @@ import {
   SyntaxKind,
 } from 'typescript';
 
+import { composeNodeAsNames } from '../compose';
+import { ComposeConfig } from '../config';
 import { normalizePath } from '../utils';
 import Statement, { StatementArgs } from './Statement';
 import { NameBinding } from './types';
@@ -37,11 +39,28 @@ export default class ExportNode extends Statement {
     this.names = names;
   }
 
+  empty() {
+    return this.names.length < 1;
+  }
+
   merge(node: ExportNode) {
     if (this.moduleIdentifier_ !== node.moduleIdentifier_ || !this.canMergeComments(node))
       return false;
-    this.names.concat(node.names);
+    this.names.push(...node.names);
     node.names = [];
     return this.mergeComments(node);
+  }
+
+  compose(config: ComposeConfig) {
+    const { leadingText, trailingText, tailingLength } = this.composeComments(config);
+    const importText = this.composeExport(tailingLength, config);
+    return leadingText + importText + trailingText;
+  }
+
+  private composeExport(commentLength: number, config: ComposeConfig) {
+    const { quote, semi } = config;
+    const path = this.moduleIdentifier_;
+    const from = path ? 'from ' + quote(path) : undefined;
+    return composeNodeAsNames('export', undefined, this.names, from, commentLength, config) + semi;
   }
 }
