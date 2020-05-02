@@ -28,6 +28,7 @@ export default class ImportNode extends Statement {
   private readonly node_: ImportDeclaration | ImportEqualsDeclaration;
 
   readonly moduleIdentifier: string;
+  readonly isScript: boolean;
   private defaultName_?: string;
   private binding_?: Binding;
 
@@ -36,8 +37,8 @@ export default class ImportNode extends Statement {
     if (moduleSpecifier.kind !== SyntaxKind.StringLiteral) return undefined;
     const moduleIdentifier = (moduleSpecifier as StringLiteral).text;
     if (!moduleIdentifier.trim()) return undefined;
-    const { defaultName, binding } = getDefaultAndBinding(importClause);
-    return new ImportNode(node, moduleIdentifier, args, defaultName, binding);
+    const { defaultName, binding, isScript } = getDefaultAndBinding(importClause);
+    return new ImportNode(node, moduleIdentifier, args, defaultName, binding, isScript);
   }
 
   static fromEqDecl(node: ImportEqualsDeclaration, args: StatementArgs) {
@@ -56,16 +57,14 @@ export default class ImportNode extends Statement {
     args: StatementArgs,
     defaultName?: string,
     binding?: Binding,
+    isScript = false,
   ) {
     super(args);
     this.node_ = node;
     this.moduleIdentifier = normalizePath(moduleIdentifier);
     this.defaultName_ = defaultName;
     this.binding_ = binding;
-  }
-
-  get isScript() {
-    return !this.defaultName_ && !this.binding_;
+    this.isScript = isScript;
   }
 
   get defaultName() {
@@ -76,13 +75,18 @@ export default class ImportNode extends Statement {
     return this.binding_;
   }
 
-  removeUnusedNames(
-    //allNames: Set<string>,
-    unusedIds: UnusedId[],
-  ) {
-    if (this.isScript) return this;
+  empty() {
+    return !this.isScript && !this.defaultName_ && !this.binding_;
+  }
+
+  removeUnusedNames(unusedIds: UnusedId[]) {
+    if (this.isScript) return;
     const withinRange = unusedIds.filter(r => this.withinDeclRange(r.pos));
-    if (withinRange.some(u => u.code === UnusedCode.ALL)) return undefined;
+    if (withinRange.some(u => u.code === UnusedCode.ALL)) {
+      this.defaultName_ = undefined;
+      this.binding_ = undefined;
+      return;
+    }
     const unusedNames = new Set(withinRange.map(r => r.id).filter((id): id is string => !!id));
     if (!isNameUsed(this.defaultName_, unusedNames)) this.defaultName_ = undefined;
     if (this.binding_) {
@@ -91,7 +95,6 @@ export default class ImportNode extends Statement {
         if (!this.binding_.names.length) this.binding_ = undefined;
       } else if (!isNameUsed(this.binding_.alias, unusedNames)) this.binding_ = undefined;
     }
-    return this.defaultName_ || this.binding_ ? this : undefined;
   }
 
   compose(config: ComposeConfig) {
@@ -102,7 +105,7 @@ export default class ImportNode extends Statement {
 
   /**
    * @returns true if `node` is fully merged to `this`;
-   *          false if `node` still has names thus can't be ignored.
+   *          false if `node` still has names or comments thus can't be ignored.
    */
   merge(node: ImportNode) {
     const { moduleIdentifier, node_ } = node;
@@ -121,19 +124,21 @@ export default class ImportNode extends Statement {
   }
 
   private mergeBinding(node: ImportNode) {
-    if (!node.binding_) return true;
-    else if (this.binding_ === undefined) {
-      this.binding_ = node.binding_;
+    const { binding_: b1 } = this;
+    const { binding_: b2 } = node;
+    if (!b2) return true;
+    else if (!b1) {
+      this.binding_ = b2;
       node.binding_ = undefined;
       return true;
-    } else if (this.binding_.type === 'namespace') {
-      if (node.binding_.type === 'namespace' && this.binding_.alias === node.binding_.alias) {
+    } else if (b1.type === 'namespace') {
+      if (b2.type === 'namespace' && b1.alias === b2.alias) {
         node.binding_ = undefined;
         return true;
       }
       return false;
-    } else if (node.binding_.type === 'namespace') return false;
-    this.binding_.names = this.binding_.names.concat(node.binding_.names);
+    } else if (b2.type === 'namespace') return false;
+    b1.names.concat(...b2.names);
     node.binding_ = undefined;
     return true;
   }
@@ -241,7 +246,7 @@ function isNameUsed(
 }
 
 function getDefaultAndBinding(importClause: ImportClause | undefined) {
-  if (!importClause) return {};
+  if (!importClause) return { isScript: true };
   const { name, namedBindings } = importClause;
   let defaultName = name && name.text;
   const binding = getBinding(namedBindings);
@@ -253,11 +258,11 @@ function getDefaultAndBinding(importClause: ImportClause | undefined) {
       names.splice(i, 1);
     }
   }
-  return { defaultName, binding };
+  return { defaultName, binding, isScript: false };
 }
 
 function getBinding(nb: NamedImportBindings | undefined): Binding | undefined {
-  if (!nb) return;
+  if (!nb) return undefined;
   if (nb.kind === SyntaxKind.NamespaceImport) return { type: 'namespace', alias: nb.name.text };
   const names = nb.elements.map(e => {
     const { name, propertyName } = e;
@@ -265,5 +270,5 @@ function getBinding(nb: NamedImportBindings | undefined): Binding | undefined {
       ? { aliasName: name.text, propertyName: propertyName.text }
       : { propertyName: name.text };
   });
-  return { type: 'named', names };
+  return names.length < 1 ? undefined : { type: 'named', names };
 }

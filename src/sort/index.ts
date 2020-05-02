@@ -21,10 +21,10 @@ export function sortImports(
   const { sortRules: sort, groupRules: subGroups } = config;
   // The top group must be a match-all group.
   const group = new SortGroup({ flag: 'all', regex: '', sort, subGroups }, sorter);
-  nodes
-    .map(n => n.removeUnusedNames(unusedIds))
-    .filter((n): n is ImportNode => !!n)
-    .forEach(n => group.add(n));
+  nodes.forEach(n => {
+    n.removeUnusedNames(unusedIds);
+    if (!n.empty()) group.add(n);
+  });
   return group.sortAndMerge();
 }
 
