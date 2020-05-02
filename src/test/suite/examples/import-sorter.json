@@ -1,4 +1,5 @@
 {
   "groupRules": ["^react(-dom)?$", "^@angular/", "^vue$", {}, "^[@]", "^[.]"],
-  "sortRules": { "names": ["_", "aA"], "paths": ["_", "aA"] }
+  "sortRules": { "names": ["_", "aA"], "paths": ["_", "aA"] },
+  "formatExports": false
 }
