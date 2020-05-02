@@ -6,6 +6,6 @@ import React from 'react'
 import {h} from '@stencil/core'
 
 
-export { A, C, E };
+export { C, A, E };
 
 export const a = <div />

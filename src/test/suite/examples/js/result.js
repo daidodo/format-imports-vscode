@@ -1,4 +1,7 @@
-import { A } from 'a';
-import C, { E } from 'b';
+import {
+  A,
+  B,
+} from 'a';
+import { E } from 'b';
 
-export { A, C, E };
+export { A, B, E };
