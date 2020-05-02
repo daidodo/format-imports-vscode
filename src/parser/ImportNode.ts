@@ -148,23 +148,24 @@ export default class ImportNode extends Statement {
 
   private composeImport(commentLength: number, config: ComposeConfig) {
     const { semi } = config;
+    const extraLength = commentLength + semi.length;
     switch (this.node_.kind) {
       case SyntaxKind.ImportDeclaration:
-        return this.composeDecl(commentLength, config) + semi;
+        return this.composeDecl(extraLength, config) + semi;
       case SyntaxKind.ImportEqualsDeclaration:
-        return this.composeEqDecl(commentLength, config) + semi;
+        return this.composeEqDecl(extraLength, config) + semi;
     }
   }
 
   // import A = require('B');
-  private composeEqDecl(commentLength: number, config: ComposeConfig) {
+  private composeEqDecl(extraLength: number, config: ComposeConfig) {
     const { quote } = config;
     const path = this.moduleIdentifier;
     const name = this.defaultName_;
     assertNonNull(name);
     const parts = [`${name} =`];
     const from = `require(${quote(path)})`;
-    return composeNodeAsParts(parts, from, commentLength, config);
+    return composeNodeAsParts(parts, from, extraLength, config);
   }
 
   /**
@@ -204,7 +205,7 @@ export default class ImportNode extends Statement {
    *    import A, { default as B, C, D } from 'E';
    * ```
    */
-  private composeDecl(commentLength: number, config: ComposeConfig) {
+  private composeDecl(extraLength: number, config: ComposeConfig) {
     const { quote } = config;
     const path = this.moduleIdentifier;
     const ending = quote(path);
@@ -216,13 +217,13 @@ export default class ImportNode extends Statement {
         this.defaultName_,
         this.binding_.names,
         from,
-        commentLength,
+        extraLength,
         config,
       );
     const parts = [];
     if (this.defaultName_) parts.push(this.defaultName_);
     if (this.binding_?.type === 'namespace') parts.push(`* as ${this.binding_.alias}`);
-    return composeNodeAsParts(parts, from, commentLength, config);
+    return composeNodeAsParts(parts, from, extraLength, config);
   }
 }
 

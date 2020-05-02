@@ -61,6 +61,7 @@ export default class ExportNode extends Statement {
     const { quote, semi } = config;
     const path = this.moduleIdentifier_;
     const from = path ? 'from ' + quote(path) : undefined;
-    return composeNodeAsNames('export', undefined, this.names, from, commentLength, config) + semi;
+    const extraLength = commentLength + semi.length;
+    return composeNodeAsNames('export', undefined, this.names, from, extraLength, config) + semi;
   }
 }
