@@ -68,7 +68,7 @@ function process(node: Node, p: ParseParams, config: Configuration) {
   } else {
     // parseId(node, p);
     p.updateImportInsertPoint(range);
-    if (formatExports && node.kind === SyntaxKind.ExportDeclaration) {
+    if (formatExports && !disabled && node.kind === SyntaxKind.ExportDeclaration) {
       const n = ExportNode.fromDecl(node as ExportDeclaration, a);
       p.addExport(n);
     }

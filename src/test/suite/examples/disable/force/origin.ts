@@ -1,6 +1,10 @@
 // ts-import-sorter: disable
 
-import B from 'b';
 import A from 'a';
+import B from 'b';
 
-export {A, B};
+export {B, A};
+
+export {}
+const C= 1;
+export {C}

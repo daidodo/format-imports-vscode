@@ -3,4 +3,5 @@
 import A from 'a';
 import B from 'b';
 
-export {A, B};
+const C= 1;
+export { A, B, C };

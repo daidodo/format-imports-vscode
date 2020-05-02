@@ -36,9 +36,9 @@ suite('Integration Test Suite', () => {
   const examples = getTestSuite(dir, 'examples');
   if (!examples) return;
   // Run all tests
-  return runTestSuite(examples);
+  // return runTestSuite(examples);
   // Or, run a specific test case
-  // return runTestSuite(examples, 'js');
+  return runTestSuite(examples, 'disable');
 });
 
 function getTestSuite(dir: string, name: string): TestSuite | undefined {
