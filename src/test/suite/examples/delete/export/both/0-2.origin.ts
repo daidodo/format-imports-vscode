@@ -1,0 +1,3 @@
+'use';    export {}   
+
+'str'

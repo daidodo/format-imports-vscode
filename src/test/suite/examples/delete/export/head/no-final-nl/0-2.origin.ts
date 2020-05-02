@@ -1,0 +1,2 @@
+'use ';  export {} from 'a';  
+
