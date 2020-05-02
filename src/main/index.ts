@@ -22,6 +22,7 @@ import {
 } from '../parser';
 import {
   Sorter,
+  sorterFromRules,
   sortExports,
   sortImports,
 } from '../sort';
@@ -42,7 +43,8 @@ export default function formatSource(
   if (editManager.empty()) return undefined;
   const composeConfig = configForCompose(config);
   const unusedIds = () => getUnusedIds(fileName, sourceFile, sourceText, tsCompilerOptions);
-  const { text, sorter } = formatImports(importNodes, point, unusedIds, config, composeConfig);
+  const sorter = sorterFromRules(config.sortRules);
+  const text = formatImports(importNodes, point, unusedIds, config, composeConfig, sorter);
   if (text && point) editManager.insert({ range: point, text, trailingNewLines: 2 });
   const edits = formatExports(exportNodes, config, composeConfig, sorter);
   edits.forEach(e => editManager.insert(e));
@@ -56,22 +58,22 @@ function formatImports(
   unusedIds: () => UnusedId[],
   config: Configuration,
   composeConfig: ComposeConfig,
+  sorter: Sorter,
 ) {
-  if (!insertPoint || !importNodes.length) return {};
-  const { groups, sorter } = sortImports(importNodes, unusedIds(), config);
+  if (!insertPoint || !importNodes.length) return undefined;
+  const groups = sortImports(importNodes, unusedIds(), config, sorter);
   const { nl } = composeConfig;
-  const text = groups.compose(composeConfig, nl + nl);
-  return { text, sorter, composeConfig };
+  return groups.compose(composeConfig, nl + nl);
 }
 
 function formatExports(
   exportNodes: ExportNode[],
   config: Configuration,
   composeConfig: ComposeConfig,
-  sorter?: Sorter,
+  sorter: Sorter,
 ) {
   if (!exportNodes.length) return [];
-  sortExports(exportNodes, config, sorter);
+  sortExports(exportNodes, sorter.compareNames);
   return exportNodes
     .filter(n => !n.empty())
     .map(n => ({ range: n.range, text: n.compose(composeConfig) }));
