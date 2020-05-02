@@ -17,7 +17,7 @@ export function loadPretConfig(fileName: string): Configuration {
     // endOfLine,
   } = config;
   return {
-    maximumLineLength: printWidth ?? 80,
+    maxLineLength: printWidth ?? 80,
     tabType: useTabs ? 'tab' : 'space',
     tabSize: tabWidth ?? 2,
     hasSemicolon: semi ?? true,

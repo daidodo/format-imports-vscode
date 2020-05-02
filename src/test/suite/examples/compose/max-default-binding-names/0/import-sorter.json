@@ -1,4 +1,4 @@
 {
-  "maximumDefaultAndBindingNamesPerLine": 0,
-  "maximumLineLength": 50
+  "maxDefaultAndBindingNamesPerLine": 0,
+  "maxLineLength": 50
 }

@@ -59,20 +59,25 @@ function composeNodeAsNamesImpl(
   config: ComposeConfig,
   forceWrap: boolean,
 ) {
-  const { text: t, canWrap } = composeNames(!!defaultName, names, config, forceWrap);
+  const { text: t, canWrap } = composeNames(verb, !!defaultName, names, config, forceWrap);
   const all = [defaultName, t].filter(s => !!s).join(', ');
   const text = [verb, all, from].filter(s => !!s).join(' ');
   return { text, canWrap };
 }
 
 function composeNames(
+  verb: string,
   hasDefault: boolean,
   names: NameBinding[] | undefined,
   config: ComposeConfig,
   forceWrap: boolean,
 ) {
   const { maxWords: mw, maxLength, bracket, nl } = config;
-  const maxWords = hasDefault ? mw.withDefault - 1 : mw.withoutDefault;
+  const maxWords = hasDefault
+    ? mw.withDefault - 1
+    : verb === 'export'
+    ? mw.exported
+    : mw.withoutDefault;
   const words = names?.map(composeName).filter((w): w is string => !!w);
   if (!words || !words.length) return {};
   if (!forceWrap && words.length <= maxWords) {

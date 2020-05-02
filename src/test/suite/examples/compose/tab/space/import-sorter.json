@@ -1,5 +1,5 @@
 {
   "tabType": "space",
   "tabSize": 3,
-  "maximumLineLength": 1
+  "maxLineLength": 1
 }

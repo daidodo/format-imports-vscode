@@ -1,4 +1,4 @@
 {
-  "maximumNamesPerWrappedLine": 0,
-  "maximumLineLength": 30
+  "maxNamesPerWrappedLine": 0,
+  "maxLineLength": 30
 }

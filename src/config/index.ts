@@ -45,10 +45,11 @@ export function isExcluded(fileName: string, config: Configuration) {
 }
 
 export function configForCompose({
-  maximumLineLength,
-  maximumBindingNamesPerLine,
-  maximumDefaultAndBindingNamesPerLine,
-  maximumNamesPerWrappedLine,
+  maxLineLength,
+  maxBindingNamesPerLine,
+  maxDefaultAndBindingNamesPerLine,
+  maxExportNamesPerLine,
+  maxNamesPerWrappedLine,
   tabType,
   tabSize,
   quoteMark,
@@ -59,11 +60,12 @@ export function configForCompose({
   eol,
 }: Configuration): ComposeConfig {
   return {
-    maxLength: (maximumLineLength ?? 80) || Number.MAX_SAFE_INTEGER,
+    maxLength: (maxLineLength ?? 80) || Number.MAX_SAFE_INTEGER,
     maxWords: {
-      withoutDefault: (maximumBindingNamesPerLine ?? 1) || Number.MAX_SAFE_INTEGER,
-      withDefault: (maximumDefaultAndBindingNamesPerLine ?? 2) || Number.MAX_SAFE_INTEGER,
-      wrapped: (maximumNamesPerWrappedLine ?? 1) || Number.MAX_SAFE_INTEGER,
+      withoutDefault: (maxBindingNamesPerLine ?? 1) || Number.MAX_SAFE_INTEGER,
+      withDefault: (maxDefaultAndBindingNamesPerLine ?? 2) || Number.MAX_SAFE_INTEGER,
+      wrapped: (maxNamesPerWrappedLine ?? 1) || Number.MAX_SAFE_INTEGER,
+      exported: maxExportNamesPerLine || Number.MAX_SAFE_INTEGER,
     },
     tab: tabType?.toLowerCase() === 'tab' ? '\t' : ' '.repeat(tabSize ?? 2),
     quote:

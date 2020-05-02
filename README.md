@@ -62,13 +62,13 @@ All VS Code settings under `"tsImportSorter"` section and their default values:
 "tsImportSorter.configuration.sortRules.names": ["_", "aA"],
 
 // Max binding names per line before wrapping. 0 for no limit.
-"tsImportSorter.configuration.maximumBindingNamesPerLine": 1,
+"tsImportSorter.configuration.maxBindingNamesPerLine": 1,
 
 // Max default and binding names per line before wrapping. 0 for no limit.
-"tsImportSorter.configuration.maximumDefaultAndBindingNamesPerLine": 2,
+"tsImportSorter.configuration.maxDefaultAndBindingNamesPerLine": 2,
 
 // Max names on wrapped lines. 0 for no limit.
-"tsImportSorter.configuration.maximumNamesPerWrappedLine": 1,
+"tsImportSorter.configuration.maxNamesPerWrappedLine": 1,
 ```
 
 ## Configuration
@@ -108,16 +108,16 @@ Here are all configs in `package.json` under `"importSorter"` section and their 
     },
 
     // Max line length before wrapping. 0 for no limit.
-    "maximumLineLength": 80,
+    "maxLineLength": 80,
 
     // Max binding names per line before wrapping. 0 for no limit.
-    "maximumBindingNamesPerLine": 1,
+    "maxBindingNamesPerLine": 1,
 
     // Max default and binding names per line before wrapping. 0 for no limit.
-    "maximumDefaultAndBindingNamesPerLine": 2,
+    "maxDefaultAndBindingNamesPerLine": 2,
 
     // Max names on wrapped lines. 0 for no limit.
-    "maximumNamesPerWrappedLine": 1,
+    "maxNamesPerWrappedLine": 1,
 
     // Number of spaces to replace a TAB.
     "tabSize": 2,
@@ -147,7 +147,7 @@ Here are all configs in `package.json` under `"importSorter"` section and their 
 
 ```json
 {
-  "maximumLineLength": 100,
+  "maxLineLength": 100,
   "quoteMark": "double",
   "tabSize": 4,
   "insertFinalNewline": false
@@ -217,17 +217,17 @@ import Excluded from 'import/sorter'; /* ts-import-sorter: disable */
 
 ### Maximum names per line
 
-When deciding whether to wrap an import statement or not, JS/TS Import Sorter looks up both `maximumLineLength` and the following values:
+When deciding whether to wrap an import statement or not, JS/TS Import Sorter looks up both `maxLineLength` and the following values:
 
 
-#### `maximumBindingNamesPerLine`
+#### `maxBindingNamesPerLine`
 
 For a statement importing only *binding names*, this value determines how many names are allowed before wrapping.
 
 For example, if you set:
 
 ```json
-"maximumBindingNamesPerLine": 2,
+"maxBindingNamesPerLine": 2,
 ```
 
 then
@@ -243,14 +243,14 @@ import {
 } from 'c';   // Wrapped as there are more than 2 names
 ```
 
-#### `maximumDefaultAndBindingNamesPerLine`
+#### `maxDefaultAndBindingNamesPerLine`
 
 For a statement importing *default* and *binding names*, this value determines how many names are allowed before wrapping.
 
 For example, if you set:
 
 ```json
-"maximumDefaultAndBindingNamesPerLine": 2,
+"maxDefaultAndBindingNamesPerLine": 2,
 ```
 
 then
@@ -264,14 +264,14 @@ import D, {
 } from 'c'; // Wrapped as there are more than 2 names
 ```
 
-#### `maximumNamesPerWrappedLine`
+#### `maxNamesPerWrappedLine`
 
 If an import statement is wrapped, this value decides how many names there are per line.
 
 For example, if you set:
 
 ```json
-"maximumNamesPerWrappedLine": 2,
+"maxNamesPerWrappedLine": 2,
 ```
 
 then

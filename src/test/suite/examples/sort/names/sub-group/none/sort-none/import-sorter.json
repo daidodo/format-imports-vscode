@@ -1,6 +1,6 @@
 {
-  "maximumBindingNamesPerLine": 0,
-  "maximumDefaultAndBindingNamesPerLine": 0,
+  "maxBindingNamesPerLine": 0,
+  "maxDefaultAndBindingNamesPerLine": 0,
   "sortRules": { "names": ["Aa", "_"] },
   "groupRules": [
     {
