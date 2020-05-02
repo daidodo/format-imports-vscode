@@ -11,11 +11,12 @@ export type Configuration = Readonly<
     excludeGlob: string[];
     groupRules: (string | string[] | GroupRule)[];
     sortRules: SortRules;
-    maximumLineLength: number;
-    maximumBindingNamesPerLine: number;
-    maximumDefaultAndBindingNamesPerLine: number;
-    maximumNamesPerWrappedLine: number;
+    maxBindingNamesPerLine: number;
+    maxDefaultAndBindingNamesPerLine: number;
+    maxExportNamesPerLine: number;
+    maxNamesPerWrappedLine: number;
     // From other configs
+    maxLineLength: number;
     tabType: 'space' | 'tab';
     tabSize: number;
     quoteMark: 'single' | 'double';
@@ -36,7 +37,7 @@ export const KEYS_TO_MERGE = ['exclude' as const, 'excludeGlob' as const, 'sortR
 
 export interface ComposeConfig {
   maxLength: number;
-  maxWords: { withDefault: number; withoutDefault: number; wrapped: number };
+  maxWords: { withDefault: number; withoutDefault: number; wrapped: number; exported: number };
   tab: string;
   quote: (s: string) => string;
   comma: string;

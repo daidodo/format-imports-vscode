@@ -177,17 +177,22 @@
           },
           "markdownDescription": "Sorting rule for imported names. See the [wiki](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules) for more details."
         },
-        "tsImportSorter.configuration.maximumBindingNamesPerLine": {
+        "tsImportSorter.configuration.maxBindingNamesPerLine": {
           "type": "number",
           "default": 1,
           "description": "Max binding names per line before wrapping. 0 for no limit."
         },
-        "tsImportSorter.configuration.maximumDefaultAndBindingNamesPerLine": {
+        "tsImportSorter.configuration.maxDefaultAndBindingNamesPerLine": {
           "type": "number",
           "default": 2,
           "description": "Max default and binding names per line before wrapping. 0 for no limit."
         },
-        "tsImportSorter.configuration.maximumNamesPerWrappedLine": {
+        "tsImportSorter.configuration.maxExportNamesPerLine": {
+          "type": "number",
+          "default": 0,
+          "description": "Max exported names per line before wrapping. 0 for no limit."
+        },
+        "tsImportSorter.configuration.maxNamesPerWrappedLine": {
           "type": "number",
           "default": 1,
           "description": "Max names on wrapped lines. 0 for no limit."
