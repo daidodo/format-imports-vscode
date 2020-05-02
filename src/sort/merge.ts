@@ -27,9 +27,7 @@ export function sortAndMergeImportNodes(
 
 export function sortAndMergeExportNodes(nodes: ExportNode[], compareNames?: Comparator) {
   nodes
-    .reverse() // Merge exports to the last to avoid 'used before defined' error.
     .reduce((r, n) => (r.some(a => a.merge(n)) ? r : [...r, n]), Array<ExportNode>())
-    .reverse()
     .forEach(n => (n.names = mergeNames(n.names, compareNames)));
 }
 

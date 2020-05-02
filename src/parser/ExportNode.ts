@@ -44,11 +44,19 @@ export default class ExportNode extends Statement {
   }
 
   merge(node: ExportNode) {
-    if (this.moduleIdentifier_ !== node.moduleIdentifier_ || !this.canMergeComments(node))
+    if (
+      this.empty() ||
+      this.moduleIdentifier_ !== node.moduleIdentifier_ ||
+      !this.canMergeComments(node)
+    )
       return false;
-    this.names.push(...node.names);
-    node.names = [];
-    return this.mergeComments(node);
+    // For `export { A } from 'a'`, merge to the front.
+    // For `export { A }`, merge to the end.
+    const src = this.moduleIdentifier_ ? node : this;
+    const dst = this.moduleIdentifier_ ? this : node;
+    dst.names.push(...src.names);
+    src.names = [];
+    return dst.mergeComments(src) && !!this.moduleIdentifier_;
   }
 
   compose(config: ComposeConfig) {
