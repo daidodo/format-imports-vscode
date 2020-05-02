@@ -18,7 +18,6 @@ import {
   ImportNode,
   parseSource,
   RangeAndEmptyLines,
-  UnusedId,
 } from '../parser';
 import {
   Sorter,
@@ -42,7 +41,8 @@ export default function formatSource(
   const editManager = new EditManager([...importNodes, ...exportNodes]);
   if (editManager.empty()) return undefined;
   const composeConfig = configForCompose(config);
-  const unusedIds = () => getUnusedIds(fileName, sourceFile, sourceText, tsCompilerOptions);
+  const unusedIds = () =>
+    getUnusedIds(importNodes, fileName, sourceFile, sourceText, tsCompilerOptions);
   const sorter = sorterFromRules(config.sortRules);
   const text = formatImports(importNodes, point, unusedIds, config, composeConfig, sorter);
   if (text && point) editManager.insert({ range: point, text, trailingNewLines: 2 });
@@ -55,13 +55,14 @@ export default function formatSource(
 function formatImports(
   importNodes: ImportNode[],
   insertPoint: RangeAndEmptyLines | undefined,
-  unusedIds: () => UnusedId[],
+  unusedIds: () => { unusedNames: Set<string>; unusedNodes: ImportNode[] },
   config: Configuration,
   composeConfig: ComposeConfig,
   sorter: Sorter,
 ) {
   if (!insertPoint || !importNodes.length) return undefined;
-  const groups = sortImports(importNodes, unusedIds(), config, sorter);
+  const { unusedNames, unusedNodes } = unusedIds();
+  const groups = sortImports(importNodes, unusedNames, unusedNodes, config, sorter);
   const { nl } = composeConfig;
   return groups.compose(composeConfig, nl + nl);
 }

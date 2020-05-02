@@ -22,6 +22,11 @@ export default class Statement {
     this.trailingCommentsText_ = args.trailingCommentsText;
   }
 
+  withinDeclRange(pos: number) {
+    const { start, end } = this.range;
+    return start.pos <= pos && pos < end.pos;
+  }
+
   private get hasLeadingComments() {
     return !!this.leadingComments_ && this.leadingComments_.length > 0;
   }

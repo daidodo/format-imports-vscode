@@ -1,8 +1,5 @@
 import { Configuration } from '../config';
-import {
-  ImportNode,
-  UnusedId,
-} from '../parser';
+import { ImportNode } from '../parser';
 import {
   Sorter,
   sorterFromRules,
@@ -13,8 +10,8 @@ export { SortGroup, Sorter, sorterFromRules };
 
 export function sortImports(
   nodes: ImportNode[],
-  // usedIds: Set<string>,
-  unusedIds: UnusedId[],
+  unusedNames: Set<string>,
+  unusedNodes: ImportNode[],
   config: Configuration,
   sorter: Sorter,
 ) {
@@ -22,7 +19,7 @@ export function sortImports(
   // The top group must be a match-all group.
   const group = new SortGroup({ flag: 'all', regex: '', sort, subGroups }, sorter);
   nodes.forEach(n => {
-    n.removeUnusedNames(unusedIds);
+    n.removeUnusedNames(unusedNames, unusedNodes);
     if (!n.empty()) group.add(n);
   });
   return group.sortAndMerge();

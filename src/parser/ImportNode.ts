@@ -20,9 +20,7 @@ import Statement, { StatementArgs } from './Statement';
 import {
   Binding,
   NameBinding,
-  UnusedId,
 } from './types';
-import { UnusedCode } from './unused';
 
 export default class ImportNode extends Statement {
   private readonly node_: ImportDeclaration | ImportEqualsDeclaration;
@@ -75,19 +73,28 @@ export default class ImportNode extends Statement {
     return this.binding_;
   }
 
+  allNames() {
+    const r: string[] = [];
+    if (this.defaultName_) r.push(this.defaultName_);
+    if (this.binding_?.type === 'namespace') r.push(this.binding_.alias);
+    else if (this.binding_?.type === 'named') {
+      const names = this.binding_.names.map(n => n.aliasName ?? n.propertyName);
+      r.push(...names);
+    }
+    return r;
+  }
+
   empty() {
     return !this.isScript && !this.defaultName_ && !this.binding_;
   }
 
-  removeUnusedNames(unusedIds: UnusedId[]) {
+  removeUnusedNames(unusedNames: Set<string>, unusedNodes: ImportNode[]) {
     if (this.isScript) return;
-    const withinRange = unusedIds.filter(r => this.withinDeclRange(r.pos));
-    if (withinRange.some(u => u.code === UnusedCode.ALL)) {
+    if (unusedNodes.includes(this)) {
       this.defaultName_ = undefined;
       this.binding_ = undefined;
       return;
     }
-    const unusedNames = new Set(withinRange.map(r => r.id).filter((id): id is string => !!id));
     if (!isNameUsed(this.defaultName_, unusedNames)) this.defaultName_ = undefined;
     if (this.binding_) {
       if (this.binding_.type === 'named') {
@@ -115,14 +122,33 @@ export default class ImportNode extends Statement {
       !this.canMergeComments(node)
     )
       return false;
+    this.removeBindingDefault(node.defaultName_);
+    node.removeBindingDefault(this.defaultName_);
     const r1 = this.mergeBinding(node);
     const r2 = this.mergeDefaultName(node);
     return r1 && r2 && this.mergeComments(node);
   }
 
-  private withinDeclRange(pos: number) {
-    const { start, end } = this.range;
-    return start.pos <= pos && pos < end.pos;
+  checkBindingDefault() {
+    // `import A, {default as A} from 'x'` => `import A from 'x'`
+    if (this.defaultName_) this.removeBindingDefault(this.defaultName_);
+    // `import {default as A} from 'x'` => `import A from 'x'`
+    else this.defaultName_ = this.pickBindingDefault();
+  }
+
+  private removeBindingDefault(defaultName?: string) {
+    if (!defaultName || this.binding_?.type !== 'named') return;
+    this.binding_.names = this.binding_.names.filter(
+      a => a.aliasName !== defaultName || a.propertyName !== 'default',
+    );
+    if (this.binding_.names.length < 1) this.binding_ = undefined;
+  }
+
+  private pickBindingDefault() {
+    if (this.binding_?.type !== 'named') return undefined;
+    const name = this.binding_.names.find(a => a.propertyName === 'default')?.aliasName;
+    this.removeBindingDefault(name);
+    return name;
   }
 
   private mergeBinding(node: ImportNode) {
@@ -250,16 +276,8 @@ function isNameUsed(
 function getDefaultAndBinding(importClause: ImportClause | undefined) {
   if (!importClause) return { isScript: true };
   const { name, namedBindings } = importClause;
-  let defaultName = name && name.text;
+  const defaultName = name && name.text;
   const binding = getBinding(namedBindings);
-  if (!defaultName && binding?.type === 'named') {
-    const { names } = binding;
-    const i = names.findIndex(n => n.propertyName === 'default' && n.aliasName);
-    if (i >= 0) {
-      defaultName = names[i].aliasName;
-      names.splice(i, 1);
-    }
-  }
   return { defaultName, binding, isScript: false };
 }
 

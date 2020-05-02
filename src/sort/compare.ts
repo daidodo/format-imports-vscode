@@ -96,6 +96,9 @@ export function compareBindingName(a: NameBinding, b: NameBinding, compare: Comp
   else if (!b) return 1;
   const { propertyName: pa, aliasName: aa } = a;
   const { propertyName: pb, aliasName: ab } = b;
+  // 'x as default' < 'default as x' < others
+  if (aa === 'default') return ab !== 'default' ? -1 : comparePropertyName(pa, pb, compare);
+  else if (ab === 'default') return 1;
   return comparePropertyName(pa, pb, compare) || compare(aa, ab);
 }
 

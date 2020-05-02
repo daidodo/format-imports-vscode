@@ -3,14 +3,7 @@ import ImportNode from './ImportNode';
 
 export { ImportNode };
 export { ExportNode };
-export {
-  LineRange,
-  RangeAndEmptyLines,
-  Binding,
-  NameBinding,
-  NodeComment,
-  UnusedId,
-} from './types';
+export { LineRange, RangeAndEmptyLines, Binding, NameBinding, NodeComment } from './types';
 
 export { getUnusedIds } from './unused';
 
