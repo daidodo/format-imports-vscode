@@ -115,7 +115,9 @@ export default class ImportNode extends Statement {
       !this.canMergeComments(node)
     )
       return false;
-    return this.mergeBinding(node) && this.mergeDefaultName(node) && this.mergeComments(node);
+    const r1 = this.mergeBinding(node);
+    const r2 = this.mergeDefaultName(node);
+    return r1 && r2 && this.mergeComments(node);
   }
 
   private withinDeclRange(pos: number) {

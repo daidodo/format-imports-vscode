@@ -5,7 +5,7 @@ import {B} from '././b'
 import {C} from './b/c/..'
 import D = require('../c')
 import A from './b'
-import * as E from './../c'
+import F,* as E from './../c'
 import F, {H} from '.././c'
 import * as G from './b'
 import * as J from './d'
