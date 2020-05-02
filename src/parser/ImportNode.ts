@@ -138,7 +138,7 @@ export default class ImportNode extends Statement {
       }
       return false;
     } else if (b2.type === 'namespace') return false;
-    b1.names.concat(...b2.names);
+    b1.names.push(...b2.names);
     node.binding_ = undefined;
     return true;
   }
