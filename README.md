@@ -13,7 +13,7 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - [Install Plugin](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter)
 - [Open Issues](https://github.com/daidodo/tsimportsorter/issues)
 
-## Release Notes for 2.0.0
+## Release Notes for 2.0
 
 - Support formatting exports.
 - Config changes:
