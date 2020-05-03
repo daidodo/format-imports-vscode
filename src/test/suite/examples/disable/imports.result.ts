@@ -2,7 +2,7 @@ import X from 'x';
 
 // This is NOT file comments.
 //ts-import-sorter:disable
-export { X };
+const a = X;
 
 
 
