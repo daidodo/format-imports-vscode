@@ -1,6 +1,15 @@
+<!-- markdownlint-configure-file
+{
+  "no-inline-html": {
+    "allowed_elements": ["img"]
+  }
+}
+-->
+
 # JS/TS Import Sorter
 
 Automatically format imports for **JavaScript** and **TypeScript** in VSCode.
+
 - [Install Plugin](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter)
 - [Open Issues](https://github.com/daidodo/tsimportsorter/issues)
 
@@ -17,16 +26,16 @@ Automatically format imports for **JavaScript** and **TypeScript** in VSCode.
 - Respect configs from [Prettier](https://prettier.io), [EditorConfig](https://editorconfig.org) and VS Code editor settings.
 
 ## How to use
-* Auto format on save when `autoFormat` is set to `onSave` (this is the default).
-* Press shortcut keys, default to `Alt+Shift+S`.
-* Use `Sort Imports` command in the Command Palette (`Ctrl+Shift+P`).
+
+- Auto format on save when `autoFormat` is set to `onSave` (this is the default).
+- Press shortcut keys, default to `Alt+Shift+S`.
+- Use `Sort Imports` command in the Command Palette (`Ctrl+Shift+P`).
 
 <img width="600" alt="1" src="https://user-images.githubusercontent.com/8170176/77234449-674c0580-6ba6-11ea-84f4-5e02ef88a8f3.png">
 
-* Right click on editor content and select `Sort Imports`.
+- Right click on editor content and select `Sort Imports`.
 
 <img width="300" alt="3" src="https://user-images.githubusercontent.com/8170176/77234533-1c7ebd80-6ba7-11ea-9bed-dcfadaea9bdf.png">
-
 
 ## Extension Settings
 
@@ -174,14 +183,15 @@ There are a few ways to exclude files from inspection:
 
 1. Add path patterns to `exclude` or `excludeGlob` in user or workspace settings in VSCode.
   
-  ```json
-  "tsImportSorter.configuration.exclude": ["regexPattern"],
-  "tsImportSorter.configuration.excludeGlob": ["globPattern"],
-  ```
+    ```json
+    "tsImportSorter.configuration.exclude": ["regexPattern"],
+    "tsImportSorter.configuration.excludeGlob": ["globPattern"],
+    ```
 
 2. Add path patterns to `package.json` or `import-sorter.json`.
-  - _All path patterns are **merged** together instead of overwritten._
-  - _Use **forward-slash** (`/`) as path separator no matter in MacOS, *nix or Windows._
+
+    - _All path patterns are **merged** together instead of overwritten._
+    - _Use **forward-slash** (`/`) as path separator no matter in MacOS, *nix or Windows._
 
 3. Add the following comment at the beginning of the source file and keep at least one empty line from the next statement:
 
@@ -200,7 +210,8 @@ or
 ```
 
 _Note:_
-* _Excluded paths and file disable-comments are **ignored** if the formatting is triggered manually, i.e. from Command Palette, editor context menu or shortcut._
+
+- _Excluded paths and file disable-comments are **ignored** if the formatting is triggered manually, i.e. from Command Palette, editor context menu or shortcut._
 
 To exclude a specific `import` declaration from sorting, please add the following as its leading or trailing comments:
 
@@ -218,7 +229,6 @@ import Excluded from 'import/sorter'; /* ts-import-sorter: disable */
 ### Maximum names per line
 
 When deciding whether to wrap an import statement or not, JS/TS Import Sorter looks up both `maxLineLength` and the following values:
-
 
 #### `maxBindingNamesPerLine`
 
@@ -294,16 +304,19 @@ Each grouping rule applies to either:
 - Non-script imports, e.g. `import React, { FC } from 'react'`.
 
 A grouping rule defines:
+
 - Type of imports to apply: Script or non-script imports.
 - Path pattern to match.
 - [Sorting Rules](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules) for paths and names within the group.
 - Sub-groups to further adjust the order of imports.
 
 _Note:_
-* _There is NO blank lines between sub-groups._
-* _If you don't want blank lines between groups, the right way is to move groups to sub-groups._
+
+- _There is NO blank lines between sub-groups._
+- _If you don't want blank lines between groups, the right way is to move groups to sub-groups._
 
 For example, `"groupRules": ["^react$", {}, "^[.]"]` defines 3 grouping rules (and their order):
+
 - `"^react$"`: matches any *non-script* imports from exact path `"react"`.
 - `{}`: is the fall-back group, i.e. any imports that don't match any other groups will fall into this group.
 - `"^[.]"`: matches any *non-script* imports from paths starting with `"."`.
@@ -319,6 +332,7 @@ import MyInput from './MyInput';
 ```
 
 _Notes:_
+
 - _By default, script imports are in the first group if you don't explicitly define rules for them._
 - _You can define a grouping rule for script imports via, e.g. `{"flag": "scripts", "regex": "[.]css$"}`._
 
@@ -327,12 +341,14 @@ For a complete guide, please refer to [the Wiki](https://github.com/daidodo/tsim
 ### Sorting Rules
 
 You can customize sorting rules for all imports, or imports within a group, on:
-* How to compare import paths;
-* How to compare imported names;
+
+- How to compare import paths;
+- How to compare imported names;
 
 You can decide:
-* Whether to compare letters case-sensitively or -insensitively;
-* The rank among lower-case letters, upper-case letters and `'_'`;
+
+- Whether to compare letters case-sensitively or -insensitively;
+- The rank among lower-case letters, upper-case letters and `'_'`;
 
 Here is an example:
 
@@ -344,8 +360,9 @@ Here is an example:
 ```
 
 The above `["_", "aA"]` means:
-* Strings are compared case-insensitively, and lower-case goes first in case of a tie.
-* `[`, `\`, `]`, `^`, `_` and `` ` ``(backtick) are in front of letters (`[a-zA-Z]`).
+
+- Strings are compared case-insensitively, and lower-case goes first in case of a tie.
+- `[`, `\`, `]`, `^`, `_` and `` ` ``(backtick) are in front of letters (`[a-zA-Z]`).
 
 A sorted array might be `['_', 'a', 'A', 'b', 'B']`.
 
@@ -363,7 +380,8 @@ If you set `paths` to `"none"`, import statements will not be sorted.
 If you set `names` to `"none"`, names will not be sorted within an import statement.
 
 _Note:_
-* _Setting `paths` or `names` to `null` doesn't disable sorting but uses the fall-back sorting rules, i.e. `["AZ", "_", "az"]`._
+
+- _Setting `paths` or `names` to `null` doesn't disable sorting but uses the fall-back sorting rules, i.e. `["AZ", "_", "az"]`._
 
 For more details and how to construct your own rules, please read [the Wiki](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules).
 
