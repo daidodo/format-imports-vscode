@@ -6,4 +6,4 @@ import * as b from 'a';
 import * as _ from 'a';
 import * as a from 'a';
 
-export { B, c, a, b, _, A, C }
+export { B, c, a, b, _, A, C };

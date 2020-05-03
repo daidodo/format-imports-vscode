@@ -1,3 +1,4 @@
 {
-  "sortRules": { "names": ["aA", "_"] }
+  "sortRules": { "names": ["aA", "_"] },
+  "formatExports": true
 }

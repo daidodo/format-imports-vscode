@@ -1,0 +1,18 @@
+export {
+  default as a,
+  default as A,
+  default as aa,
+  default as aA,
+  default as Aa,
+  default as AA,
+  default as ab,
+  default as aB,
+  default as Ab,
+  default as AB,
+  default as b,
+  default as B,
+  default as c,
+  default as C,
+  default as d,
+  default as D,
+} from 'a';

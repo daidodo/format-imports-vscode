@@ -1,3 +1,4 @@
 {
-  "sortRules": { "names": null }
+  "sortRules": { "names": null },
+  "formatExports": true
 }

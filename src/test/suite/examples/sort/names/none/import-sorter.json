@@ -1,5 +1,6 @@
 {
   "maxBindingNamesPerLine": 0,
   "maxDefaultAndBindingNamesPerLine": 0,
-  "sortRules": { "names": "none" }
+  "sortRules": { "names": "none" },
+  "formatExports": true
 }

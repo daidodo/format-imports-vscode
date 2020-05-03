@@ -6,4 +6,4 @@ import b from 'a';
 import C from 'a';
 import c from 'a';
 
-export { B, c, a, b, _, A, C }
+export { _, A, a, B, b, C, c };

@@ -277,7 +277,9 @@
   "importSorter": {
     "excludeGlob": [
       "**/test/suite/examples/**/?(*.)origin.ts?(x)",
-      "**/test/suite/examples/**/?(*.)origin.js?(x)"
+      "**/test/suite/examples/**/?(*.)origin.js?(x)",
+      "**/test/suite/examples/**/?(*.)result.ts?(x)",
+      "**/test/suite/examples/**/?(*.)result.js?(x)"
     ]
   }
 }

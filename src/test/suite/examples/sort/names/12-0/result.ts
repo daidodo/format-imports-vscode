@@ -8,4 +8,4 @@ import {
   _,
 } from 'a';
 
-export { B, c, a, b, _, A, C }
+export { a, A, b, B, c, C, _ };

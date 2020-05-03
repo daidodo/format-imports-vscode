@@ -13,4 +13,4 @@ import {
   c,
 } from 'a';
 
-export { B, aab, c, a, BB, b, aa, aaa, _, A, BBA, C }
+export { A, B, BB, BBA, C, _, a, aa, aaa, aab, b, c };

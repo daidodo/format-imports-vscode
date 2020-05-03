@@ -1,3 +1,6 @@
 {
-  "sortRules": { "names": ["aA"] }
+  "maxBindingNamesPerLine": 0,
+  "maxDefaultAndBindingNamesPerLine": 0,
+  "sortRules": { "names": ["aA"] },
+  "formatExports": true
 }
