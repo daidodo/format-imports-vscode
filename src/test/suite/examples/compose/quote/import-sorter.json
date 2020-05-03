@@ -1,3 +1,4 @@
 {
-  "quoteMark": "single"
+  "quoteMark": "single",
+  "formatExports": true
 }

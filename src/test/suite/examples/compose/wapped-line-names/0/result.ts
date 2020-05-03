@@ -6,5 +6,8 @@ import {
   HH, II,
 } from 'b';
 
-export {A,B,C,D,E,F,G,H,I}
-export {AA, BB, CD, DD, EE, FF, GG, HH, II}
+export {
+  A, AA, B, BB, C, CD, D, DD,
+  E, EE, F, FF, G, GG, H, HH,
+  I, II,
+};

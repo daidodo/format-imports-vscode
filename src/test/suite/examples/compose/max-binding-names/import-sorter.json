@@ -1,3 +1,5 @@
 {
-  "maxBindingNamesPerLine": 3
+  "maxBindingNamesPerLine": 3,
+  "maxExportNamesPerLine": 2,
+  "formatExports": true
 }

@@ -24,4 +24,13 @@ import * as DDD from 'dddddd';
 import * as DD
   from 'dddddddd';
 
-export {A,AA,AAA,B,BB,BBB,C,CC,CCC,D,DD,DDD}
+export { A, AA, AAA, B, BBB };
+export {
+  aaaa,
+  aaaaa,
+  bbb,
+} from 'a'; //cmt
+export { a, b } from 'a';/*cmt
+xxx*/
+
+type X = C&CC&CCC&BB& D&DD&DDD;

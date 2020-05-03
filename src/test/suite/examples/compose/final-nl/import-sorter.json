@@ -1,3 +1,4 @@
 {
-  "insertFinalNewline": true
+  "insertFinalNewline": true,
+  "formatExports": true
 }

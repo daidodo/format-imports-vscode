@@ -1,4 +1,5 @@
 {
   "bracketSpacing": true,
-  "maxBindingNamesPerLine": 0
+  "maxBindingNamesPerLine": 0,
+  "formatExports": true
 }

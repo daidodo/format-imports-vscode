@@ -1,2 +1,2 @@
 'use'; 
-import A from 'a'
+   export {} 

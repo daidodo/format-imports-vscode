@@ -9,4 +9,14 @@ import {
   I,
 } from 'c';
 
-export {A,B,C,D,E,F,G,H,I}
+export {
+  a, b,
+} from 'a';
+export {
+  c, d, e,
+} from 'b';
+export {
+  A, B, C,
+  D,
+};
+type X =E&F&G&H&I

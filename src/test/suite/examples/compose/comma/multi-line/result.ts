@@ -3,4 +3,7 @@ import {
   B,
 } from 'a';
 
-export {A,B}
+export {
+  A,
+  B,
+};

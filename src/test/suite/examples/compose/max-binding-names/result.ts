@@ -6,4 +6,10 @@ import {
   G,
 } from 'b';
 
-export {A,B,C,D,E,F,G}
+export { A, B };
+type X =C&D&E&F&G
+export {
+  AA,
+  BB,
+  CC,
+} from 'a';

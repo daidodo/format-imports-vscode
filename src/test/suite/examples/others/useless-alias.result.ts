@@ -1,3 +1,3 @@
 import { A } from 'a';
 
-export {A}
+export { A, B };

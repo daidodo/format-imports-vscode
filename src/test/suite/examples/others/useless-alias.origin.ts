@@ -1,3 +1,3 @@
 import {A as A} from 'a';
 
-export {A}
+export {A, B as B}

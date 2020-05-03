@@ -9,5 +9,20 @@ import {
   GG,
 } from 'bbbbb';
 
-export {A,B,C,D,E,F,G}
-export { AA, BB, CC, DD, EE, FF, GG }
+export {
+  A,
+  AA,
+  B,
+  BB,
+  C,
+  CC,
+  D,
+  DD,
+  E,
+  EE,
+  F,
+  FF,
+  G,
+  GG,
+};
+export { aa, bb, cc } from 'a';

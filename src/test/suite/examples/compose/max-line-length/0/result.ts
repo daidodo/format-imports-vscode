@@ -3,5 +3,5 @@ import B = require('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 import { C } from 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
 import * as D from 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
 
-export {A,B,C,D}
-export {aaaaaaa,bbbbbbbbbbbb,cccccccccccccccccccccccc} from 'ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd'
+export { A, B, C, D };
+export { aaaaaaa, bbbbbbbbbbbb, cccccccccccccccccccccccc } from 'ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd';
