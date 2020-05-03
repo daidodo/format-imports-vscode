@@ -1,3 +1,5 @@
+<!-- markdownlint-disable first-line-h1 -->
+
 ### Features
 
 - Missing Option to turn off blank line after group. ([Link](https://github.com/daidodo/tsimportsorter/issues/6))
