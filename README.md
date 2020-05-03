@@ -6,7 +6,7 @@
 }
 -->
 
-# JS/TS Import Sorter
+# JS/TS Import/Export Sorter
 
 Automatically format **imports** and **exports** for **JavaScript** and **TypeScript** in VSCode.
 
