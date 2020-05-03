@@ -94,12 +94,22 @@ function compareBinding(a: Binding | undefined, b: Binding | undefined, compare:
 export function compareBindingName(a: NameBinding, b: NameBinding, compare: Comparator) {
   if (!a) return b ? -1 : 0;
   else if (!b) return 1;
+  // 'default' < 'x as default' < 'default as x' < others
+  if (isDefault(a)) return isDefault(b) ? 0 : -1;
+  else if (isDefault(b)) return 1;
   const { propertyName: pa, aliasName: aa } = a;
   const { propertyName: pb, aliasName: ab } = b;
-  // 'x as default' < 'default as x' < others
-  if (aa === 'default') return ab !== 'default' ? -1 : comparePropertyName(pa, pb, compare);
-  else if (ab === 'default') return 1;
+  if (isAsDefault(a)) return isAsDefault(b) ? comparePropertyName(pa, pb, compare) : -1;
+  else if (isAsDefault(b)) return 1;
   return comparePropertyName(pa, pb, compare) || compare(aa, ab);
+}
+
+function isDefault(a: NameBinding) {
+  return a.propertyName === 'default' && !a.aliasName;
+}
+
+function isAsDefault(a: NameBinding) {
+  return !!a.propertyName && a.aliasName === 'default';
 }
 
 /**

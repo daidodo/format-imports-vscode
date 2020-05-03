@@ -1,4 +1,5 @@
 export {
+  default,
   a as default,
   A as default,
   aa as default,
