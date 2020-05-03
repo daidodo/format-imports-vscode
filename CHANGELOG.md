@@ -4,13 +4,14 @@
 
 ### 2.0.0
 
-- Sort exports.
-- Add `"tsImportSorter.configuration.formatExports"`.
-- Add `"tsImportSorter.configuration.maxExportNamesPerLine"`.
-- `"tsImportSorter.configuration.maximumBindingNamesPerLine"` -> `"tsImportSorter.configuration.maxBindingNamesPerLine"`.
-- `"tsImportSorter.configuration.maximumDefaultAndBindingNamesPerLine"` -> `"tsImportSorter.configuration.maxDefaultAndBindingNamesPerLine"`.
-- `"tsImportSorter.configuration.maximumNamesPerWrappedLine"` -> `"tsImportSorter.configuration.maxNamesPerWrappedLine"`.
-- `"maximumLineLength"` -> `"maxLineLength"`.
+- Support formatting exports.
+- Config changes:
+  - Add `"formatExports"`.
+  - Add `"maxExportNamesPerLine"`.
+  - Rename `"maximumBindingNamesPerLine"` to `"maxBindingNamesPerLine"`.
+  - Rename `"maximumDefaultAndBindingNamesPerLine"` to `"maxDefaultAndBindingNamesPerLine"`.
+  - Rename `"maximumNamesPerWrappedLine"` to `"maxNamesPerWrappedLine"`.
+  - Rename `"maximumLineLength"` to `"maxLineLength"`.
 
 ### 1.2.6
 

@@ -13,6 +13,17 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - [Install Plugin](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter)
 - [Open Issues](https://github.com/daidodo/tsimportsorter/issues)
 
+## Release Notes for 2.0.0
+
+- Support formatting exports.
+- Config changes:
+  - Add `"formatExports"`.
+  - Add `"maxExportNamesPerLine"`.
+  - Rename `"maximumBindingNamesPerLine"` to `"maxBindingNamesPerLine"`.
+  - Rename `"maximumDefaultAndBindingNamesPerLine"` to `"maxDefaultAndBindingNamesPerLine"`.
+  - Rename `"maximumNamesPerWrappedLine"` to `"maxNamesPerWrappedLine"`.
+  - Rename `"maximumLineLength"` to `"maxLineLength"`.
+
 ## Features
 
 - Auto format imports and exports on save, or manually format with command, shortcut or context menu.
