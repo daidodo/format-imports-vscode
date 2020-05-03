@@ -8,34 +8,35 @@
 
 # JS/TS Import Sorter
 
-Automatically format imports for **JavaScript** and **TypeScript** in VSCode.
+Automatically format **imports** and **exports** for **JavaScript** and **TypeScript** in VSCode.
 
 - [Install Plugin](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter)
 - [Open Issues](https://github.com/daidodo/tsimportsorter/issues)
 
 ## Features
 
-- Auto format on save, or manually format with command / shortcut / context menu.
-- Merge imports and remove duplicated names.
-- Delete unused names, but keep `React` ([React](https://reactjs.org)) or `h` ([Stencil](https://stenciljs.com/)) if used.
+- Auto format imports and exports on save, or manually format with command, shortcut or context menu.
+- Merge imports or exports if possible, and remove duplicated names.
+- Delete unused import names, correctly handle `React` ([React](https://reactjs.org)) and `h` ([Stencil](https://stenciljs.com/)).
 - Group and sort imports by customizable rules.
+- Sort binding names in imports and exports.
 - Support multi-root projects.
-- Ignore specific files or imports.
+- Ignore specific files, imports or exports.
 - Preserve `'use strict'`, `///` directives, shebang (`#!`) and global comments, e.g. license.
-- Keep comments with imports when reordering.
+- Keep comments with imports or exports when moving.
 - Respect configs from [Prettier](https://prettier.io), [EditorConfig](https://editorconfig.org) and VS Code editor settings.
 
 ## How to use
 
 - Auto format on save when `autoFormat` is set to `onSave` (this is the default).
 - Press shortcut keys, default to `Alt+Shift+S`.
-- Use `Sort Imports` command in the Command Palette (`Ctrl+Shift+P`).
+- Use `Sort Imports/Exports` command in the Command Palette (`Ctrl+Shift+P`).
 
-<img width="600" alt="1" src="https://user-images.githubusercontent.com/8170176/77234449-674c0580-6ba6-11ea-84f4-5e02ef88a8f3.png">
+    <img width="600" alt="1" src="https://user-images.githubusercontent.com/8170176/80916196-24598200-8d4f-11ea-99f5-208f46a9dcb5.png">
 
-- Right click on editor content and select `Sort Imports`.
+- Right click on editor content and select `Sort Imports/Exports`.
 
-<img width="300" alt="3" src="https://user-images.githubusercontent.com/8170176/77234533-1c7ebd80-6ba7-11ea-9bed-dcfadaea9bdf.png">
+    <img width="350" alt="image" src="https://user-images.githubusercontent.com/8170176/80916268-874b1900-8d4f-11ea-97de-f18c52bb54c6.png">
 
 ## Extension Settings
 
@@ -45,8 +46,11 @@ All VS Code settings under `"tsImportSorter"` section and their default values:
 // Configuration file name.
 "tsImportSorter.configuration.configurationFileName": "import-sorter.json",
 
-// When to auto format imports. Valid values are 'off' or 'onSave'.
+// When to auto format imports/exports. Valid values are 'off' or 'onSave'.
 "tsImportSorter.configuration.autoFormat": "onSave",
+
+// Whether to format exports as well.
+"tsImportSorter.configuration.formatExports": true,
 
 // Disable formatting for files matching regular expressions.
 "tsImportSorter.configuration.exclude": ["node_modules"],
@@ -54,7 +58,7 @@ All VS Code settings under `"tsImportSorter"` section and their default values:
 // Disable formatting for files matching glob patterns.
 "tsImportSorter.configuration.excludeGlob": [],
 
-// Grouping rules for path patterns. {} is the fall-back group.
+// Grouping rules for path patterns for imports. {} is the fall-back group.
 "tsImportSorter.configuration.groupRules": [
   "^react(-dom)?$",
   "^@angular/",
@@ -67,14 +71,17 @@ All VS Code settings under `"tsImportSorter"` section and their default values:
 // Sorting rule for import paths. Valid values are 'none' or string array.
 "tsImportSorter.configuration.sortRules.paths": ["_", "aA"],
 
-// Sorting rule for imported names. Valid values are 'none' or string array.
+// Sorting rule for imported/exported names. Valid values are 'none' or string array.
 "tsImportSorter.configuration.sortRules.names": ["_", "aA"],
 
-// Max binding names per line before wrapping. 0 for no limit.
+// Max binding names per line before wrapping for imports. 0 for no limit.
 "tsImportSorter.configuration.maxBindingNamesPerLine": 1,
 
-// Max default and binding names per line before wrapping. 0 for no limit.
+// Max default and binding names per line before wrapping for imports. 0 for no limit.
 "tsImportSorter.configuration.maxDefaultAndBindingNamesPerLine": 2,
+
+// Max binding names per line before wrapping for exports. 0 for no limit.
+"tsImportSorter.configuration.maxExportNamesPerLine": 0,
 
 // Max names on wrapped lines. 0 for no limit.
 "tsImportSorter.configuration.maxNamesPerWrappedLine": 1,
@@ -82,7 +89,7 @@ All VS Code settings under `"tsImportSorter"` section and their default values:
 
 ## Configuration
 
-JS/TS Import Sorter reads configurations from the following sources (in precedence from high to low):
+JS/TS Import/Export Sorter reads configurations from the following sources (in precedence from high to low):
 
 - `"importSorter"` section in `package.json`
 - `import-sorter.json` (configurable)
@@ -96,8 +103,11 @@ Here are all configs in `package.json` under `"importSorter"` section and their 
 ```json
 {
   "importSorter": {
-    // When to auto format imports. Valid values are 'off' or 'onSave'.
+    // When to auto format imports/exports. Valid values are 'off' or 'onSave'.
     "autoFormat": "onSave",
+
+    // Whether to format exports as well.
+    "formatExports": true,
 
     // Disable formatting for files matching regular expressions.
     "exclude": ["node_modules"],
@@ -105,25 +115,28 @@ Here are all configs in `package.json` under `"importSorter"` section and their 
     // Disable formatting for files matching glob patterns.
     "excludeGlob": [],
 
-    // Grouping rules for path patterns. {} is the fall-back group.
+    // Grouping rules for path patterns for imports. {} is the fall-back group.
     "groupRules": ["^react(-dom)?$", "^@angular/", "^vue$", {}, "^[@]", "^[.]"],
 
     "sortRules": {
       // Sorting rule for import paths. Valid values are 'none' or string array.
       "paths": ["_", "aA"],
 
-      // Sorting rule for imported names. Valid values are 'none' or string array.
+      // Sorting rule for imported/exported names. Valid values are 'none' or string array.
       "names": ["_", "aA"]
     },
 
     // Max line length before wrapping. 0 for no limit.
     "maxLineLength": 80,
 
-    // Max binding names per line before wrapping. 0 for no limit.
+    // Max binding names per line before wrapping for imports. 0 for no limit.
     "maxBindingNamesPerLine": 1,
 
-    // Max default and binding names per line before wrapping. 0 for no limit.
+    // Max default and binding names per line before wrapping for imports. 0 for no limit.
     "maxDefaultAndBindingNamesPerLine": 2,
+
+    // Max binding names per line before wrapping for exports. 0 for no limit.
+    "maxExportNamesPerLine": 0,
 
     // Max names on wrapped lines. 0 for no limit.
     "maxNamesPerWrappedLine": 1,
@@ -165,7 +178,7 @@ Here are all configs in `package.json` under `"importSorter"` section and their 
 
 ### Multi-root projects support
 
-JS/TS Import Sorter respects [VS Code user and workspace settings](https://code.visualstudio.com/docs/getstarted/settings) and supports [multi-root workspaces](https://code.visualstudio.com/docs/editor/multi-root-workspaces).
+JS/TS Import/Export Sorter respects [VS Code user and workspace settings](https://code.visualstudio.com/docs/getstarted/settings) and supports [multi-root workspaces](https://code.visualstudio.com/docs/editor/multi-root-workspaces).
 
 `package.json` is searched in the following order:
 
@@ -177,7 +190,7 @@ JS/TS Import Sorter respects [VS Code user and workspace settings](https://code.
 
 No search is needed if `"tsImportSorter.configuration.configurationFileName"` is an absolute path, e.g. `/path/to/import-sorter.json` or `C:\path\to\import-sorter.json`.
 
-### Ignore files or import declarations
+### Ignore files or import/export declarations
 
 There are a few ways to exclude files from inspection:
 
@@ -213,7 +226,7 @@ _Note:_
 
 - _Excluded paths and file disable-comments are **ignored** if the formatting is triggered manually, i.e. from Command Palette, editor context menu or shortcut._
 
-To exclude a specific `import` declaration from sorting, please add the following as its leading or trailing comments:
+To exclude a specific `import` or `export` declaration from formatting, please add the following as its leading or trailing comments:
 
 ```ts
 // ts-import-sorter: disable
@@ -223,12 +236,16 @@ import Excluded from 'import/sorter';
 or
 
 ```ts
-import Excluded from 'import/sorter'; /* ts-import-sorter: disable */
+export { Excluded } from 'import/sorter'; /* ts-import-sorter: disable */
 ```
+
+To disable formatting for all exports, just set `"formatExports": false` in the config.
 
 ### Maximum names per line
 
-When deciding whether to wrap an import statement or not, JS/TS Import Sorter looks up both `maxLineLength` and the following values:
+Whether to wrap an `import` statement is decided by `maxBindingNamesPerLine` and `maxDefaultAndBindingNamesPerLine`, as well as `maxLineLength`.
+
+Whether to wrap an `export` statement is decided by `maxExportNamesPerLine`, as well as `maxLineLength`.
 
 #### `maxBindingNamesPerLine`
 
@@ -274,9 +291,31 @@ import D, {
 } from 'c'; // Wrapped as there are more than 2 names
 ```
 
+#### `maxExportNamesPerLine`
+
+For `export {}` or `export {} from 'x'` statements, this value determines how many names are allowed before wrapping.
+
+For example, if you set:
+
+```json
+"maxExportNamesPerLine": 2,
+```
+
+then
+
+```typescript
+export { A };             // No wrap as there is 1 name
+export { B, C } from 'b'; // No wrap as there are 2 names
+export {
+  D,
+  E,
+  F,
+} from 'c'; // Wrapped as there are more than 2 names
+```
+
 #### `maxNamesPerWrappedLine`
 
-If an import statement is wrapped, this value decides how many names there are per line.
+If an import/export statement is wrapped, this value decides how many names there are per line.
 
 For example, if you set:
 
@@ -292,11 +331,17 @@ import {
   C, D,
   E,
 } from 'a'; // There are 2 names at most per wrapped line
+
+export {
+  A, B,
+  C, D,
+  E,
+}; // There are 2 names at most per wrapped line
 ```
 
 ### Grouping Rules
 
-JS/TS Import Sorter can put imports into different groups separated by a blank line, based on the rules defined in `groupRules`.
+JS/TS Import/Export Sorter can put imports into different groups separated by a blank line, based on the rules defined in `groupRules`.
 
 Each grouping rule applies to either:
 
@@ -315,7 +360,7 @@ _Note:_
 - _There is NO blank lines between sub-groups._
 - _If you don't want blank lines between groups, the right way is to move groups to sub-groups._
 
-For example, `"groupRules": ["^react$", {}, "^[.]"]` defines 3 grouping rules (and their order):
+For example, `"groupRules": ["^react$", {}, "^[.]"]` defines 3 groups (and their order):
 
 - `"^react$"`: matches any *non-script* imports from exact path `"react"`.
 - `{}`: is the fall-back group, i.e. any imports that don't match any other groups will fall into this group.
@@ -335,15 +380,20 @@ _Notes:_
 
 - _By default, script imports are in the first group if you don't explicitly define rules for them._
 - _You can define a grouping rule for script imports via, e.g. `{"flag": "scripts", "regex": "[.]css$"}`._
+- _You CANNOT group exports. Grouping Rules are only for imports._
 
 For a complete guide, please refer to [the Wiki](https://github.com/daidodo/tsimportsorter/wiki/Grouping-Rules).
 
 ### Sorting Rules
 
-You can customize sorting rules for all imports, or imports within a group, on:
+You can customize sorting rules for all imports and exports, or imports within a group, on:
 
 - How to compare import paths;
-- How to compare imported names;
+- How to compare imported/exported names;
+
+_Note:_
+
+- _Exports will NOT be sorted based on paths. Only names within an export are sorted._
 
 You can decide:
 
@@ -377,7 +427,7 @@ You can also disable sorting by specifying `"none"` in `sortRules`, e.g.:
 
 If you set `paths` to `"none"`, import statements will not be sorted.
 
-If you set `names` to `"none"`, names will not be sorted within an import statement.
+If you set `names` to `"none"`, names will not be sorted within an import or export statement.
 
 _Note:_
 

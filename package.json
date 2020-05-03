@@ -1,6 +1,6 @@
 {
   "name": "tsimportsorter",
-  "displayName": "JS/TS Import Sorter",
+  "displayName": "JS/TS Import/Export Sorter",
   "description": "Auto format imports and exports for JavaScript and TypeScript.",
   "icon": "assets/icons/main.jpg",
   "publisher": "dozerg",
@@ -32,6 +32,7 @@
     "import",
     "export",
     "sort imports",
+    "format imports",
     "format exports",
     "multi-root ready"
   ],
@@ -69,11 +70,11 @@
     "commands": [
       {
         "command": "tsImportSorter.command.sortImports",
-        "title": "Sort Imports"
+        "title": "Sort Imports/Exports"
       }
     ],
     "configuration": {
-      "title": "JS/TS Import Sorter configuration",
+      "title": "JS/TS Import/Export Sorter configuration",
       "properties": {
         "tsImportSorter.configuration.configurationFileName": {
           "type": "string",
@@ -87,10 +88,10 @@
             "onSave"
           ],
           "default": "onSave",
-          "description": "When to auto format imports.",
+          "description": "When to auto format imports/exports.",
           "enumDescriptions": [
-            "Never auto format imports.",
-            "Auto format imports on save."
+            "Never auto format imports/exports.",
+            "Auto format imports/exports on save."
           ]
         },
         "tsImportSorter.configuration.formatExports": {
@@ -133,7 +134,7 @@
               "object"
             ]
           },
-          "markdownDescription": "Grouping rules for path patterns. See the [wiki](https://github.com/daidodo/tsimportsorter/wiki/Grouping-Rules) for more details."
+          "markdownDescription": "Grouping rules for path patterns for imports. See the [wiki](https://github.com/daidodo/tsimportsorter/wiki/Grouping-Rules) for more details."
         },
         "tsImportSorter.configuration.sortRules.paths": {
           "type": [
@@ -175,27 +176,27 @@
               "_"
             ]
           },
-          "markdownDescription": "Sorting rule for imported names. See the [wiki](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules) for more details."
+          "markdownDescription": "Sorting rule for imported/exported names. See the [wiki](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules) for more details."
         },
         "tsImportSorter.configuration.maxBindingNamesPerLine": {
           "type": "number",
           "default": 1,
-          "description": "Max binding names per line before wrapping. 0 for no limit."
+          "description": "Max binding names per line before wrapping for imports. 0 for no limit."
         },
         "tsImportSorter.configuration.maxDefaultAndBindingNamesPerLine": {
           "type": "number",
           "default": 2,
-          "description": "Max default and binding names per line before wrapping. 0 for no limit."
+          "description": "Max default and binding names per line before wrapping for imports. 0 for no limit."
         },
         "tsImportSorter.configuration.maxExportNamesPerLine": {
           "type": "number",
           "default": 0,
-          "description": "Max exported names per line before wrapping. 0 for no limit."
+          "description": "Max binding names per line before wrapping for exports. 0 for no limit."
         },
         "tsImportSorter.configuration.maxNamesPerWrappedLine": {
           "type": "number",
           "default": 1,
-          "description": "Max names on wrapped lines. 0 for no limit."
+          "description": "Max names on wrapped lines for imports/exports. 0 for no limit."
         }
       }
     }
