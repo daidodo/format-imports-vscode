@@ -13,6 +13,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+<!-- [Stacked changes]
+
+-->
+
 ## [2.0.0] - 2020-05-03
 
 ### Added
@@ -20,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support formatting exports.
 - Add `"formatExports"`.
 - Add `"maxExportNamesPerLine"`.
+- Support `'none'` as [Sorting Rules](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules).
 
 ### Changed
 
@@ -32,27 +37,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add [Sorting Rules](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules) support.
+- Support [Sorting Rules](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules).
 - Add `"tsImportSorter.configuration.sortRules.paths"`.
 - Add `"tsImportSorter.configuration.sortRules.names"`.
+- Support shebang (`#!`).
 
-## [1.2.0] - 2020-04-06
-
-### Added
-
-- Add Sub-group support.
+## [1.2.1] - 2020-04-06
 
 ### Changed
 
-- Change `"tsImportSorter.configuration.groupRules"`.
+- Change `"tsImportSorter.configuration.groupRules"` content.
 - Improve [Grouping Rules](https://github.com/daidodo/tsimportsorter/wiki/Grouping-Rules).
+- Support sub-groups.
 
 ## [1.1.0] - 2020-03-21
 
 ### Added
 
 - Command / shortcut / context menu support.
-- `"tsImportSorter.configuration.autoFormat"`.
+- Add `"tsImportSorter.configuration.autoFormat"`.
+- Support glob patterns to exclude files.
 
 ### Removed
 
@@ -60,8 +64,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2020-01-29
 
-- First stable version.
+### Added
+
+- Support regex patterns to exclude files.
+- Support comments to exclude files or imports.
+- Add Javascript support.
+- Preserve global comments and `'use strict'`.
+- Respect VS Code `editor` config.
+- Respect Prettier and EditorConfig config.
+- Support multi-root projects.
 
 ## [0.0.2] - 2020-01-18
 
-- First version with full functionality.
+### Added
+
+- Auto sort on save. No need for commands or clicks.
+- Auto merge imports, deduplicate names.
+- Auto delete unused names and handle `React` with JSX properly.
+- Group by customizable rules.
+- Preserve leading and trailing comments with imports.
+- Support config both in `package.json` and `import-sorter.json`.
