@@ -96,10 +96,7 @@ function composeNames(
 function composeName(name: NameBinding | undefined) {
   if (!name) return;
   const { propertyName, aliasName } = name;
-  if (propertyName)
-    return aliasName && aliasName !== propertyName
-      ? `${propertyName} as ${aliasName}`
-      : propertyName;
+  if (propertyName) return aliasName ? `${propertyName} as ${aliasName}` : propertyName;
   assertNonNull(aliasName);
   return `* as ${aliasName}`;
 }

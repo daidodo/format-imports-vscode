@@ -19,6 +19,7 @@ import {
 import Statement, { StatementArgs } from './Statement';
 import {
   Binding,
+  getNameBinding,
   NameBinding,
 } from './types';
 
@@ -284,11 +285,6 @@ function getDefaultAndBinding(importClause: ImportClause | undefined) {
 function getBinding(nb: NamedImportBindings | undefined): Binding | undefined {
   if (!nb) return undefined;
   if (nb.kind === SyntaxKind.NamespaceImport) return { type: 'namespace', alias: nb.name.text };
-  const names = nb.elements.map(e => {
-    const { name, propertyName } = e;
-    return propertyName
-      ? { aliasName: name.text, propertyName: propertyName.text }
-      : { propertyName: name.text };
-  });
+  const names = nb.elements.map(getNameBinding);
   return names.length < 1 ? undefined : { type: 'named', names };
 }

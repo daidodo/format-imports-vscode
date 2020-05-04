@@ -1,4 +1,7 @@
-import { LineAndCharacter } from 'typescript';
+import {
+  Identifier,
+  LineAndCharacter,
+} from 'typescript';
 
 export type Binding =
   | {
@@ -34,4 +37,13 @@ export interface RangeAndEmptyLines extends LineRange {
   trailingNewLines: number;
   fullEnd: Pos;
   eof: boolean;
+}
+
+export function getNameBinding(specifier: {
+  propertyName?: Identifier;
+  name: Identifier;
+}): NameBinding {
+  const { text: name } = specifier.name;
+  const prop = specifier.propertyName?.text;
+  return prop && prop !== name ? { aliasName: name, propertyName: prop } : { propertyName: name };
 }
