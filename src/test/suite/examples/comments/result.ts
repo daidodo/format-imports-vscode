@@ -25,6 +25,7 @@ import C from 'C'; /* statement comment 2 */
 export { A, B }; // Tail 1
 // Head 2
 export { C }; // Tail 2
+
 // Head 3
 export { D, E };  // Tail 3
 // Disable comment 3

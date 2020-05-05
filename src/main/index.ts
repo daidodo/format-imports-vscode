@@ -46,7 +46,7 @@ export default function formatSource(
   const sorter = sorterFromRules(config.sortRules);
   const text = formatImports(importNodes, point, unusedIds, config, composeConfig, sorter);
   if (text && point) editManager.insert({ range: point, text, trailingNewLines: 2 });
-  const edits = formatExports(exportNodes, config, composeConfig, sorter);
+  const edits = formatExports(exportNodes, composeConfig, sorter);
   edits.forEach(e => editManager.insert(e));
 
   return apply(sourceText, sourceFile, editManager.generateEdits(composeConfig));
@@ -67,15 +67,16 @@ function formatImports(
   return groups.compose(composeConfig, nl + nl);
 }
 
-function formatExports(
-  exportNodes: ExportNode[],
-  config: Configuration,
-  composeConfig: ComposeConfig,
-  sorter: Sorter,
-) {
+function formatExports(exportNodes: ExportNode[], composeConfig: ComposeConfig, sorter: Sorter) {
   if (!exportNodes.length) return [];
   sortExports(exportNodes, sorter.compareNames);
   return exportNodes
     .filter(n => !n.empty())
-    .map(n => ({ range: n.range, text: n.compose(composeConfig) }));
+    .map(n => {
+      const { range } = n;
+      const { leadingNewLines: ln, trailingNewLines: tn } = range;
+      const leadingNewLines = Math.min(ln, 2);
+      const trailingNewLines = Math.min(tn, 2);
+      return { range, text: n.compose(composeConfig), leadingNewLines, trailingNewLines };
+    });
 }
