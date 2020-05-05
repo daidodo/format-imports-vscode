@@ -44,7 +44,7 @@ export default function formatSource(
   if (editManager.empty()) return undefined;
   const composeConfig = configForCompose(config);
   const unusedIds = () =>
-    getUnusedIds(allIds, importNodes, fileName, sourceFile, sourceText, tsCompilerOptions);
+    getUnusedIds(allIds, importNodes, fileName, sourceFile, tsCompilerOptions);
   const sorter = sorterFromRules(config.sortRules);
   const text = formatImports(importNodes, point, unusedIds, config, composeConfig, sorter);
   if (text && point) editManager.insert({ range: point, text, trailingNewLines: 2 });
