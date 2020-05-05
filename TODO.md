@@ -2,7 +2,7 @@
 
 ### Features
 
-- Missing Option to turn off blank line after group. ([Link](https://github.com/daidodo/tsimportsorter/issues/6))
+- Debug logs, open issue template, easy way to copy/paste logs for bug fix.
 - Write CONTRIBUTING.md.
 - Group level comments. ([Link](https://github.com/SoominHan/import-sorter/issues/46))
 - Support ESLint plugin import/order. ([Link](https://github.com/SoominHan/import-sorter/issues/43))
