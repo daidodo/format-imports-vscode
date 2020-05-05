@@ -10,6 +10,7 @@ import {
 export default class ParseParams {
   readonly sourceFile: SourceFile;
   readonly sourceText: string;
+  readonly allIds = new Set<string>();
 
   readonly importNodes: ImportNode[] = [];
   // If 'range' is undefined, insert imports before the first ImportNode.

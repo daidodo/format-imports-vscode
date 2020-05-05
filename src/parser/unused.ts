@@ -8,6 +8,12 @@ import ts, {
 
 import ImportNode from './ImportNode';
 
+export interface NameUsage {
+  usedNames?: Set<string>;
+  unusedNames?: Set<string>;
+  unusedNodes?: ImportNode[];
+}
+
 enum UnusedCode {
   SINGLE_1 = 6133,
   SINGLE_2 = 6196,
@@ -15,12 +21,13 @@ enum UnusedCode {
 }
 
 export function getUnusedIds(
+  allIds: Set<string>,
   importNodes: ImportNode[],
   fileName: string,
   sourceFile: SourceFile,
   sourceText: string,
   tsCompilerOptions?: CompilerOptions,
-) {
+): NameUsage {
   const UNUSED_CODE = new Set(
     Object.values(UnusedCode).filter((v): v is number => typeof v === 'number'),
   );
@@ -29,11 +36,15 @@ export function getUnusedIds(
   const options = prepareOptions(tsCompilerOptions);
   const host = mockHost(fileName, sourceFile, sourceText, options);
   const program = ts.createProgram([fileName], options, host);
-  // https://github.com/microsoft/TypeScript/wiki/API-Breaking-Changes#program-interface-changes
-  program
-    .getSemanticDiagnostics(sourceFile)
-    .filter(m => m.file === sourceFile && UNUSED_CODE.has(m.code))
-    .forEach(m => transform(m, importNodes, unusedNames, unusedNodes));
+  try {
+    // https://github.com/microsoft/TypeScript/wiki/API-Breaking-Changes#program-interface-changes
+    program
+      .getSemanticDiagnostics(sourceFile)
+      .filter(m => m.file === sourceFile && UNUSED_CODE.has(m.code))
+      .forEach(m => transform(m, importNodes, unusedNames, unusedNodes));
+  } catch (e) {
+    return { usedNames: allIds };
+  }
   return { unusedNames, unusedNodes };
 }
 

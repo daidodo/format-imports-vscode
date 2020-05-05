@@ -16,6 +16,7 @@ import {
   ExportNode,
   getUnusedIds,
   ImportNode,
+  NameUsage,
   parseSource,
   RangeAndEmptyLines,
 } from '../parser';
@@ -33,16 +34,17 @@ export default function formatSource(
   tsCompilerOptions?: CompilerOptions,
 ) {
   const sourceFile = ts.createSourceFile(fileName, sourceText, ScriptTarget.Latest);
-  const { importNodes, importsInsertPoint: point, exportNodes } = parseSource(
+  const { importNodes, importsInsertPoint: point, exportNodes, allIds } = parseSource(
     sourceFile,
     sourceText,
     config,
+    tsCompilerOptions,
   );
   const editManager = new EditManager([...importNodes, ...exportNodes]);
   if (editManager.empty()) return undefined;
   const composeConfig = configForCompose(config);
   const unusedIds = () =>
-    getUnusedIds(importNodes, fileName, sourceFile, sourceText, tsCompilerOptions);
+    getUnusedIds(allIds, importNodes, fileName, sourceFile, sourceText, tsCompilerOptions);
   const sorter = sorterFromRules(config.sortRules);
   const text = formatImports(importNodes, point, unusedIds, config, composeConfig, sorter);
   if (text && point) editManager.insert({ range: point, text, trailingNewLines: 2 });
@@ -55,14 +57,13 @@ export default function formatSource(
 function formatImports(
   importNodes: ImportNode[],
   insertPoint: RangeAndEmptyLines | undefined,
-  unusedIds: () => { unusedNames: Set<string>; unusedNodes: ImportNode[] },
+  unusedIds: () => NameUsage,
   config: Configuration,
   composeConfig: ComposeConfig,
   sorter: Sorter,
 ) {
   if (!insertPoint || !importNodes.length) return undefined;
-  const { unusedNames, unusedNodes } = unusedIds();
-  const groups = sortImports(importNodes, unusedNames, unusedNodes, config, sorter);
+  const groups = sortImports(importNodes, unusedIds(), config, sorter);
   const { nl } = composeConfig;
   return groups.compose(composeConfig, nl + nl);
 }

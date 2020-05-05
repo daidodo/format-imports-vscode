@@ -1,4 +1,5 @@
 import {
+  CompilerOptions,
   ExportDeclaration,
   ExpressionStatement,
   ImportDeclaration,
@@ -19,15 +20,20 @@ import {
 import ParseParams from './ParseParams';
 import { RangeAndEmptyLines } from './types';
 
-export function parseSource(sourceFile: SourceFile, sourceText: string, config: Configuration) {
+export function parseSource(
+  sourceFile: SourceFile,
+  sourceText: string,
+  config: Configuration,
+  options?: CompilerOptions,
+) {
   const p = new ParseParams(sourceFile, sourceText);
   const [syntaxList] = sourceFile.getChildren();
   if (syntaxList && syntaxList.kind === SyntaxKind.SyntaxList)
-    for (const node of syntaxList.getChildren()) if (!process(node, p, config)) break;
+    for (const node of syntaxList.getChildren()) if (!process(node, p, config, options)) break;
   return p;
 }
 
-function process(node: Node, p: ParseParams, config: Configuration) {
+function process(node: Node, p: ParseParams, config: Configuration, options?: CompilerOptions) {
   const { force, formatExports } = config;
   const {
     fileComments,
@@ -66,7 +72,7 @@ function process(node: Node, p: ParseParams, config: Configuration) {
     p.addImport(n);
     p.updateImportInsertPoint(range);
   } else {
-    // parseId(node, p);
+    parseId(node, p, options);
     p.updateImportInsertPoint(range);
     if (formatExports && !disabled && node.kind === SyntaxKind.ExportDeclaration) {
       const n = ExportNode.fromDecl(node as ExportDeclaration, a);
@@ -85,7 +91,8 @@ function process(node: Node, p: ParseParams, config: Configuration) {
  *
  * Keep the code just for regression purposes.
  * @deprecated In favor to TS compiler error/warning messages.
-function parseId(node: Node, p: Params) {
+ */
+function parseId(node: Node, p: ParseParams, options?: CompilerOptions) {
   const { sourceFile, allIds } = p;
   switch (node.kind) {
     case SyntaxKind.Identifier:
@@ -94,14 +101,12 @@ function parseId(node: Node, p: Params) {
     case SyntaxKind.JsxElement:
     case SyntaxKind.JsxSelfClosingElement:
     case SyntaxKind.JsxFragment:
-      // This is NOT always true with StencilJS.
       // See: https://github.com/ionic-team/stencil/blob/master/BREAKING_CHANGES.md#import--h--is-required
-      allIds.add('React');
+      allIds.add(options?.jsxFactory === 'h' ? 'h' : 'React');
       break;
   }
-  node.forEachChild(n => parseId(n, p));
+  node.forEachChild(n => parseId(n, p, options));
 }
- */
 
 function isUseStrict(node: Node) {
   if (node.kind !== SyntaxKind.ExpressionStatement) return false;

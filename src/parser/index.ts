@@ -1,10 +1,7 @@
 import ExportNode from './ExportNode';
 import ImportNode from './ImportNode';
 
-export { ImportNode };
-export { ExportNode };
-export { LineRange, RangeAndEmptyLines, Binding, NameBinding, NodeComment } from './types';
-
-export { getUnusedIds } from './unused';
-
+export { ExportNode, ImportNode };
+export { Binding, LineRange, NameBinding, NodeComment, RangeAndEmptyLines } from './types';
+export { getUnusedIds, NameUsage } from './unused';
 export { parseSource } from './parser';
