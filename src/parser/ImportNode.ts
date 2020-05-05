@@ -33,7 +33,7 @@ export default class ImportNode extends Statement {
 
   static fromDecl(node: ImportDeclaration, args: StatementArgs) {
     const { importClause, moduleSpecifier } = node;
-    if (moduleSpecifier.kind !== SyntaxKind.StringLiteral) return undefined;
+    if (!moduleSpecifier || moduleSpecifier.kind !== SyntaxKind.StringLiteral) return undefined;
     const moduleIdentifier = (moduleSpecifier as StringLiteral).text;
     if (!moduleIdentifier.trim()) return undefined;
     const { defaultName, binding, isScript } = getDefaultAndBinding(importClause);
@@ -42,9 +42,10 @@ export default class ImportNode extends Statement {
 
   static fromEqDecl(node: ImportEqualsDeclaration, args: StatementArgs) {
     const { moduleReference } = node;
-    if (moduleReference.kind !== SyntaxKind.ExternalModuleReference) return undefined;
+    if (!moduleReference || moduleReference.kind !== SyntaxKind.ExternalModuleReference)
+      return undefined;
     const { expression } = moduleReference;
-    if (expression.kind !== SyntaxKind.StringLiteral) return undefined;
+    if (!expression || expression.kind !== SyntaxKind.StringLiteral) return undefined;
     const moduleIdentifier = (expression as StringLiteral).text;
     const defaultName = node.name.text;
     return new ImportNode(node, moduleIdentifier, args, defaultName);

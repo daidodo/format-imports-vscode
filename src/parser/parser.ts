@@ -106,6 +106,6 @@ function parseId(node: Node, p: Params) {
 function isUseStrict(node: Node) {
   if (node.kind !== SyntaxKind.ExpressionStatement) return false;
   const { expression } = node as ExpressionStatement;
-  if (expression.kind !== SyntaxKind.StringLiteral) return false;
+  if (!expression || expression.kind !== SyntaxKind.StringLiteral) return false;
   return (expression as StringLiteral).text === 'use strict';
 }

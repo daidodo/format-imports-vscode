@@ -14,7 +14,7 @@ import {
 
 export { GroupRule } from './grouping';
 export { SegSymbol, SortRule, SortRules } from './sorting';
-export { Configuration, ComposeConfig };
+export { ComposeConfig, Configuration };
 
 export default function loadConfig(
   fileUri: Uri,
