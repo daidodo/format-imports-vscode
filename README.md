@@ -111,7 +111,7 @@ JS/TS Import/Export Sorter reads configurations from the following sources (in p
 
 Here are all configs in `package.json` under `"importSorter"` section and their default values:
 
-```json
+```javascript
 {
   "importSorter": {
     // When to auto format imports/exports. Valid values are 'off' or 'onSave'.
