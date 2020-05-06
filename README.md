@@ -366,7 +366,7 @@ A grouping rule defines:
 - [Sorting Rules](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules) for paths and names within the group.
 - Sub-groups to further adjust the order of imports.
 
-_Note:_
+_Notes:_
 
 - _There is NO blank lines between sub-groups._
 - _If you don't want blank lines between groups, the right way is to move groups to sub-groups._
@@ -391,7 +391,7 @@ _Notes:_
 
 - _By default, script imports are in the first group if you don't explicitly define rules for them._
 - _You can define a grouping rule for script imports via, e.g. `{"flag": "scripts", "regex": "[.]css$"}`._
-- _You CANNOT group exports. Grouping Rules are only for imports._
+- _Exports will NOT be grouped. Grouping Rules are only for imports._
 
 For a complete guide, please refer to [the Wiki](https://github.com/daidodo/tsimportsorter/wiki/Grouping-Rules).
 
