@@ -13,7 +13,9 @@ import {
 } from './types';
 
 export { GroupRule } from './grouping';
+
 export { SegSymbol, SortRule, SortRules } from './sorting';
+
 export { ComposeConfig, Configuration };
 
 export default function loadConfig(

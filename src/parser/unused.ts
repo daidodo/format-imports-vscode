@@ -3,9 +3,9 @@ import ts, {
   CompilerOptions,
   Diagnostic,
   SourceFile,
-  sys,
 } from 'typescript';
 
+import { normalizePath } from '../utils';
 import ImportNode from './ImportNode';
 
 export interface NameUsage {
@@ -25,7 +25,6 @@ export function getUnusedIds(
   importNodes: ImportNode[],
   fileName: string,
   sourceFile: SourceFile,
-  sourceText: string,
   tsCompilerOptions?: CompilerOptions,
 ): NameUsage {
   const UNUSED_CODE = new Set(
@@ -34,12 +33,12 @@ export function getUnusedIds(
   const unusedNames = new Set<string>();
   const unusedNodes = Array<ImportNode>();
   const options = prepareOptions(tsCompilerOptions);
-  const host = mockHost(fileName, sourceFile, sourceText, options);
+  const host = mockHost(fileName, sourceFile, options);
   const program = ts.createProgram([fileName], options, host);
   try {
     // https://github.com/microsoft/TypeScript/wiki/API-Breaking-Changes#program-interface-changes
     program
-      .getSemanticDiagnostics(sourceFile)
+      .getSemanticDiagnostics()
       .filter(m => m.file === sourceFile && UNUSED_CODE.has(m.code))
       .forEach(m => transform(m, importNodes, unusedNames, unusedNodes));
   } catch (e) {
@@ -61,20 +60,16 @@ function prepareOptions(options?: CompilerOptions): CompilerOptions {
 function mockHost(
   fileName: string,
   sourceFile: SourceFile,
-  sourceText: string,
   options: CompilerOptions,
 ): CompilerHost {
+  const host = ts.createCompilerHost(options);
+  // Normalize the path before comparing because it can be both '/' and '\' in Windows
+  const fn = normalizePath(fileName);
   return {
-    fileExists: fn => fn === fileName,
-    readFile: fn => (fn === fileName ? sourceText : undefined),
-    getSourceFile: fn => (fn === fileName ? sourceFile : undefined),
-    getDefaultLibFileName: () => ts.getDefaultLibFileName(options),
-    writeFile: () => undefined,
-    getCurrentDirectory: () => '',
-    getDirectories: () => [],
-    getCanonicalFileName: fn => (sys.useCaseSensitiveFileNames ? fn : fn.toLowerCase()),
-    useCaseSensitiveFileNames: () => sys.useCaseSensitiveFileNames,
-    getNewLine: () => '\n',
+    ...host,
+    getSourceFile: f => (normalizePath(f) === fn ? sourceFile : undefined),
+    // The following costs significant performance:
+    // normalizePath(f) === fn ? sourceFile : getSourceFile(f, l, e, c),
   };
 }
 

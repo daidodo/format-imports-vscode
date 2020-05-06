@@ -27,11 +27,11 @@
 
 ### Bugs
 
-- Test `unused/deep` fails on Windows 10 + VS Code 1.42.1.
 - Inner comments are removed after formatting. E.g. `import A /*inner comment*/ from 'a'`.
 
 ### DONE
 
+- ~~Test `unused/deep` fails on Windows 10 + VS Code 1.42.1.~~
 - ~~Unit tests.~~
 - ~~Sort exports. ([Link](https://github.com/daidodo/tsimportsorter/issues/6#issuecomment-619185391), [Doc](https://github.com/tc39/proposal-export-ns-from))~~
 - ~~Required `h` import missing (StencilJS). ([Link](https://gitlab.com/smartive-private/christoph/typescript-hero/-/issues/488))~~

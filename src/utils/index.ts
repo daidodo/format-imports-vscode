@@ -13,7 +13,7 @@ export function assertNonNull<T>(value: T, message?: string): asserts value is N
 
 export function normalizePath(str: string | undefined | null) {
   if (!str) return '';
-  const r = path.normalize(str.replace(/\\/g, '/'));
+  const r = path.normalize(str.replace(/\\/g, '/')).replace(/\\/g, '/');
   return !str.startsWith('.')
     ? r
     : !r.startsWith('.')
