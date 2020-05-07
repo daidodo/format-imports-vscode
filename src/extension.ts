@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/camelcase */
+
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import {
   commands,
   ExtensionContext,
+  OutputChannel,
   Range,
   TextDocument,
   TextDocumentWillSaveEvent,
@@ -13,11 +16,20 @@ import {
 } from 'vscode';
 
 import loadConfig, { isExcluded } from './config';
+import {
+  initLog,
+  uninitLog,
+} from './log';
 import formatSource from './main';
+
+let g_vscChannel: OutputChannel;
 
 // This method is called when your extension is activated.
 // Your extension is activated the very first time the command is executed.
 export function activate(context: ExtensionContext) {
+  g_vscChannel = window.createOutputChannel('JS/TS Import/Export Sorter');
+  initLog(g_vscChannel);
+
   const sortCommand = commands.registerTextEditorCommand(
     'tsImportSorter.command.sortImports',
     sortImportsByCommand,
@@ -40,7 +52,10 @@ export function activate(context: ExtensionContext) {
 }
 
 // this method is called when your extension is deactivated
-// export function deactivate() {}
+export function deactivate() {
+  uninitLog();
+  g_vscChannel.dispose();
+}
 
 function sortImportsByCommand(editor: TextEditor) {
   if (!editor) return;

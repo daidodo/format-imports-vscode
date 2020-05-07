@@ -205,6 +205,7 @@
   "dependencies": {
     "editorconfig": "^0.15.3",
     "lodash.clonedeep": "^4.5.0",
+    "log4js": "^6.2.1",
     "minimatch": "^3.0.4",
     "prettier": "^2.0.5",
     "typescript": "^3.8.3"
@@ -229,7 +230,8 @@
   "prettier": {
     "singleQuote": true,
     "trailingComma": "all",
-    "printWidth": 100
+    "printWidth": 100,
+    "arrowParens": "avoid"
   },
   "eslintConfig": {
     "root": true,
