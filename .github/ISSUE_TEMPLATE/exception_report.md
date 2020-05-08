@@ -1,12 +1,3 @@
----
-name: Exception report
-about: Encounter an exception and report to us.
-title: ''
-labels: ''
-assignees: ''
-
----
-
 **Code snippet triggering the exception**
 ```ts
 ```
