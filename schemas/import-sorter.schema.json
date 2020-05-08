@@ -35,9 +35,9 @@
     },
     "sortRules": {
       "$ref": "#/$def/sortRules",
-      "properties": {
-        "paths": { "default": ["_", "aA"] },
-        "names": { "default": ["_", "aA"] }
+      "default": {
+        "paths": ["_", "aA"],
+        "names": ["_", "aA"]
       }
     },
     "maxBindingNamesPerLine": {
@@ -111,14 +111,15 @@
     }
   },
   "$def": {
-    "sortNone": { "type": "string", "enum": ["none"] },
     "sortSegment": { "type": "string", "enum": ["az", "AZ", "aA", "Aa", "_"] },
     "sortSegments": {
       "type": "array",
       "items": { "$ref": "#/$def/sortSegment" },
       "uniqueItems": true
     },
-    "sortRule": { "oneOf": [{ "$ref": "#/$def/sortNone" }, { "$ref": "#/$def/sortSegments" }] },
+    "sortRule": {
+      "oneOf": [{ "type": "string", "enum": ["none"] }, { "$ref": "#/$def/sortSegments" }]
+    },
     "sortRules": {
       "type": "object",
       "properties": {
@@ -153,7 +154,8 @@
     },
     "groupRules": {
       "type": "array",
-      "items": { "$ref": "#/$def/groupRule" }
+      "items": { "$ref": "#/$def/groupRule" },
+      "uniqueItems": true
     }
   }
 }
