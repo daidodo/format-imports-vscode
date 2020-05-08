@@ -7,7 +7,6 @@
 - Group level comments. ([Link](https://github.com/SoominHan/import-sorter/issues/46))
 - Support ESLint plugin import/order. ([Link](https://github.com/SoominHan/import-sorter/issues/43))
 - Import namespace alias. ([Link](https://github.com/SoominHan/import-sorter/issues/29))
-- Add config json schema.
 - Feature Request - Standalone CLI version. ([Link](https://github.com/SoominHan/import-sorter/issues/57))
 - Add a "sort-imports.on-focus-change" sorting option. ([Link](https://github.com/amatiasq/vsc-sort-imports/issues/30))
 - Format files within a directory.
@@ -31,6 +30,7 @@
 
 ### DONE
 
+- ~~Add config json schema.~~
 - ~~Debug logs, open issue template, easy way to copy/paste logs for bug fix.~~
 - ~~Test `unused/deep` fails on Windows 10 + VS Code 1.42.1.~~
 - ~~Unit tests.~~
