@@ -368,7 +368,7 @@ A grouping rule defines:
 
 _Notes:_
 
-- _There is NO blank lines between sub-groups._
+- _There are NO blank lines between sub-groups._
 - _If you don't want blank lines between groups, the right way is to move groups to sub-groups._
 
 For example, `"groupRules": ["^react$", {}, "^[.]"]` defines 3 groups (and their order):
