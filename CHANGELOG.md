@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add `"formatExports"`.
 - Add `"maxExportNamesPerLine"`.
 - Support `'none'` as [Sorting Rules](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules).
+- Support `h` ([Stencil](https://stenciljs.com/)).
 
 ### Changed
 
