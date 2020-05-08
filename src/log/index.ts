@@ -1,11 +1,6 @@
 import log4js from 'log4js';
 import { OutputChannel } from 'vscode';
 
-import {
-  extensionsInfo,
-  osInfo,
-  vscodeInfo,
-} from '../env';
 import { getAppenderModule } from './channel';
 
 export function initLog(channel: OutputChannel) {
@@ -28,9 +23,6 @@ export function initLog(channel: OutputChannel) {
     },
     categories: { default: { appenders: ['vscChannel'], level: 'debug', enableCallStack: true } },
   });
-  logger().info('os:', osInfo());
-  logger().info('vscode:', vscodeInfo());
-  logger().info('extensions:', extensionsInfo());
 }
 
 export function logger(category?: string) {

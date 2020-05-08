@@ -11,6 +11,7 @@ import {
 } from 'typescript';
 
 import { Configuration } from '../config';
+import { logger } from '../log';
 import ExportNode from './ExportNode';
 import ImportNode from './ImportNode';
 import {
@@ -48,7 +49,10 @@ function process(node: Node, p: ParseParams, config: Configuration, options?: Co
     fullEnd,
     eof,
   } = parseLineRanges(node, p);
-  if (!force && isDisabled(fileComments)) return false; // File is disabled
+  if (!force && isDisabled(fileComments)) {
+    logger('parser.process').info('Disable comment found. Ignoring file.');
+    return false;
+  }
   if (isUseStrict(node)) return true; // Skip 'use strict' directive
   p.checkFileComments = false; // No more checks for global comments after non-'use strict' statement
   const range: RangeAndEmptyLines = {

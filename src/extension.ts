@@ -17,7 +17,13 @@ import {
 
 import loadConfig, { isExcluded } from './config';
 import {
+  extensionsInfo,
+  osInfo,
+  vscodeInfo,
+} from './env';
+import {
   initLog,
+  logger,
   uninitLog,
 } from './log';
 import formatSource from './main';
@@ -29,6 +35,9 @@ let g_vscChannel: OutputChannel;
 export function activate(context: ExtensionContext) {
   g_vscChannel = window.createOutputChannel('JS/TS Import/Export Sorter');
   initLog(g_vscChannel);
+  logger().info('os:', osInfo());
+  logger().info('vscode:', vscodeInfo());
+  logger().info('extensions:', extensionsInfo());
 
   const sortCommand = commands.registerTextEditorCommand(
     'tsImportSorter.command.sortImports',
@@ -74,13 +83,21 @@ function sortImportsBeforeSavingDocument(event: TextDocumentWillSaveEvent) {
 }
 
 function formatDocument(document: TextDocument, force?: boolean) {
+  const log = logger('formatDocument');
   if (!isSupported(document)) return undefined;
   const { uri: fileUri, languageId, eol } = document;
   const { fsPath: fileName } = fileUri;
   try {
     const { config, tsCompilerOptions } = loadConfig(fileUri, languageId, eol, force);
     if (!force && config.autoFormat !== 'onSave') return undefined;
-    if (isExcluded(fileName, config)) return undefined;
+    log.info('config:', config);
+    log.info('tsCompilerOptions:', tsCompilerOptions);
+    if (isExcluded(fileName, config)) {
+      const { exclude, excludeGlob } = config;
+      log.info('Excluding fileName:', fileName, 'via config:', { exclude, excludeGlob });
+      return undefined;
+    }
+    log.info('fileName:', fileName);
     const sourceText = document.getText();
     const newText = formatSource(fileName, sourceText, config, tsCompilerOptions);
     return newText === sourceText ? undefined : newText;

@@ -12,6 +12,7 @@ import {
   apply,
   EditManager,
 } from '../edit';
+import { logger } from '../log';
 import {
   ExportNode,
   getUnusedIds,
@@ -33,6 +34,7 @@ export default function formatSource(
   config: Configuration,
   tsCompilerOptions?: CompilerOptions,
 ) {
+  const log = logger('parser.formatSource');
   const sourceFile = ts.createSourceFile(fileName, sourceText, ScriptTarget.Latest);
   const { importNodes, importsInsertPoint: point, exportNodes, allIds } = parseSource(
     sourceFile,
@@ -41,8 +43,12 @@ export default function formatSource(
     tsCompilerOptions,
   );
   const editManager = new EditManager([...importNodes, ...exportNodes]);
-  if (editManager.empty()) return undefined;
+  if (editManager.empty()) {
+    log.info('No sortable imports or exports found. Skipping file.');
+    return undefined;
+  }
   const composeConfig = configForCompose(config);
+  log.info('composeConfig:', composeConfig);
   const unusedIds = () =>
     getUnusedIds(allIds, importNodes, fileName, sourceFile, tsCompilerOptions);
   const sorter = sorterFromRules(config.sortRules);
