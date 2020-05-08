@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
 
+import { URLSearchParams } from 'url';
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import {
@@ -11,6 +12,7 @@ import {
   TextDocumentWillSaveEvent,
   TextEdit,
   TextEditor,
+  Uri,
   window,
   workspace,
 } from 'vscode';
@@ -82,6 +84,9 @@ function sortImportsBeforeSavingDocument(event: TextDocumentWillSaveEvent) {
   event.waitUntil(Promise.resolve([TextEdit.replace(fullRange(document), newSourceText)]));
 }
 
+const ISSUE_URL =
+  'https://github.com/daidodo/tsimportsorter/issues/new?assignees=&labels=&template=exception_report.md&';
+
 function formatDocument(document: TextDocument, force?: boolean) {
   const log = logger('formatDocument');
   if (!isSupported(document)) return undefined;
@@ -100,12 +105,22 @@ function formatDocument(document: TextDocument, force?: boolean) {
     log.info('fileName:', fileName);
     const sourceText = document.getText();
     const newText = formatSource(fileName, sourceText, config, tsCompilerOptions);
-    return newText === sourceText ? undefined : newText;
+    const ret = newText === sourceText ? undefined : newText;
+    log.info(`Finished format${ret === undefined ? ' with no-op.' : '.'}`);
+    return ret;
   } catch (e) {
-    window.showErrorMessage(
-      `Error found: ${e.message}.
-      If you believe this is a bug, please report on https://github.com/daidodo/tsimportsorter`,
-    );
+    log.error('Found exception:', e);
+    window
+      .showErrorMessage(
+        'Something is wrong. Please view & copy the logs and report a bug.',
+        'View logs & Report',
+      )
+      .then(v => {
+        if (!v) return;
+        g_vscChannel.show();
+        const p = new URLSearchParams({ title: `Exception: ${e.message}` });
+        commands.executeCommand('vscode.open', Uri.parse(ISSUE_URL + p));
+      });
   }
   return undefined;
 }

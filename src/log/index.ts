@@ -11,14 +11,14 @@ export function initLog(channel: OutputChannel) {
         layoutNormal: {
           type: 'basic',
         },
-        layoutError: {
-          type: 'pattern',
-          pattern: '[%d] [%p] %c - %m (%f:%l)',
-        },
-        layoutCritical: {
-          type: 'pattern',
-          pattern: '[%d] [%p] %c - %m%n%s',
-        },
+        // layoutError: {
+        //   type: 'pattern',
+        //   pattern: '[%d] [%p] %c - %m (%f:%l)',
+        // },
+        // layoutCritical: {
+        //   type: 'pattern',
+        //   pattern: '[%d] [%p] %c - %m%n%s',
+        // },
       },
     },
     categories: { default: { appenders: ['vscChannel'], level: 'debug', enableCallStack: true } },
