@@ -76,7 +76,7 @@ function process(node: Node, p: ParseParams, config: Configuration, options?: Co
     p.addImport(n);
     p.updateImportInsertPoint(range);
   } else {
-    parseId(node, p, options);
+    // parseId(node, p, options);
     p.updateImportInsertPoint(range);
     if (formatExports && !disabled && node.kind === SyntaxKind.ExportDeclaration) {
       const n = ExportNode.fromDecl(node as ExportDeclaration, a);
@@ -95,7 +95,6 @@ function process(node: Node, p: ParseParams, config: Configuration, options?: Co
  *
  * Keep the code just for regression purposes.
  * @deprecated In favor to TS compiler error/warning messages.
- */
 function parseId(node: Node, p: ParseParams, options?: CompilerOptions) {
   const { sourceFile, allIds } = p;
   switch (node.kind) {
@@ -111,6 +110,7 @@ function parseId(node: Node, p: ParseParams, options?: CompilerOptions) {
   }
   node.forEachChild(n => parseId(n, p, options));
 }
+ */
 
 function isUseStrict(node: Node) {
   if (node.kind !== SyntaxKind.ExpressionStatement) return false;
