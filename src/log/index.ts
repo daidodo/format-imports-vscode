@@ -21,7 +21,7 @@ export function initLog(channel: OutputChannel) {
         // },
       },
     },
-    categories: { default: { appenders: ['vscChannel'], level: 'debug', enableCallStack: true } },
+    categories: { default: { appenders: ['vscChannel'], level: 'info' } },
   });
 }
 

@@ -2,7 +2,6 @@
 
 ### Features
 
-- Debug logs, open issue template, easy way to copy/paste logs for bug fix.
 - Write CONTRIBUTING.md.
 - Group level comments. ([Link](https://github.com/SoominHan/import-sorter/issues/46))
 - Support ESLint plugin import/order. ([Link](https://github.com/SoominHan/import-sorter/issues/43))
@@ -31,6 +30,7 @@
 
 ### DONE
 
+- ~~Debug logs, open issue template, easy way to copy/paste logs for bug fix.~~
 - ~~Test `unused/deep` fails on Windows 10 + VS Code 1.42.1.~~
 - ~~Unit tests.~~
 - ~~Sort exports. ([Link](https://github.com/daidodo/tsimportsorter/issues/6#issuecomment-619185391), [Doc](https://github.com/tc39/proposal-export-ns-from))~~
