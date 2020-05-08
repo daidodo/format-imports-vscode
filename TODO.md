@@ -2,6 +2,7 @@
 
 ### Features
 
+- Test coverage.
 - Write CONTRIBUTING.md.
 - Group level comments. ([Link](https://github.com/SoominHan/import-sorter/issues/46))
 - Support ESLint plugin import/order. ([Link](https://github.com/SoominHan/import-sorter/issues/43))
