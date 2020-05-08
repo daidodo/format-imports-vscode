@@ -161,10 +161,10 @@ Here are all configs in `package.json` under `"importSorter"` section and their 
     // Use single or double quotes. Valid values are 'single' or 'double'.
     "quoteMark": "single",
 
-    // Whether to add trailing commas when multi-line. Valid values are 'none' or 'multiLine'.
+    // When to add trailing a comma for the last name. Valid values are 'none' or 'multiLine'.
     "trailingComma": "multiLine",
 
-    // Whether to add semicolons at the ends of statements.
+    // Whether to add semicolons at the end of statements.
     "hasSemicolon": true,
 
     // Whether to end files with a new line.

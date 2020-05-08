@@ -1,0 +1,159 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "JSON schema for JS/TS Import/Export Sorter configuration",
+  "type": "object",
+  "properties": {
+    "autoFormat": {
+      "type": "string",
+      "enum": ["off", "onSave"],
+      "default": "onSave",
+      "description": "When to auto format imports/exports."
+    },
+    "formatExports": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to format exports as well."
+    },
+    "exclude": {
+      "type": "array",
+      "default": ["node_modules"],
+      "items": { "type": "string" },
+      "uniqueItems": true,
+      "description": "Disable formatting for files matching regular expressions."
+    },
+    "excludeGlob": {
+      "type": "array",
+      "default": [],
+      "items": { "type": "string" },
+      "uniqueItems": true,
+      "description": "Disable formatting for files matching glob patterns."
+    },
+    "groupRules": {
+      "$ref": "#/$def/groupRules",
+      "default": ["^react(-dom)?$", "^@angular/", "^vue$", {}, "^[@]", "^[.]"],
+      "markdownDescription": "Grouping rules for path patterns for imports. See the [wiki](https://github.com/daidodo/tsimportsorter/wiki/Grouping-Rules) for more details."
+    },
+    "sortRules": {
+      "$ref": "#/$def/sortRules",
+      "properties": {
+        "paths": { "default": ["_", "aA"] },
+        "names": { "default": ["_", "aA"] }
+      }
+    },
+    "maxBindingNamesPerLine": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 1,
+      "description": "Max binding names per line before wrapping for imports. 0 for no limit."
+    },
+    "maxDefaultAndBindingNamesPerLine": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 2,
+      "description": "Max default and binding names per line before wrapping for imports. 0 for no limit."
+    },
+    "maxExportNamesPerLine": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 0,
+      "description": "Max binding names per line before wrapping for exports. 0 for no limit."
+    },
+    "maxNamesPerWrappedLine": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 1,
+      "description": "Max names on wrapped lines for imports/exports. 0 for no limit."
+    },
+    "maxLineLength": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 80,
+      "description": "Max line length before wrapping. 0 for no limit."
+    },
+    "tabType": {
+      "type": "string",
+      "enum": ["tab", "space"],
+      "default": "space",
+      "description": "Indent lines with tabs or spaces."
+    },
+    "tabSize": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 2,
+      "description": "Number of spaces to replace a TAB."
+    },
+    "quoteMark": {
+      "type": "string",
+      "enum": ["single", "double"],
+      "default": "single",
+      "description": "Use single or double quotes."
+    },
+    "trailingComma": {
+      "type": "string",
+      "enum": ["none", "multiLine"],
+      "default": "multiLine",
+      "description": "When to add trailing commas for the last name."
+    },
+    "hasSemicolon": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to add semicolons at the end of statements."
+    },
+    "insertFinalNewline": {
+      "type": "boolean",
+      "default": true,
+      "description": " Whether to end files with a new line."
+    },
+    "bracketSpacing": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to add spaces between brackets. true for '{ id }' and false for '{id}'."
+    }
+  },
+  "$def": {
+    "sortNone": { "type": "string", "enum": ["none"] },
+    "sortSegment": { "type": "string", "enum": ["az", "AZ", "aA", "Aa", "_"] },
+    "sortSegments": {
+      "type": "array",
+      "items": { "$ref": "#/$def/sortSegment" },
+      "uniqueItems": true
+    },
+    "sortRule": { "oneOf": [{ "$ref": "#/$def/sortNone" }, { "$ref": "#/$def/sortSegments" }] },
+    "sortRules": {
+      "type": "object",
+      "properties": {
+        "paths": {
+          "$ref": "#/$def/sortRule",
+          "markdownDescription": "Sorting rule for import paths. See the [wiki](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules) for more details."
+        },
+        "names": {
+          "$ref": "#/$def/sortRule",
+          "markdownDescription": "Sorting rule for imported/exported names. See the [wiki](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules) for more details."
+        }
+      }
+    },
+    "groupRule": {
+      "oneOf": [
+        { "type": "string" },
+        { "$ref": "#/$def/groupRules" },
+        {
+          "type": "object",
+          "properties": {
+            "flag": {
+              "type": "string",
+              "enum": ["all", "scripts"],
+              "description": "Targets of this group."
+            },
+            "regex": { "type": "string", "description": "Import path pattern." },
+            "sort": { "$ref": "#/$def/sortRules", "description": "Sorting rules for this group." },
+            "subGroups": { "$ref": "#/$def/groupRules", "description": "Sub-groups and rules." }
+          }
+        }
+      ]
+    },
+    "groupRules": {
+      "type": "array",
+      "items": { "$ref": "#/$def/groupRule" }
+    }
+  }
+}

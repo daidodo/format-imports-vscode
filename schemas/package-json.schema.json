@@ -1,0 +1,9 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "properties": {
+    "importSorter": {
+      "description": "JS/TS Import/Export Sorter configuration",
+      "$ref": "./import-sorter.schema.json"
+    }
+  }
+}

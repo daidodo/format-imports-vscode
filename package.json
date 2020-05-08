@@ -74,6 +74,16 @@
         "title": "Sort Imports/Exports"
       }
     ],
+    "jsonValidation": [
+      {
+        "fileMatch": "import-sorter.json",
+        "url": "./schemas/import-sorter.schema.json"
+      },
+      {
+        "fileMatch": "package.json",
+        "url": "./schemas/package-json.schema.json"
+      }
+    ],
     "configuration": {
       "title": "JS/TS Import/Export Sorter configuration",
       "properties": {
