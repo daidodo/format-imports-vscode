@@ -1,8 +1,8 @@
 import {
+  ExportNode,
   ImportNode,
   NameBinding,
 } from '../parser';
-import ExportNode from '../parser/ExportNode';
 import {
   Comparator,
   compareBindingName,
