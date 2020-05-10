@@ -2,7 +2,7 @@ import { ComposeConfig } from '../config';
 import {
   NameBinding,
   NodeComment,
-} from '../parser';
+} from '../types';
 import {
   assert,
   assertNonNull,

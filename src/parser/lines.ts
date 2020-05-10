@@ -5,12 +5,12 @@ import ts, {
   TextRange,
 } from 'typescript';
 
-import ParseParams from './ParseParams';
 import {
   LineRange,
   NodeComment,
   Pos,
-} from './types';
+} from '../types';
+import ParseParams from './ParseParams';
 
 export function parseLineRanges(node: Node, p: ParseParams) {
   const { sourceFile, sourceText } = p;

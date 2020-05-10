@@ -2,11 +2,11 @@ import {
   SortRule,
   SortRules,
 } from '../config';
+import { ImportNode } from '../parser';
 import {
   Binding,
-  ImportNode,
   NameBinding,
-} from '../parser';
+} from '../types';
 import Segment, { Params } from './Segment';
 
 export type Comparator = (a: string | undefined, b: string | undefined) => number;

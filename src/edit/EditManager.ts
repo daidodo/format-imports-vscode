@@ -1,12 +1,6 @@
-import { LineAndCharacter } from 'typescript';
-import {
-  Position,
-  Range,
-  TextEdit,
-} from 'vscode';
-
 import { ComposeConfig } from '../config';
-import { RangeAndEmptyLines } from '../parser';
+import { RangeAndEmptyLines } from '../types';
+import { Edit } from './types';
 
 interface InsertText {
   text?: string;
@@ -110,12 +104,12 @@ function decideInsert(
   config: ComposeConfig,
   leadingNewLines?: number,
   trailingNewLines?: number,
-) {
+): Edit {
   const { nl } = config;
-  const { fullStart: s, start: e, leadingNewLines: lnl } = range;
-  const ln = !s.pos ? 0 : ensure(lnl, leadingNewLines);
+  const { fullStart: start, start: end, leadingNewLines: lnl } = range;
+  const ln = !start.pos ? 0 : ensure(lnl, leadingNewLines);
   const tn = ensure(trailingNewLines);
-  return getEdit(s, e, nl.repeat(ln) + text + nl.repeat(tn));
+  return { range: { start, end }, newText: nl.repeat(ln) + text + nl.repeat(tn) };
 }
 
 function decideReplace(
@@ -124,22 +118,23 @@ function decideReplace(
   config: ComposeConfig,
   leadingNewLines?: number,
   trailingNewLines?: number,
-) {
+): Edit {
   const { nl, lastNewLine } = config;
-  const { fullStart: s, fullEnd: e, leadingNewLines: lnl, trailingNewLines: tnl, eof } = range;
-  const ln = !s.pos ? 0 : ensure(leadingNewLines, lnl);
+  const {
+    fullStart: start,
+    fullEnd: end,
+    leadingNewLines: lnl,
+    trailingNewLines: tnl,
+    eof,
+  } = range;
+  const ln = !start.pos ? 0 : ensure(leadingNewLines, lnl);
   const tn = eof ? (lastNewLine ? 1 : 0) : ensure(trailingNewLines, tnl);
-  return getEdit(s, e, nl.repeat(ln) + text + nl.repeat(tn));
+  return { range: { start, end }, newText: nl.repeat(ln) + text + nl.repeat(tn) };
 }
 
-function decideDelete(range: RangeAndEmptyLines, config: ComposeConfig) {
+function decideDelete(range: RangeAndEmptyLines, config: ComposeConfig): Edit {
   const { nl, lastNewLine } = config;
-  const { fullStart: s, fullEnd: e, leadingNewLines: ln, trailingNewLines: tn, eof } = range;
-  const n = !s.pos ? 0 : eof ? (lastNewLine ? 1 : 0) : ensure(ln + tn);
-  return getEdit(s, e, nl.repeat(n));
-}
-
-function getEdit(s: LineAndCharacter, e: LineAndCharacter, text?: string) {
-  const r = new Range(new Position(s.line, s.character), new Position(e.line, e.character));
-  return text ? TextEdit.replace(r, text) : TextEdit.delete(r);
+  const { fullStart: start, fullEnd: end, leadingNewLines: ln, trailingNewLines: tn, eof } = range;
+  const n = !start.pos ? 0 : eof ? (lastNewLine ? 1 : 0) : ensure(ln + tn);
+  return { range: { start, end }, newText: nl.repeat(n) };
 }

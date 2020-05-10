@@ -6,12 +6,10 @@ import {
 
 import { composeNodeAsNames } from '../compose';
 import { ComposeConfig } from '../config';
+import { NameBinding } from '../types';
 import { normalizePath } from '../utils';
+import { getNameBinding } from './helper';
 import Statement, { StatementArgs } from './Statement';
-import {
-  getNameBinding,
-  NameBinding,
-} from './types';
 
 export default class ExportNode extends Statement {
   private readonly moduleIdentifier_?: string;

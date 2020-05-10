@@ -13,15 +13,15 @@ import {
 } from '../compose';
 import { ComposeConfig } from '../config';
 import {
+  Binding,
+  NameBinding,
+} from '../types';
+import {
   assertNonNull,
   normalizePath,
 } from '../utils';
+import { getNameBinding } from './helper';
 import Statement, { StatementArgs } from './Statement';
-import {
-  Binding,
-  getNameBinding,
-  NameBinding,
-} from './types';
 import { NameUsage } from './unused';
 
 export default class ImportNode extends Statement {

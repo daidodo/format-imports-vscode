@@ -3,7 +3,7 @@ import { ComposeConfig } from '../config';
 import {
   NodeComment,
   RangeAndEmptyLines,
-} from './types';
+} from '../types';
 
 export interface StatementArgs {
   range: RangeAndEmptyLines;

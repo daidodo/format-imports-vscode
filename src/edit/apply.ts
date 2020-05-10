@@ -1,9 +1,10 @@
 import { SourceFile } from 'typescript';
-import { TextEdit } from 'vscode';
 
-export function apply(sourceText: string, sourceFile: SourceFile, edits: TextEdit[]) {
+import { Edit } from './types';
+
+export function apply(sourceText: string, sourceFile: SourceFile, edits: Edit[]) {
   if (edits.length < 1) return undefined;
-  const sortedEdits = edits.sort(({ range: r1 }, { range: r2 }) => r1.start.compareTo(r2.start));
+  const sortedEdits = edits.sort(({ range: r1 }, { range: r2 }) => r1.start.pos - r2.start.pos);
   let text = '';
   let cur = 0;
   sortedEdits.forEach(({ range, newText }) => {
