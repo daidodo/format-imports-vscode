@@ -65,7 +65,10 @@ function mockHost(
     ...host,
     getSourceFile: f => (normalizePath(f) === fn ? sourceFile : undefined),
     // The following costs significant performance:
-    // normalizePath(f) === fn ? sourceFile : getSourceFile(f, l, e, c),
+    // getSourceFile: (f, l, e, c) => {
+    //   logger('parser.mockHost').debug('fileName:', f);
+    //   return normalizePath(f) === fn ? sourceFile : host.getSourceFile(f, l, e, c);
+    // },
   };
 }
 

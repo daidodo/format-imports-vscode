@@ -1,4 +1,5 @@
 import fs from 'fs';
+import log4js from 'log4js';
 import path, { sep } from 'path';
 
 export function assert(condition: unknown, message?: string): asserts condition {
@@ -64,4 +65,8 @@ export function isRegularFile(path: string) {
 
 export function isObject(v: any) {
   return typeof v === 'object' && !Array.isArray(v) && v !== null;
+}
+
+export function logger(category?: string) {
+  return log4js.getLogger(category);
 }

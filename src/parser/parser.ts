@@ -11,7 +11,8 @@ import {
 } from 'typescript';
 
 import { Configuration } from '../config';
-import { logger } from '../log';
+import { RangeAndEmptyLines } from '../types';
+import { logger } from '../utils';
 import ExportNode from './ExportNode';
 import ImportNode from './ImportNode';
 import {
@@ -19,7 +20,6 @@ import {
   parseLineRanges,
 } from './lines';
 import ParseParams from './ParseParams';
-import { RangeAndEmptyLines } from './types';
 
 export function parseSource(
   sourceFile: SourceFile,

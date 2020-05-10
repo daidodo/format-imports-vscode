@@ -27,10 +27,6 @@ export function initLog(channel: OutputChannel) {
   });
 }
 
-export function logger(category?: string) {
-  return log4js.getLogger(category);
-}
-
 export function uninitLog() {
   log4js.shutdown();
 }

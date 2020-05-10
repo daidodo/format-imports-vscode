@@ -12,14 +12,12 @@ import {
   apply,
   EditManager,
 } from '../edit';
-import { logger } from '../log';
 import {
   ExportNode,
   getUnusedIds,
   ImportNode,
   NameUsage,
   parseSource,
-  RangeAndEmptyLines,
 } from '../parser';
 import {
   Sorter,
@@ -27,14 +25,18 @@ import {
   sortExports,
   sortImports,
 } from '../sort';
+import { RangeAndEmptyLines } from '../types';
+import { logger } from '../utils';
 
-export default function formatSource(
+export function formatSource(
   fileName: string,
   sourceText: string,
   config: Configuration,
   tsCompilerOptions?: CompilerOptions,
 ) {
   const log = logger('parser.formatSource');
+  log.debug('config:', config);
+  log.debug('tsCompilerOptions:', tsCompilerOptions);
   const sourceFile = ts.createSourceFile(fileName, sourceText, ScriptTarget.Latest);
   const { importNodes, importsInsertPoint: point, exportNodes, allIds } = parseSource(
     sourceFile,
