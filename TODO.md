@@ -2,7 +2,7 @@
 
 ### Features
 
-- Test coverage.
+- Test coverage. ([Example](https://github.com/codecov/example-typescript-vscode-extension))
 - Write CONTRIBUTING.md.
 - Group level comments. ([Link](https://github.com/SoominHan/import-sorter/issues/46))
 - Support ESLint plugin import/order. ([Link](https://github.com/SoominHan/import-sorter/issues/43))
