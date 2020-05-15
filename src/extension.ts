@@ -17,18 +17,17 @@ import {
   workspace,
 } from 'vscode';
 
-import loadConfig, { isExcluded } from './config';
+import { isExcluded } from './config';
+import { formatSource } from './format';
 import {
   extensionsInfo,
-  osInfo,
-  vscodeInfo,
-} from './env';
-import {
   initLog,
   logger,
+  osInfo,
+  resolveConfig,
   uninitLog,
-} from './log';
-import formatSource from './main';
+  vscodeInfo,
+} from './vscode';
 
 let g_vscChannel: OutputChannel;
 
@@ -93,7 +92,7 @@ function formatDocument(document: TextDocument, force?: boolean) {
   const { uri: fileUri, languageId, eol } = document;
   const { fsPath: fileName } = fileUri;
   try {
-    const { config, tsCompilerOptions } = loadConfig(fileUri, languageId, eol, force);
+    const { config, tsCompilerOptions } = resolveConfig(fileUri, languageId, eol, force);
     if (!force && config.autoFormat !== 'onSave') return undefined;
     log.info('config:', config);
     log.info('tsCompilerOptions:', tsCompilerOptions);

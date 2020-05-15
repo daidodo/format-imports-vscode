@@ -3,8 +3,9 @@
   "displayName": "JS/TS Import/Export Sorter",
   "description": "Auto format imports and exports for JavaScript and TypeScript.",
   "icon": "assets/icons/main.jpg",
+  "main": "./out/extension.js",
   "publisher": "dozerg",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "license": "MIT",
   "scripts": {
     "vscode:prepublish": "rm -rf out && git pull && npm run compile",
@@ -44,7 +45,6 @@
     "onLanguage:typescriptreact",
     "onCommand:tsImportSorter.command.sortImports"
   ],
-  "main": "./out/extension.js",
   "contributes": {
     "menus": {
       "commandPalette": [

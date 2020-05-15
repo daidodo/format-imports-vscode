@@ -7,12 +7,14 @@ import {
   workspace,
 } from 'vscode';
 
-import { Configuration } from '../../config';
-import { merge } from '../../config/helper';
+import { assertNonNull } from '../../common';
+import { mergeConfig } from '../../config';
 import { fileConfig } from '../../config/importSorter';
 import { loadTsConfig } from '../../config/tsconfig';
-import formatSource from '../../main';
-import { assertNonNull } from '../../utils';
+import {
+  Configuration,
+  formatSource,
+} from '../../format';
 
 interface TestSuite {
   name: string;
@@ -71,7 +73,8 @@ function getTestSuite(dir: string, name: string): TestSuite | undefined {
 function runTestSuite(ts: TestSuite, specific?: string, preConfig?: Configuration) {
   const { name, config: curConfig, tsCompOpt, cases, suites } = ts;
   const defResult = cases.find(c => !c.name && !c.origin)?.result;
-  const config = curConfig && preConfig ? merge(preConfig, curConfig) : curConfig ?? preConfig;
+  const config =
+    curConfig && preConfig ? mergeConfig(preConfig, curConfig) : curConfig ?? preConfig;
   suite(name, () => {
     if (!specific) {
       cases.forEach(c => runTestCase(c, defResult, config, tsCompOpt));
@@ -110,5 +113,5 @@ function runTestCase(
 
 function updateEol(config: Configuration | undefined, eol: EndOfLine) {
   const c: Configuration = { eol: eol === EndOfLine.CRLF ? 'CRLF' : 'LF' };
-  return config ? merge(config, c) : c;
+  return config ? mergeConfig(config, c) : c;
 }

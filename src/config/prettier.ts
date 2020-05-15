@@ -1,6 +1,6 @@
 import pt from 'prettier';
 
-import { Configuration } from './types';
+import { Configuration } from '../format';
 
 // https://prettier.io/docs/en/options.html
 export function loadPretConfig(fileName: string): Configuration {
