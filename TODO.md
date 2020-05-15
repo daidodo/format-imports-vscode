@@ -17,6 +17,7 @@
 - Prevent organize import on parse error. ([Link](https://gitlab.com/smartive-private/christoph/typescript-hero/-/issues/406))
 - Add setting for one import per line. ([Link](https://gitlab.com/smartive-private/christoph/typescript-hero/-/issues/351))
 - Sort css imports to the bottom by default. ([Link](https://github.com/zeilmannnoah/orion-import-sorter/issues/1), [Ref](https://raygun.com/blog/css-preprocessors-examples/)).
+- Support [twin.macro](https://github.com/ben-rogerson/twin.macro). ([Link](https://github.com/daidodo/tsimportsorter/issues/12))
 
 ### Implementation
 
