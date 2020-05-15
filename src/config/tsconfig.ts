@@ -1,6 +1,6 @@
 import ts, { sys } from 'typescript';
 
-import { parentFolder } from '../utils';
+import { parentFolder } from './helper';
 
 export function loadTsConfig(fileName: string) {
   const configFile = ts.findConfigFile(fileName, sys.fileExists.bind(sys));

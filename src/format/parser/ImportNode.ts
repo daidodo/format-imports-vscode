@@ -7,6 +7,7 @@ import {
   SyntaxKind,
 } from 'typescript';
 
+import { assertNonNull } from '../../common';
 import {
   composeNodeAsNames,
   composeNodeAsParts,
@@ -16,10 +17,7 @@ import {
   Binding,
   NameBinding,
 } from '../types';
-import {
-  assertNonNull,
-  normalizePath,
-} from '../utils';
+import { normalizePath } from '../utils';
 import { getNameBinding } from './helper';
 import Statement, { StatementArgs } from './Statement';
 import { NameUsage } from './unused';

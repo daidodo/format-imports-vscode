@@ -1,12 +1,12 @@
+import {
+  assert,
+  assertNonNull,
+} from '../../common';
 import { ComposeConfig } from '../config';
 import {
   NameBinding,
   NodeComment,
 } from '../types';
-import {
-  assert,
-  assertNonNull,
-} from '../utils';
 
 export function composeNodeAsParts(
   parts: string[],

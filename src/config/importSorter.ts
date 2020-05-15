@@ -1,37 +1,19 @@
 import fs from 'fs';
-import cloneDeep from 'lodash.clonedeep';
-import {
-  Uri,
-  workspace,
-} from 'vscode';
 
+import { assert } from '../common';
+import { Configuration } from '../format';
 import {
-  assert,
-  assertNonNull,
   findFileFromPathAndParents,
-  isObject,
-} from '../utils';
-import { merge } from './helper';
+  mergeConfig,
+} from './helper';
 import { loadPretConfig } from './prettier';
-import { Configuration } from './types';
-import { loadVscConfig } from './vscode';
 
-export function loadImportSorterConfig(fileUri: Uri, languageId: string) {
-  const { fsPath: fileName } = fileUri;
-  const wsConfig = workspaceConfig(fileUri);
-  const vscConfig = loadVscConfig(fileUri, languageId);
-  const pretConfig = loadPretConfig(fileName);
-  const fConfig = fileConfig(wsConfig.configurationFileName, fileName);
-  const pkgConfig = packageConfig(fileName);
-  return merge(wsConfig, vscConfig, pretConfig, fConfig, pkgConfig);
-}
-
-function workspaceConfig(fileUri: Uri) {
-  const config = workspace
-    .getConfiguration('tsImportSorter', fileUri)
-    .get<Configuration>('configuration');
-  assertNonNull(config, 'Missing configuration in workspace.');
-  return cloneDeep(config);
+export function loadImportSorterConfig(config: Configuration, sourceFileName: string) {
+  const { configurationFileName: cfgFileName } = config;
+  const pretConfig = loadPretConfig(sourceFileName);
+  const fConfig = fileConfig(cfgFileName, sourceFileName);
+  const pkgConfig = packageConfig(sourceFileName);
+  return mergeConfig(config, pretConfig, fConfig, pkgConfig);
 }
 
 function packageConfig(fileName: string) {
@@ -51,4 +33,8 @@ export function fileConfig(filename: string | undefined, path?: string) {
   const config = JSON.parse(fs.readFileSync(configFile, 'utf8'));
   assert(isObject(config), `Bad config in "${configFile}"`);
   return config as Configuration;
+}
+
+function isObject(v: any) {
+  return typeof v === 'object' && !Array.isArray(v) && v !== null;
 }
