@@ -5,7 +5,10 @@ import ts, {
   SourceFile,
 } from 'typescript';
 
-import { normalizePath } from '../utils';
+import {
+  logger,
+  normalizePath,
+} from '../utils';
 import ImportNode from './ImportNode';
 
 export interface NameUsage {
@@ -35,12 +38,17 @@ export function getUnusedIds(
   const options = prepareOptions(tsCompilerOptions);
   const host = mockHost(fileName, sourceFile, options);
   const program = ts.createProgram([fileName], options, host);
-  // https://github.com/microsoft/TypeScript/wiki/API-Breaking-Changes#program-interface-changes
-  program
-    .getSemanticDiagnostics(sourceFile)
-    .filter(m => m.file === sourceFile && UNUSED_CODE.has(m.code))
-    .forEach(m => transform(m, importNodes, unusedNames, unusedNodes));
-  return { usedNames, unusedNames, unusedNodes };
+  try {
+    // https://github.com/microsoft/TypeScript/wiki/API-Breaking-Changes#program-interface-changes
+    program
+      .getSemanticDiagnostics(sourceFile)
+      .filter(m => m.file === sourceFile && UNUSED_CODE.has(m.code))
+      .forEach(m => transform(m, importNodes, unusedNames, unusedNodes));
+    return { usedNames, unusedNames, unusedNodes };
+  } catch (e) {
+    logger('parser.getUnusedIds').error('getSemanticDiagnostics failed:', e);
+    return { usedNames };
+  }
 }
 
 function prepareOptions(options?: CompilerOptions): CompilerOptions {
