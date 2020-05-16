@@ -23,6 +23,7 @@ export type Configuration = Readonly<
     maxDefaultAndBindingNamesPerLine: number;
     maxExportNamesPerLine: number;
     maxNamesPerWrappedLine: number;
+    keepUnused: KeepUnusedConfig[];
     // From other configs
     maxLineLength: number;
     tabType: 'space' | 'tab';
@@ -37,6 +38,13 @@ export type Configuration = Readonly<
     force: boolean; // Internal. Ignore exclude paths and file disable-comment.
   }>
 >;
+
+export type KeepUnusedConfig =
+  | string
+  | {
+      path: string;
+      names?: string[];
+    };
 
 export type ComposeConfig = DeepReadonly<{
   maxLength: number;

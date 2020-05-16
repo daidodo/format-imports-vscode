@@ -43,7 +43,12 @@ export function parentFolder(path: string | undefined | null) {
 /**
  * Properties in `Configuration` that need to be merged instead of replaced.
  */
-const KEYS_TO_MERGE = ['exclude' as const, 'excludeGlob' as const, 'sortRules' as const];
+const KEYS_TO_MERGE = [
+  'exclude' as const,
+  'excludeGlob' as const,
+  'sortRules' as const,
+  'keepUnused' as const,
+];
 
 export function mergeConfig(...configs: Configuration[]) {
   return configs.reduce((a, b) => {

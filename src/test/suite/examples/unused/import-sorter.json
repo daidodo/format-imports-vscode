@@ -1,0 +1,11 @@
+{
+  "keepUnused": [
+    "",
+    "keepA",
+    { "path": null },
+    { "path": "" },
+    { "path": "keepB" },
+    { "path": "keepC", "name": null },
+    { "path": "keepD", "name": ["keepD"] }
+  ]
+}

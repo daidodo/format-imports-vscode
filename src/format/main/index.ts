@@ -19,6 +19,7 @@ import {
   NameUsage,
   parseSource,
 } from '../parser';
+import KeepUnused, { filterUsageToKeep } from '../parser/KeepUnused';
 import {
   Sorter,
   sorterFromRules,
@@ -71,7 +72,9 @@ function formatImports(
   sorter: Sorter,
 ) {
   if (!insertPoint || !importNodes.length) return undefined;
-  const groups = sortImports(importNodes, unusedIds(), config, sorter);
+  const keepUnused = config.keepUnused?.map(entry => new KeepUnused(entry));
+  const usage = filterUsageToKeep(unusedIds(), keepUnused);
+  const groups = sortImports(importNodes, usage, config, sorter);
   const { nl } = composeConfig;
   return groups.compose(composeConfig, nl + nl);
 }
