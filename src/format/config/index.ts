@@ -1,3 +1,5 @@
+import { DeepReadonly } from 'utility-types';
+
 import { GroupRule } from './grouping';
 import {
   SegSymbol,
@@ -36,7 +38,7 @@ export type Configuration = Readonly<
   }>
 >;
 
-export interface ComposeConfig {
+export type ComposeConfig = DeepReadonly<{
   maxLength: number;
   maxWords: { withDefault: number; withoutDefault: number; wrapped: number; exported: number };
   tab: string;
@@ -46,7 +48,7 @@ export interface ComposeConfig {
   bracket: (s: string) => string;
   lastNewLine: boolean;
   nl: string;
-}
+}>;
 
 export function configForCompose({
   maxLineLength,
