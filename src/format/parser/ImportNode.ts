@@ -90,15 +90,15 @@ export default class ImportNode extends Statement {
     return !this.isScript && !this.defaultName_ && !this.binding_;
   }
 
-  removeUnusedNames(usage: NameUsage, keepUnused: KeepUnused) {
+  removeUnusedNames(usage: NameUsage, keepUnused?: KeepUnused) {
     const { unusedNodes } = usage;
     if (this.isScript) return;
-    if (unusedNodes && unusedNodes.includes(this) && !keepUnused.node(this)) {
+    const keepUnusedName = keepUnused?.forPath(this.moduleIdentifier);
+    if (unusedNodes && unusedNodes.includes(this) && !keepUnusedName) {
       this.defaultName_ = undefined;
       this.binding_ = undefined;
       return;
     }
-    const keepUnusedName = keepUnused.nameOfNode(this);
     if (!isNameUsed(this.defaultName_, usage, keepUnusedName)) {
       this.defaultName_ = undefined;
     }
@@ -271,13 +271,13 @@ export default class ImportNode extends Statement {
 function isNameUsed(
   name: NameBinding | string | undefined,
   usage: NameUsage,
-  keepUnused: (name: string) => boolean,
+  keepUnused?: (name: string) => boolean,
 ) {
   if (!name) return false;
   const { unusedNames, usedNames } = usage;
   const n = typeof name === 'string' ? name : name.aliasName ?? name.propertyName;
   if (!n) return false;
-  if (keepUnused(n)) return true;
+  if (keepUnused?.(n)) return true;
   // `unusedNames` (from TS compiler) gives more accurate results
   // than `usedNames` (from manual parsing).
   if (unusedNames) return !unusedNames.has(n);
