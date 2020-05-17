@@ -99,9 +99,7 @@ export default class ImportNode extends Statement {
       this.binding_ = undefined;
       return;
     }
-    if (!isNameUsed(this.defaultName_, usage, keepUnusedName)) {
-      this.defaultName_ = undefined;
-    }
+    if (!isNameUsed(this.defaultName_, usage, keepUnusedName)) this.defaultName_ = undefined;
     if (this.binding_) {
       if (this.binding_.type === 'named') {
         this.binding_.names = this.binding_.names.filter(n => isNameUsed(n, usage, keepUnusedName));
