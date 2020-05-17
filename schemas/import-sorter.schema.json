@@ -171,7 +171,7 @@
           "properties": {
             "path": { "type": "string", "description": "Import path pattern to keep" },
             "names": {
-              "type": ["array", "null"],
+              "type": "array",
               "items": { "type": "string" },
               "description": "Import names of matching path to keep"
             }

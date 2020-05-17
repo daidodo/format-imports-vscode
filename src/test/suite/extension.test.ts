@@ -38,7 +38,7 @@ suite('Integration Test Suite', () => {
   const examples = getTestSuite(dir, 'examples');
   if (!examples) return;
   // Run all tests
-  return runTestSuite(examples, 'unused/keep');
+  return runTestSuite(examples);
   // Or, run a specific test case
   // return runTestSuite(examples, 'compose');
 });
