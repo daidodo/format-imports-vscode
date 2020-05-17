@@ -6,8 +6,9 @@ import {
   SortRule,
   SortRules,
 } from './sorting';
+import { KeepUnusedRule } from './unused';
 
-export { GroupRule, SegSymbol, SortRule, SortRules };
+export { GroupRule, KeepUnusedRule, SegSymbol, SortRule, SortRules };
 
 export type Configuration = Readonly<
   Partial<{
@@ -23,6 +24,7 @@ export type Configuration = Readonly<
     maxDefaultAndBindingNamesPerLine: number;
     maxExportNamesPerLine: number;
     maxNamesPerWrappedLine: number;
+    keepUnused: KeepUnusedRule[];
     // From other configs
     maxLineLength: number;
     tabType: 'space' | 'tab';

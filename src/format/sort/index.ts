@@ -1,6 +1,7 @@
 import { Configuration } from '../config';
 import {
   ImportNode,
+  KeepUnused,
   NameUsage,
 } from '../parser';
 import {
@@ -17,11 +18,12 @@ export function sortImports(
   config: Configuration,
   sorter: Sorter,
 ) {
-  const { sortRules: sort, groupRules: subGroups } = config;
+  const { sortRules: sort, groupRules: subGroups, keepUnused } = config;
   // The top group must be a match-all group.
   const group = new SortGroup({ flag: 'all', regex: '', sort, subGroups }, sorter);
+  const keepUnusedBouncer = keepUnused && new KeepUnused(keepUnused);
   nodes.forEach(n => {
-    n.removeUnusedNames(usage);
+    n.removeUnusedNames(usage, keepUnusedBouncer);
     if (!n.empty()) group.add(n);
   });
   return group.sortAndMerge();
