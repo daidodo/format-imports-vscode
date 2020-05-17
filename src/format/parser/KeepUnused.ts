@@ -1,40 +1,72 @@
 import { KeepUnusedConfig } from '../config';
-import {
-  ImportNode,
-  NameUsage,
-} from './';
+import ImportNode from './ImportNode';
 
 export default class KeepUnused {
-  private readonly path: RegExp;
-  private readonly names: RegExp[];
+  private readonly entries: Map<ImportNode, KeepUnusedMatcher[]>;
 
-  constructor(cfg: KeepUnusedConfig) {
-    if (typeof cfg === 'string') {
-      this.path = new RegExp(cfg);
-      this.names = [];
-    } else {
-      this.path = new RegExp(cfg.path);
-      this.names = cfg.names?.map(name => new RegExp(name)) ?? [];
-    }
+  constructor(cfg: KeepUnusedConfig[] = [], nodes: ImportNode[]) {
+    const matchers = cfg.map(entry => new KeepUnusedMatcher(entry));
+    this.entries = new Map();
+
+    nodes.forEach(node => {
+      const nodeMatchers = matchers.filter(matcher => matcher.matchPath(node.moduleIdentifier));
+      if (nodeMatchers.length > 0) {
+        this.entries.set(node, nodeMatchers);
+      }
+    });
   }
 
-  public matchImportNode(node: ImportNode) {
-    return this.path.test(node.moduleIdentifier);
+  node(node: ImportNode) {
+    return this.entries.has(node);
+  }
+
+  nameOfNode(node: ImportNode) {
+    const matchers = this.entries.get(node);
+    return function keepNameOfNode(name: string) {
+      return (
+        matchers?.some(matcher => {
+          return matcher.matchName(name);
+        }) ?? false
+      );
+    };
   }
 }
 
-export function filterUsageToKeep(
-  usage: NameUsage,
-  keepUnused: KeepUnused[] | undefined,
-): NameUsage {
-  if (!keepUnused) {
-    return usage;
+class KeepUnusedMatcher {
+  private readonly pathRx: RegExp | null;
+  private readonly namesRx: RegExp[] | null;
+
+  constructor(cfg: KeepUnusedConfig) {
+    let path = null;
+    let names = null;
+    if (isNonEmptyString(cfg)) {
+      path = cfg;
+      names = null;
+    } else if (cfg) {
+      path = cfg.path ?? null;
+      names = cfg.names ?? null;
+    }
+    this.pathRx = path ? new RegExp(path) : null;
+    this.namesRx = names
+      ? names
+          .map(name => (isNonEmptyString(name) ? new RegExp(name) : null))
+          .filter((val): val is RegExp => val !== null)
+      : null;
   }
-  return {
-    usedNames: usage.usedNames,
-    unusedNodes: usage.unusedNodes?.filter(node =>
-      keepUnused.some(entry => entry.matchImportNode(node)),
-    ),
-    unusedNames: usage.unusedNames, // ??? How to pair it with path
-  };
+
+  matchPath(path: string) {
+    return this.pathRx?.test(path) ?? false;
+  }
+
+  matchName(name: string) {
+    if (this.namesRx === null) {
+      // no names configured, match always
+      return true;
+    }
+    return this.namesRx.some(n => n?.test(name));
+  }
+}
+
+function isNonEmptyString(value: any): value is string {
+  return typeof value === 'string' && value.length > 0;
 }

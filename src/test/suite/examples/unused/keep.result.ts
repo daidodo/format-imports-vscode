@@ -1,4 +1,5 @@
 import A from 'keepA';
-import keepB from 'B';
+import keepB, { B } from 'keepB';
 import * as any from 'keepC';
 import { keepD } from 'keepD';
+import { keepE } from 'keepE';

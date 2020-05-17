@@ -3,6 +3,7 @@ import {
   ImportNode,
   NameUsage,
 } from '../parser';
+import KeepUnused from '../parser/KeepUnused';
 import {
   Sorter,
   sorterFromRules,
@@ -20,8 +21,9 @@ export function sortImports(
   const { sortRules: sort, groupRules: subGroups } = config;
   // The top group must be a match-all group.
   const group = new SortGroup({ flag: 'all', regex: '', sort, subGroups }, sorter);
+  const keepUnusedBouncer = new KeepUnused(config.keepUnused, nodes);
   nodes.forEach(n => {
-    n.removeUnusedNames(usage);
+    n.removeUnusedNames(usage, keepUnusedBouncer);
     if (!n.empty()) group.add(n);
   });
   return group.sortAndMerge();

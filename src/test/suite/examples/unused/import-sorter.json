@@ -5,7 +5,8 @@
     { "path": null },
     { "path": "" },
     { "path": "keepB" },
-    { "path": "keepC", "name": null },
-    { "path": "keepD", "name": ["keepD"] }
+    { "path": "keepC", "names": null },
+    { "path": "keepD", "names": ["keepD"] },
+    { "path": "keepE", "names": ["keepE"] }
   ]
 }

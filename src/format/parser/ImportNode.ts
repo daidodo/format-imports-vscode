@@ -19,6 +19,7 @@ import {
 } from '../types';
 import { normalizePath } from '../utils';
 import { getNameBinding } from './helper';
+import KeepUnused from './KeepUnused';
 import Statement, { StatementArgs } from './Statement';
 import { NameUsage } from './unused';
 
@@ -89,20 +90,25 @@ export default class ImportNode extends Statement {
     return !this.isScript && !this.defaultName_ && !this.binding_;
   }
 
-  removeUnusedNames(usage: NameUsage) {
+  removeUnusedNames(usage: NameUsage, keepUnused: KeepUnused) {
     const { unusedNodes } = usage;
     if (this.isScript) return;
-    if (unusedNodes && unusedNodes.includes(this)) {
+    if (unusedNodes && unusedNodes.includes(this) && !keepUnused.node(this)) {
       this.defaultName_ = undefined;
       this.binding_ = undefined;
       return;
     }
-    if (!isNameUsed(this.defaultName_, usage)) this.defaultName_ = undefined;
+    const keepUnusedName = keepUnused.nameOfNode(this);
+    if (!isNameUsed(this.defaultName_, usage, keepUnusedName)) {
+      this.defaultName_ = undefined;
+    }
     if (this.binding_) {
       if (this.binding_.type === 'named') {
-        this.binding_.names = this.binding_.names.filter(n => isNameUsed(n, usage));
+        this.binding_.names = this.binding_.names.filter(n => isNameUsed(n, usage, keepUnusedName));
         if (!this.binding_.names.length) this.binding_ = undefined;
-      } else if (!isNameUsed(this.binding_.alias, usage)) this.binding_ = undefined;
+      } else if (!isNameUsed(this.binding_.alias, usage, keepUnusedName)) {
+        this.binding_ = undefined;
+      }
     }
   }
 
@@ -262,14 +268,18 @@ export default class ImportNode extends Statement {
   }
 }
 
-function isNameUsed(name: NameBinding | string | undefined, usage: NameUsage) {
+function isNameUsed(
+  name: NameBinding | string | undefined,
+  usage: NameUsage,
+  keepUnused: (name: string) => boolean,
+) {
   if (!name) return false;
   const { unusedNames, usedNames } = usage;
   const n = typeof name === 'string' ? name : name.aliasName ?? name.propertyName;
   if (!n) return false;
   // `unusedNames` (from TS compiler) gives more accurate results
   // than `usedNames` (from manual parsing).
-  if (unusedNames) return !unusedNames.has(n);
+  if (unusedNames) return !unusedNames.has(n) || keepUnused(n);
   if (usedNames) return usedNames.has(n);
   return true; // Keep it for safety
 }
