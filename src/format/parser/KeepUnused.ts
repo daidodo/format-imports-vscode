@@ -11,7 +11,7 @@ export default class KeepUnused {
   constructor(rules: KeepUnusedRule[]) {
     this.entries_ = rules
       .map(e => (typeof e === 'string' ? { path: e } : e))
-      .filter(e => e.path)
+      .filter(e => e && e.path)
       .map(e => ({ path: new RegExp(e.path), names: e.names?.map(n => new RegExp(n)) }));
   }
 

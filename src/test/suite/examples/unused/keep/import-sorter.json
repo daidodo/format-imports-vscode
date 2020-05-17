@@ -1,17 +1,20 @@
 {
   "keepUnused": [
+    null,
     "",
     "keepA",
     { "path": null },
     { "path": "" },
     { "path": "keepB" },
     { "path": "keepC", "names": null },
-    { "path": "keepD", "names": ["keepD"] },
-    { "path": "keepE", "names": ["keepE"] },
-    { "path": "keepF", "names": [] },
-    { "path": "keepG", "names": ["keepG"] },
-    { "path": "keepH", "names": ["keepH"] },
-    { "path": "keepI", "names": ["keepI1"] },
-    { "path": "keepI", "names": ["keepI2"] }
+    { "path": "keepD", "names": [] },
+    { "path": "keepE", "names": ["E"] },
+    { "path": "keepF", "names": ["F", "G"] },
+    { "path": "keepH" },
+    { "path": "keepH", "names": ["H"] },
+    { "path": "keepI", "names": ["I"] },
+    { "path": "keepI", "names": [] },
+    { "path": "keepJ", "names": ["J"] },
+    { "path": "keepJ", "names": ["K"] }
   ]
 }

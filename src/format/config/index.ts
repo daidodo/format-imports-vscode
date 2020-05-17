@@ -6,8 +6,9 @@ import {
   SortRule,
   SortRules,
 } from './sorting';
+import { KeepUnusedRule } from './unused';
 
-export { GroupRule, SegSymbol, SortRule, SortRules };
+export { GroupRule, KeepUnusedRule, SegSymbol, SortRule, SortRules };
 
 export type Configuration = Readonly<
   Partial<{
@@ -38,13 +39,6 @@ export type Configuration = Readonly<
     force: boolean; // Internal. Ignore exclude paths and file disable-comment.
   }>
 >;
-
-export type KeepUnusedRule =
-  | string
-  | {
-      path: string;
-      names?: string[];
-    };
 
 export type ComposeConfig = DeepReadonly<{
   maxLength: number;
