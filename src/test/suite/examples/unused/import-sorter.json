@@ -8,6 +8,8 @@
     { "path": "keepC", "names": null },
     { "path": "keepD", "names": ["keepD"] },
     { "path": "keepE", "names": ["keepE"] },
-    { "path": "keepF", "names": [] }
+    { "path": "keepF", "names": [] },
+    { "path": "keepG", "names": ["keepG"] },
+    { "path": "keepH", "names": ["keepH"] }
   ]
 }
