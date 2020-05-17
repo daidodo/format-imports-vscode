@@ -43,7 +43,7 @@
     "keepUnused": {
       "type": "array",
       "default": [],
-      "items": { "type": ["string", "object"] },
+      "items": { "$ref": "#/$def/keepUnusedRule" },
       "markdownDescription": "By default all unused imports are removed. Keep some or all them around with this setting if you need."
     },
     "maxBindingNamesPerLine": {
@@ -162,6 +162,22 @@
       "type": "array",
       "items": { "$ref": "#/$def/groupRule" },
       "uniqueItems": true
+    },
+    "keepUnusedRule": {
+      "oneOf": [
+        { "type": "string" },
+        {
+          "type": "object",
+          "properties": {
+            "path": { "type": "string", "description": "Import path pattern to keep" },
+            "names": {
+              "type": ["array", "null"],
+              "items": { "type": "string" },
+              "description": "Import names of matching path to keep"
+            }
+          }
+        }
+      ]
     }
   }
 }

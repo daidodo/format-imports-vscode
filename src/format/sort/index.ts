@@ -18,10 +18,10 @@ export function sortImports(
   config: Configuration,
   sorter: Sorter,
 ) {
-  const { sortRules: sort, groupRules: subGroups } = config;
+  const { sortRules: sort, groupRules: subGroups, keepUnused } = config;
   // The top group must be a match-all group.
   const group = new SortGroup({ flag: 'all', regex: '', sort, subGroups }, sorter);
-  const keepUnusedBouncer = new KeepUnused(config.keepUnused, nodes);
+  const keepUnusedBouncer = new KeepUnused(keepUnused, nodes);
   nodes.forEach(n => {
     n.removeUnusedNames(usage, keepUnusedBouncer);
     if (!n.empty()) group.add(n);

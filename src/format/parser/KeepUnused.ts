@@ -1,10 +1,10 @@
-import { KeepUnusedConfig } from '../config';
+import { KeepUnusedRule } from '../config';
 import ImportNode from './ImportNode';
 
 export default class KeepUnused {
   private readonly entries: Map<ImportNode, KeepUnusedMatcher[]>;
 
-  constructor(cfg: KeepUnusedConfig[] = [], nodes: ImportNode[]) {
+  constructor(cfg: KeepUnusedRule[] = [], nodes: ImportNode[]) {
     const matchers = cfg.map(entry => new KeepUnusedMatcher(entry));
     this.entries = new Map();
 
@@ -36,7 +36,7 @@ class KeepUnusedMatcher {
   private readonly pathRx: RegExp | null;
   private readonly namesRx: RegExp[] | null;
 
-  constructor(cfg: KeepUnusedConfig) {
+  constructor(cfg: KeepUnusedRule) {
     let path = null;
     let names = null;
     if (isNonEmptyString(cfg)) {

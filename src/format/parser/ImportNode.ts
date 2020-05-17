@@ -277,9 +277,10 @@ function isNameUsed(
   const { unusedNames, usedNames } = usage;
   const n = typeof name === 'string' ? name : name.aliasName ?? name.propertyName;
   if (!n) return false;
+  if (keepUnused(n)) return true;
   // `unusedNames` (from TS compiler) gives more accurate results
   // than `usedNames` (from manual parsing).
-  if (unusedNames) return !unusedNames.has(n) || keepUnused(n);
+  if (unusedNames) return !unusedNames.has(n);
   if (usedNames) return usedNames.has(n);
   return true; // Keep it for safety
 }

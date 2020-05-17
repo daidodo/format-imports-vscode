@@ -454,14 +454,19 @@ For more details and how to construct your own rules, please read [the Wiki](htt
 
 ### Unused imports removal
 
-By default all unused imports are removed. In some cases you might want to keep the import even if it's unused. For example to keep `import tw from 'twin.macro'` around you can do following:
+By default all unused imports are removed. In some cases you might want to keep the import even if it's unused. For example to keep `import tw from 'twin.macro'`  you can do the following:
 
 ```json
 "keepUnused": ["twin.macro"]
-]
 ```
 
-Another example is `import styled, { css } from 'styled-components'` and if you want to keep `css` import around no matter what, you can achieve that with following config. The `styled` would be removed if it's unused.
+This is equivalent to a more verbose version:
+
+```json
+"keepUnused": [{ "path": "twin.macro" }]
+```
+
+Another example is `import styled, { css } from 'styled-components'` and if you want to keep `css` import while `styled` is removed if unused, you can achieve that with the following configuration:
 
 ```json
 "keepUnused": [

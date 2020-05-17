@@ -23,7 +23,7 @@ export type Configuration = Readonly<
     maxDefaultAndBindingNamesPerLine: number;
     maxExportNamesPerLine: number;
     maxNamesPerWrappedLine: number;
-    keepUnused: KeepUnusedConfig[];
+    keepUnused: KeepUnusedRule[];
     // From other configs
     maxLineLength: number;
     tabType: 'space' | 'tab';
@@ -39,7 +39,7 @@ export type Configuration = Readonly<
   }>
 >;
 
-export type KeepUnusedConfig =
+export type KeepUnusedRule =
   | string
   | {
       path: string;
