@@ -40,6 +40,12 @@
         "names": ["_", "aA"]
       }
     },
+    "keepUnused": {
+      "type": "array",
+      "default": [],
+      "items": { "type": ["string", "object"] },
+      "markdownDescription": "By default all unused imports are removed. Keep some or all them around with this setting if you need."
+    },
     "maxBindingNamesPerLine": {
       "type": "integer",
       "minimum": 0,

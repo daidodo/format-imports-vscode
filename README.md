@@ -85,6 +85,9 @@ All VS Code settings under `"tsImportSorter"` section and their default values:
 // Sorting rule for imported/exported names. Valid values are 'none' or string array.
 "tsImportSorter.configuration.sortRules.names": ["_", "aA"],
 
+// By default all unused imports are removed. Keep some or all them around with this setting if you need.
+"tsImportSorter.configuration.keepUnused": [],
+
 // Max binding names per line before wrapping for imports. 0 for no limit.
 "tsImportSorter.configuration.maxBindingNamesPerLine": 1,
 
@@ -136,6 +139,9 @@ Here are all configs in `package.json` under `"importSorter"` section and their 
       // Sorting rule for imported/exported names. Valid values are 'none' or string array.
       "names": ["_", "aA"]
     },
+
+    // By default all unused imports are removed. Keep some or all them around with this setting if you need.
+    "keepUnused": [],
 
     // Max line length before wrapping. 0 for no limit.
     "maxLineLength": 80,
@@ -445,6 +451,25 @@ _Note:_
 - _Setting `paths` or `names` to `null` doesn't disable sorting but uses the fall-back sorting rules, i.e. `["AZ", "_", "az"]`._
 
 For more details and how to construct your own rules, please read [the Wiki](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules).
+
+### Unused imports removal
+
+By default all unused imports are removed. In some cases you might want to keep the import even if it's unused. For example to keep `import tw from 'twin.macro'` around you can do following:
+
+```json
+"keepUnused": ["twin.macro"]
+]
+```
+
+Another example is `import styled, { css } from 'styled-components'` and if you want to keep `css` import around no matter what, you can achieve that with following config. The `styled` would be removed if it's unused.
+
+```json
+"keepUnused": [
+  { "path": "styled-components", "names": ["css"] }
+]
+```
+
+Both `path` and `names` are converted to regular expressions so you can get really wild here.
 
 ## Thanks
 
