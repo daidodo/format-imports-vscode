@@ -28,7 +28,7 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 
 - Auto format imports and exports on save, or manually format with command, shortcut or context menu.
 - Merge imports or exports if possible, and remove duplicated names.
-- Delete unused import names, correctly handle `React` ([React](https://reactjs.org)) and `h` ([Stencil](https://stenciljs.com/)).
+- Delete unused import names with configurable exceptions, correctly handle `React` ([React](https://reactjs.org)) and `h` ([Stencil](https://stenciljs.com/)).
 - Group and sort imports by customizable rules.
 - Sort binding names in imports and exports.
 - Support multi-root projects.
