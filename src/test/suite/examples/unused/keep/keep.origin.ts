@@ -6,5 +6,6 @@ import E, { keepE } from 'keepE';
 import F1, { F2 } from 'keepF';
 import noKeepG, { G } from 'keepG';
 import H, { noKeepH } from 'keepH';
+import keepI1, { keepI2 } from 'keepI';
 
 export { G, H }
