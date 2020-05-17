@@ -1,9 +1,9 @@
 import { Configuration } from '../config';
 import {
   ImportNode,
+  KeepUnused,
   NameUsage,
 } from '../parser';
-import KeepUnused from '../parser/KeepUnused';
 import {
   Sorter,
   sorterFromRules,
