@@ -59,7 +59,7 @@ class KeepUnusedMatcher {
   }
 
   matchName(name: string) {
-    if (this.namesRx === null) {
+    if (this.namesRx === null || this.namesRx.length === 0) {
       // no names configured, match always
       return true;
     }
