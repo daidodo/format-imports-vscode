@@ -3,7 +3,6 @@
 ### Features
 
 - Test coverage. ([Example](https://github.com/codecov/example-typescript-vscode-extension))
-- Write CONTRIBUTING.md.
 - Group level comments. ([Link](https://github.com/SoominHan/import-sorter/issues/46))
 - Support ESLint plugin import/order. ([Link](https://github.com/SoominHan/import-sorter/issues/43))
 - Import namespace alias. ([Link](https://github.com/SoominHan/import-sorter/issues/29))
@@ -31,6 +30,7 @@
 
 ### DONE
 
+- ~~Write CONTRIBUTING.md.~~
 - ~~Add config json schema.~~
 - ~~Debug logs, open issue template, easy way to copy/paste logs for bug fix.~~
 - ~~Test `unused/deep` fails on Windows 10 + VS Code 1.42.1.~~
