@@ -23,8 +23,8 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 
 - Auto format imports and exports on save, or manually format with command, shortcut or context menu.
 - Merge imports or exports if possible, and remove duplicated names.
-- Delete unused import names with configurable exceptions, correctly handle `React` ([React](https://reactjs.org)) and `h` ([Stencil](https://stenciljs.com/)).
-- Group and sort imports by customizable rules.
+- Delete unused imports with configurable exceptions.
+- Group and sort imports by custom rules.
 - Sort binding names in imports and exports.
 - Support multi-root projects.
 - Ignore specific files, imports or exports.
@@ -101,7 +101,7 @@ All VS Code settings under `"tsImportSorter"` section and their default values:
 JS/TS Import/Export Sorter reads configurations from the following sources (in precedence from high to low):
 
 - `"importSorter"` section in `package.json`
-- `import-sorter.json` (configurable)
+- `import-sorter.json` (File name is configurable)
 - [Prettier configuration](https://github.com/prettier/prettier-vscode#configuration) if installed
 - `.editorconfig`
 - VS Code `"editor"` and `"files"` settings
@@ -470,6 +470,10 @@ Another example is `import styled, { css } from 'styled-components'` and if you 
 ```
 
 Both `path` and `names` are converted to regular expressions so you can get really wild here.
+
+_Note:_
+
+- _You DON'T need to add `React` ([React](https://reactjs.org)) and `h` ([Stencil](https://stenciljs.com/)) to `keepUnused` as they are handled already._
 
 ## Thanks
 
