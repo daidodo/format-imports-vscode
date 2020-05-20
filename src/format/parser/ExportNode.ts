@@ -13,6 +13,7 @@ import Statement, { StatementArgs } from './Statement';
 
 export default class ExportNode extends Statement {
   private readonly moduleIdentifier_?: string;
+  private readonly isTypeOnly: boolean;
   names: NameBinding[];
 
   static fromDecl(node: ExportDeclaration, args: StatementArgs) {
@@ -23,16 +24,18 @@ export default class ExportNode extends Statement {
       .map(getNameBinding);
     if (moduleSpecifier && moduleSpecifier.kind !== SyntaxKind.StringLiteral) return undefined;
     const moduleIdentifier = moduleSpecifier && (moduleSpecifier as StringLiteral).text;
-    return new ExportNode(moduleIdentifier, names, args);
+    return new ExportNode(moduleIdentifier, names, args, node.isTypeOnly);
   }
 
   private constructor(
     moduleIdentifier: string | undefined,
     names: NameBinding[],
     args: StatementArgs,
+    isTypeOnly: boolean,
   ) {
     super(args);
     this.moduleIdentifier_ = moduleIdentifier && normalizePath(moduleIdentifier);
+    this.isTypeOnly = isTypeOnly;
     this.names = names;
   }
 
@@ -67,6 +70,16 @@ export default class ExportNode extends Statement {
     const path = this.moduleIdentifier_;
     const from = path ? 'from ' + quote(path) : undefined;
     const extraLength = commentLength + semi.length;
-    return composeNodeAsNames('export', undefined, this.names, from, extraLength, config) + semi;
+    return (
+      composeNodeAsNames(
+        'export',
+        this.isTypeOnly,
+        undefined,
+        this.names,
+        from,
+        extraLength,
+        config,
+      ) + semi
+    );
   }
 }
