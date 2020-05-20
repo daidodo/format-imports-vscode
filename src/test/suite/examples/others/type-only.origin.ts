@@ -1,4 +1,4 @@
-import type A from 'A'
-import type { B } from 'B'
+import type A from 'a'
+import type { B } from 'b'
 
 export type { A, B }
