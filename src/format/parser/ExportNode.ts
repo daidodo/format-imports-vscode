@@ -13,7 +13,7 @@ import Statement, { StatementArgs } from './Statement';
 
 export default class ExportNode extends Statement {
   private readonly moduleIdentifier_?: string;
-  private readonly isTypeOnly: boolean;
+  private readonly isTypeOnly_: boolean;
   names: NameBinding[];
 
   static fromDecl(node: ExportDeclaration, args: StatementArgs) {
@@ -35,7 +35,7 @@ export default class ExportNode extends Statement {
   ) {
     super(args);
     this.moduleIdentifier_ = moduleIdentifier && normalizePath(moduleIdentifier);
-    this.isTypeOnly = isTypeOnly;
+    this.isTypeOnly_ = isTypeOnly;
     this.names = names;
   }
 
@@ -73,7 +73,7 @@ export default class ExportNode extends Statement {
     return (
       composeNodeAsNames(
         'export',
-        this.isTypeOnly,
+        this.isTypeOnly_,
         undefined,
         this.names,
         from,
