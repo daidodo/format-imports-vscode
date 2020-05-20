@@ -75,6 +75,10 @@ export default class ImportNode extends Statement {
     return this.binding_;
   }
 
+  get isTypeOnly() {
+    return (this.node_ as ImportDeclaration).importClause?.isTypeOnly ?? false;
+  }
+
   allNames() {
     const r: string[] = [];
     if (this.defaultName_) r.push(this.defaultName_);
@@ -253,6 +257,7 @@ export default class ImportNode extends Statement {
     if (this.binding_?.type === 'named')
       return composeNodeAsNames(
         'import',
+        this.isTypeOnly,
         this.defaultName_,
         this.binding_.names,
         from,
