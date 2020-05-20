@@ -39,6 +39,7 @@ export function composeComments(comments: NodeComment[] | undefined, { nl }: Com
 
 export function composeNodeAsNames(
   verb: string,
+  isTypeOnly: boolean,
   defaultName: string | undefined,
   names: NameBinding[] | undefined,
   from: string | undefined,
@@ -46,20 +47,36 @@ export function composeNodeAsNames(
   config: ComposeConfig,
 ) {
   const { maxLength } = config;
-  const { text, canWrap } = composeNodeAsNamesImpl(verb, defaultName, names, from, config, false);
+  const { text, canWrap } = composeNodeAsNamesImpl(
+    verb,
+    isTypeOnly,
+    defaultName,
+    names,
+    from,
+    config,
+    false,
+  );
   if (maxLength >= text.length + extraLength || !canWrap) return text;
-  return composeNodeAsNamesImpl(verb, defaultName, names, from, config, true).text;
+  return composeNodeAsNamesImpl(verb, isTypeOnly, defaultName, names, from, config, true).text;
 }
 
 function composeNodeAsNamesImpl(
   verb: string,
+  isTypeOnly: boolean,
   defaultName: string | undefined,
   names: NameBinding[] | undefined,
   from: string | undefined,
   config: ComposeConfig,
   forceWrap: boolean,
 ) {
-  const { text: t, canWrap } = composeNames(verb, !!defaultName, names, config, forceWrap);
+  const { text: t, canWrap } = composeNames(
+    verb,
+    isTypeOnly,
+    !!defaultName,
+    names,
+    config,
+    forceWrap,
+  );
   const all = [defaultName, t].filter(s => !!s).join(', ');
   const text = [verb, all, from].filter(s => !!s).join(' ');
   return { text, canWrap };
@@ -67,6 +84,7 @@ function composeNodeAsNamesImpl(
 
 function composeNames(
   verb: string,
+  isTypeOnly: boolean,
   hasDefault: boolean,
   names: NameBinding[] | undefined,
   config: ComposeConfig,
