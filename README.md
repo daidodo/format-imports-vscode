@@ -19,9 +19,9 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 
 ## Features
 
-- Auto format imports and exports on save, or manually format with command, shortcut or context menu.
+- Auto format imports and exports on save, or manually from command, shortcut or context menu.
 - Merge imports or exports if possible, and remove duplicated names.
-- Delete unused imports with configurable exceptions.
+- Delete unused imports with configurable exceptions for, e.g. macros.
 - Group and sort imports by custom rules.
 - Sort binding names in imports and exports.
 - Support [Type-Only imports/exports](https://devblogs.microsoft.com/typescript/announcing-typescript-3-8/#type-only-imports-exports).
