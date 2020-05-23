@@ -3,12 +3,19 @@ import 'aaaaaaaaaaaaaaaaaaaaa';
 
 import A
   from 'aa';   //comment
+import type AAAA from 'aaaaa';
+import type AAAA
+  from 'aaaaaa';
 import AAA from 'aaaaaaaaaaa';
 import AA
   from 'aaaaaaaaaaaaa';
+import type { BBBB } from 'b';
 import {
   B,
 } from 'bb';//commnt
+import type {
+  BBBB,
+} from 'bb';
 import { BBB } from 'bbbbbbb';
 import {
   BB,
@@ -32,5 +39,10 @@ export {
 } from 'a'; //cmt
 export { a, b } from 'a';/*cmt
 xxx*/
+export type { a, b } from 'a';
+export type {
+  a,
+  b,
+} from 'aa';
 
-type X = C&CC&CCC&BB& D&DD&DDD;
+type X = C & CC & CCC & BB & D & DD & DDD & AAAA & BBBB;

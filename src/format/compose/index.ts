@@ -9,14 +9,15 @@ import {
 } from '../types';
 
 export function composeNodeAsParts(
+  verb: string,
   parts: string[],
   from: string,
   extraLength: number,
   { maxLength, tab, nl }: ComposeConfig,
 ) {
   const [first, ...rest] = parts;
-  assert(!!first);
-  let text = `import ${first}` + (rest.length ? ',' : '');
+  assert(!!first, `Invalid parts=${parts} for verb=${verb}, from=${from}`);
+  let text = `${verb} ${first}` + (rest.length ? ',' : '');
   const lines = [];
   rest.forEach((p, i, a) => {
     const c = i + 1 < a.length ? ',' : '';
@@ -39,7 +40,6 @@ export function composeComments(comments: NodeComment[] | undefined, { nl }: Com
 
 export function composeNodeAsNames(
   verb: string,
-  isTypeOnly: boolean,
   defaultName: string | undefined,
   names: NameBinding[] | undefined,
   from: string | undefined,
@@ -47,36 +47,20 @@ export function composeNodeAsNames(
   config: ComposeConfig,
 ) {
   const { maxLength } = config;
-  const { text, canWrap } = composeNodeAsNamesImpl(
-    verb,
-    isTypeOnly,
-    defaultName,
-    names,
-    from,
-    config,
-    false,
-  );
+  const { text, canWrap } = composeNodeAsNamesImpl(verb, defaultName, names, from, config, false);
   if (maxLength >= text.length + extraLength || !canWrap) return text;
-  return composeNodeAsNamesImpl(verb, isTypeOnly, defaultName, names, from, config, true).text;
+  return composeNodeAsNamesImpl(verb, defaultName, names, from, config, true).text;
 }
 
 function composeNodeAsNamesImpl(
   verb: string,
-  isTypeOnly: boolean,
   defaultName: string | undefined,
   names: NameBinding[] | undefined,
   from: string | undefined,
   config: ComposeConfig,
   forceWrap: boolean,
 ) {
-  const { text: t, canWrap } = composeNames(
-    verb,
-    isTypeOnly,
-    !!defaultName,
-    names,
-    config,
-    forceWrap,
-  );
+  const { text: t, canWrap } = composeNames(verb, !!defaultName, names, config, forceWrap);
   const all = [defaultName, t].filter(s => !!s).join(', ');
   const text = [verb, all, from].filter(s => !!s).join(' ');
   return { text, canWrap };
@@ -84,7 +68,6 @@ function composeNodeAsNamesImpl(
 
 function composeNames(
   verb: string,
-  isTypeOnly: boolean,
   hasDefault: boolean,
   names: NameBinding[] | undefined,
   config: ComposeConfig,
@@ -93,7 +76,7 @@ function composeNames(
   const { maxWords: mw, maxLength, bracket, nl } = config;
   const maxWords = hasDefault
     ? mw.withDefault - 1
-    : verb === 'export'
+    : verb.startsWith('export')
     ? mw.exported
     : mw.withoutDefault;
   const words = names?.map(composeName).filter((w): w is string => !!w);
