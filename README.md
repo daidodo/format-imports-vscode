@@ -13,11 +13,9 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - [Install Plugin](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter)
 - [Open Issues](https://github.com/daidodo/tsimportsorter/issues)
 
-## Release Notes for 2.1
+## Release Notes for 2.1.4
 
-- Support keeping unused imports.
-- Config changes:
-  - Add `"keepUnused"`.
+- Support [Type-Only imports/exports](https://devblogs.microsoft.com/typescript/announcing-typescript-3-8/#type-only-imports-exports).
 
 ## Features
 
@@ -26,6 +24,7 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - Delete unused imports with configurable exceptions.
 - Group and sort imports by custom rules.
 - Sort binding names in imports and exports.
+- Support [Type-Only imports/exports](https://devblogs.microsoft.com/typescript/announcing-typescript-3-8/#type-only-imports-exports).
 - Support multi-root projects.
 - Ignore specific files, imports or exports.
 - Preserve `'use strict'`, `///` directives, shebang (`#!`) and global comments, e.g. license.

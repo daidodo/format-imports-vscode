@@ -17,6 +17,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -->
 
+## [2.1.4] - 2020-05-23
+
+### Added
+
+- Support [Type-Only imports/exports](https://devblogs.microsoft.com/typescript/announcing-typescript-3-8/#type-only-imports-exports).
+
 ## [2.1.0] - 2020-05-17
 
 ### Added
