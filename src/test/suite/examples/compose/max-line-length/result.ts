@@ -10,12 +10,12 @@ import AAA from 'aaaaaaaaaaa';
 import AA
   from 'aaaaaaaaaaaaa';
 import type { BBBB } from 'b';
-import {
-  B,
-} from 'bb';//commnt
 import type {
   BBBB,
 } from 'bb';
+import {
+  B,
+} from 'bb';//commnt
 import { BBB } from 'bbbbbbb';
 import {
   BB,

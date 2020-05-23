@@ -28,7 +28,7 @@ export default class ImportNode extends Statement {
 
   readonly moduleIdentifier: string;
   readonly isScript: boolean;
-  private readonly isTypeOnly_: boolean;
+  readonly isTypeOnly: boolean;
   private defaultName_?: string;
   private binding_?: Binding;
 
@@ -67,7 +67,7 @@ export default class ImportNode extends Statement {
     this.defaultName_ = defaultName;
     this.binding_ = binding;
     this.isScript = isScript;
-    this.isTypeOnly_ = isTypeOnly;
+    this.isTypeOnly = isTypeOnly;
   }
 
   get defaultName() {
@@ -118,18 +118,18 @@ export default class ImportNode extends Statement {
    *          false if `node` still has names or comments thus can't be ignored.
    */
   merge(node: ImportNode) {
-    const { isTypeOnly_: t } = this;
+    const { isTypeOnly } = this;
     if (
       this.moduleIdentifier !== node.moduleIdentifier ||
       this.node_.kind !== node.node_.kind ||
-      t !== node.isTypeOnly_ ||
+      isTypeOnly !== node.isTypeOnly ||
       !this.canMergeComments(node)
     )
       return false;
     this.removeBindingDefault(node.defaultName_);
     node.removeBindingDefault(this.defaultName_);
-    const r1 = this.mergeBinding(node, !t);
-    const r2 = this.mergeDefaultName(node, !t);
+    const r1 = this.mergeBinding(node, !isTypeOnly);
+    const r2 = this.mergeDefaultName(node, !isTypeOnly);
     return r1 && r2 && this.mergeComments(node);
   }
 
@@ -138,7 +138,7 @@ export default class ImportNode extends Statement {
     if (this.defaultName_) this.removeBindingDefault(this.defaultName_);
     // `import {default as A, B} from 'x'` => `import A, {B} from 'x'`
     // `import type {default as A} from 'x'` => `import type A from 'x'`
-    else this.defaultName_ = this.pickBindingDefault(this.isTypeOnly_);
+    else this.defaultName_ = this.pickBindingDefault(this.isTypeOnly);
   }
 
   compose(config: ComposeConfig) {
@@ -264,7 +264,7 @@ export default class ImportNode extends Statement {
     const path = this.moduleIdentifier;
     const ending = quote(path);
     if (this.isScript) return `import ${ending}`;
-    const verb = 'import' + (this.isTypeOnly_ ? ' type' : '');
+    const verb = 'import' + (this.isTypeOnly ? ' type' : '');
     const from = `from ${ending}`;
     if (this.binding_?.type === 'named')
       return composeNodeAsNames(
