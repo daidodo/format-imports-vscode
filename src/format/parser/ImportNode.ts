@@ -28,6 +28,7 @@ export default class ImportNode extends Statement {
 
   readonly moduleIdentifier: string;
   readonly isScript: boolean;
+  readonly isTypeOnly: boolean;
   private defaultName_?: string;
   private binding_?: Binding;
 
@@ -36,8 +37,8 @@ export default class ImportNode extends Statement {
     if (!moduleSpecifier || moduleSpecifier.kind !== SyntaxKind.StringLiteral) return undefined;
     const moduleIdentifier = (moduleSpecifier as StringLiteral).text;
     if (!moduleIdentifier.trim()) return undefined;
-    const { defaultName, binding, isScript } = getDefaultAndBinding(importClause);
-    return new ImportNode(node, moduleIdentifier, args, defaultName, binding, isScript);
+    const { defaultName, binding, isScript, isTypeOnly } = getDefaultAndBinding(importClause);
+    return new ImportNode(node, moduleIdentifier, args, defaultName, binding, isScript, isTypeOnly);
   }
 
   static fromEqDecl(node: ImportEqualsDeclaration, args: StatementArgs) {
@@ -58,6 +59,7 @@ export default class ImportNode extends Statement {
     defaultName?: string,
     binding?: Binding,
     isScript = false,
+    isTypeOnly = false,
   ) {
     super(args);
     this.node_ = node;
@@ -65,6 +67,7 @@ export default class ImportNode extends Statement {
     this.defaultName_ = defaultName;
     this.binding_ = binding;
     this.isScript = isScript;
+    this.isTypeOnly = isTypeOnly;
   }
 
   get defaultName() {
@@ -110,36 +113,38 @@ export default class ImportNode extends Statement {
     }
   }
 
-  compose(config: ComposeConfig) {
-    const { leadingText, trailingText, tailingLength } = this.composeComments(config);
-    const importText = this.composeImport(tailingLength, config);
-    return leadingText + importText + trailingText;
-  }
-
   /**
    * @returns true if `node` is fully merged to `this`;
    *          false if `node` still has names or comments thus can't be ignored.
    */
   merge(node: ImportNode) {
-    const { moduleIdentifier, node_ } = node;
+    const { isTypeOnly } = this;
     if (
-      this.moduleIdentifier !== moduleIdentifier ||
-      this.node_.kind !== node_.kind ||
+      this.moduleIdentifier !== node.moduleIdentifier ||
+      this.node_.kind !== node.node_.kind ||
+      isTypeOnly !== node.isTypeOnly ||
       !this.canMergeComments(node)
     )
       return false;
     this.removeBindingDefault(node.defaultName_);
     node.removeBindingDefault(this.defaultName_);
-    const r1 = this.mergeBinding(node);
-    const r2 = this.mergeDefaultName(node);
+    const r1 = this.mergeBinding(node, !isTypeOnly);
+    const r2 = this.mergeDefaultName(node, !isTypeOnly);
     return r1 && r2 && this.mergeComments(node);
   }
 
   checkBindingDefault() {
     // `import A, {default as A} from 'x'` => `import A from 'x'`
     if (this.defaultName_) this.removeBindingDefault(this.defaultName_);
-    // `import {default as A} from 'x'` => `import A from 'x'`
-    else this.defaultName_ = this.pickBindingDefault();
+    // `import {default as A, B} from 'x'` => `import A, {B} from 'x'`
+    // `import type {default as A} from 'x'` => `import type A from 'x'`
+    else this.defaultName_ = this.pickBindingDefault(this.isTypeOnly);
+  }
+
+  compose(config: ComposeConfig) {
+    const { leadingText, trailingText, tailingLength } = this.composeComments(config);
+    const importText = this.composeImport(tailingLength, config);
+    return leadingText + importText + trailingText;
   }
 
   private removeBindingDefault(defaultName?: string) {
@@ -150,18 +155,25 @@ export default class ImportNode extends Statement {
     if (this.binding_.names.length < 1) this.binding_ = undefined;
   }
 
-  private pickBindingDefault() {
+  /**
+   * Find and remove 'default as X' from binding names and returns 'X'.
+   *
+   * If whenSingle is true and names array length is not 1, do nothing.
+   */
+  private pickBindingDefault(whenSingle = false) {
     if (this.binding_?.type !== 'named') return undefined;
+    if (whenSingle && this.binding_.names.length > 1) return undefined;
     const name = this.binding_.names.find(a => a.propertyName === 'default')?.aliasName;
     this.removeBindingDefault(name);
     return name;
   }
 
-  private mergeBinding(node: ImportNode) {
+  private mergeBinding(node: ImportNode, takeOver: boolean) {
     const { binding_: b1 } = this;
     const { binding_: b2 } = node;
     if (!b2) return true;
     else if (!b1) {
+      if (!takeOver) return false;
       this.binding_ = b2;
       node.binding_ = undefined;
       return true;
@@ -177,10 +189,13 @@ export default class ImportNode extends Statement {
     return true;
   }
 
-  private mergeDefaultName(node: ImportNode) {
+  private mergeDefaultName(node: ImportNode, takeOver: boolean) {
     if (this.defaultName_ && node.defaultName_ && this.defaultName_ !== node.defaultName_)
       return false;
-    if (!this.defaultName_) this.defaultName_ = node.defaultName_;
+    if (!this.defaultName_) {
+      if (!takeOver) return !node.defaultName_;
+      this.defaultName_ = node.defaultName_;
+    }
     node.defaultName_ = undefined;
     return true;
   }
@@ -204,7 +219,7 @@ export default class ImportNode extends Statement {
     assertNonNull(name);
     const parts = [`${name} =`];
     const from = `require(${quote(path)})`;
-    return composeNodeAsParts(parts, from, extraLength, config);
+    return composeNodeAsParts('import', parts, from, extraLength, config);
   }
 
   /**
@@ -249,10 +264,11 @@ export default class ImportNode extends Statement {
     const path = this.moduleIdentifier;
     const ending = quote(path);
     if (this.isScript) return `import ${ending}`;
+    const verb = 'import' + (this.isTypeOnly ? ' type' : '');
     const from = `from ${ending}`;
     if (this.binding_?.type === 'named')
       return composeNodeAsNames(
-        'import',
+        verb,
         this.defaultName_,
         this.binding_.names,
         from,
@@ -262,7 +278,7 @@ export default class ImportNode extends Statement {
     const parts = [];
     if (this.defaultName_) parts.push(this.defaultName_);
     if (this.binding_?.type === 'namespace') parts.push(`* as ${this.binding_.alias}`);
-    return composeNodeAsParts(parts, from, extraLength, config);
+    return composeNodeAsParts(verb, parts, from, extraLength, config);
   }
 }
 
@@ -285,10 +301,10 @@ function isNameUsed(
 
 function getDefaultAndBinding(importClause: ImportClause | undefined) {
   if (!importClause) return { isScript: true };
-  const { name, namedBindings } = importClause;
+  const { name, namedBindings, isTypeOnly } = importClause;
   const defaultName = name && name.text;
   const binding = getBinding(namedBindings);
-  return { defaultName, binding, isScript: false };
+  return { defaultName, binding, isScript: false, isTypeOnly };
 }
 
 function getBinding(nb: NamedImportBindings | undefined): Binding | undefined {

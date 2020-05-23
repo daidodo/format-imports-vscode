@@ -9,14 +9,15 @@ import {
 } from '../types';
 
 export function composeNodeAsParts(
+  verb: string,
   parts: string[],
   from: string,
   extraLength: number,
   { maxLength, tab, nl }: ComposeConfig,
 ) {
   const [first, ...rest] = parts;
-  assert(!!first);
-  let text = `import ${first}` + (rest.length ? ',' : '');
+  assert(!!first, `Invalid parts=${parts} for verb=${verb}, from=${from}`);
+  let text = `${verb} ${first}` + (rest.length ? ',' : '');
   const lines = [];
   rest.forEach((p, i, a) => {
     const c = i + 1 < a.length ? ',' : '';
@@ -75,7 +76,7 @@ function composeNames(
   const { maxWords: mw, maxLength, bracket, nl } = config;
   const maxWords = hasDefault
     ? mw.withDefault - 1
-    : verb === 'export'
+    : verb.startsWith('export')
     ? mw.exported
     : mw.withoutDefault;
   const words = names?.map(composeName).filter((w): w is string => !!w);

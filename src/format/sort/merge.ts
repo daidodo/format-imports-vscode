@@ -20,7 +20,7 @@ export function sortAndMergeImportNodes(
   );
   merged.forEach(n => {
     if (n.binding?.type !== 'named') return;
-    n.binding.names = mergeNames(n.binding.names, compareNames);
+    n.binding.names = sortAndDedupNames(n.binding.names, compareNames);
     n.checkBindingDefault();
   });
   return comparePaths
@@ -31,10 +31,13 @@ export function sortAndMergeImportNodes(
 export function sortAndMergeExportNodes(nodes: ExportNode[], compareNames?: Comparator) {
   nodes
     .reduce((r, n) => (r.some(a => a.merge(n)) ? r : [...r, n]), Array<ExportNode>())
-    .forEach(n => (n.names = mergeNames(n.names, compareNames)));
+    .forEach(n => (n.names = sortAndDedupNames(n.names, compareNames)));
 }
 
-function mergeNames(names: NameBinding[], compareNames?: Comparator) {
+/**
+ * Sort names and remove duplicates.
+ */
+function sortAndDedupNames(names: NameBinding[], compareNames?: Comparator) {
   return compareNames
     ? names
         .sort((a, b) => compareBindingName(a, b, compareNames))

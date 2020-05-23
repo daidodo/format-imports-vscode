@@ -48,11 +48,19 @@ export function compareNodes(
 ) {
   return (
     comparePaths(a.moduleIdentifier, b.moduleIdentifier) ||
+    compareTypeOnly(a.isTypeOnly, b.isTypeOnly) ||
     (compareNames
       ? compareDefaultName(a.defaultName, b.defaultName, compareNames) ||
         compareBinding(a.binding, b.binding, compareNames)
       : 0)
   );
+}
+
+/**
+ * Sort typed imports in front of other imports.
+ */
+function compareTypeOnly(a: boolean, b: boolean) {
+  return (a ? 0 : 1) - (b ? 0 : 1);
 }
 
 /**

@@ -13,26 +13,29 @@ import Statement, { StatementArgs } from './Statement';
 
 export default class ExportNode extends Statement {
   private readonly moduleIdentifier_?: string;
+  private readonly isTypeOnly_: boolean;
   names: NameBinding[];
 
   static fromDecl(node: ExportDeclaration, args: StatementArgs) {
-    const { exportClause, moduleSpecifier } = node;
+    const { exportClause, moduleSpecifier, isTypeOnly } = node;
     if (!exportClause || exportClause.kind !== SyntaxKind.NamedExports) return undefined;
     const names = exportClause.elements
       .filter(e => e.kind === SyntaxKind.ExportSpecifier)
       .map(getNameBinding);
     if (moduleSpecifier && moduleSpecifier.kind !== SyntaxKind.StringLiteral) return undefined;
     const moduleIdentifier = moduleSpecifier && (moduleSpecifier as StringLiteral).text;
-    return new ExportNode(moduleIdentifier, names, args);
+    return new ExportNode(moduleIdentifier, names, args, isTypeOnly);
   }
 
   private constructor(
     moduleIdentifier: string | undefined,
     names: NameBinding[],
     args: StatementArgs,
+    isTypeOnly: boolean,
   ) {
     super(args);
     this.moduleIdentifier_ = moduleIdentifier && normalizePath(moduleIdentifier);
+    this.isTypeOnly_ = isTypeOnly;
     this.names = names;
   }
 
@@ -44,6 +47,7 @@ export default class ExportNode extends Statement {
     if (
       this.empty() ||
       this.moduleIdentifier_ !== node.moduleIdentifier_ ||
+      this.isTypeOnly_ !== node.isTypeOnly_ ||
       !this.canMergeComments(node)
     )
       return false;
@@ -64,9 +68,10 @@ export default class ExportNode extends Statement {
 
   private composeExport(commentLength: number, config: ComposeConfig) {
     const { quote, semi } = config;
+    const verb = 'export' + (this.isTypeOnly_ ? ' type' : '');
     const path = this.moduleIdentifier_;
     const from = path ? 'from ' + quote(path) : undefined;
     const extraLength = commentLength + semi.length;
-    return composeNodeAsNames('export', undefined, this.names, from, extraLength, config) + semi;
+    return composeNodeAsNames(verb, undefined, this.names, from, extraLength, config) + semi;
   }
 }
