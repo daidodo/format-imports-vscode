@@ -2,6 +2,8 @@ import glob from 'glob';
 import Mocha from 'mocha';
 import path from 'path';
 
+import setupCoverage from '../coverage';
+
 export function run(): Promise<void> {
   // Create the mocha test
   const mocha = new Mocha({
@@ -9,7 +11,9 @@ export function run(): Promise<void> {
   });
   mocha.useColors(true);
   // Search for test files in src/
-  const testsRoot = path.resolve(__dirname, '../..');
+  const testsRoot = path.resolve(__dirname, '..', '..');
+  const packageRoot = path.resolve(testsRoot, '..');
+  setupCoverage(packageRoot);
 
   return new Promise((c, e) => {
     glob('**/**.test.js', { cwd: testsRoot }, (err, files) => {
