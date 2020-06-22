@@ -30,3 +30,10 @@ export default class D { }
 
 export * from './hi'  // defualt export is excluded
 export * as n from './hi'
+
+const HI = './hi';
+export {HI} from HI;
+
+import B from HI;
+import C from '   ';
+import D = require(HI);
