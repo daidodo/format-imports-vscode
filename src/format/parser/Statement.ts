@@ -1,3 +1,4 @@
+import { assert } from '../../common';
 import { composeComments } from '../compose';
 import { ComposeConfig } from '../config';
 import {
@@ -50,7 +51,7 @@ export default class Statement {
   }
 
   protected mergeComments(node: Statement) {
-    if (!this.canMergeComments(node)) return false;
+    assert(this.canMergeComments(node));
     if (!this.leadingComments_) this.leadingComments_ = node.leadingComments_;
     if (!this.trailingCommentsText_) this.trailingCommentsText_ = node.trailingCommentsText_;
     node.leadingComments_ = undefined;

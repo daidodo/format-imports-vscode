@@ -45,4 +45,6 @@ import * as KKK  from 'keepJ';
 import k, { kk } from 'keepJ';
 import * as kkk from 'keepJ';
 
+import L from 'notKeep';
+
 
