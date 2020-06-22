@@ -1,3 +1,3 @@
 import React from 'react';
 
-const x = <div />;
+const x = <div><input /></div>;

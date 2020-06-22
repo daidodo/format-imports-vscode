@@ -28,9 +28,7 @@ export function parseSource(
   options?: CompilerOptions,
 ) {
   const p = new ParseParams(sourceFile, sourceText);
-  const [syntaxList] = sourceFile.getChildren();
-  if (syntaxList && syntaxList.kind === SyntaxKind.SyntaxList)
-    for (const node of syntaxList.getChildren()) if (!process(node, p, config, options)) break;
+  for (const node of sourceFile.statements) if (!process(node, p, config, options)) break;
   return p;
 }
 
