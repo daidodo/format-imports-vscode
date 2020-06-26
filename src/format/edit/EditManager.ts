@@ -14,7 +14,7 @@ interface EditBlock extends InsertText {
 
 interface RangeBlock extends RangeAndEmptyLines {
   inserts: InsertText[];
-  keep?: boolean;
+  keep?: boolean; // Whether to keep texts already in the range.
 }
 
 export default class EditManager {
@@ -37,8 +37,7 @@ export default class EditManager {
       if (pos < s.pos) {
         this.ranges_.splice(i, 0, target);
         return;
-      } else if (s.pos <= pos && pos <= e.pos) {
-        // 'pos <= e.pos' is to proactively absorb edit.
+      } else if (pos <= e.pos) {
         r.inserts.push(edit);
         return;
       }
@@ -71,10 +70,9 @@ function merge(ranges: RangeAndEmptyLines[]) {
   }, new Array<RangeAndEmptyLines>());
 }
 
-function joinInserts(inserts: InsertText[], config: ComposeConfig) {
+function joinInserts(inserts: InsertText[], { nl }: ComposeConfig) {
   if (inserts.length < 1) return {};
   if (inserts.length < 2) return inserts[0];
-  const { nl } = config;
   const t: string[] = [];
   inserts.reduce((a, b) => {
     if (a.text) {
@@ -101,11 +99,10 @@ function ensure(...n: (number | undefined)[]) {
 function decideInsert(
   text: string,
   range: RangeAndEmptyLines,
-  config: ComposeConfig,
+  { nl }: ComposeConfig,
   leadingNewLines?: number,
   trailingNewLines?: number,
 ): Edit {
-  const { nl } = config;
   const { fullStart: start, start: end, leadingNewLines: lnl } = range;
   const ln = !start.pos ? 0 : ensure(lnl, leadingNewLines);
   const tn = ensure(trailingNewLines);
@@ -115,11 +112,10 @@ function decideInsert(
 function decideReplace(
   text: string,
   range: RangeAndEmptyLines,
-  config: ComposeConfig,
+  { nl, lastNewLine }: ComposeConfig,
   leadingNewLines?: number,
   trailingNewLines?: number,
 ): Edit {
-  const { nl, lastNewLine } = config;
   const {
     fullStart: start,
     fullEnd: end,
@@ -132,8 +128,7 @@ function decideReplace(
   return { range: { start, end }, newText: nl.repeat(ln) + text + nl.repeat(tn) };
 }
 
-function decideDelete(range: RangeAndEmptyLines, config: ComposeConfig): Edit {
-  const { nl, lastNewLine } = config;
+function decideDelete(range: RangeAndEmptyLines, { nl, lastNewLine }: ComposeConfig): Edit {
   const { fullStart: start, fullEnd: end, leadingNewLines: ln, trailingNewLines: tn, eof } = range;
   const n = !start.pos ? 0 : eof ? (lastNewLine ? 1 : 0) : ensure(ln + tn);
   return { range: { start, end }, newText: nl.repeat(n) };
