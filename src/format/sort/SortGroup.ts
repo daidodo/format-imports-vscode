@@ -37,8 +37,8 @@ export default class SortGroup {
   }
 
   /**
-   * @param node The node to be added
-   * @param fallBack Whether to add node if this is a fall-back group
+   * @param node - The node to be added
+   * @param fallBack - Whether to add node if this is a fall-back group
    * @returns Whether node is added to this group
    */
   add(node: ImportNode, fallBack = false) {
