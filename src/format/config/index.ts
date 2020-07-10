@@ -25,6 +25,7 @@ export type Configuration = Readonly<
     maxExportNamesPerLine: number;
     maxNamesPerWrappedLine: number;
     keepUnused: KeepUnusedRule[];
+    EmptyLinesBetweenGroups: number;
     // From other configs
     maxLineLength: number;
     tabType: 'space' | 'tab';
@@ -43,6 +44,7 @@ export type Configuration = Readonly<
 export type ComposeConfig = DeepReadonly<{
   maxLength: number;
   maxWords: { withDefault: number; withoutDefault: number; wrapped: number; exported: number };
+  groupSep: string;
   tab: string;
   quote: (s: string) => string;
   comma: string;
@@ -58,6 +60,7 @@ export function configForCompose({
   maxDefaultAndBindingNamesPerLine,
   maxExportNamesPerLine,
   maxNamesPerWrappedLine,
+  EmptyLinesBetweenGroups,
   tabType,
   tabSize,
   quoteMark,
@@ -67,6 +70,7 @@ export function configForCompose({
   insertFinalNewline,
   eol,
 }: Configuration): ComposeConfig {
+  const nl = eol === 'CRLF' ? '\r\n' : '\n';
   return {
     maxLength: (maxLineLength ?? 80) || Number.MAX_SAFE_INTEGER,
     maxWords: {
@@ -75,6 +79,7 @@ export function configForCompose({
       wrapped: (maxNamesPerWrappedLine ?? 1) || Number.MAX_SAFE_INTEGER,
       exported: maxExportNamesPerLine || Number.MAX_SAFE_INTEGER,
     },
+    groupSep: nl.repeat((EmptyLinesBetweenGroups ?? 1) + 1),
     tab: tabType?.toLowerCase() === 'tab' ? '\t' : ' '.repeat(tabSize ?? 2),
     quote:
       quoteMark?.toLowerCase() === 'double' ? (s: string) => `"${s}"` : (s: string) => `'${s}'`,
@@ -82,6 +87,6 @@ export function configForCompose({
     semi: hasSemicolon === false ? '' : ';',
     bracket: bracketSpacing === false ? (s: string) => `{${s}}` : (s: string) => `{ ${s} }`,
     lastNewLine: insertFinalNewline !== false,
-    nl: eol === 'CRLF' ? '\r\n' : '\n',
+    nl,
   };
 }

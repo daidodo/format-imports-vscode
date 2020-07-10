@@ -33,7 +33,7 @@ export default class SortGroup {
         return { ...r, flag: f };
       })
       .map(r => new SortGroup(r, this.sorter_));
-    this.flag_ = flag ?? this.subGroups_?.map(g => g.flag_).reduce((r, f) => (r === f ? r : 'all'));
+    this.flag_ = flag; // ?? this.subGroups_?.map(g => g.flag_).reduce((r, f) => (r === f ? r : 'all'));
   }
 
   /**

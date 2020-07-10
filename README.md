@@ -89,6 +89,9 @@ All VS Code settings under `"tsImportSorter"` section and their default values:
 
 // Max names on wrapped lines. 0 for no limit.
 "tsImportSorter.configuration.maxNamesPerWrappedLine": 1,
+
+// Number of empty lines between groups (NOT sub-groups).
+"tsImportSorter.configuration.EmptyLinesBetweenGroups": 1,
 ```
 
 ## Configuration
@@ -147,6 +150,9 @@ Here are all configs in `package.json` under `"importSorter"` section and their 
 
     // Max names on wrapped lines. 0 for no limit.
     "maxNamesPerWrappedLine": 1,
+
+    // Number of empty lines between groups (NOT sub-groups).
+    "EmptyLinesBetweenGroups": 1,
 
     // Number of spaces to replace a TAB.
     "tabSize": 2,
@@ -348,7 +354,7 @@ export {
 
 ### Grouping Rules
 
-JS/TS Import/Export Sorter can put imports into different groups separated by a blank line, based on the rules defined in `groupRules`.
+JS/TS Import/Export Sorter can put imports into different groups separated by empty lines (configurable), based on the rules defined in `groupRules`.
 
 Each grouping rule applies to either:
 
@@ -365,7 +371,7 @@ A grouping rule defines:
 _Notes:_
 
 - _There are NO blank lines between sub-groups._
-- _If you don't want blank lines between groups, the right way is to move groups to sub-groups._
+- _Use `EmptyLinesBetweenGroups` to change empty lines between groups._
 
 For example, `"groupRules": ["^react$", {}, "^[.]"]` defines 3 groups (and their order):
 

@@ -72,8 +72,8 @@ function formatImports(
 ) {
   if (!insertPoint || !importNodes.length) return undefined;
   const groups = sortImports(importNodes, unusedIds(), config, sorter);
-  const { nl } = composeConfig;
-  return groups.compose(composeConfig, nl + nl);
+  const { groupSep } = composeConfig;
+  return groups.compose(composeConfig, groupSep);
 }
 
 function formatExports(exportNodes: ExportNode[], composeConfig: ComposeConfig, sorter: Sorter) {
