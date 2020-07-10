@@ -70,6 +70,12 @@
       "default": 1,
       "description": "Max names on wrapped lines for imports/exports. 0 for no limit."
     },
+    "EmptyLinesBetweenGroups": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 1,
+      "description": "Number of empty lines between groups (NOT sub-groups)."
+    },
     "maxLineLength": {
       "type": "integer",
       "minimum": 0,
