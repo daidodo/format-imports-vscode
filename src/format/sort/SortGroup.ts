@@ -15,13 +15,12 @@ export default class SortGroup {
   private readonly regex_: RegExp | undefined;
   private readonly sorter_: Sorter;
   private readonly subGroups_?: SortGroup[];
-  private nodes_: ImportNode[] = [];
-  private scripts_: ImportNode[] = [];
+  private nodes_: ImportNode[] = []; // Fall-back group for non-script imports
+  private scripts_: ImportNode[] = []; // Fall-back group for script imports
 
   constructor(rule: GroupRule, parentSorter?: Sorter) {
     const { flag, regex, sort, subGroups } = rule;
     const sortRules = sort === 'none' ? { paths: 'none' as const, names: 'none' as const } : sort;
-    this.flag_ = flag;
     this.regex_ = regex || regex === '' ? RegExp(regex) : undefined;
     this.sorter_ = parentSorter
       ? updateSorterWithRules(parentSorter, sortRules)
@@ -34,8 +33,14 @@ export default class SortGroup {
         return { ...r, flag: f };
       })
       .map(r => new SortGroup(r, this.sorter_));
+    this.flag_ = flag ?? this.subGroups_?.map(g => g.flag_).reduce((r, f) => (r === f ? r : 'all'));
   }
 
+  /**
+   * @param node The node to be added
+   * @param fallBack Whether to add node if this is a fall-back group
+   * @returns Whether node is added to this group
+   */
   add(node: ImportNode, fallBack = false) {
     const { isScript, moduleIdentifier } = node;
     if (this.flag_ === 'scripts' && !isScript) return false;

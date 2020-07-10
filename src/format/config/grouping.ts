@@ -2,9 +2,9 @@ import { SortRules } from './sorting';
 
 export interface GroupRule {
   /**
-   * - "all": This group is for all imports.
+   * - "all": This group is for all imports, i.e. script and non-script imports.
    * - "scripts": This group is for script imports, e.g. `import 'some_scripts';`
-   * - `undefined`: This group is for other imports.
+   * - `undefined`: This group is for non-script imports.
    */
   flag?: 'all' | 'scripts' | undefined;
 
