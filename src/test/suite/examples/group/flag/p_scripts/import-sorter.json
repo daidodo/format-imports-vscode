@@ -1,0 +1,3 @@
+{
+  "groupRules": [{ "flag": "scripts", "subGroups": ["^a"] }]
+}

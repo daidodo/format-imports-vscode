@@ -2,11 +2,12 @@ import { SortRules } from './sorting';
 
 export interface GroupRule {
   /**
-   * - "all": This group is for all imports, i.e. script and non-script imports.
-   * - "scripts": This group is for script imports, e.g. `import 'some_scripts';`
-   * - `undefined`: This group is for non-script imports.
+   * - "all": This group is for all imports, i.e. script and named (non-script) imports.
+   * - "scripts": This group is for script imports, e.g. `import 'some_scripts';`.
+   * - `named`: This group is for named (non-script) imports, e.g. `import React from 'react';`.
+   * - `undefined`: Infer the flag from its parent and subGroups.
    */
-  flag?: 'all' | 'scripts' | undefined;
+  flag?: 'all' | 'scripts' | 'named';
 
   /**
    * Import path pattern.

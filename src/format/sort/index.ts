@@ -20,7 +20,7 @@ export function sortImports(
 ) {
   const { sortRules: sort, groupRules: subGroups, keepUnused } = config;
   // The top group must be a match-all group.
-  const group = new SortGroup({ flag: 'all', regex: '', sort, subGroups }, sorter);
+  const group = new SortGroup({ flag: 'all', regex: '', sort, subGroups }, { sorter });
   const keepUnusedBouncer = keepUnused && new KeepUnused(keepUnused);
   nodes.forEach(n => {
     n.removeUnusedNames(usage, keepUnusedBouncer);

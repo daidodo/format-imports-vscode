@@ -1,0 +1,11 @@
+{
+  "groupRules": [
+    {
+      "flag": "all",
+      "regex": "^[abc]",
+      "subGroups": [
+        { "flag": null, "regex": "^[bc]", "subGroups": [{ "flag": "all", "regex": "^b" }] }
+      ]
+    }
+  ]
+}

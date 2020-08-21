@@ -1,3 +1,4 @@
+import { assertNonNull } from '../../common';
 import {
   ComposeConfig,
   GroupRule,
@@ -10,30 +11,30 @@ import {
 } from './compare';
 import { sortAndMergeImportNodes } from './merge';
 
+type Flag = GroupRule['flag'];
+
 export default class SortGroup {
-  private readonly flag_: GroupRule['flag'];
+  private readonly flag_: Flag;
   private readonly regex_: RegExp | undefined;
   private readonly sorter_: Sorter;
   private readonly subGroups_?: SortGroup[];
   private nodes_: ImportNode[] = []; // Fall-back group for non-script imports
   private scripts_: ImportNode[] = []; // Fall-back group for script imports
 
-  constructor(rule: GroupRule, parentSorter?: Sorter) {
+  constructor(rule: GroupRule, parent: { sorter?: Sorter; flag?: Flag }) {
     const { flag, regex, sort, subGroups } = rule;
+    const flag1 = SortGroup.inferFlag1(flag, parent.flag);
     const sortRules = sort === 'none' ? { paths: 'none' as const, names: 'none' as const } : sort;
     this.regex_ = regex || regex === '' ? RegExp(regex) : undefined;
-    this.sorter_ = parentSorter
-      ? updateSorterWithRules(parentSorter, sortRules)
+    this.sorter_ = parent.sorter
+      ? updateSorterWithRules(parent.sorter, sortRules)
       : sorterFromRules(sortRules);
     this.subGroups_ = subGroups
       ?.map(r => {
-        if (typeof r === 'string') return flag === 'all' ? { regex: r } : { flag, regex: r };
-        if (Array.isArray(r)) return flag === 'all' ? { subGroups: r } : { flag, subGroups: r };
-        const f = r.flag ?? (flag === 'all' ? undefined : flag);
-        return { ...r, flag: f };
+        return typeof r === 'string' ? { regex: r } : Array.isArray(r) ? { subGroups: r } : r;
       })
-      .map(r => new SortGroup(r, this.sorter_));
-    this.flag_ = flag; // ?? this.subGroups_?.map(g => g.flag_).reduce((r, f) => (r === f ? r : 'all'));
+      .map(r => new SortGroup(r, { sorter: this.sorter_, flag: flag1 }));
+    this.flag_ = SortGroup.inferFlag2(flag1, this.subGroups_);
   }
 
   /**
@@ -44,7 +45,7 @@ export default class SortGroup {
   add(node: ImportNode, fallBack = false) {
     const { isScript, moduleIdentifier } = node;
     if (this.flag_ === 'scripts' && !isScript) return false;
-    if (!this.flag_ && isScript) return false;
+    if (this.flag_ === 'named' && isScript) return false;
     if (this.regex_) {
       if (!this.regex_.test(moduleIdentifier)) return false;
       if (this.addToSubGroup(node, fallBack)) return true;
@@ -83,5 +84,27 @@ export default class SortGroup {
     ]
       .filter(t => !!t)
       .join(sep);
+  }
+
+  /**
+   * Infer flag (step 1) from current config (flag) and parent's flag.
+   */
+  private static inferFlag1(flag: Flag, parentFlag: Flag) {
+    if (flag) return flag;
+    return parentFlag && parentFlag !== 'all' ? parentFlag : undefined;
+  }
+
+  /**
+   * Infer flag (step 2) from children's flags.
+   */
+  private static inferFlag2(flag1: Flag, subGroups?: SortGroup[]) {
+    if (flag1) return flag1;
+    const childrenFlag = subGroups
+      ?.map(g => g.flag_)
+      .reduce((a, b) => {
+        assertNonNull(b);
+        return !a || a === b ? b : 'all';
+      }, undefined);
+    return childrenFlag ?? 'named';
   }
 }
