@@ -2,7 +2,6 @@
 
 ### Features
 
-- Infer 'flag' from sub-groups in GroupRule. ([Link](https://github.com/daidodo/tsimportsorter/issues/17))
 - Group level comments. ([Link](https://github.com/SoominHan/import-sorter/issues/46))
 - Support ESLint plugin import/order. ([Link](https://github.com/SoominHan/import-sorter/issues/43))
 - Import namespace alias. ([Link](https://github.com/SoominHan/import-sorter/issues/29))
@@ -29,6 +28,7 @@
 
 ### DONE
 
+- ~~Infer 'flag' from sub-groups in GroupRule. ([Link](https://github.com/daidodo/tsimportsorter/issues/17))~~
 - ~~Test coverage. ([Example](https://github.com/codecov/example-typescript-vscode-extension), [Doc](https://rpeshkov.net/blog/vscode-extension-coverage/))~~
 - ~~Support [twin.macro](https://github.com/ben-rogerson/twin.macro). ([Link](https://github.com/daidodo/tsimportsorter/issues/12))~~
 - ~~Write CONTRIBUTING.md.~~

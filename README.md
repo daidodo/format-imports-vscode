@@ -359,11 +359,11 @@ JS/TS Import/Export Sorter can put imports into different groups separated by em
 Each grouping rule applies to either:
 
 - Script imports, e.g. `import 'some/scripts'`, or
-- Non-script imports, e.g. `import React, { FC } from 'react'`.
+- Named (non-script) imports, e.g. `import React, { FC } from 'react'`.
 
 A grouping rule defines:
 
-- Type of imports to apply: Script or non-script imports.
+- Type of imports to apply: Script or named imports.
 - Path pattern to match.
 - [Sorting Rules](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules) for paths and names within the group.
 - Sub-groups to further adjust the order of imports.
@@ -375,9 +375,9 @@ _Notes:_
 
 For example, `"groupRules": ["^react$", {}, "^[.]"]` defines 3 groups (and their order):
 
-- `"^react$"`: matches any *non-script* imports from exact path `"react"`.
+- `"^react$"`: matches any *named* imports from exact path `"react"`.
 - `{}`: is the fall-back group, i.e. any imports that don't match any other groups will fall into this group.
-- `"^[.]"`: matches any *non-script* imports from paths starting with `"."`.
+- `"^[.]"`: matches any *named* imports from paths starting with `"."`.
 
 The following is an example of the results:
 

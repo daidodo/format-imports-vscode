@@ -154,7 +154,7 @@
           "properties": {
             "flag": {
               "type": "string",
-              "enum": ["all", "scripts"],
+              "enum": ["all", "scripts", "named"],
               "description": "Targets of this group."
             },
             "regex": { "type": "string", "description": "Import path pattern." },
