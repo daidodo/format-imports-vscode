@@ -475,6 +475,12 @@ Both `path` and `names` are converted to regular expressions so you can get real
 _Note:_
 
 - _You DON'T need to add `React` ([React](https://reactjs.org)) and `h` ([Stencil](https://stenciljs.com/)) to `keepUnused` as they are handled already._
+- _By default, `"keepUnused"` array is empty, i.e. DON'T keep any unused imports._
+- _To keep ALL unused imports you can simply set:_
+
+```json
+"keepUnused": [".*"]
+```
 
 ## Thanks
 
