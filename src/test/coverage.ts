@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+
 import decache from 'decache';
 import fs from 'fs';
 import glob from 'glob';
@@ -29,7 +32,7 @@ declare const global: any;
  * Set up Code Coverage, hooking require() so that instrumented code is returned.
  */
 export default function setupCoverage(rootPath: string) {
-  const coverageVar = '$$cov_' + new Date().getTime() + '$$';
+  const coverageVar = `$$cov_${new Date().getTime()}$$`;
   const instrumenter = new Instrumenter({ coverageVariable: coverageVar });
   const sourceRoot = path.join(rootPath, CONFIG.relativeSourcePath);
   const srcFiles = new Set(
@@ -89,6 +92,7 @@ function reportCoverage(
   const coverageFile = path.resolve(reportingDir, 'coverage.json');
   fs.writeFileSync(coverageFile, JSON.stringify(cov), 'utf8');
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   const remappedCollector = remapIstanbul.remap(cov);
   const reporter = new Reporter(undefined, reportingDir);
   reporter.addAll(CONFIG.reports);

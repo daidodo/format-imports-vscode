@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+
 import os from 'os';
 import vscode from 'vscode';
 

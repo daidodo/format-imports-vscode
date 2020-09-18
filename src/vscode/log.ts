@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+
 import log4js, {
   AppenderModule,
   LoggingEvent,
@@ -32,6 +34,7 @@ function getAppenderModule(channel: OutputChannel): AppenderModule {
     configure(config: any, layouts: any) {
       const { layoutNormal: n, timezoneOffset } = config;
       const { layout: getLayout, basicLayout } = layouts;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       const normalLayout = getLayout(n.type, n) ?? basicLayout;
       return (event: LoggingEvent) => {
         const msg = normalLayout(event, timezoneOffset);

@@ -70,7 +70,7 @@ export function mergeConfig(...configs: Configuration[]) {
   });
 }
 
-function purify<T extends object>(a: T): Partial<T> {
+function purify<T extends Record<string, unknown>>(a: T): Partial<T> {
   const r: Partial<T> = {};
   for (const k in a) {
     const v = a[k];
