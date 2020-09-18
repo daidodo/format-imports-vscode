@@ -73,7 +73,7 @@ function sortImportsByCommand(editor: TextEditor) {
   if (!document) return;
   const newSourceText = formatDocument(document, true);
   if (newSourceText === undefined) return;
-  editor.edit(edit => edit.replace(fullRange(document), newSourceText));
+  void editor.edit(edit => edit.replace(fullRange(document), newSourceText));
 }
 
 function sortImportsBeforeSavingDocument(event: TextDocumentWillSaveEvent) {
@@ -107,9 +107,9 @@ function formatDocument(document: TextDocument, force?: boolean) {
     const ret = newText === sourceText ? undefined : newText;
     log.info(`Finished format${ret === undefined ? ' with no-op.' : '.'}`);
     return ret;
-  } catch (e) {
+  } catch (e: unknown) {
     log.error('Found exception:', e);
-    window
+    void window
       .showErrorMessage(
         'Something is wrong. Please view & copy the logs and report a bug.',
         'View logs & Report',
@@ -117,8 +117,10 @@ function formatDocument(document: TextDocument, force?: boolean) {
       .then(v => {
         if (!v) return;
         g_vscChannel.show();
-        const p = new URLSearchParams({ title: `Exception: ${e.message}` });
-        commands.executeCommand('vscode.open', Uri.parse(ISSUE_URL + p));
+        const p = new URLSearchParams({
+          title: `Exception: ${e instanceof Error ? e.message : e}`,
+        });
+        void commands.executeCommand('vscode.open', Uri.parse(ISSUE_URL + p.toString()));
       });
   }
   return undefined;
