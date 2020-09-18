@@ -12,8 +12,8 @@ export default function runner(
   // Create the mocha test
   const mocha = new Mocha({
     ui: 'tdd',
+    color: true,
   });
-  mocha.useColors(true);
   // Search for test files in src/
   setupCoverage(packageRoot);
 
