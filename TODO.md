@@ -3,7 +3,7 @@
 ### Features
 
 - Group level comments. ([Link](https://github.com/SoominHan/import-sorter/issues/46))
-- Support ESLint plugin import/order. ([Link](https://github.com/SoominHan/import-sorter/issues/43), [Link](https://github.com/SoominHan/import-sorter/issues/65), [Link](https://github.com/SoominHan/import-sorter/issues/36))
+- Support ESLint plugin import/order. ([Link](https://github.com/SoominHan/import-sorter/issues/43), [Link](https://github.com/SoominHan/import-sorter/issues/65), [Link](https://github.com/SoominHan/import-sorter/issues/36), [Rule](https://eslint.org/docs/rules/sort-imports), [Rule](https://eslint.org/docs/rules/no-duplicate-imports))
 - Import namespace alias. ([Link](https://github.com/SoominHan/import-sorter/issues/29))
 - Standalone npm package, CLI version. ([Link](https://github.com/znikola/vscode-es6-typescript-import-sorter/issues/20), [Link](https://github.com/SoominHan/import-sorter/issues/57))
 - Add a "sort-imports.on-focus-change" sorting option. ([Link](https://github.com/amatiasq/vsc-sort-imports/issues/30))
