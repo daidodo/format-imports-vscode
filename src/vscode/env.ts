@@ -20,11 +20,12 @@ export function vscodeInfo() {
 }
 
 export function extensionsInfo() {
-  return vscode.extensions.all.map(e => ({
-    displayName: e.packageJSON.displayName,
-    id: e.id,
-    version: e.packageJSON.version,
-  }));
+  return vscode.extensions.all
+    .filter(e => !e.packageJSON.isBuiltin)
+    .map(({ id, packageJSON }) => {
+      const { displayName, version } = packageJSON;
+      return `${id}@${version}` + (displayName ? ` (${displayName})` : '');
+    });
 }
 
 export function workspacesInfo() {
