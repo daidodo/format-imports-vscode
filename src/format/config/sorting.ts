@@ -19,7 +19,7 @@ export type SortRule = SegSymbol[] | 'none';
 
 export interface SortRules {
   /**
-   * Sort import statements by paths or first names.
+   * Sort import statements by paths or first names. Default by paths.
    *
    * If by paths, the result is:
    * ```
@@ -33,7 +33,7 @@ export interface SortRules {
    * import B from 'a';
    * ```
    */
-  // sortImportsBy: 'paths' | 'names';
+  // sortImportsBy?: 'paths' | 'names';
   /**
    * Sorting rule for import paths.
    */
