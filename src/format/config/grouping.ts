@@ -21,6 +21,24 @@ export interface GroupRule {
   regex?: string;
 
   /**
+   * Sort import statements by paths or first names.
+   * If it's undefined, then use the parent's value, or 'paths' if this is a top group.
+   *
+   * If by paths, the result is:
+   * ```
+   * import B from 'a';
+   * import A from 'b';
+   * ```
+   *
+   * If by names, the result is:
+   * ```
+   * import A from 'b';
+   * import B from 'a';
+   * ```
+   */
+  sortImportsBy?: 'paths' | 'names';
+
+  /**
    * Sorting rules for this group.
    *
    * If it's `undefined`, or either `paths` or `names` is `undefined`, then inherit
@@ -32,8 +50,8 @@ export interface GroupRule {
 
   /**
    * Sub-groups and rules. Imports will be sorted as the same order as sub groups defined.
-   * - `string` elems will be expanded to `{ regex: elem }`.
-   * - `string[]` elems will be expanded to `{ subGroups: elem }`.
+   * - `string` items will be expanded to `{ regex: elem }`.
+   * - `string[]` items will be expanded to `{ subGroups: elem }`.
    */
   subGroups?: (string | string[] | GroupRule)[];
 }

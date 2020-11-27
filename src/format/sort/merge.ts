@@ -6,11 +6,13 @@ import { NameBinding } from '../types';
 import {
   Comparator,
   compareBindingName,
-  compareNodes,
+  compareImportNodesByNames,
+  compareImportNodesByPaths,
 } from './compare';
 
 export function sortAndMergeImportNodes(
   nodes: ImportNode[],
+  byPaths: boolean,
   comparePaths?: Comparator,
   compareNames?: Comparator,
 ) {
@@ -23,9 +25,9 @@ export function sortAndMergeImportNodes(
     n.binding.names = sortAndDedupNames(n.binding.names, compareNames);
     n.checkBindingDefault();
   });
-  return comparePaths
-    ? merged.sort((a, b) => compareNodes(a, b, comparePaths, compareNames))
-    : merged;
+  return byPaths
+    ? sortImportNodesByPaths(merged, comparePaths, compareNames)
+    : sortImportNodesByNames(merged, compareNames);
 }
 
 export function sortAndMergeExportNodes(nodes: ExportNode[], compareNames?: Comparator) {
@@ -51,6 +53,20 @@ function sortAndDedupNames(names: NameBinding[], compareNames?: Comparator) {
         (r, a) => (r.some(e => isEqual(e, a)) ? r : [...r, a]), // Remove duplicates
         new Array<NameBinding>(),
       );
+}
+
+function sortImportNodesByPaths(
+  nodes: ImportNode[],
+  comparePaths?: Comparator,
+  compareNames?: Comparator,
+) {
+  return comparePaths
+    ? nodes.sort((a, b) => compareImportNodesByPaths(a, b, comparePaths, compareNames))
+    : nodes;
+}
+
+function sortImportNodesByNames(nodes: ImportNode[], compareNames?: Comparator) {
+  return compareNames ? nodes.sort((a, b) => compareImportNodesByNames(a, b, compareNames)) : nodes;
 }
 
 function isEqual(a: NameBinding, b: NameBinding) {

@@ -40,7 +40,7 @@ export function updateSorterWithRules(sorter: Sorter, rules: SortRules | undefin
   return r;
 }
 
-export function compareNodes(
+export function compareImportNodesByPaths(
   a: ImportNode,
   b: ImportNode,
   comparePaths: Comparator,
@@ -54,6 +54,24 @@ export function compareNodes(
         compareBinding(a.binding, b.binding, compareNames)
       : 0)
   );
+}
+
+export function compareImportNodesByNames(a: ImportNode, b: ImportNode, compareNames: Comparator) {
+  return (
+    compareNameArrays(a.allNames(), b.allNames(), compareNames) ||
+    compareTypeOnly(a.isTypeOnly, b.isTypeOnly) ||
+    compareDefaultName(a.defaultName, b.defaultName, compareNames) ||
+    compareBinding(a.binding, b.binding, compareNames)
+  );
+}
+
+function compareNameArrays(n1: string[], n2: string[], compareNames: Comparator) {
+  let i = 0;
+  for (; i < n1.length && i < n2.length; ++i) {
+    const r = compareNames(n1[i], n2[i]);
+    if (r !== 0) return r;
+  }
+  return i < n1.length ? 1 : i < n2.length ? -1 : 0;
 }
 
 /**

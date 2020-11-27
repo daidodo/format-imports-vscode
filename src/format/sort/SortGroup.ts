@@ -12,20 +12,26 @@ import {
 import { sortAndMergeImportNodes } from './merge';
 
 type Flag = GroupRule['flag'];
+type SortImportsBy = Required<GroupRule>['sortImportsBy'];
 
 export default class SortGroup {
   private readonly flag_: Flag;
   private readonly regex_: RegExp | undefined;
+  private readonly sortImportsBy_: SortImportsBy;
   private readonly sorter_: Sorter;
   private readonly subGroups_?: SortGroup[];
   private nodes_: ImportNode[] = []; // Fall-back group for non-script imports
   private scripts_: ImportNode[] = []; // Fall-back group for script imports
 
-  constructor(rule: GroupRule, parent: { sorter?: Sorter; flag?: Flag }) {
-    const { flag, regex, sort, subGroups } = rule;
+  constructor(
+    rule: GroupRule,
+    parent: { sorter?: Sorter; flag?: Flag; sortImportsBy?: SortImportsBy },
+  ) {
+    const { flag, regex, sortImportsBy, sort, subGroups } = rule;
     const flag1 = SortGroup.inferFlag1(flag, parent.flag);
     const sortRules = sort === 'none' ? { paths: 'none' as const, names: 'none' as const } : sort;
     this.regex_ = regex || regex === '' ? RegExp(regex) : undefined;
+    this.sortImportsBy_ = sortImportsBy ?? parent.sortImportsBy ?? 'paths';
     this.sorter_ = parent.sorter
       ? updateSorterWithRules(parent.sorter, sortRules)
       : sorterFromRules(sortRules);
@@ -33,7 +39,14 @@ export default class SortGroup {
       ?.map(r => {
         return typeof r === 'string' ? { regex: r } : Array.isArray(r) ? { subGroups: r } : r;
       })
-      .map(r => new SortGroup(r, { sorter: this.sorter_, flag: flag1 }));
+      .map(
+        r =>
+          new SortGroup(r, {
+            sorter: this.sorter_,
+            flag: flag1,
+            sortImportsBy: this.sortImportsBy_,
+          }),
+      );
     this.flag_ = SortGroup.inferFlag2(flag1, this.subGroups_);
   }
 
@@ -66,11 +79,11 @@ export default class SortGroup {
   }
 
   sortAndMerge() {
-    const { nodes_, scripts_, sorter_ } = this;
+    const { nodes_, scripts_, sorter_, sortImportsBy_ } = this;
     const { comparePaths, compareNames } = sorter_;
-
-    this.nodes_ = sortAndMergeImportNodes(nodes_, comparePaths, compareNames);
-    this.scripts_ = sortAndMergeImportNodes(scripts_, comparePaths, compareNames);
+    const byPaths = sortImportsBy_ != 'names';
+    this.nodes_ = sortAndMergeImportNodes(nodes_, byPaths, comparePaths, compareNames);
+    this.scripts_ = sortAndMergeImportNodes(scripts_, byPaths, comparePaths, compareNames);
     this.subGroups_?.forEach(g => g.sortAndMerge());
     return this;
   }
