@@ -17,6 +17,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -->
 
+## [3.1.0] - 2020-11-27
+
+### Added
+
+- Add global `"sortImportsBy"` config.
+- Add `"sortImportsBy"` option to group rules.
+- Support sorting import statements by paths or imported names.
+
 ## [3.0.0] - 2020-08-21
 
 ### Added
