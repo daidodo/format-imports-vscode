@@ -19,22 +19,6 @@ export type SortRule = SegSymbol[] | 'none';
 
 export interface SortRules {
   /**
-   * Sort import statements by paths or first names. Default by paths.
-   *
-   * If by paths, the result is:
-   * ```
-   * import B from 'a';
-   * import A from 'b';
-   * ```
-   *
-   * If by names, the result is:
-   * ```
-   * import A from 'b';
-   * import B from 'a';
-   * ```
-   */
-  // sortImportsBy?: 'paths' | 'names';
-  /**
    * Sorting rule for import paths.
    */
   paths?: SortRule;
