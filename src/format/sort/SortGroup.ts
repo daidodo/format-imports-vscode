@@ -83,7 +83,7 @@ export default class SortGroup {
     const { comparePaths, compareNames } = sorter_;
     const byPaths = sortImportsBy_ != 'names';
     this.nodes_ = sortAndMergeImportNodes(nodes_, byPaths, comparePaths, compareNames);
-    this.scripts_ = sortAndMergeImportNodes(scripts_, byPaths, comparePaths, compareNames);
+    this.scripts_ = sortAndMergeImportNodes(scripts_, true, comparePaths, compareNames);
     this.subGroups_?.forEach(g => g.sortAndMerge());
     return this;
   }
