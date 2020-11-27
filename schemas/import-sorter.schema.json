@@ -28,6 +28,9 @@
       "uniqueItems": true,
       "description": "Disable formatting for files matching glob patterns."
     },
+    "sortImportsBy": {
+      "$ref": "#/$def/sortImportsBy"
+    },
     "groupRules": {
       "$ref": "#/$def/groupRules",
       "default": ["^react(-dom)?$", "^@angular/", "^vue$", {}, "^[@]", "^[.]"],
@@ -158,6 +161,7 @@
               "description": "Targets of this group."
             },
             "regex": { "type": "string", "description": "Import path pattern." },
+            "sortImportsBy": { "$ref": "#/$def/sortImportsBy" },
             "sort": { "$ref": "#/$def/sortRules", "description": "Sorting rules for this group." },
             "subGroups": { "$ref": "#/$def/groupRules", "description": "Sub-groups and rules." }
           }
@@ -184,6 +188,12 @@
           }
         }
       ]
+    },
+    "sortImportsBy": {
+      "type": "string",
+      "enum": ["paths", "names"],
+      "default": "paths",
+      "description": "Sort import statements by paths or first names."
     }
   }
 }

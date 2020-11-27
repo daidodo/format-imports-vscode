@@ -128,6 +128,15 @@
           },
           "description": "Disable formatting for files matching glob patterns."
         },
+        "tsImportSorter.configuration.sortImportsBy": {
+          "type": "string",
+          "enum": [
+            "paths",
+            "names"
+          ],
+          "default": "paths",
+          "description": "Sort import statements by paths or first names."
+        },
         "tsImportSorter.configuration.groupRules": {
           "type": "array",
           "default": [

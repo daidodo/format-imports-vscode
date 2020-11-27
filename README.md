@@ -18,7 +18,7 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - Auto format imports and exports on save, or manually from command, shortcut or context menu.
 - Merge imports or exports if possible, and remove duplicated names.
 - Delete unused imports with configurable exceptions for, e.g. macros.
-- Group and sort imports by custom rules.
+- Group and sort imports by custom rules, including sorted by paths or names.
 - Sort binding names in imports and exports.
 - Support [Type-Only imports/exports](https://devblogs.microsoft.com/typescript/announcing-typescript-3-8/#type-only-imports-exports).
 - Support multi-root projects.
@@ -121,6 +121,9 @@ Here are all configs in `package.json` under `"importSorter"` section and their 
 
     // Disable formatting for files matching glob patterns.
     "excludeGlob": [],
+
+    // Sort import statements by paths or first names. Valid values are 'paths' or 'names'.
+    "sortImportsBy": "paths",
 
     // Grouping rules for path patterns for imports. {} is the fall-back group.
     "groupRules": ["^react(-dom)?$", "^@angular/", "^vue$", {}, "^[@]", "^[.]"],
@@ -365,6 +368,7 @@ A grouping rule defines:
 
 - Type of imports to apply: Script or named imports.
 - Path pattern to match.
+- How to sort imports, by paths or first names, inside the group.
 - [Sorting Rules](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules) for paths and names within the group.
 - Sub-groups to further adjust the order of imports.
 
@@ -372,6 +376,7 @@ _Notes:_
 
 - _There are NO blank lines between sub-groups._
 - _Use `EmptyLinesBetweenGroups` to change empty lines between groups._
+- _A group can have its own `sortImportsBy` override regardless of the global option, and sub groups will respect it._
 
 For example, `"groupRules": ["^react$", {}, "^[.]"]` defines 3 groups (and their order):
 
