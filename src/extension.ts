@@ -90,16 +90,16 @@ function formatDocument(document: TextDocument, force?: boolean) {
   const { uri: fileUri, languageId, eol } = document;
   const { fsPath: fileName } = fileUri;
   try {
+    log.info('Start formatting fileName:', fileName);
     const { config, tsCompilerOptions } = resolveConfig(fileUri, languageId, eol, force);
     if (!force && config.autoFormat !== 'onSave') return undefined;
-    log.info('config:', config);
+    log.info('Resolved config:', config);
     log.info('tsCompilerOptions:', tsCompilerOptions);
     if (isExcluded(fileName, config)) {
       const { exclude, excludeGlob } = config;
       log.info('Excluding fileName:', fileName, 'via config:', { exclude, excludeGlob });
       return undefined;
     }
-    log.info('fileName:', fileName);
     const sourceText = document.getText();
     const newText = formatSource(fileName, sourceText, config, tsCompilerOptions);
     const ret = newText === sourceText ? undefined : newText;
