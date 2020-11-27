@@ -56,12 +56,18 @@ export function compareImportNodesByPaths(
   );
 }
 
-export function compareImportNodesByNames(a: ImportNode, b: ImportNode, compareNames: Comparator) {
+export function compareImportNodesByNames(
+  a: ImportNode,
+  b: ImportNode,
+  comparePaths: Comparator | undefined,
+  compareNames: Comparator,
+) {
   return (
     compareNameArrays(a.allNames(), b.allNames(), compareNames) ||
     compareTypeOnly(a.isTypeOnly, b.isTypeOnly) ||
     compareDefaultName(a.defaultName, b.defaultName, compareNames) ||
-    compareBinding(a.binding, b.binding, compareNames)
+    compareBinding(a.binding, b.binding, compareNames) ||
+    (comparePaths ? comparePaths(a.moduleIdentifier, b.moduleIdentifier) : 0)
   );
 }
 

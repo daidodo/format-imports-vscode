@@ -27,7 +27,7 @@ export function sortAndMergeImportNodes(
   });
   return byPaths
     ? sortImportNodesByPaths(merged, comparePaths, compareNames)
-    : sortImportNodesByNames(merged, compareNames);
+    : sortImportNodesByNames(merged, comparePaths, compareNames);
 }
 
 export function sortAndMergeExportNodes(nodes: ExportNode[], compareNames?: Comparator) {
@@ -65,8 +65,14 @@ function sortImportNodesByPaths(
     : nodes;
 }
 
-function sortImportNodesByNames(nodes: ImportNode[], compareNames?: Comparator) {
-  return compareNames ? nodes.sort((a, b) => compareImportNodesByNames(a, b, compareNames)) : nodes;
+function sortImportNodesByNames(
+  nodes: ImportNode[],
+  comparePaths?: Comparator,
+  compareNames?: Comparator,
+) {
+  return compareNames
+    ? nodes.sort((a, b) => compareImportNodesByNames(a, b, comparePaths, compareNames))
+    : nodes;
 }
 
 function isEqual(a: NameBinding, b: NameBinding) {
