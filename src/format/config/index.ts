@@ -18,6 +18,7 @@ export type Configuration = Readonly<
     formatExports: boolean;
     exclude: string[];
     excludeGlob: string[];
+    sortImportsBy: 'paths' | 'names';
     groupRules: (string | string[] | GroupRule)[];
     sortRules: SortRules;
     maxBindingNamesPerLine: number;
