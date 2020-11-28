@@ -15,12 +15,12 @@ import {
   workspace,
 } from 'vscode';
 
+import { logger } from './common';
 import { isExcluded } from './config';
 import { formatSource } from './format';
 import {
   extensionsInfo,
   initLog,
-  logger,
   osInfo,
   resolveConfig,
   uninitLog,
@@ -33,10 +33,10 @@ let g_vscChannel: OutputChannel;
 // Your extension is activated the very first time the command is executed.
 export function activate(context: ExtensionContext) {
   g_vscChannel = window.createOutputChannel('JS/TS Import/Export Sorter');
-  initLog(g_vscChannel);
-  logger().info('os:', osInfo());
-  logger().info('vscode:', vscodeInfo());
-  logger().info('extensions:', extensionsInfo());
+  const log = initLog(g_vscChannel);
+  log.info('os:', osInfo());
+  log.info('vscode:', vscodeInfo());
+  log.info('extensions:', extensionsInfo());
 
   const sortCommand = commands.registerTextEditorCommand(
     'tsImportSorter.command.sortImports',

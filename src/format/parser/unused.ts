@@ -5,10 +5,8 @@ import ts, {
   SourceFile,
 } from 'typescript';
 
-import {
-  logger,
-  normalizePath,
-} from '../utils';
+import { logger } from '../../common';
+import { normalizePath } from '../utils';
 import ImportNode from './ImportNode';
 
 export interface NameUsage {

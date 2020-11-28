@@ -8,25 +8,23 @@ import path from 'path';
 import { OutputChannel } from 'vscode';
 
 export function initLog(channel: OutputChannel) {
-  log4js.configure({
-    appenders: {
-      vscChannel: {
-        type: getAppenderModule(channel),
-        layoutNormal: {
-          type: 'basic',
+  return log4js
+    .configure({
+      appenders: {
+        vscChannel: {
+          type: getAppenderModule(channel),
+          layoutNormal: {
+            type: 'basic',
+          },
         },
       },
-    },
-    categories: { default: { appenders: ['vscChannel'], level: 'info' } },
-  });
+      categories: { default: { appenders: ['vscChannel'], level: 'info' } },
+    })
+    .getLogger();
 }
 
 export function uninitLog() {
   log4js.shutdown();
-}
-
-export function logger(category?: string) {
-  return log4js.getLogger(category);
 }
 
 function getAppenderModule(channel: OutputChannel): AppenderModule {

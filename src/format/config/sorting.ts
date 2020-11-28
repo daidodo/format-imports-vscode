@@ -35,9 +35,10 @@ export interface SortRules {
   /**
    * The order of different styles of imports from [ESLint](https://eslint.org/docs/rules/sort-imports#membersyntaxsortorder).
    *
-   * If undefined, imports will not be distinguished and sorted by types.
+   * If undefined, imports will NOT be distinguished and sorted by types.
    */
   syntaxOrder?: SyntaxSortRule;
+
   /**
    * Sorting rule for import paths.
    */

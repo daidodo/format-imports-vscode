@@ -1,9 +1,12 @@
 import pt from 'prettier';
 
+import { logger } from '../common';
 import { Configuration } from '../format';
 
 // https://prettier.io/docs/en/options.html
 export function loadPretConfig(fileName: string): Configuration {
+  const log = logger('config.loadPretConfig');
+  log.info('Prettier API version: ', pt.version);
   const config = pt.resolveConfig.sync(fileName, { useCache: false, editorconfig: true });
   if (!config) return {};
   const {

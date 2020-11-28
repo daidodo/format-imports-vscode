@@ -10,9 +10,9 @@ import {
   SyntaxKind,
 } from 'typescript';
 
+import { logger } from '../../common';
 import { Configuration } from '../config';
 import { RangeAndEmptyLines } from '../types';
-import { logger } from '../utils';
 import ExportNode from './ExportNode';
 import ImportNode from './ImportNode';
 import {

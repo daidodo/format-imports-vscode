@@ -3,6 +3,7 @@ import ts, {
   ScriptTarget,
 } from 'typescript';
 
+import { logger } from '../../common';
 import {
   ComposeConfig,
   configForCompose,
@@ -26,7 +27,6 @@ import {
   sortImports,
 } from '../sort';
 import { RangeAndEmptyLines } from '../types';
-import { logger } from '../utils';
 
 export function formatSource(
   fileName: string,
