@@ -11,22 +11,42 @@
 export type SegSymbol = 'az' | 'AZ' | 'aA' | 'Aa' | '_';
 
 /**
- * Sorting rule, which can be:
+ * String comparison rule.
  *
  * If it's 'none', then there is no sorting at all.
  */
-export type SortRule = SegSymbol[] | 'none';
+export type CompareRule = SegSymbol[] | 'none';
+
+/**
+ * Symbols for different styles of imports from [ESLint](https://eslint.org/docs/rules/sort-imports#membersyntaxsortorder):
+ * - none - import module without exported bindings.
+ * - all - import all members provided by exported bindings.
+ * - multiple - import multiple members.
+ * - single - import single member.
+ */
+type SyntaxTypeSymbol = 'none' | 'all' | 'single' | 'multiple';
+
+/**
+ * The order of the above different types of imports.
+ */
+type SyntaxSortRule = [SyntaxTypeSymbol, SyntaxTypeSymbol, SyntaxTypeSymbol, SyntaxTypeSymbol];
 
 export interface SortRules {
   /**
+   * The order of different styles of imports from [ESLint](https://eslint.org/docs/rules/sort-imports#membersyntaxsortorder).
+   *
+   * If undefined, imports will not be distinguished and sorted by types.
+   */
+  syntaxOrder?: SyntaxSortRule;
+  /**
    * Sorting rule for import paths.
    */
-  paths?: SortRule;
+  paths?: CompareRule;
 
   /**
    * Sorting rule for imported names.
    */
-  names?: SortRule;
+  names?: CompareRule;
 }
 
 /*

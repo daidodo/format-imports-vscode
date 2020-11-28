@@ -1,5 +1,5 @@
 import {
-  SortRule,
+  CompareRule,
   SortRules,
 } from '../config';
 import { ImportNode } from '../parser';
@@ -169,7 +169,7 @@ const COMPARE_DEF: Comparator = (a, b) => {
   return a < b ? -1 : a > b ? 1 : 0;
 };
 
-function comparatorFromRule(rule: SortRule | undefined) {
+function comparatorFromRule(rule: CompareRule | undefined) {
   if (rule === 'none') return undefined;
   const p = { map: new Map<number, Segment>() };
   rule?.forEach((s, i) => new Segment(s, i, p));
