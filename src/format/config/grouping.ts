@@ -1,5 +1,24 @@
 import { SortRules } from './sorting';
 
+/**
+ * Symbols for different styles of imports from [ESLint](https://eslint.org/docs/rules/sort-imports#membersyntaxsortorder):
+ * - none - import module without exported bindings.
+ * - all - import all members provided by exported bindings.
+ * - multiple - import multiple members.
+ * - single - import single member.
+ */
+// type SyntaxTypeSymbol = 'none' | 'all' | 'single' | 'multiple';
+
+/**
+ * The order of the above different types of imports.
+ */
+// export type SyntaxGroupRule = [
+//   SyntaxTypeSymbol,
+//   SyntaxTypeSymbol,
+//   SyntaxTypeSymbol,
+//   SyntaxTypeSymbol,
+// ];
+
 export interface GroupRule {
   /**
    * - "all": This group is for all imports, i.e. script and named (non-script) imports.
@@ -54,4 +73,11 @@ export interface GroupRule {
    * - `string[]` items will be expanded to `{ subGroups: elem }`.
    */
   subGroups?: (string | string[] | GroupRule)[];
+
+  /**
+   * The order of different styles of imports from [ESLint](https://eslint.org/docs/rules/sort-imports#membersyntaxsortorder).
+   *
+   * If undefined, imports will NOT be distinguished and sorted by types.
+   */
+  // syntaxSubGroups?: SyntaxGroupRule;
 }
