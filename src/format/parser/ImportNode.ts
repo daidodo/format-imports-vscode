@@ -122,6 +122,7 @@ export default class ImportNode extends Statement {
     if (
       this.moduleIdentifier !== node.moduleIdentifier ||
       this.node_.kind !== node.node_.kind ||
+      this.isScript !== node.isScript ||
       isTypeOnly !== node.isTypeOnly ||
       !this.canMergeComments(node)
     )
