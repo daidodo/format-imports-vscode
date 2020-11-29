@@ -9,7 +9,7 @@ import {
   sorterFromRules,
   updateSorterWithRules,
 } from './compare';
-import { sortAndMergeImportNodes } from './merge';
+import { sortImportNodes } from './merge';
 
 type Flag = GroupRule['flag'];
 type SortImportsBy = Required<GroupRule>['sortImportsBy'];
@@ -78,14 +78,14 @@ export default class SortGroup {
     return false;
   }
 
-  sortAndMerge() {
+  sort() {
     const { nodes_, scripts_, sorter_, sortImportsBy_ } = this;
     const { comparePaths, compareNames } = sorter_;
     const byPaths = sortImportsBy_ != 'names';
-    this.nodes_ = sortAndMergeImportNodes(nodes_, byPaths, comparePaths, compareNames);
+    this.nodes_ = sortImportNodes(nodes_, byPaths, comparePaths, compareNames);
     // Script imports are always sorted by paths.
-    this.scripts_ = sortAndMergeImportNodes(scripts_, true, comparePaths, compareNames);
-    this.subGroups_?.forEach(g => g.sortAndMerge());
+    this.scripts_ = sortImportNodes(scripts_, true, comparePaths, compareNames);
+    this.subGroups_?.forEach(g => g.sort());
     return this;
   }
 
