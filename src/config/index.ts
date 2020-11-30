@@ -1,5 +1,6 @@
 import minimatch from 'minimatch';
 
+import { logger } from '../common';
 import { Configuration } from '../format';
 import { loadImportSorterConfig } from './importSorter';
 import { loadTsConfig } from './tsconfig';
@@ -7,8 +8,11 @@ import { loadTsConfig } from './tsconfig';
 export { mergeConfig } from './helper';
 
 export function loadConfig(config: Configuration, sourceFileName: string) {
+  const log = logger('config.loadConfig');
+  log.debug('Start loading extension and TypeScript configs for sourceFileName:', sourceFileName);
   const extConfig = loadImportSorterConfig(config, sourceFileName);
   const tsCompilerOptions = loadTsConfig(sourceFileName);
+  log.debug('Finish loading extension and TypeScript configs.');
   return { config: extConfig, tsCompilerOptions };
 }
 

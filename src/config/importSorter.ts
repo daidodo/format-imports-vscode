@@ -1,6 +1,9 @@
 import fs from 'fs';
 
-import { assert } from '../common';
+import {
+  assert,
+  logger,
+} from '../common';
 import { Configuration } from '../format';
 import {
   findFileFromPathAndParents,
@@ -9,10 +12,16 @@ import {
 import { loadPretConfig } from './prettier';
 
 export function loadImportSorterConfig(config: Configuration, sourceFileName: string) {
+  const log = logger('config.loadImportSorterConfig');
+  log.debug('Start loading extension config for sourceFileName:', sourceFileName);
   const { configurationFileName: cfgFileName } = config;
+  log.debug('Load Prettier/EditorConfig config.');
   const pretConfig = loadPretConfig(sourceFileName);
+  log.debug('Load import-sorter config:', cfgFileName);
   const fConfig = fileConfig(cfgFileName, sourceFileName);
+  log.debug('Load package.json config.');
   const pkgConfig = packageConfig(sourceFileName);
+  log.debug('Finish loading extension config');
   return mergeConfig(config, pretConfig, fConfig, pkgConfig);
 }
 

@@ -6,6 +6,7 @@ import {
   WorkspaceConfiguration,
 } from 'vscode';
 
+import { logger } from '../common';
 import {
   loadConfig,
   mergeConfig,
@@ -24,20 +25,26 @@ interface VscFilesConfig {
 }
 
 export function resolveConfig(fileUri: Uri, languageId: string, eol: EndOfLine, force?: boolean) {
+  const log = logger('vscode.resolveConfig');
   const { fsPath: fileName } = fileUri;
+  log.debug(`Start resolving configs for fileName: ${fileName}, languageId: ${languageId}`);
   const vscConfig = loadVscConfig(fileUri, languageId);
   const { config: fileConfig, tsCompilerOptions } = loadConfig(vscConfig, fileName);
   const config = mergeConfig(fileConfig, {
     eol: eol === EndOfLine.CRLF ? 'CRLF' : 'LF',
     force,
   });
+  log.debug('Finish resolving configs.');
   return { config, tsCompilerOptions };
 }
 
 function loadVscConfig(fileUri: Uri, languageId: string): Configuration {
+  const log = logger('config.loadVscConfig');
+  log.debug(`Start loading VSC config for fileName: ${fileUri.fsPath}, languageId: ${languageId}`);
   const wsConfig = workspaceConfig(fileUri);
   const general = workspace.getConfiguration(undefined, fileUri);
   const langSpec = workspace.getConfiguration(`[${languageId}]`, fileUri);
+  log.debug('Finish loading VSC config');
   return mergeConfig(wsConfig, transform(general), transform(langSpec));
 }
 
