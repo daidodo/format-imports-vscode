@@ -60,7 +60,7 @@ All VS Code settings under `"tsImportSorter"` section and their default values:
 "tsImportSorter.configuration.excludeGlob": [],
 
 // Sort import statements by paths or first names. Valid values are 'paths' or 'names'.
-"sortImportsBy": "paths",
+"tsImportSorter.sortImportsBy": "paths",
 
 // Grouping rules for path patterns for imports. {} is the fall-back group.
 "tsImportSorter.configuration.groupRules": [
