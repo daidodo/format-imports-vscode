@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Extend grouping rules to support more types of imports.
+- Extend grouping rules to support [more types of imports](https://github.com/daidodo/tsimportsorter/wiki/Grouping-Rules#types-of-imports).
 
 ### Changed
 

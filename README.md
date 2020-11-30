@@ -13,6 +13,16 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - [Install Plugin](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter)
 - [Open Issues](https://github.com/daidodo/tsimportsorter/issues)
 
+## [4.0.0] Release Notes
+
+### Added
+
+- Extend grouping rules to support [more types of imports](https://github.com/daidodo/tsimportsorter/wiki/Grouping-Rules#types-of-imports).
+
+### Changed
+
+- Change option `flag` to `flags` in [Grouping Rules](https://github.com/daidodo/tsimportsorter/wiki/Grouping-Rules).
+
 ## Features
 
 - Auto format imports and exports on save, or manually from command, shortcut or context menu.
