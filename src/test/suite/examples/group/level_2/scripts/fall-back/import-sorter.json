@@ -1,10 +1,10 @@
 {
   "groupRules": [
-    { "flag": "scripts", "subGroups": ["^j", {}] },
-    { "flag": "scripts", "regex": "^[gh]", "subGroups": [{}, "^g"] },
-    { "flag": "scripts", "regex": "^[ef]", "subGroups": ["^f"] },
-    { "flag": "scripts" },
-    { "flag": "scripts", "regex": null, "subGroups": [{ "regex": "^d" }, "^c"] },
-    { "flag": "scripts", "subGroups": [{ "regex": "^b" }, "^a"] }
+    { "flags": "scripts", "subGroups": ["^j", {}] },
+    { "flags": "scripts", "regex": "^[gh]", "subGroups": [{}, "^g"] },
+    { "flags": "scripts", "regex": "^[ef]", "subGroups": ["^f"] },
+    { "flags": "scripts" },
+    { "flags": "scripts", "regex": null, "subGroups": [{ "regex": "^d" }, "^c"] },
+    { "flags": "scripts", "subGroups": [{ "regex": "^b" }, "^a"] }
   ]
 }

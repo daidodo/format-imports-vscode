@@ -148,6 +148,11 @@
         }
       }
     },
+    "flagSymbol": {
+      "type": "string",
+      "enum": ["all", "scripts", "named", "multiple", "single", "namespace"],
+      "description": "Type of imports."
+    },
     "groupRule": {
       "oneOf": [
         { "type": "string" },
@@ -155,10 +160,19 @@
         {
           "type": "object",
           "properties": {
-            "flag": {
-              "type": "string",
-              "enum": ["all", "scripts", "named"],
-              "description": "Targets of this group."
+            "flags": {
+              "oneOf": [
+                {
+                  "$ref": "#/$def/flagSymbol",
+                  "description": "Type of imports supported by this group."
+                },
+                {
+                  "type": "array",
+                  "items": { "$ref": "#/$def/flagSymbol" },
+                  "uniqueItems": true,
+                  "description": "Types of imports supported by this group."
+                }
+              ]
             },
             "regex": { "type": "string", "description": "Import path pattern." },
             "sortImportsBy": { "$ref": "#/$def/sortImportsBy" },

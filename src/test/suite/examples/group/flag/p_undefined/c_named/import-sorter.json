@@ -2,7 +2,7 @@
   "groupRules": [
     {
       "regex": "^[abc]",
-      "subGroups": [{ "regex": "^[bc]", "subGroups": [{ "flag": "named", "regex": "^c" }] }]
+      "subGroups": [{ "regex": "^[bc]", "subGroups": [{ "flags": "named", "regex": "^c" }] }]
     }
   ]
 }

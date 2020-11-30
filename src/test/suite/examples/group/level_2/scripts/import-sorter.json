@@ -1,8 +1,8 @@
 {
   "groupRules": [
-    { "flag": "scripts", "regex": "^[gh]", "subGroups": [{}, "^g"] },
-    { "flag": "scripts", "regex": "^[ef]", "subGroups": ["^f"] },
-    { "flag": "scripts", "regex": null, "subGroups": [{ "regex": "^d" }, "^c"] },
-    { "flag": "scripts", "subGroups": [{ "regex": "^b" }, "^a"] }
+    { "flags": "scripts", "regex": "^[gh]", "subGroups": [{}, "^g"] },
+    { "flags": "scripts", "regex": "^[ef]", "subGroups": ["^f"] },
+    { "flags": "scripts", "regex": null, "subGroups": [{ "regex": "^d" }, "^c"] },
+    { "flags": "scripts", "subGroups": [{ "regex": "^b" }, "^a"] }
   ]
 }

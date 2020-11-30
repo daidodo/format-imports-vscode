@@ -1,46 +1,41 @@
 import { SortRules } from './sorting';
 
 /**
- * Symbols for different styles of imports from [ESLint](https://eslint.org/docs/rules/sort-imports#membersyntaxsortorder):
- * - none - import module without exported bindings.
- * - all - import all members provided by exported bindings.
- * - multiple - import multiple members.
- * - single - import single member.
+ * Symbols for different types of imports:
+ * - `scripts`: Script imports, e.g. `import 'some_scripts'`.
+ * - `multiple`: Import multiple members, e.g. `import A, {B, C} from 'a'` or `import A, * as B from 'a'`.
+ * - `single`: Import single member, e.g. `import A from 'a'` or `import {A} from 'a'`.
+ * - `namespace`: Import a namespace, e.g. `import * as A from 'a'`.
+ * - `named`: All `multiple`, `single` and `namespace` combined.
+ * - `all`: All `scripts` and `named` combined.
  */
-// type SyntaxTypeSymbol = 'none' | 'all' | 'single' | 'multiple';
-
-/**
- * The order of the above different types of imports.
- */
-// export type SyntaxGroupRule = [
-//   SyntaxTypeSymbol,
-//   SyntaxTypeSymbol,
-//   SyntaxTypeSymbol,
-//   SyntaxTypeSymbol,
-// ];
+export type FlagSymbol = 'scripts' | 'multiple' | 'single' | 'namespace' | 'named' | 'all';
 
 export interface GroupRule {
   /**
-   * - "all": This group is for all imports, i.e. script and named (non-script) imports.
-   * - "scripts": This group is for script imports, e.g. `import 'some_scripts';`.
-   * - `named`: This group is for named (non-script) imports, e.g. `import React from 'react';`.
-   * - `undefined`: Infer the flag from its parent and subGroups.
+   * Types of imports this group supports.
+   *
+   * If undefined, infer the flags from its parent and sub groups.
    */
-  flag?: 'all' | 'scripts' | 'named';
+  flags?: FlagSymbol | FlagSymbol[];
 
   /**
    * Import path pattern.
+   *
    * If it's defined, an import matching the pattern will fall into this group no matter
    * it matches one of `subGroups` or not.
+   *
    * If it's `undefined`, only imports matching one of `subGroups` fall into this group.
    *
    * If both `regex` and `subGroups` are `undefined`, then this is a *fall-back* group,
-   * i.e. any cases don't match any other groups (within the parent) will fall into this group.
+   * i.e. any cases don't match any other groups (within the parent and subject to `flags`)
+   * will fall into this group.
    */
   regex?: string;
 
   /**
    * Sort import statements by paths or first names.
+   *
    * If it's undefined, then use the parent's value, or 'paths' if this is a top group.
    *
    * If by paths, the result is:
@@ -73,11 +68,4 @@ export interface GroupRule {
    * - `string[]` items will be expanded to `{ subGroups: elem }`.
    */
   subGroups?: (string | string[] | GroupRule)[];
-
-  /**
-   * The order of different styles of imports from [ESLint](https://eslint.org/docs/rules/sort-imports#membersyntaxsortorder).
-   *
-   * If undefined, imports will NOT be distinguished and sorted by types.
-   */
-  // syntaxSubGroups?: SyntaxGroupRule;
 }

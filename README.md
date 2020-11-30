@@ -359,18 +359,13 @@ export {
 
 JS/TS Import/Export Sorter can put imports into different groups separated by empty lines (configurable), based on the rules defined in `groupRules`.
 
-Each grouping rule applies to either:
-
-- Script imports, e.g. `import 'some/scripts'`, or
-- Named (non-script) imports, e.g. `import React, { FC } from 'react'`.
-
 A grouping rule defines:
 
-- Type of imports to apply: Script or named imports.
+- Types of imports to apply.
 - Path pattern to match.
 - How to sort imports, by paths or first names, inside the group.
 - [Sorting Rules](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules) for paths and names within the group.
-- Sub-groups to further adjust the order of imports.
+- Sub-groups to further adjust the order.
 
 _Notes:_
 
@@ -397,7 +392,6 @@ import MyInput from './MyInput';
 _Notes:_
 
 - _By default, script imports are in the first group if you don't explicitly define rules for them._
-- _You can define a grouping rule for script imports via, e.g. `{"flag": "scripts", "regex": "[.]css$"}`._
 - _Exports will NOT be grouped. Grouping Rules are only for imports._
 
 For a complete guide, please refer to [the Wiki](https://github.com/daidodo/tsimportsorter/wiki/Grouping-Rules).

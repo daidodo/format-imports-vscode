@@ -1,6 +1,6 @@
-import { assertNonNull } from '../../common';
 import {
   ComposeConfig,
+  FlagSymbol,
   GroupRule,
 } from '../config';
 import { ImportNode } from '../parser';
@@ -11,11 +11,11 @@ import {
 } from './compare';
 import { sortImportNodes } from './merge';
 
-type Flag = GroupRule['flag'];
+type FlagsConfig = Required<GroupRule>['flags'];
 type SortImportsBy = Required<GroupRule>['sortImportsBy'];
 
 export default class SortGroup {
-  private readonly flag_: Flag;
+  private readonly flags_: FlagSymbol[];
   private readonly regex_: RegExp | undefined;
   private readonly sortImportsBy_: SortImportsBy;
   private readonly sorter_: Sorter;
@@ -25,10 +25,11 @@ export default class SortGroup {
 
   constructor(
     rule: GroupRule,
-    parent: { sorter?: Sorter; flag?: Flag; sortImportsBy?: SortImportsBy },
+    parent: { sorter?: Sorter; flags?: FlagSymbol[]; sortImportsBy?: SortImportsBy },
   ) {
-    const { flag, regex, sortImportsBy, sort, subGroups } = rule;
-    const flag1 = SortGroup.inferFlag1(flag, parent.flag);
+    const { flags: originFlags, regex, sortImportsBy, sort, subGroups } = rule;
+    const flags = breakFlags(originFlags);
+    const flags1 = SortGroup.inferFlags1(flags, parent.flags);
     const sortRules = sort === 'none' ? { paths: 'none' as const, names: 'none' as const } : sort;
     this.regex_ = regex || regex === '' ? RegExp(regex) : undefined;
     this.sortImportsBy_ = sortImportsBy ?? parent.sortImportsBy ?? 'paths';
@@ -43,11 +44,11 @@ export default class SortGroup {
         r =>
           new SortGroup(r, {
             sorter: this.sorter_,
-            flag: flag1,
+            flags: flags1,
             sortImportsBy: this.sortImportsBy_,
           }),
       );
-    this.flag_ = SortGroup.inferFlag2(flag1, this.subGroups_);
+    this.flags_ = SortGroup.inferFlags2(flags, flags1, this.subGroups_);
   }
 
   /**
@@ -56,9 +57,9 @@ export default class SortGroup {
    * @returns Whether node is added to this group
    */
   add(node: ImportNode, fallBack = false) {
-    const { isScript, moduleIdentifier } = node;
-    if (this.flag_ === 'scripts' && !isScript) return false;
-    if (this.flag_ === 'named' && isScript) return false;
+    const { flagType, moduleIdentifier } = node;
+    if (!isFlagIncluded(flagType, this.flags_)) return false;
+    const isScript = flagType === 'scripts';
     if (this.regex_) {
       if (!this.regex_.test(moduleIdentifier)) return false;
       if (this.addToSubGroup(node, fallBack)) return true;
@@ -101,24 +102,48 @@ export default class SortGroup {
   }
 
   /**
-   * Infer flag (step 1) from current config (flag) and parent's flag.
+   * Infer flags (step 1) from current config (flags) and parent's flags.
    */
-  private static inferFlag1(flag: Flag, parentFlag: Flag) {
-    if (flag) return flag;
-    return parentFlag && parentFlag !== 'all' ? parentFlag : undefined;
+  private static inferFlags1(flags: FlagSymbol[], parentFlags: FlagSymbol[] | undefined) {
+    const bp = parentFlags ? breakFlags(parentFlags) : [];
+    return flags.length > 0 ? flags : removeScriptsIfCombined(bp);
   }
 
   /**
-   * Infer flag (step 2) from children's flags.
+   * Infer flags (step 2) from children's flags.
    */
-  private static inferFlag2(flag1: Flag, subGroups?: SortGroup[]) {
-    if (flag1) return flag1;
-    const childrenFlag = subGroups
-      ?.map(g => g.flag_)
-      .reduce((a, b) => {
-        assertNonNull(b);
-        return !a || a === b ? b : 'all';
-      }, undefined);
-    return childrenFlag ?? 'named';
+  private static inferFlags2(flags: FlagSymbol[], flags1: FlagSymbol[], subGroups?: SortGroup[]) {
+    if (flags.length > 0) return flags;
+    const childrenFlags = subGroups?.reduce<FlagSymbol[]>((r, g) => [...r, ...g.flags_], []);
+    return childrenFlags && childrenFlags.length > 0 ? dedupFlags(childrenFlags) : flags1;
   }
+}
+
+function dedupFlags(flags: FlagSymbol[]) {
+  return [...new Set(flags)];
+}
+
+function breakFlags(flags: FlagsConfig | undefined) {
+  if (!flags) return [];
+  const f = typeof flags === 'string' ? [flags] : flags;
+  return dedupFlags(f.reduce<FlagSymbol[]>((r, f) => [...r, ...breakFlag(f)], []));
+}
+
+function breakFlag(flag: FlagSymbol): FlagSymbol[] {
+  switch (flag) {
+    case 'all':
+      return ['scripts', ...breakFlag('named')];
+    case 'named':
+      return ['multiple', 'single', 'namespace'];
+    default:
+      return [flag];
+  }
+}
+
+function removeScriptsIfCombined(flags: FlagSymbol[]) {
+  return flags.length > 1 ? flags.filter(f => f !== 'scripts') : flags;
+}
+
+function isFlagIncluded(flag: FlagSymbol, flags: FlagSymbol[]) {
+  return flags.some(f => f === flag);
 }

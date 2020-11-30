@@ -12,7 +12,10 @@ import {
   composeNodeAsNames,
   composeNodeAsParts,
 } from '../compose';
-import { ComposeConfig } from '../config';
+import {
+  ComposeConfig,
+  FlagSymbol,
+} from '../config';
 import {
   Binding,
   NameBinding,
@@ -27,7 +30,7 @@ export default class ImportNode extends Statement {
   private readonly node_: ImportDeclaration | ImportEqualsDeclaration;
 
   readonly moduleIdentifier: string;
-  readonly isScript: boolean;
+  private readonly isScript: boolean;
   readonly isTypeOnly: boolean;
   private defaultName_?: string;
   private binding_?: Binding;
@@ -76,6 +79,14 @@ export default class ImportNode extends Statement {
 
   get binding() {
     return this.binding_;
+  }
+
+  get flagType(): FlagSymbol {
+    if (this.isScript) return 'scripts';
+    if (this.defaultName_) return this.binding_ ? 'multiple' : 'single';
+    assertNonNull(this.binding_);
+    if (this.binding_.type === 'namespace') return 'namespace';
+    return this.binding_.names.length === 1 ? 'single' : 'multiple';
   }
 
   allNames() {

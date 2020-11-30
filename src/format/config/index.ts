@@ -1,6 +1,9 @@
 import { DeepReadonly } from 'utility-types';
 
-import { GroupRule } from './grouping';
+import {
+  FlagSymbol,
+  GroupRule,
+} from './grouping';
 import {
   CompareRule,
   SegSymbol,
@@ -8,7 +11,7 @@ import {
 } from './sorting';
 import { KeepUnusedRule } from './unused';
 
-export { CompareRule, GroupRule, KeepUnusedRule, SegSymbol, SortRules };
+export { CompareRule, FlagSymbol, GroupRule, KeepUnusedRule, SegSymbol, SortRules };
 
 export type Configuration = Readonly<
   Partial<{

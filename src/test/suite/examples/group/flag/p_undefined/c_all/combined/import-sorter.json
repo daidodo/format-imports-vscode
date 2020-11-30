@@ -6,8 +6,8 @@
         {
           "regex": "^[bc]",
           "subGroups": [
-            { "flag": "named", "regex": "^c" },
-            { "flag": "scripts", "regex": "^b" }
+            { "flags": "named", "regex": "^c" },
+            { "flags": "scripts", "regex": "^b" }
           ]
         }
       ]

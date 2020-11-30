@@ -22,7 +22,7 @@ export function sortImports(
   const { sortRules: sort, groupRules: subGroups, keepUnused, sortImportsBy } = config;
   // The top group must be a match-all group.
   const group = new SortGroup(
-    { flag: 'all', regex: '', sort, subGroups, sortImportsBy },
+    { flags: 'all', regex: '', sort, subGroups, sortImportsBy },
     { sorter },
   );
   const keepUnusedBouncer = keepUnused && new KeepUnused(keepUnused);

@@ -1,3 +1,3 @@
 {
-  "groupRules": [{ "flag": "named", "subGroups": [{ "flag": null, "regex": "^a" }] }]
+  "groupRules": [{ "flags": "named", "subGroups": [{ "flags": null, "regex": "^a" }] }]
 }

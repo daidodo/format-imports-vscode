@@ -1,7 +1,7 @@
 {
   "groupRules": [
-    { "flag": null, "regex": "^c" },
-    { "flag": null, "regex": null },
+    { "flags": null, "regex": "^c" },
+    { "flags": null, "regex": null },
     { "regex": "^b" },
     {},
     "^a"
