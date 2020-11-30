@@ -17,6 +17,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -->
 
+## [4.0.0 - 2020-11-30]
+
+### Added
+
+- Extend grouping rules to support more types of imports.
+
+### Changed
+
+- Change option `flag` to `flags` in [Grouping Rules](https://github.com/daidodo/tsimportsorter/wiki/Grouping-Rules).
+
 ## [3.1.0] - 2020-11-27
 
 ### Added
