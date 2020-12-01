@@ -6,4 +6,4 @@ import * as F from 'e'
 import G, {H} from 'f'
 import I, * as J from 'g'
 import 'h'
-export {A, B, C, D, E, F, G, H, I, J}
+export { A, B, C, D, E, F, G, H, I, J };
