@@ -11,7 +11,7 @@ import {
 } from 'typescript';
 
 import { logger } from '../../common';
-import { Configuration } from '../config';
+import { Configuration } from '../../config';
 import { RangeAndEmptyLines } from '../types';
 import ExportNode from './ExportNode';
 import ImportNode from './ImportNode';

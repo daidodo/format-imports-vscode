@@ -8,7 +8,7 @@ import {
   ComposeConfig,
   configForCompose,
   Configuration,
-} from '../config';
+} from '../../config';
 import {
   apply,
   EditManager,

@@ -1,4 +1,4 @@
-import { KeepUnusedRule } from '../config';
+import { KeepUnusedRule } from '../../config';
 
 interface Entry {
   path: RegExp;

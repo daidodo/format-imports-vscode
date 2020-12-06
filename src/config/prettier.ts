@@ -1,7 +1,7 @@
 import pt from 'prettier';
 
 import { logger } from '../common';
-import { Configuration } from '../format';
+import { Configuration } from './types';
 
 // https://prettier.io/docs/en/options.html
 export function loadPretConfig(fileName: string): Configuration {

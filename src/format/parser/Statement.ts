@@ -1,6 +1,6 @@
 import { assert } from '../../common';
+import { ComposeConfig } from '../../config';
 import { composeComments } from '../compose';
-import { ComposeConfig } from '../config';
 import {
   NodeComment,
   RangeAndEmptyLines,

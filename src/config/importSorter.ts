@@ -4,16 +4,15 @@ import {
   assert,
   logger,
 } from '../common';
-import { Configuration } from '../format';
 import {
   findFileFromPathAndParents,
   mergeConfig,
 } from './helper';
 import { loadPretConfig } from './prettier';
+import { Configuration } from './types';
 
 export function loadImportSorterConfig(config: Configuration, sourceFileName: string) {
   const log = logger('config.loadImportSorterConfig');
-  log.debug('Start loading extension config for sourceFileName:', sourceFileName);
   const { configurationFileName: cfgFileName } = config;
   log.debug('Load Prettier/EditorConfig config.');
   const pretConfig = loadPretConfig(sourceFileName);
@@ -21,7 +20,6 @@ export function loadImportSorterConfig(config: Configuration, sourceFileName: st
   const fConfig = fileConfig(cfgFileName, sourceFileName);
   log.debug('Load package.json config.');
   const pkgConfig = packageConfig(sourceFileName);
-  log.debug('Finish loading extension config');
   return mergeConfig(config, pretConfig, fConfig, pkgConfig);
 }
 

@@ -8,10 +8,10 @@ import {
 
 import { logger } from '../common';
 import {
+  Configuration,
   loadConfig,
   mergeConfig,
 } from '../config';
-import { Configuration } from '../format';
 
 interface VscEditorConfig {
   detectIndentation: boolean;

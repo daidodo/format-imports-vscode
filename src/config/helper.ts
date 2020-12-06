@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { sep } from 'path';
 
-import { Configuration } from '../format';
+import { Configuration } from './types';
 
 /**
  * Search for `filename` from `path` and up to all its parents.

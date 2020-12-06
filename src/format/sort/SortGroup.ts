@@ -2,7 +2,7 @@ import {
   ComposeConfig,
   FlagSymbol,
   GroupRule,
-} from '../config';
+} from '../../config';
 import { ImportNode } from '../parser';
 import {
   Sorter,

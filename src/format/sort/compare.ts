@@ -1,7 +1,7 @@
 import {
   CompareRule,
   SortRules,
-} from '../config';
+} from '../../config';
 import { ImportNode } from '../parser';
 import {
   Binding,

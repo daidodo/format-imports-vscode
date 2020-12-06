@@ -1,19 +1,29 @@
 import minimatch from 'minimatch';
 
-import { logger } from '../common';
-import { Configuration } from '../format';
+import { loadESLintConfig } from './eslint';
 import { loadImportSorterConfig } from './importSorter';
 import { loadTsConfig } from './tsconfig';
+import { Configuration } from './types';
+
+export {
+  CompareRule,
+  Configuration,
+  FlagSymbol,
+  GroupRule,
+  KeepUnusedRule,
+  SegSymbol,
+  SortRules,
+} from './types';
 
 export { mergeConfig } from './helper';
+export { ComposeConfig, configForCompose } from './compose';
+export { ESLintConfig } from './eslint';
 
 export function loadConfig(config: Configuration, sourceFileName: string) {
-  const log = logger('config.loadConfig');
-  log.debug('Start loading extension and TypeScript configs for sourceFileName:', sourceFileName);
   const extConfig = loadImportSorterConfig(config, sourceFileName);
+  const eslintConfig = loadESLintConfig(sourceFileName);
   const tsCompilerOptions = loadTsConfig(sourceFileName);
-  log.debug('Finish loading extension and TypeScript configs.');
-  return { config: extConfig, tsCompilerOptions };
+  return { config: extConfig, tsCompilerOptions, eslintConfig };
 }
 
 export function isExcluded(fileName: string, config: Configuration) {

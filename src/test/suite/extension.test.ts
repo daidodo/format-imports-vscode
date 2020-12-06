@@ -8,13 +8,13 @@ import {
 } from 'vscode';
 
 import { assertNonNull } from '../../common';
-import { mergeConfig } from '../../config';
-import { fileConfig } from '../../config/importSorter';
-import { loadTsConfig } from '../../config/tsconfig';
 import {
   Configuration,
-  formatSource,
-} from '../../format';
+  mergeConfig,
+} from '../../config';
+import { fileConfig } from '../../config/importSorter';
+import { loadTsConfig } from '../../config/tsconfig';
+import { formatSource } from '../../format';
 
 interface TestSuite {
   name: string;

@@ -9,13 +9,13 @@ import {
 
 import { assertNonNull } from '../../common';
 import {
+  ComposeConfig,
+  FlagSymbol,
+} from '../../config';
+import {
   composeNodeAsNames,
   composeNodeAsParts,
 } from '../compose';
-import {
-  ComposeConfig,
-  FlagSymbol,
-} from '../config';
 import {
   Binding,
   NameBinding,
