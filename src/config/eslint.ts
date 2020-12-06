@@ -15,12 +15,18 @@ type Rules = Required<Linter.Config>['rules'];
 
 export function loadESLintConfig(filePath: string) {
   const log = logger('config.loadESLintConfig');
-  log.info('ESLint API version:', ESLint.version);
   log.debug('Start loading ESLint config for filePath:', filePath);
-  const eslint = new CLIEngine({});
-  const config = eslint.getConfigForFile(filePath);
-  log.debug('Finish loading ESLint config');
-  return translate(config);
+  log.info('ESLint API version:', ESLint.version);
+  try {
+    const eslint = new CLIEngine({});
+    const config = eslint.getConfigForFile(filePath);
+    log.debug('Finish loading ESLint config');
+    return translate(config);
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : `${e}`;
+    log.warn('Failed loading ESLint config:', msg);
+    return {};
+  }
 }
 
 function translate({ rules }: Linter.Config) {
