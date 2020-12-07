@@ -1,8 +1,8 @@
 import {
-  ComposeConfig,
   FlagSymbol,
   GroupRule,
 } from '../../config';
+import { ComposeConfig } from '../config';
 import { ImportNode } from '../parser';
 import {
   Sorter,

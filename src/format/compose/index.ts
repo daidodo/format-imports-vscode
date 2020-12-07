@@ -2,7 +2,7 @@ import {
   assert,
   assertNonNull,
 } from '../../common';
-import { ComposeConfig } from '../../config';
+import { ComposeConfig } from '../config';
 import {
   NameBinding,
   NodeComment,

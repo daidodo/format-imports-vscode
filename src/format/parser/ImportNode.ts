@@ -8,14 +8,12 @@ import {
 } from 'typescript';
 
 import { assertNonNull } from '../../common';
-import {
-  ComposeConfig,
-  FlagSymbol,
-} from '../../config';
+import { FlagSymbol } from '../../config';
 import {
   composeNodeAsNames,
   composeNodeAsParts,
 } from '../compose';
+import { ComposeConfig } from '../config';
 import {
   Binding,
   NameBinding,

@@ -1,14 +1,14 @@
-import ts, {
-  CompilerOptions,
-  ScriptTarget,
-} from 'typescript';
+import ts, { ScriptTarget } from 'typescript';
 
 import { logger } from '../../common';
 import {
-  ComposeConfig,
-  configForCompose,
+  AllConfig,
   Configuration,
 } from '../../config';
+import {
+  ComposeConfig,
+  configForCompose,
+} from '../config';
 import {
   apply,
   EditManager,
@@ -31,12 +31,12 @@ import { RangeAndEmptyLines } from '../types';
 export function formatSource(
   fileName: string,
   sourceText: string,
-  config: Configuration,
-  tsCompilerOptions?: CompilerOptions,
+  { config, eslintConfig, tsCompilerOptions }: AllConfig,
 ) {
   const log = logger('parser.formatSource');
-  log.debug('config:', config);
-  log.debug('tsCompilerOptions:', tsCompilerOptions);
+  log.info('config:', config);
+  log.info('eslintConfig:', eslintConfig);
+  log.info('tsCompilerOptions:', tsCompilerOptions);
   const sourceFile = ts.createSourceFile(fileName, sourceText, ScriptTarget.Latest);
   const { importNodes, importsInsertPoint: point, exportNodes, allIds } = parseSource(
     sourceFile,
@@ -45,10 +45,7 @@ export function formatSource(
     tsCompilerOptions,
   );
   const editManager = new EditManager([...importNodes, ...exportNodes]);
-  if (editManager.empty()) {
-    log.info('No sortable imports or exports found. Skipping file.');
-    return undefined;
-  }
+  if (editManager.empty()) return undefined;
   const composeConfig = configForCompose(config);
   log.info('composeConfig:', composeConfig);
   const unusedIds = () =>

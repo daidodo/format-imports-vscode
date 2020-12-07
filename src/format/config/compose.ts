@@ -1,6 +1,6 @@
 import { DeepReadonly } from 'utility-types';
 
-import { Configuration } from './types';
+import { Configuration } from '../../config';
 
 export type ComposeConfig = DeepReadonly<ReturnType<typeof configForCompose>>;
 

@@ -104,10 +104,11 @@ function runTestCase(
     const res = result || defResult;
     const doc = await workspace.openTextDocument(origin);
     const c = updateEol(config, doc.eol);
+    const allConfig = { config: c, eslintConfig: {}, tsCompilerOptions: tsCompOpt };
     const source = doc.getText();
     const expected = res ? fs.readFileSync(res).toString() : source;
-    const actual = formatSource(origin, source, c, tsCompOpt) ?? source;
-    assert.equal(actual, expected);
+    const actual = formatSource(origin, source, allConfig) ?? source;
+    assert.strictEqual(actual, expected);
   });
 }
 

@@ -4,8 +4,8 @@ import {
   SyntaxKind,
 } from 'typescript';
 
-import { ComposeConfig } from '../../config';
 import { composeNodeAsNames } from '../compose';
+import { ComposeConfig } from '../config';
 import { NameBinding } from '../types';
 import { normalizePath } from '../utils';
 import { getNameBinding } from './helper';

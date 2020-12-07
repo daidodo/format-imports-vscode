@@ -1,4 +1,4 @@
-import { ComposeConfig } from '../../config';
+import { ComposeConfig } from '../config';
 import { RangeAndEmptyLines } from '../types';
 import { Edit } from './types';
 

@@ -16,8 +16,9 @@ export {
 } from './types';
 
 export { mergeConfig } from './helper';
-export { ComposeConfig, configForCompose } from './compose';
 export { ESLintConfig } from './eslint';
+
+export type AllConfig = ReturnType<typeof loadConfig>;
 
 export function loadConfig(config: Configuration, sourceFileName: string) {
   const extConfig = loadImportSorterConfig(config, sourceFileName);

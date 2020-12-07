@@ -16,7 +16,7 @@ export function loadImportSorterConfig(config: Configuration, sourceFileName: st
   const { configurationFileName: cfgFileName } = config;
   log.debug('Load Prettier/EditorConfig config.');
   const pretConfig = loadPretConfig(sourceFileName);
-  log.debug('Load import-sorter config:', cfgFileName);
+  log.debug('Load import-sorter config from', cfgFileName);
   const fConfig = fileConfig(cfgFileName, sourceFileName);
   log.debug('Load package.json config.');
   const pkgConfig = packageConfig(sourceFileName);
