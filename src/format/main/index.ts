@@ -8,6 +8,7 @@ import {
 import {
   ComposeConfig,
   configForCompose,
+  translateESLintConfig,
 } from '../config';
 import {
   apply,
@@ -31,12 +32,13 @@ import { RangeAndEmptyLines } from '../types';
 export function formatSource(
   fileName: string,
   sourceText: string,
-  { config, eslintConfig, tsCompilerOptions }: AllConfig,
+  { config: originConfig, eslintConfig, tsCompilerOptions }: AllConfig,
 ) {
   const log = logger('parser.formatSource');
-  log.info('config:', config);
+  log.info('config:', originConfig);
   log.info('eslintConfig:', eslintConfig);
   log.info('tsCompilerOptions:', tsCompilerOptions);
+  const config = translateESLintConfig(originConfig, eslintConfig);
   const sourceFile = ts.createSourceFile(fileName, sourceText, ScriptTarget.Latest);
   const { importNodes, importsInsertPoint: point, exportNodes, allIds } = parseSource(
     sourceFile,

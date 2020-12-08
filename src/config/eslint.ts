@@ -5,11 +5,10 @@ import {
   ESLint,
   Linter,
 } from 'eslint';
-import { DeepReadonly } from 'utility-types';
 
 import { logger } from '../common';
 
-export type ESLintConfig = DeepReadonly<ReturnType<typeof loadESLintConfig>>;
+export type ESLintConfig = ReturnType<typeof loadESLintConfig>;
 
 type Rules = Required<Linter.Config>['rules'];
 
