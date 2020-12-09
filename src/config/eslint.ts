@@ -8,11 +8,13 @@ import {
 
 import { logger } from '../common';
 
-export type ESLintConfig = ReturnType<typeof loadESLintConfig>;
+export interface ESLintConfig {
+  sortImports?: SortImportsOptions;
+}
 
 type Rules = Required<Linter.Config>['rules'];
 
-export function loadESLintConfig(filePath: string) {
+export function loadESLintConfig(filePath: string): ESLintConfig | undefined {
   const log = logger('config.loadESLintConfig');
   log.debug('Start loading ESLint config for filePath:', filePath);
   log.info('ESLint API version:', ESLint.version);
@@ -24,15 +26,17 @@ export function loadESLintConfig(filePath: string) {
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : `${e}`;
     log.warn('Failed loading ESLint config:', msg);
-    return {};
+    return undefined;
   }
 }
 
 function translate({ rules }: Linter.Config) {
-  if (!rules) return {};
+  if (!rules) return undefined;
   const sortImports = extractSortImportsRule(rules);
   return { sortImports };
 }
+
+export type SortImportsOptions = ReturnType<typeof extractSortImportsRule>;
 
 function extractSortImportsRule(rules: Rules) {
   const DEFAULT_OPTIONS = {
@@ -48,49 +52,7 @@ function extractSortImportsRule(rules: Rules) {
     allowSeparatedGroups: false,
   };
   return extractOptions(rules, 'sort-imports', DEFAULT_OPTIONS);
-  // if (!options) return config;
-  // const { ignoreCase, memberSyntaxSortOrder, allowSeparatedGroups } = options;
-  // const sortRules = translateSortRules(config, ignoreCase);
-  // const groupRules = translateGroupRules(config, memberSyntaxSortOrder, allowSeparatedGroups);
-  // return { ...config, sortImportsBy: 'names', sortRules, groupRules };
 }
-
-// function translateSortRules(config: Configuration, ignoreCase: boolean) {
-//   const { sortRules } = config;
-//   const names: CompareRule = ignoreCase ? ['_', 'aA'] : ['AZ', '_'];
-//   return { ...(sortRules ?? {}), names };
-// }
-
-// function translateGroupRules(
-//   config: Configuration,
-//   memberSyntaxSortOrder: ('none' | 'all' | 'multiple' | 'single')[],
-//   allowSeparatedGroups: boolean,
-// ) {
-//   const groups: GroupRule[] = memberSyntaxSortOrder.map(v => {
-//     switch (v) {
-//       case 'none':
-//         return { flags: 'scripts' };
-//       case 'all':
-//         return { flags: 'namespace' };
-//       case 'multiple':
-//         return { flags: 'multiple' };
-//       case 'single':
-//         return { flags: 'single' };
-//     }
-//   });
-//   // If groups are not recognized, then group imports by memberSyntaxSortOrder.
-//   if (!allowSeparatedGroups) return groups;
-//   const { groupRules } = config;
-//   const uniformGroups = typeof groupRules === 'string';
-//   const res = (groupRules ?? []).map(({ flags, regex }) => ({}));
-//   if (!groupRules) {
-//   }
-
-//   const groupRules =
-//     allowSeparatedGroups && originGroupRules
-//       ? originGroupRules.map(({ flags, regex }) => ({ flags, regex, subGroups: groups }))
-//       : groups;
-// }
 
 function extractOptions<Key extends keyof Rules, Options>(
   rules: Rules,

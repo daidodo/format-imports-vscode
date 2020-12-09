@@ -4,17 +4,26 @@ import {
   ESLintConfig,
   GroupRule,
   mergeConfig,
+  SortImportsOptions,
 } from '../../config';
 
-export type ESLintConfigProcessed = Partial<
-  Required<ReturnType<typeof translateESLintConfig>>['processed']
->;
-
-export function translateESLintConfig(oldConfig: Configuration, eslintConfig: ESLintConfig) {
-  return translateSortImportsRule(oldConfig, eslintConfig.sortImports);
+export interface ESLintConfigProcessed {
+  ignoreSorting: boolean;
+  subGroups?: GroupRule[];
 }
 
-type SortImportsOptions = ESLintConfig['sortImports'];
+interface TranslateResult {
+  config: Configuration;
+  processed?: ESLintConfigProcessed;
+}
+
+export function translateESLintConfig(
+  config: Configuration,
+  eslintConfig: ESLintConfig | undefined,
+): TranslateResult {
+  if (!eslintConfig) return { config };
+  return translateSortImportsRule(config, eslintConfig.sortImports);
+}
 
 function translateSortImportsRule(oldConfig: Configuration, options: SortImportsOptions) {
   if (!options) return { config: oldConfig };

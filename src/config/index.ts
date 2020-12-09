@@ -1,6 +1,10 @@
 import minimatch from 'minimatch';
+import { CompilerOptions } from 'typescript';
 
-import { loadESLintConfig } from './eslint';
+import {
+  ESLintConfig,
+  loadESLintConfig,
+} from './eslint';
 import { loadImportSorterConfig } from './importSorter';
 import { loadTsConfig } from './tsconfig';
 import { Configuration } from './types';
@@ -16,11 +20,15 @@ export {
 } from './types';
 
 export { mergeConfig } from './helper';
-export { ESLintConfig } from './eslint';
+export { ESLintConfig, SortImportsOptions } from './eslint';
 
-export type AllConfig = ReturnType<typeof loadConfig>;
+export interface AllConfig {
+  config: Configuration;
+  tsCompilerOptions?: CompilerOptions;
+  eslintConfig?: ESLintConfig;
+}
 
-export function loadConfig(config: Configuration, sourceFileName: string) {
+export function loadConfig(config: Configuration, sourceFileName: string): AllConfig {
   const extConfig = loadImportSorterConfig(config, sourceFileName);
   const eslintConfig = loadESLintConfig(sourceFileName);
   const tsCompilerOptions = loadTsConfig(sourceFileName);
