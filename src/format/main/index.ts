@@ -10,6 +10,7 @@ import {
   configForCompose,
   translateESLintConfig,
 } from '../config';
+import { ESLintConfigProcessed } from '../config/eslint';
 import {
   apply,
   EditManager,
@@ -38,7 +39,9 @@ export function formatSource(
   log.info('config:', originConfig);
   log.info('eslintConfig:', eslintConfig);
   log.info('tsCompilerOptions:', tsCompilerOptions);
-  const config = translateESLintConfig(originConfig, eslintConfig);
+  const { config, processed } = translateESLintConfig(originConfig, eslintConfig);
+  log.debug('Translated ESLint config to newConfig:', config);
+  log.debug('ESLint config processed data:', processed);
   const sourceFile = ts.createSourceFile(fileName, sourceText, ScriptTarget.Latest);
   const { importNodes, importsInsertPoint: point, exportNodes, allIds } = parseSource(
     sourceFile,
@@ -53,11 +56,18 @@ export function formatSource(
   const unusedIds = () =>
     getUnusedIds(allIds, importNodes, fileName, sourceFile, tsCompilerOptions);
   const sorter = sorterFromRules(config.sortRules);
-  const text = formatImports(importNodes, point, unusedIds, config, composeConfig, sorter);
+  const text = formatImports(
+    importNodes,
+    point,
+    unusedIds,
+    config,
+    composeConfig,
+    sorter,
+    processed,
+  );
   if (text && point) editManager.insert({ range: point, text, trailingNewLines: 2 });
   const edits = formatExports(exportNodes, composeConfig, sorter);
   edits.forEach(e => editManager.insert(e));
-
   return apply(sourceText, sourceFile, editManager.generateEdits(composeConfig));
 }
 
@@ -68,9 +78,10 @@ function formatImports(
   config: Configuration,
   composeConfig: ComposeConfig,
   sorter: Sorter,
+  eslintProcessed?: ESLintConfigProcessed,
 ) {
   if (!insertPoint || !importNodes.length) return undefined;
-  const groups = sortImports(importNodes, unusedIds(), config, sorter);
+  const groups = sortImports(importNodes, unusedIds(), config, sorter, eslintProcessed);
   const { groupSep } = composeConfig;
   return groups.compose(composeConfig, groupSep);
 }

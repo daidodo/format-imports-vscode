@@ -2,7 +2,10 @@ import {
   FlagSymbol,
   GroupRule,
 } from '../../config';
-import { ComposeConfig } from '../config';
+import {
+  ComposeConfig,
+  ESLintConfigProcessed,
+} from '../config';
 import { ImportNode } from '../parser';
 import {
   Sorter,
@@ -13,6 +16,7 @@ import { sortImportNodes } from './merge';
 
 type FlagsConfig = Required<GroupRule>['flags'];
 type SortImportsBy = Required<GroupRule>['sortImportsBy'];
+type SubGroups = Required<GroupRule>['subGroups'];
 
 export default class SortGroup {
   private readonly flags_: FlagSymbol[];
@@ -24,31 +28,29 @@ export default class SortGroup {
   private scripts_: ImportNode[] = []; // Fall-back group for script imports
 
   constructor(
-    rule: GroupRule,
-    parent: { sorter?: Sorter; flags?: FlagSymbol[]; sortImportsBy?: SortImportsBy },
+    { flags: originFlags, regex, sortImportsBy, sort, subGroups }: GroupRule,
+    parent: { sorter: Sorter; flags?: FlagSymbol[]; sortImportsBy?: SortImportsBy },
+    eslintConfigArray?: (ESLintConfigProcessed | undefined)[],
   ) {
-    const { flags: originFlags, regex, sortImportsBy, sort, subGroups } = rule;
+    const [currentConfig, ...childrenConfig] = eslintConfigArray ?? [];
+    const { ignoreSorting, subGroups: replaceSubGroupRules } = currentConfig ?? {};
     const flags = breakFlags(originFlags);
     const flags1 = SortGroup.inferFlags1(flags, parent.flags);
-    const sortRules = sort === 'none' ? { paths: 'none' as const, names: 'none' as const } : sort;
     this.regex_ = regex || regex === '' ? RegExp(regex) : undefined;
-    this.sortImportsBy_ = sortImportsBy ?? parent.sortImportsBy ?? 'paths';
-    this.sorter_ = parent.sorter
-      ? updateSorterWithRules(parent.sorter, sortRules)
-      : sorterFromRules(sortRules);
-    this.subGroups_ = subGroups
-      ?.map(r => {
-        return typeof r === 'string' ? { regex: r } : Array.isArray(r) ? { subGroups: r } : r;
-      })
-      .map(
-        r =>
-          new SortGroup(r, {
-            sorter: this.sorter_,
-            flags: flags1,
-            sortImportsBy: this.sortImportsBy_,
-          }),
-      );
-    this.flags_ = SortGroup.inferFlags2(flags, flags1, this.subGroups_);
+    if (ignoreSorting) {
+      this.sortImportsBy_ = parent.sortImportsBy ?? 'paths';
+      this.sorter_ = parent.sorter;
+    } else {
+      this.sortImportsBy_ = sortImportsBy ?? parent.sortImportsBy ?? 'paths';
+      const sortRules = sort === 'none' ? { paths: 'none' as const, names: 'none' as const } : sort;
+      this.sorter_ = parent.sorter
+        ? updateSorterWithRules(parent.sorter, sortRules)
+        : sorterFromRules(sortRules);
+    }
+    const ownSubGroups = this.calcSubGroups(subGroups, flags1, childrenConfig);
+    const replaceSubGroups = this.calcSubGroups(replaceSubGroupRules, flags1);
+    this.flags_ = SortGroup.inferFlags2(flags, flags1, ownSubGroups);
+    this.subGroups_ = replaceSubGroups ?? ownSubGroups;
   }
 
   /**
@@ -99,6 +101,25 @@ export default class SortGroup {
     ]
       .filter(t => !!t)
       .join(sep);
+  }
+
+  private calcSubGroups(
+    groupRules: SubGroups | undefined,
+    flags: FlagSymbol[],
+    eslintConfigArray?: (ESLintConfigProcessed | undefined)[],
+  ) {
+    return groupRules
+      ?.map(r => {
+        return typeof r === 'string' ? { regex: r } : Array.isArray(r) ? { subGroups: r } : r;
+      })
+      .map(
+        r =>
+          new SortGroup(
+            r,
+            { sorter: this.sorter_, flags, sortImportsBy: this.sortImportsBy_ },
+            eslintConfigArray,
+          ),
+      );
   }
 
   /**

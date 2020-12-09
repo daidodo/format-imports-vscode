@@ -1,3 +1,3 @@
 export { ComposeConfig, configForCompose } from './compose';
 
-export { translateESLintConfig } from './eslint';
+export { ESLintConfigProcessed, translateESLintConfig } from './eslint';

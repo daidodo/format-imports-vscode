@@ -1,40 +1,45 @@
-import { logger } from '../../common';
 import {
   CompareRule,
   Configuration,
   ESLintConfig,
   GroupRule,
+  mergeConfig,
 } from '../../config';
 
-export function translateESLintConfig(config: Configuration, eslintConfig: ESLintConfig) {
-  return translateSortImportsRule(config, eslintConfig.sortImports);
+export type ESLintConfigProcessed = Partial<
+  Required<ReturnType<typeof translateESLintConfig>>['processed']
+>;
+
+export function translateESLintConfig(oldConfig: Configuration, eslintConfig: ESLintConfig) {
+  return translateSortImportsRule(oldConfig, eslintConfig.sortImports);
 }
 
 type SortImportsOptions = ESLintConfig['sortImports'];
 
-function translateSortImportsRule(config: Configuration, options: SortImportsOptions) {
-  const log = logger('format.translateSortImportsRule');
-  if (!options) return config;
+function translateSortImportsRule(oldConfig: Configuration, options: SortImportsOptions) {
+  if (!options) return { config: oldConfig };
   const { ignoreCase, memberSyntaxSortOrder, allowSeparatedGroups } = options;
-  const sortRules = calcSortRules(config, ignoreCase);
-  const groupRules = calcGroupRules(config, memberSyntaxSortOrder, allowSeparatedGroups);
-  const newConfig: Configuration = { ...config, sortImportsBy: 'names', sortRules, groupRules };
-  log.debug('Translated ESLint config to newConfig:', newConfig);
-  return newConfig;
+  const sortRules = calcSortRules(ignoreCase);
+  const { groupRules, subGroups } = calcGroupRules(
+    oldConfig,
+    memberSyntaxSortOrder,
+    allowSeparatedGroups,
+  );
+  const config = mergeConfig(oldConfig, { sortImportsBy: 'names', sortRules, groupRules });
+  return subGroups ? { config, processed: { subGroups, ignoreSorting: true } } : { config };
 }
 
-function calcSortRules(config: Configuration, ignoreCase: boolean) {
-  const { sortRules } = config;
+function calcSortRules(ignoreCase: boolean) {
   const names: CompareRule = ignoreCase ? ['_', 'aA'] : ['AZ', '_'];
-  return { ...(sortRules ?? {}), names };
+  return { names };
 }
 
 function calcGroupRules(
-  config: Configuration,
+  { groupRules }: Configuration,
   memberSyntaxSortOrder: ('none' | 'all' | 'multiple' | 'single')[],
   allowSeparatedGroups: boolean,
-): GroupRule[] {
-  const subGroups: GroupRule[] = memberSyntaxSortOrder.map(v => {
+) {
+  const groups: GroupRule[] = memberSyntaxSortOrder.map(v => {
     switch (v) {
       case 'none':
         return { flags: 'scripts' };
@@ -46,15 +51,7 @@ function calcGroupRules(
         return { flags: 'single' };
     }
   });
-  // If groups are not recognized, then group the imports by memberSyntaxSortOrder.
-  if (!allowSeparatedGroups) return subGroups;
-  const { groupRules } = config;
-  // Substitute sub groups with memberSyntaxSortOrder, reset sorting settings.
-  const newGroups: GroupRule[] = (groupRules ?? []).map(g => {
-    if (typeof g === 'string' || Array.isArray(g)) return { subGroups };
-    return { ...g, sortImportsBy: undefined, sort: undefined, subGroups };
-  });
-  // Set up the fall-back group.
-  newGroups.push({ flags: 'named', subGroups });
-  return newGroups;
+  return allowSeparatedGroups
+    ? { groupRules: [...(groupRules ?? []), { flags: 'named' as const }], subGroups: groups }
+    : { groupRules: groups };
 }

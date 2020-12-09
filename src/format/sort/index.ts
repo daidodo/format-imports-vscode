@@ -1,4 +1,5 @@
 import { Configuration } from '../../config';
+import { ESLintConfigProcessed } from '../config';
 import {
   ImportNode,
   KeepUnused,
@@ -18,12 +19,17 @@ export function sortImports(
   usage: NameUsage,
   config: Configuration,
   sorter: Sorter,
+  eslint?: ESLintConfigProcessed,
 ) {
-  const { sortRules: sort, groupRules: subGroups, keepUnused, sortImportsBy } = config;
+  const { groupRules: subGroups, keepUnused, sortImportsBy } = config;
+  // The 1st item is for the hypothetical top group;
+  // The 2nd item is for its sub groups, i.e. the real groups from user config.
+  const eslintConfigArray = [undefined, eslint];
   // The top group must be a match-all group.
   const group = new SortGroup(
-    { flags: 'all', regex: '', sort, subGroups, sortImportsBy },
-    { sorter },
+    { flags: 'all', regex: '', subGroups },
+    { sorter, sortImportsBy },
+    eslintConfigArray,
   );
   const keepUnusedBouncer = keepUnused && new KeepUnused(keepUnused);
   const left = removeUnusedNames(nodes, usage, keepUnusedBouncer);
