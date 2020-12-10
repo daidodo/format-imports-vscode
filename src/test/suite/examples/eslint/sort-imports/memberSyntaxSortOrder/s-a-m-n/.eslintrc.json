@@ -1,0 +1,8 @@
+{
+  "rules": {
+    "sort-imports": ["error", {
+      "allowSeparatedGroups": false,
+      "memberSyntaxSortOrder": ["single", "all", "multiple", "none"]
+    }]
+  }
+}

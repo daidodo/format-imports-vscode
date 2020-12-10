@@ -1,0 +1,7 @@
+{
+  "rules": {
+    "sort-imports": ["error", {
+      "ignoreMemberSort": true
+    }]
+  }
+}

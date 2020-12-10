@@ -1,0 +1,12 @@
+{
+  "groupRules": [
+    { "flags": "scripts", "regex": "^a", "subGroups": ["^ab", "^aa"] },
+    "^a",
+    { "flags": "scripts", "regex": "^b" },
+    { "regex": "^b", "subGroups": ["^bb", {}, "^ba"] },
+    { "flags": "scripts", "regex": "^c" },
+    {},
+    { "flags": "scripts" },
+    ["^db", "^da", "^d"]
+  ]
+}
