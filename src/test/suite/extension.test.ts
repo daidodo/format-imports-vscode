@@ -10,8 +10,10 @@ import {
 import { assertNonNull } from '../../common';
 import {
   Configuration,
+  ESLintConfig,
   mergeConfig,
 } from '../../config';
+import { loadESLintConfig } from '../../config/eslint';
 import { fileConfig } from '../../config/importSorter';
 import { loadTsConfig } from '../../config/tsconfig';
 import { formatSource } from '../../format';
@@ -20,6 +22,7 @@ interface TestSuite {
   name: string;
   config?: Configuration;
   tsCompOpt?: CompilerOptions;
+  eslintConfig?: ESLintConfig;
   cases: TestCase[];
   suites: TestSuite[];
 }
@@ -32,6 +35,7 @@ interface TestCase {
 
 const CONF = 'import-sorter.json';
 const TS_CONF = 'tsconfig.json';
+const ESLINT_CONF = '.eslintrc.json';
 
 suite('Integration Test Suite', () => {
   const dir = path.resolve(__dirname).replace(/(\\|\/)out(\\|\/)/g, `${sep}src${sep}`);
@@ -40,15 +44,20 @@ suite('Integration Test Suite', () => {
   // Run all tests
   return runTestSuite(examples);
   // Or, run a specific test case
-  // return runTestSuite(examples, 'group/level_N');
+  // return runTestSuite(examples, 'eslint');
 });
 
 function getTestSuite(dir: string, name: string): TestSuite | undefined {
   const path = dir + sep + name;
   const entries = fs.readdirSync(path, { withFileTypes: true });
-  const config = entries.find(({ name }) => name === CONF) && fileConfig(`${path}${sep}${CONF}`);
+  // Search and load 'import-sorter.json' under path.
+  const config = entries.find(({ name }) => name === CONF) && fileConfig(path + sep + CONF);
+  // Search and load 'tsconfig.json' under path.
   const tsCompOpt =
-    entries.find(({ name }) => name === TS_CONF) && loadTsConfig(`${path}${sep}${TS_CONF}`);
+    entries.find(({ name }) => name === TS_CONF) && loadTsConfig(path + sep + TS_CONF);
+  // Search and load '.eslintrc.json' under path.
+  const eslintConfig =
+    entries.find(({ name }) => name === ESLINT_CONF) && loadESLintConfig(path + sep + ESLINT_CONF);
   const suites = entries
     .filter(e => e.isDirectory())
     .map(({ name }) => getTestSuite(path, name))
@@ -67,23 +76,23 @@ function getTestSuite(dir: string, name: string): TestSuite | undefined {
       else v.result = p;
       map.set(k, v);
     });
-  return { name, config, tsCompOpt, suites, cases: [...map.values()] };
+  return { name, config, tsCompOpt, eslintConfig, suites, cases: [...map.values()] };
 }
 
 function runTestSuite(ts: TestSuite, specific?: string, preConfig?: Configuration) {
-  const { name, config: curConfig, tsCompOpt, cases, suites } = ts;
+  const { name, config: curConfig, tsCompOpt, eslintConfig, cases, suites } = ts;
   const defResult = cases.find(c => !c.name && !c.origin)?.result;
   const config =
     curConfig && preConfig ? mergeConfig(preConfig, curConfig) : curConfig ?? preConfig;
   suite(name, () => {
     if (!specific) {
-      cases.forEach(c => runTestCase(c, defResult, config, tsCompOpt));
+      cases.forEach(c => runTestCase(c, defResult, config, tsCompOpt, eslintConfig));
       suites.forEach(s => runTestSuite(s, undefined, config));
     } else {
       const [n, ...rest] = specific.split('/').filter(s => !!s);
       if (!rest.length) {
         const c = cases.find(c => (c.name ?? 'default') === n);
-        if (c) return runTestCase(c, defResult, config, tsCompOpt);
+        if (c) return runTestCase(c, defResult, config, tsCompOpt, eslintConfig);
       }
       const s = suites.find(s => s.name === n);
       assertNonNull(s, `Test case/suite '${n}' not found in suite '${name}'`);
@@ -97,6 +106,7 @@ function runTestCase(
   defResult?: string,
   config?: Configuration,
   tsCompOpt?: CompilerOptions,
+  eslintConfig?: ESLintConfig,
 ) {
   if (!name && !origin) return;
   test(name ?? 'default', async () => {
@@ -104,7 +114,7 @@ function runTestCase(
     const res = result || defResult;
     const doc = await workspace.openTextDocument(origin);
     const c = updateEol(config, doc.eol);
-    const allConfig = { config: c, eslintConfig: {}, tsCompilerOptions: tsCompOpt };
+    const allConfig = { config: c, eslintConfig, tsCompilerOptions: tsCompOpt };
     const source = doc.getText();
     const expected = res ? fs.readFileSync(res).toString() : source;
     const actual = formatSource(origin, source, allConfig) ?? source;
