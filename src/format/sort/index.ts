@@ -22,20 +22,17 @@ export function sortImports(
   eslint?: ESLintConfigProcessed,
 ) {
   const { groupRules: subGroups, keepUnused, sortImportsBy } = config;
-  // The 1st item is for the hypothetical top group;
-  // The 2nd item is for its sub groups, i.e. the real groups from user config.
-  const eslintConfigArray = [undefined, eslint];
   // The top group must be a match-all group.
   const group = new SortGroup(
     { flags: 'all', regex: '', subGroups },
     { sorter, sortImportsBy },
-    eslintConfigArray,
+    eslint,
   );
   const keepUnusedBouncer = keepUnused && new KeepUnused(keepUnused);
   const left = removeUnusedNames(nodes, usage, keepUnusedBouncer);
   const merged = mergeImportNodes(left);
   merged.forEach(n => group.add(n));
-  return group.sort();
+  return group.sort(0);
 }
 
 export { sortAndMergeExportNodes as sortExports } from './merge';

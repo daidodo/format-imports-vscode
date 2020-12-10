@@ -8,6 +8,7 @@ import {
   compareBindingName,
   compareImportNodesByNames,
   compareImportNodesByPaths,
+  Sorter,
 } from './compare';
 
 export function mergeImportNodes(nodes: ImportNode[]) {
@@ -24,8 +25,7 @@ export function mergeImportNodes(nodes: ImportNode[]) {
 export function sortImportNodes(
   nodes: ImportNode[],
   byPaths: boolean,
-  comparePaths?: Comparator,
-  compareNames?: Comparator,
+  { comparePaths, compareNames }: Sorter,
 ) {
   // Sort binding names
   nodes.forEach(n => {

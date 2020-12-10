@@ -1,3 +1,4 @@
+import { assertNonNull } from '../../common';
 import {
   FlagSymbol,
   GroupRule,
@@ -24,20 +25,20 @@ export default class SortGroup {
   private readonly sortImportsBy_: SortImportsBy;
   private readonly sorter_: Sorter;
   private readonly subGroups_?: SortGroup[];
+  private readonly eslintGroupOrder_?: FlagSymbol[];
   private nodes_: ImportNode[] = []; // Fall-back group for non-script imports
   private scripts_: ImportNode[] = []; // Fall-back group for script imports
+  private ignoreSubGroups_ = false;
 
   constructor(
     { flags: originFlags, regex, sortImportsBy, sort, subGroups }: GroupRule,
     parent: { sorter: Sorter; flags?: FlagSymbol[]; sortImportsBy?: SortImportsBy },
-    eslintConfigArray?: (ESLintConfigProcessed | undefined)[],
+    eslint?: ESLintConfigProcessed,
   ) {
-    const [currentConfig, ...childrenConfig] = eslintConfigArray ?? [];
-    const { ignoreSorting, subGroups: replaceSubGroupRules } = currentConfig ?? {};
     const flags = breakFlags(originFlags);
     const flags1 = SortGroup.inferFlags1(flags, parent.flags);
     this.regex_ = regex || regex === '' ? RegExp(regex) : undefined;
-    if (ignoreSorting) {
+    if (eslint?.ignoreSorting) {
       this.sortImportsBy_ = parent.sortImportsBy ?? 'paths';
       this.sorter_ = parent.sorter;
     } else {
@@ -47,10 +48,9 @@ export default class SortGroup {
         ? updateSorterWithRules(parent.sorter, sortRules)
         : sorterFromRules(sortRules);
     }
-    const ownSubGroups = this.calcSubGroups(subGroups, flags1, childrenConfig);
-    const replaceSubGroups = this.calcSubGroups(replaceSubGroupRules, flags1);
-    this.flags_ = SortGroup.inferFlags2(flags, flags1, ownSubGroups);
-    this.subGroups_ = replaceSubGroups ?? ownSubGroups;
+    this.subGroups_ = this.calcSubGroups(subGroups, flags1, eslint);
+    this.flags_ = SortGroup.inferFlags2(flags, flags1, this.subGroups_);
+    this.eslintGroupOrder_ = eslint?.groupOrder;
   }
 
   /**
@@ -81,22 +81,48 @@ export default class SortGroup {
     return false;
   }
 
-  sort() {
+  sort(level: number) {
+    if (this.eslintGroupOrder_) return this.sortByEslintGroups(level);
     const { nodes_, scripts_, sorter_, sortImportsBy_ } = this;
-    const { comparePaths, compareNames } = sorter_;
     const byPaths = sortImportsBy_ != 'names';
-    this.nodes_ = sortImportNodes(nodes_, byPaths, comparePaths, compareNames);
+    this.nodes_ = sortImportNodes(nodes_, byPaths, sorter_);
     // Script imports are always sorted by paths.
-    this.scripts_ = sortImportNodes(scripts_, true, comparePaths, compareNames);
-    this.subGroups_?.forEach(g => g.sort());
+    this.scripts_ = sortImportNodes(scripts_, true, sorter_);
+    this.subGroups_?.forEach(g => g.sort(level + 1));
+    return this;
+  }
+
+  private sortByEslintGroups(level: number) {
+    if (level === 0) {
+      const { scripts_, nodes_, eslintGroupOrder_: flags, sorter_, sortImportsBy_ } = this;
+      assertNonNull(flags);
+      const byPaths = sortImportsBy_ != 'names';
+
+      this.nodes_ = sortNodesByFlags(nodes_, flags, sorter_, byPaths);
+
+      // Script imports are always sorted by paths.
+      this.scripts_ = sortImportNodes(scripts_, true, sorter_);
+      this.subGroups_?.forEach(g => g.sort(level + 1));
+    } else if (level === 1) {
+      const { eslintGroupOrder_: flags, sorter_, sortImportsBy_ } = this;
+      assertNonNull(flags);
+      const byPaths = sortImportsBy_ != 'names';
+
+      this.nodes_ = sortNodesByFlags(this.allNodes_, flags, sorter_, byPaths);
+      this.scripts_ = [];
+      this.ignoreSubGroups_ = true;
+    }
     return this;
   }
 
   compose(config: ComposeConfig, sep: string): string {
     const { nl } = config;
+    const subGroups = this.ignoreSubGroups_
+      ? []
+      : this.subGroups_?.map(g => g.compose(config, nl)) ?? [];
     return [
       this.scripts_.map(n => n.compose(config)).join(nl),
-      ...(this.subGroups_?.map(g => g.compose(config, nl)) ?? []),
+      ...subGroups,
       this.nodes_.map(n => n.compose(config)).join(nl),
     ]
       .filter(t => !!t)
@@ -106,7 +132,7 @@ export default class SortGroup {
   private calcSubGroups(
     groupRules: SubGroups | undefined,
     flags: FlagSymbol[],
-    eslintConfigArray?: (ESLintConfigProcessed | undefined)[],
+    eslint?: ESLintConfigProcessed,
   ) {
     return groupRules
       ?.map(r => {
@@ -117,9 +143,16 @@ export default class SortGroup {
           new SortGroup(
             r,
             { sorter: this.sorter_, flags, sortImportsBy: this.sortImportsBy_ },
-            eslintConfigArray,
+            eslint,
           ),
       );
+  }
+
+  private get allNodes_(): ImportNode[] {
+    return (this.subGroups_ ?? []).reduce((r, g) => [...r, ...g.allNodes_], [
+      ...this.scripts_,
+      ...this.nodes_,
+    ]);
   }
 
   /**
@@ -167,4 +200,21 @@ function removeScriptsIfCombined(flags: FlagSymbol[]) {
 
 function isFlagIncluded(flag: FlagSymbol, flags: FlagSymbol[]) {
   return flags.some(f => f === flag);
+}
+
+/**
+ * First group `nodes` in the order defined by `flags`, then sort nodes inside each group.
+ * Please note `flags` must be ATOMIC, i.e. neither 'all' nor 'named'.
+ */
+function sortNodesByFlags(
+  nodes: ImportNode[],
+  flags: FlagSymbol[],
+  sorter: Sorter,
+  byPath: boolean,
+) {
+  const order = flags.map(f => ({ flag: f, nodes: new Array<ImportNode>() }));
+  const fallback: ImportNode[] = [];
+  nodes.forEach(n => (order.find(g => g.flag === n.flagType)?.nodes ?? fallback).push(n));
+  const groups = [...order.map(({ nodes }) => nodes), fallback];
+  return groups.reduce((r, g) => [...r, ...sortImportNodes(g, byPath, sorter)]);
 }

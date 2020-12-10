@@ -2,14 +2,14 @@ import {
   CompareRule,
   Configuration,
   ESLintConfig,
-  GroupRule,
+  FlagSymbol,
   mergeConfig,
   SortImportsOptions,
 } from '../../config';
 
 export interface ESLintConfigProcessed {
   ignoreSorting: boolean;
-  subGroups?: GroupRule[];
+  groupOrder?: FlagSymbol[];
 }
 
 interface TranslateResult {
@@ -29,13 +29,9 @@ function translateSortImportsRule(oldConfig: Configuration, options: SortImports
   if (!options) return { config: oldConfig };
   const { ignoreCase, memberSyntaxSortOrder, allowSeparatedGroups } = options;
   const sortRules = calcSortRules(ignoreCase);
-  const { groupRules, subGroups } = calcGroupRules(
-    oldConfig,
-    memberSyntaxSortOrder,
-    allowSeparatedGroups,
-  );
+  const { groupRules, groupOrder } = calcGroupRules(memberSyntaxSortOrder, allowSeparatedGroups);
   const config = mergeConfig(oldConfig, { sortImportsBy: 'names', sortRules, groupRules });
-  return subGroups ? { config, processed: { subGroups, ignoreSorting: true } } : { config };
+  return { config, processed: { groupOrder, ignoreSorting: true } };
 }
 
 function calcSortRules(ignoreCase: boolean) {
@@ -44,23 +40,22 @@ function calcSortRules(ignoreCase: boolean) {
 }
 
 function calcGroupRules(
-  { groupRules }: Configuration,
   memberSyntaxSortOrder: ('none' | 'all' | 'multiple' | 'single')[],
   allowSeparatedGroups: boolean,
 ) {
-  const groups: GroupRule[] = memberSyntaxSortOrder.map(v => {
+  const groupOrder: FlagSymbol[] = memberSyntaxSortOrder.map(v => {
     switch (v) {
       case 'none':
-        return { flags: 'scripts' };
+        return 'scripts';
       case 'all':
-        return { flags: 'namespace' };
+        return 'namespace';
       case 'multiple':
-        return { flags: 'multiple' };
+        return 'multiple';
       case 'single':
-        return { flags: 'single' };
+        return 'single';
     }
   });
   return allowSeparatedGroups
-    ? { groupRules: [...(groupRules ?? []), { flags: 'named' as const }], subGroups: groups }
-    : { groupRules: groups };
+    ? { groupOrder }
+    : { groupRules: groupOrder.map(g => ({ flags: g })) };
 }
