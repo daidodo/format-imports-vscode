@@ -1,4 +1,5 @@
 {
+  "root": true,
   "rules": {
     "no-unused-vars": "off",
     "import/no-useless-path-segments": "off",

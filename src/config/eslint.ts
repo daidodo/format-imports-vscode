@@ -20,6 +20,10 @@ export function loadESLintConfig(filePath: string): ESLintConfig | undefined {
   log.info('ESLint API version:', ESLint.version);
   try {
     const eslint = new CLIEngine({});
+    if (eslint.isPathIgnored(filePath)) {
+      log.debug('Ignored by ESLint for filePath:', filePath);
+      return undefined;
+    }
     const config = eslint.getConfigForFile(filePath);
     log.debug('Finish loading ESLint config');
     return translate(config);
