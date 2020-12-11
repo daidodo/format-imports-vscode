@@ -3,7 +3,6 @@
 ### Features
 
 - Group level comments. ([Link](https://github.com/SoominHan/import-sorter/issues/46))
-- Support ESLint plugin import/order. ([Link](https://github.com/SoominHan/import-sorter/issues/43), [Link](https://github.com/SoominHan/import-sorter/issues/65), [Link](https://github.com/SoominHan/import-sorter/issues/36), [Rule](https://eslint.org/docs/rules/sort-imports), [Rule](https://eslint.org/docs/rules/no-duplicate-imports), [API](https://github.com/eslint/eslintrc/blob/a75bacd9a743a7bbcdb8c59e5d4f9de3dc8b0f20/lib/config-array-factory.js#L16))
 - Import namespace alias. ([Link](https://github.com/SoominHan/import-sorter/issues/29))
 - Standalone npm package, CLI version. ([Link](https://github.com/znikola/vscode-es6-typescript-import-sorter/issues/20), [Link](https://github.com/SoominHan/import-sorter/issues/57))
 - Add a "sort-imports.on-focus-change" sorting option. ([Link](https://github.com/amatiasq/vsc-sort-imports/issues/30))
@@ -29,6 +28,7 @@
 
 ### DONE
 
+- ~~Support ESLint plugin import/order. ([Link](https://github.com/SoominHan/import-sorter/issues/43), [Link](https://github.com/SoominHan/import-sorter/issues/65), [Link](https://github.com/SoominHan/import-sorter/issues/36), [Rule](https://eslint.org/docs/rules/sort-imports), [Rule](https://eslint.org/docs/rules/no-duplicate-imports), [API](https://github.com/eslint/eslintrc/blob/a75bacd9a743a7bbcdb8c59e5d4f9de3dc8b0f20/lib/config-array-factory.js#L16))~~
 - ~~Organize Imports should sort by import name instead path. ([Link](https://github.com/microsoft/TypeScript/issues/23279), [Link](https://github.com/SoominHan/import-sorter/issues/40))~~
 - ~~Infer 'flag' from sub-groups in GroupRule. ([Link](https://github.com/daidodo/tsimportsorter/issues/17))~~
 - ~~Test coverage. ([Example](https://github.com/codecov/example-typescript-vscode-extension), [Doc](https://rpeshkov.net/blog/vscode-extension-coverage/))~~

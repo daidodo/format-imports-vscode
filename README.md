@@ -13,29 +13,26 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - [Install Plugin](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter)
 - [Open Issues](https://github.com/daidodo/tsimportsorter/issues)
 
-## [4.0] Release Notes
+## [4.1] Release Notes
 
 ### Added
 
-- Extend grouping rules to support [more types of imports](https://github.com/daidodo/tsimportsorter/wiki/Grouping-Rules#types-of-imports).
-
-### Changed
-
-- Change option `flag` to `flags` in [Grouping Rules](https://github.com/daidodo/tsimportsorter/wiki/Grouping-Rules).
+- Comply with [ESLint sort-imports](https://eslint.org/docs/rules/sort-imports) rules.
+- Add `development.enableDebug` in VS Code user settings for detailed logs.
 
 ## Features
 
 - Auto format imports and exports on save, or manually from command, shortcut or context menu.
-- Merge imports or exports if possible, and remove duplicated names.
+- Merge and sort imports and exports, and remove duplicated names.
 - Delete unused imports with configurable exceptions for, e.g. macros.
 - Group and sort imports by custom rules, including sorted by paths or names.
-- Sort binding names in imports and exports.
 - Support [Type-Only imports/exports](https://devblogs.microsoft.com/typescript/announcing-typescript-3-8/#type-only-imports-exports).
 - Support multi-root projects.
-- Ignore specific files, imports or exports.
+- Ignore files, imports or exports by config or inline comments.
 - Preserve `'use strict'`, `///` directives, shebang (`#!`) and global comments, e.g. license.
-- Keep comments with imports or exports when moving.
+- Keep comments when moving code.
 - Respect configs from [Prettier](https://prettier.io), [EditorConfig](https://editorconfig.org) and VS Code editor settings.
+- Comply with [ESLint sort-imports](https://eslint.org/docs/rules/sort-imports) rules.
 
 ## How to use
 
@@ -105,12 +102,16 @@ All VS Code settings under `"tsImportSorter"` section and their default values:
 
 // Number of empty lines between groups (NOT sub-groups).
 "tsImportSorter.configuration.EmptyLinesBetweenGroups": 1,
+
+// Whether to enable debug mode and print detailed logs to the output channel.
+"tsImportSorter.configuration.development.enableDebug": false,
 ```
 
 ## Configuration
 
 JS/TS Import/Export Sorter reads configurations from the following sources (in precedence from high to low):
 
+- [ESLint configuration](https://eslint.org/docs/user-guide/configuring) if installed.
 - `"importSorter"` section in `package.json`
 - `import-sorter.json` (File name is configurable)
 - [Prettier configuration](https://github.com/prettier/prettier-vscode#configuration) if installed
@@ -205,21 +206,16 @@ Here are all configs in `package.json` under `"importSorter"` section and their 
 }
 ```
 
-### Multi-root projects support
+### ESLint rules
 
-JS/TS Import/Export Sorter respects [VS Code user and workspace settings](https://code.visualstudio.com/docs/getstarted/settings) and supports [multi-root workspaces](https://code.visualstudio.com/docs/editor/multi-root-workspaces).
+If installed, [ESLint sort-imports](https://eslint.org/docs/rules/sort-imports) rules will be detected and consulted, so that the results code will comply to the lint rules.
 
-`package.json` is searched in the following order:
+If there are conflicts between user config and ESLint rules, the ESLint rules will win
+to avoid any lint errors.
 
-- The same folder of the edited file.
-- If not found, then go to the parent folder.
-- Continue if still not found, till the root folder (`/`)
+For more info about how the confilicts are resolved, please check the [ESLint Compatibility](https://github.com/daidodo/tsimportsorter/wiki/ESLint-Compatibility) wiki.
 
-`import-sorter.json` is searched in a similar way if it's a relative path.
-
-No search is needed if `"tsImportSorter.configuration.configurationFileName"` is an absolute path, e.g. `/path/to/import-sorter.json` or `C:\path\to\import-sorter.json`.
-
-### Ignore files or import/export declarations
+## Ignore files or import/export statements
 
 There are a few ways to exclude files from inspection:
 
@@ -255,7 +251,7 @@ _Note:_
 
 - _Excluded paths and file disable-comments are **ignored** if the formatting is triggered manually, i.e. from Command Palette, editor context menu or shortcut._
 
-To exclude a specific `import` or `export` declaration from formatting, please add the following as its leading or trailing comments:
+To exclude a specific `import` or `export` statement from formatting, please add the following as its leading or trailing comments:
 
 ```ts
 // ts-import-sorter: disable
@@ -270,13 +266,13 @@ export { Excluded } from 'import/sorter'; /* ts-import-sorter: disable */
 
 To disable formatting for all exports, just set `"formatExports": false` in the config.
 
-### Maximum names per line
+## Maximum names per line
 
 Whether to wrap an `import` statement is decided by `maxBindingNamesPerLine` and `maxDefaultAndBindingNamesPerLine`, as well as `maxLineLength`.
 
 Whether to wrap an `export` statement is decided by `maxExportNamesPerLine`, as well as `maxLineLength`.
 
-#### `maxBindingNamesPerLine`
+### `maxBindingNamesPerLine`
 
 For a statement importing only *binding names*, this value determines how many names are allowed before wrapping.
 
@@ -299,7 +295,7 @@ import {
 } from 'c';   // Wrapped as there are more than 2 names
 ```
 
-#### `maxDefaultAndBindingNamesPerLine`
+### `maxDefaultAndBindingNamesPerLine`
 
 For a statement importing *default* and *binding names*, this value determines how many names are allowed before wrapping.
 
@@ -320,7 +316,7 @@ import D, {
 } from 'c'; // Wrapped as there are more than 2 names
 ```
 
-#### `maxExportNamesPerLine`
+### `maxExportNamesPerLine`
 
 For `export {}` or `export {} from 'x'` statements, this value determines how many names are allowed before wrapping.
 
@@ -342,7 +338,7 @@ export {
 } from 'c'; // Wrapped as there are more than 2 names
 ```
 
-#### `maxNamesPerWrappedLine`
+### `maxNamesPerWrappedLine`
 
 If an import/export statement is wrapped, this value decides how many names there are per line.
 
@@ -368,7 +364,7 @@ export {
 }; // There are 2 names at most per wrapped line
 ```
 
-### Grouping Rules
+## Grouping Rules
 
 JS/TS Import/Export Sorter can put imports into different groups separated by empty lines (configurable), based on the rules defined in `groupRules`.
 
@@ -409,7 +405,7 @@ _Notes:_
 
 For a complete guide, please refer to [the Wiki](https://github.com/daidodo/tsimportsorter/wiki/Grouping-Rules).
 
-### Sorting Rules
+## Sorting Rules
 
 You can customize sorting rules for all imports and exports, or imports within a group, on:
 
@@ -460,7 +456,7 @@ _Note:_
 
 For more details and how to construct your own rules, please read [the Wiki](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules).
 
-### Unused Imports Removal
+## Unused Imports Removal
 
 By default all unused imports are removed. In some cases you might want to keep the import even if it's unused. For example to keep `import tw from 'twin.macro'`  you can do the following:
 

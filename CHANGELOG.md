@@ -17,6 +17,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -->
 
+## [4.1.0] - 2020-12-11
+
+### Added
+
+- Comply with [ESLint sort-imports](https://eslint.org/docs/rules/sort-imports) rules.
+- Add `development.enableDebug` in VS Code user settings for detailed logs.
+
 ## [4.0.0] - 2020-11-30
 
 ### Added
