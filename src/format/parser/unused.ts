@@ -90,7 +90,8 @@ function transform(
   if (code === UnusedCode.SINGLE_1 || code === UnusedCode.SINGLE_2) {
     // ts(6133): 'XXX' is declared but its value is never read.
     // ts(6196): 'XXX' is declared but never used.
-    const id = /^'(\w+)' is declared but/.exec(text)?.[1];
+    // `[^']+` is used instead of `\w+` for unicode characters.
+    const id = /^'([^']+)' is declared but/.exec(text)?.[1];
     if (!id) {
       log.warn(`Cannot parse identifier for error code=${code} from message='${text}'`);
       return;
