@@ -40,9 +40,6 @@ import FD,{eE} from 'db' // comment
 import {_F, a, aa, ab, aA, aB, b, c, d, dd, A, Aa, Ab, AA, AB, B, BB, BBB, C, D, 中} from 'da' // comment
 
 
-import H = require('aa');
-import bC = require('bb');
-import DA = require('cc');
 
 import ba from '..' // comment
 import cA, {bA} from '.' // comment

@@ -3,9 +3,11 @@
     "no-unused-vars": "off",
     "import/no-useless-path-segments": "off",
     "no-duplicate-imports": "off",
-    "sort-imports": ["error", {
+    "sort-imports": ["warn", {
+      "ignoreMemberSort": true,
+      "ignoreDeclarationSort": true,
       "allowSeparatedGroups": true,
-      "memberSyntaxSortOrder": ["single", "all", "multiple", "none"]
+      "memberSyntaxSortOrder": ["multiple", "single",  "none", "all"]
     }]
   }
 }

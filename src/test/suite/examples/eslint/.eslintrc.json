@@ -1,19 +1,8 @@
 {
   "rules": {
-    "import/no-useless-path-segments": [
-      "error",
-      {
-        "noUselessIndex": true
-      }
-    ],
-    "no-duplicate-imports": "warn",
-    "sort-imports": [
-      "error",
-      {
-        "ignoreCase": false,
-        "allowSeparatedGroups": true,
-        "memberSyntaxSortOrder": ["multiple", "single", "none", "all" ]
-      }
-    ]
+    "no-unused-vars": "off",
+    "import/no-useless-path-segments": "off",
+    "no-duplicate-imports": "off",
+    "sort-imports": "off"
   }
 }
