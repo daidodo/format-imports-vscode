@@ -214,5 +214,5 @@ function sortNodesByFlags(
   const fallback: ImportNode[] = [];
   nodes.forEach(n => (order.find(g => g.flag === n.flagType)?.nodes ?? fallback).push(n));
   const groups = [...order.map(({ nodes }) => nodes), fallback];
-  return groups.reduce((r, g) => [...r, ...sortImportNodes(g, byPath, sorter)]);
+  return groups.reduce((r, g) => [...r, ...sortImportNodes(g, byPath, sorter)], []);
 }

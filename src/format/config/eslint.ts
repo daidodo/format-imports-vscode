@@ -29,9 +29,10 @@ function translateSortImportsRule(oldConfig: Configuration, options?: SortImport
   if (!options) return { config: oldConfig };
   const sortImportsBy = calcSortImportsBy(options);
   const sortRules = calcSortRules(options);
+  const ignoreSorting = !!sortImportsBy || !!sortRules;
   const { groupRules, groupOrder } = calcGroupRules(options);
   const config = mergeConfig(oldConfig, { sortImportsBy, sortRules, groupRules });
-  return { config, processed: { groupOrder, ignoreSorting: true } };
+  return { config, processed: { groupOrder, ignoreSorting } };
 }
 
 function calcSortImportsBy({ ignoreDeclarationSort }: SortImportsOptions) {
@@ -43,7 +44,7 @@ function calcSortRules({
   ignoreDeclarationSort,
   ignoreMemberSort,
 }: SortImportsOptions) {
-  if (!ignoreDeclarationSort && ignoreMemberSort) return undefined;
+  if (ignoreDeclarationSort && ignoreMemberSort) return undefined;
   const names: CompareRule = ignoreCase ? ['_', 'aA'] : ['AZ', '_'];
   return { names };
 }
