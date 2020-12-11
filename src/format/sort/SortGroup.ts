@@ -80,6 +80,21 @@ export default class SortGroup {
     return false;
   }
 
+  /**
+   * Sort imports within this group.
+   *
+   * 1. If `eslintGroupOrder_` is undefined, then sort `scripts_`, `nodes_` and `subGroups_`
+   *    based on user config.
+   * 2. Otherwise:
+   *    * If this is the top group (`level === 0`), then:
+   *      * Sort `nodes_` (fallback group) and `scripts_` based on ESLint and user config,
+   *        though `scripts_` will be the same regardless of ESLint config.
+   *      * Sort `subGroups_` (user config groups) based on their rules.
+   *    * If this is the user config group (`level === 1`), then:
+   *      * Disregard `subGroups_`.
+   *      * Merge all imports together and sort them based on ESLint and user config.
+   *    * Else, no sort is needed.
+   */
   sort(level: number) {
     const { nodes_, scripts_, sorter_, sortImportsBy_, eslintGroupOrder_: flags } = this;
     if (flags && level > 1) return this;
