@@ -98,7 +98,7 @@ function formatDocument(document: TextDocument, force?: boolean) {
       log.info('Excluding fileName:', fileName, 'via config:', { exclude, excludeGlob });
       return undefined;
     }
-    log.info('Start formatting fileName:', fileName);
+    log.debug('Start formatting fileName:', fileName);
     const sourceText = document.getText();
     const newText = formatSource(fileName, sourceText, allConfig);
     const ret = newText === sourceText ? undefined : newText;
@@ -108,8 +108,8 @@ function formatDocument(document: TextDocument, force?: boolean) {
     log.error('Found exception:', e);
     void window
       .showErrorMessage(
-        'Something is wrong. Please view & copy the logs and report a bug.',
-        'View logs & Report',
+        'Something is wrong. Please open the logs and report an issue.',
+        'Open logs & report an issue',
       )
       .then(v => {
         if (!v) return;

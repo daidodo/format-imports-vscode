@@ -4,7 +4,6 @@ about: Create a report to help us improve
 title: ''
 labels: ''
 assignees: ''
-
 ---
 
 **Describe the bug**
@@ -12,6 +11,7 @@ A clear and concise description of what the bug is.
 
 **To Reproduce**
 Steps to reproduce the behavior:
+
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'
@@ -27,30 +27,42 @@ A clear and concise description of what actually happens.
 If applicable, add screenshots to help explain your problem.
 
 **OS (please complete the following information):**
- - OS: [e.g. MacOS, Windows]
- - Version:
+
+- OS: [e.g. MacOS, Windows]
+- Version:
 
 **VS Code (please complete the following information):**
- - Version:
+
+- Version:
 
 **package.json (please remove any sensitive info)**
+
 ```json
+
 ```
 
 **tsconfig.json (if any)**
+
 ```json
+
 ```
 
 **.prettierrc/.prettierrc.js/prettier.config.js/.prettierrc.toml (if any)**
-*filename*:
-```
+_filename_:
+
+```json
+
 ```
 
 **.editorconfig (if any)**
-```
+
+```json
+
 ```
 
 **Installed VS Code extensions**
 [Execute `$ code --list-extensions` in terminal to get the list. [How to run VS Code from terminal in MacOS](https://code.visualstudio.com/docs/setup/mac#_launching-from-the-command-line)]
-```
+
+```txt
+
 ```

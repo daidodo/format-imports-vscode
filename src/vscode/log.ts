@@ -18,7 +18,7 @@ export function initLog(channel: OutputChannel) {
           },
         },
       },
-      categories: { default: { appenders: ['vscChannel'], level: 'debug' } },
+      categories: { default: { appenders: ['vscChannel'], level: 'info' } },
     })
     .getLogger();
 }

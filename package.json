@@ -233,6 +233,11 @@
           "type": "number",
           "default": 1,
           "description": "Max names on wrapped lines for imports/exports. 0 for no limit."
+        },
+        "tsImportSorter.configuration.development.enableDebug": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether to enable debug mode and print detailed logs to the output channel."
         }
       }
     }

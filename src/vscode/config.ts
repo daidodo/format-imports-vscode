@@ -27,7 +27,7 @@ interface VscFilesConfig {
 export function resolveConfig(fileUri: Uri, languageId: string, eol: EndOfLine, force?: boolean) {
   const log = logger('vscode.resolveConfig');
   const { fsPath: fileName } = fileUri;
-  log.debug(`Start resolving configs for fileName: ${fileName}, languageId: ${languageId}`);
+  log.info(`Start resolving configs for fileName: ${fileName}, languageId: ${languageId}`);
   const vscConfig = loadVscConfig(fileUri, languageId);
   const { config: fileConfig, eslintConfig, tsCompilerOptions } = loadConfig(vscConfig, fileName);
   const config = mergeConfig(fileConfig, {
@@ -52,6 +52,7 @@ function workspaceConfig(fileUri: Uri) {
   const config = workspace
     .getConfiguration('tsImportSorter', fileUri)
     .get<Configuration>('configuration');
+  logger().level = config?.development?.enableDebug ? 'debug' : 'info';
   if (!config) return {};
   return cloneDeep(config);
 }

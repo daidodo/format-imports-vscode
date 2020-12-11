@@ -52,7 +52,7 @@ export function formatSource(
   const editManager = new EditManager([...importNodes, ...exportNodes]);
   if (editManager.empty()) return undefined;
   const composeConfig = configForCompose(config);
-  log.info('composeConfig:', composeConfig);
+  log.debug('composeConfig:', composeConfig);
   const unusedIds = () =>
     getUnusedIds(allIds, importNodes, fileName, sourceFile, tsCompilerOptions);
   const sorter = sorterFromRules(config.sortRules);

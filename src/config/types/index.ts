@@ -40,5 +40,8 @@ export type Configuration = Readonly<
     // Internal or not configurable
     eol: 'LF' | 'CRLF'; // This is not configurable because VS Code will format the file anyway.
     force: boolean; // Internal. Ignore exclude paths and file disable-comment.
+    development: {
+      enableDebug: boolean;
+    };
   }>
 >;
