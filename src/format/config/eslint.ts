@@ -25,24 +25,30 @@ export function translateESLintConfig(
   return translateSortImportsRule(config, eslintConfig.sortImports);
 }
 
-function translateSortImportsRule(oldConfig: Configuration, options: SortImportsOptions) {
+function translateSortImportsRule(oldConfig: Configuration, options?: SortImportsOptions) {
   if (!options) return { config: oldConfig };
-  const { ignoreCase, memberSyntaxSortOrder, allowSeparatedGroups } = options;
-  const sortRules = calcSortRules(ignoreCase);
-  const { groupRules, groupOrder } = calcGroupRules(memberSyntaxSortOrder, allowSeparatedGroups);
-  const config = mergeConfig(oldConfig, { sortImportsBy: 'names', sortRules, groupRules });
+  const sortImportsBy = calcSortImportsBy(options);
+  const sortRules = calcSortRules(options);
+  const { groupRules, groupOrder } = calcGroupRules(options);
+  const config = mergeConfig(oldConfig, { sortImportsBy, sortRules, groupRules });
   return { config, processed: { groupOrder, ignoreSorting: true } };
 }
 
-function calcSortRules(ignoreCase: boolean) {
+function calcSortImportsBy({ ignoreDeclarationSort }: SortImportsOptions) {
+  return ignoreDeclarationSort ? undefined : ('names' as const);
+}
+
+function calcSortRules({
+  ignoreCase,
+  ignoreDeclarationSort,
+  ignoreMemberSort,
+}: SortImportsOptions) {
+  if (!ignoreDeclarationSort && ignoreMemberSort) return undefined;
   const names: CompareRule = ignoreCase ? ['_', 'aA'] : ['AZ', '_'];
   return { names };
 }
 
-function calcGroupRules(
-  memberSyntaxSortOrder: ('none' | 'all' | 'multiple' | 'single')[],
-  allowSeparatedGroups: boolean,
-) {
+function calcGroupRules({ memberSyntaxSortOrder, allowSeparatedGroups }: SortImportsOptions) {
   const groupOrder: FlagSymbol[] = memberSyntaxSortOrder.map(v => {
     switch (v) {
       case 'none':

@@ -36,7 +36,7 @@ function translate({ rules }: Linter.Config) {
   return { sortImports };
 }
 
-export type SortImportsOptions = ReturnType<typeof extractSortImportsRule>;
+export type SortImportsOptions = NonNullable<ReturnType<typeof extractSortImportsRule>>;
 
 function extractSortImportsRule(rules: Rules) {
   const DEFAULT_OPTIONS = {
