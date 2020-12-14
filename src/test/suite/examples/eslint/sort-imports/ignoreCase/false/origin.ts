@@ -31,7 +31,7 @@ import * as CA from 'cb' // comment
 import dB from 'cc' // comment
 import {cC} from 'ca' // comment
 import DD,{cE} from 'cb' // comment
-import {dF,DG, df, DF, Df} from 'ca' // comment
+import DF, {default as dF,DG, df, DF as XY, Df} from 'ca' // comment
 
 import * as eA from 'dc' // comment
 import fB from 'dc' // comment

@@ -9,6 +9,7 @@ import {
 
 export interface ESLintConfigProcessed {
   ignoreSorting: boolean;
+  aliasFirst: boolean;
   groupOrder?: FlagSymbol[];
 }
 
@@ -29,10 +30,11 @@ function translateSortImportsRule(oldConfig: Configuration, options?: SortImport
   if (!options) return { config: oldConfig };
   const sortImportsBy = calcSortImportsBy(options);
   const sortRules = calcSortRules(options);
+  const aliasFirst = !!sortRules;
   const ignoreSorting = !!sortImportsBy || !!sortRules;
   const { groupRules, groupOrder } = calcGroupRules(options);
   const config = mergeConfig(oldConfig, { sortImportsBy, sortRules, groupRules });
-  return { config, processed: { groupOrder, ignoreSorting } };
+  return { config, processed: { groupOrder, ignoreSorting, aliasFirst } };
 }
 
 function calcSortImportsBy({ ignoreDeclarationSort }: SortImportsOptions) {

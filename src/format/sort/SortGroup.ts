@@ -25,6 +25,7 @@ export default class SortGroup {
   private readonly sorter_: Sorter;
   private readonly subGroups_?: SortGroup[];
   private readonly eslintGroupOrder_?: FlagSymbol[];
+  private readonly aliasFirst_: boolean;
   private nodes_: ImportNode[] = []; // Fall-back group for non-script imports
   private scripts_: ImportNode[] = []; // Fall-back group for script imports
   private ignoreSubGroups_ = false;
@@ -50,6 +51,7 @@ export default class SortGroup {
     this.subGroups_ = this.calcSubGroups(subGroups, flags1, eslint);
     this.flags_ = SortGroup.inferFlags2(flags, flags1, this.subGroups_);
     this.eslintGroupOrder_ = eslint?.groupOrder;
+    this.aliasFirst_ = !!eslint?.aliasFirst;
   }
 
   /**
@@ -96,18 +98,31 @@ export default class SortGroup {
    *    * Else, no sort is needed.
    */
   sort(level: number) {
-    const { nodes_, scripts_, sorter_, sortImportsBy_, eslintGroupOrder_: flags } = this;
+    const {
+      nodes_,
+      scripts_,
+      sorter_,
+      sortImportsBy_,
+      eslintGroupOrder_: flags,
+      aliasFirst_,
+    } = this;
     if (flags && level > 1) return this;
     const byPaths = sortImportsBy_ != 'names';
     this.nodes_ = flags
-      ? sortNodesByFlags(level === 0 ? nodes_ : this.allNodes_, flags, byPaths, sorter_)
-      : sortImportNodes(nodes_, byPaths, sorter_);
+      ? sortNodesByFlags(
+          level === 0 ? nodes_ : this.allNodes_,
+          flags,
+          byPaths,
+          sorter_,
+          aliasFirst_,
+        )
+      : sortImportNodes(nodes_, byPaths, sorter_, aliasFirst_);
     if (flags && level === 1) {
       this.scripts_ = [];
       this.ignoreSubGroups_ = true;
     } else {
       // Script imports are always sorted by paths.
-      this.scripts_ = sortImportNodes(scripts_, true, sorter_);
+      this.scripts_ = sortImportNodes(scripts_, true, sorter_, aliasFirst_);
       this.subGroups_?.forEach(g => g.sort(level + 1));
     }
     return this;
@@ -209,10 +224,11 @@ function sortNodesByFlags(
   flags: FlagSymbol[],
   byPath: boolean,
   sorter: Sorter,
+  aliasFirst: boolean,
 ) {
   const order = flags.map(f => ({ flag: f, nodes: new Array<ImportNode>() }));
   const fallback: ImportNode[] = [];
   nodes.forEach(n => (order.find(g => g.flag === n.flagType)?.nodes ?? fallback).push(n));
   const groups = [...order.map(({ nodes }) => nodes), fallback];
-  return groups.reduce((r, g) => [...r, ...sortImportNodes(g, byPath, sorter)], []);
+  return groups.reduce((r, g) => [...r, ...sortImportNodes(g, byPath, sorter, aliasFirst)], []);
 }

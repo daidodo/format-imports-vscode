@@ -24,7 +24,7 @@ import { A, AA, AB, Aa, Ab, B, BB, BBB, C, D, _F, a, aA, aB, aa, ab, b, c, d, dd
 import { AG, _A, bF } from 'ba'; // comment
 import BD, { AE } from 'ba'; // comment
 import DD, { cE } from 'cb'; // comment
-import { DF, DG, Df, dF, df } from 'ca'; // comment
+import DF, { DG, Df, DF as XY, default as dF, df } from 'ca'; // comment
 import Da, { E } from 'aa'; // comment
 import { F, _, g } from 'ab'; // comment
 import FD, { eE } from 'db'; // comment

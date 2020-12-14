@@ -51,7 +51,7 @@ export function compareImportNodesByPaths(
     compareTypeOnly(a.isTypeOnly, b.isTypeOnly) ||
     (compareNames
       ? compareDefaultName(a.defaultName, b.defaultName, compareNames) ||
-        compareBinding(a.binding, b.binding, compareNames)
+        compareBinding(a.binding, b.binding, compareNames, false)
       : 0)
   );
 }
@@ -61,12 +61,13 @@ export function compareImportNodesByNames(
   b: ImportNode,
   comparePaths: Comparator | undefined,
   compareNames: Comparator,
+  aliasFirst: boolean,
 ) {
   return (
     compareNameArrays(a.allNames(), b.allNames(), compareNames) ||
     compareTypeOnly(a.isTypeOnly, b.isTypeOnly) ||
     compareDefaultName(a.defaultName, b.defaultName, compareNames) ||
-    compareBinding(a.binding, b.binding, compareNames) ||
+    compareBinding(a.binding, b.binding, compareNames, aliasFirst) ||
     (comparePaths ? comparePaths(a.moduleIdentifier, b.moduleIdentifier) : 0)
   );
 }
@@ -112,18 +113,28 @@ function compareDefaultName(a: string | undefined, b: string | undefined, compar
  * import { A, B } from './a';  // named binding import
  * ```
  */
-function compareBinding(a: Binding | undefined, b: Binding | undefined, compare: Comparator) {
+function compareBinding(
+  a: Binding | undefined,
+  b: Binding | undefined,
+  compare: Comparator,
+  aliasFirst: boolean,
+) {
   if (!a) return b ? -1 : 0;
   if (!b) return 1;
   if (a.type === 'named' && b.type === 'named')
-    return compareBindingName(a.names[0], b.names[0], compare);
+    return compareBindingName(a.names[0], b.names[0], compare, aliasFirst);
   // Put namespace binding in front of named bindings.
   if (a.type === 'named') return 1;
   if (b.type === 'named') return -1;
   return compare(a.alias, b.alias);
 }
 
-export function compareBindingName(a: NameBinding, b: NameBinding, compare: Comparator) {
+export function compareBindingName(
+  a: NameBinding,
+  b: NameBinding,
+  compare: Comparator,
+  aliasFirst: boolean,
+) {
   if (!a) return b ? -1 : 0;
   else if (!b) return 1;
   // 'default' < 'x as default' < 'default as x' < others
@@ -133,7 +144,9 @@ export function compareBindingName(a: NameBinding, b: NameBinding, compare: Comp
   const { propertyName: pb, aliasName: ab } = b;
   if (isAsDefault(a)) return isAsDefault(b) ? comparePropertyName(pa, pb, compare) : -1;
   else if (isAsDefault(b)) return 1;
-  return comparePropertyName(pa, pb, compare) || compare(aa, ab);
+  return aliasFirst
+    ? compare(aa ?? pa, ab ?? pb) || comparePropertyName(pa, pb, compare)
+    : comparePropertyName(pa, pb, compare) || compare(aa, ab);
 }
 
 function isDefault(a: NameBinding) {

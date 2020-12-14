@@ -31,7 +31,7 @@ import * as CA from 'cb' // comment
 import dB from 'cc' // comment
 import {cC} from 'ca' // comment
 import DD,{cE} from 'cb' // comment
-import {dF,DG, df, DF, Df} from 'ca' // comment
+import DF, {default as dF,DG, df, DF as XY, Df} from 'ca' // comment
 
 import * as eA from 'dc' // comment
 import fB from 'dc' // comment
@@ -40,6 +40,9 @@ import FD,{eE} from 'db' // comment
 import {_F, a, aa, ab, aA, aB, b, c, d, dd, A, Aa, Ab, AA, AB, B, BB, BBB, C, D, 中} from 'da' // comment
 
 
+import H = require('aa');
+import bC = require('bb');
+import DA = require('cc');
 
 import ba from '..' // comment
 import cA, {bA} from '.' // comment

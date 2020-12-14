@@ -4,6 +4,7 @@ import 'ac'; // comment
 
 import Ba from 'ab'; // comment
 import { Ca } from 'ac'; // comment
+import H = require('aa');
 import { _, F, g } from 'ab'; // comment
 import Da, { E } from 'aa'; // comment
 import * as ax from 'aa'; // comment
@@ -13,6 +14,7 @@ import 'bb'; // comment
 import 'bc'; // comment
 
 import Ay from 'bc'; // comment
+import bC = require('bb');
 import { BC } from 'bb'; // comment
 import { _A, AG, bF } from 'ba'; // comment
 import BD, { AE } from 'ba'; // comment
@@ -27,10 +29,11 @@ import 'cc'; // comment
 
 import ba from '../'; // comment
 import { cC } from 'ca'; // comment
+import DA = require('cc');
 import dB from 'cc'; // comment
 import cA, { bA } from './'; // comment
 import DD, { cE } from 'cb'; // comment
-import { df, dF, Df, DF, DG } from 'ca'; // comment
+import DF, { df, default as dF, Df, DG, DF as XY } from 'ca'; // comment
 import * as CA from 'cb'; // comment
 import * as Cc from '_'; // comment
 

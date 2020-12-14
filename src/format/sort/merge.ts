@@ -26,23 +26,26 @@ export function sortImportNodes(
   nodes: ImportNode[],
   byPaths: boolean,
   { comparePaths, compareNames }: Sorter,
+  aliasFirst: boolean,
 ) {
   // Sort binding names
   nodes.forEach(n => {
     if (n.binding?.type !== 'named') return;
-    if (compareNames) n.binding.names = sortBindingNames(n.binding.names, compareNames);
+    if (compareNames) n.binding.names = sortBindingNames(n.binding.names, compareNames, aliasFirst);
     n.checkBindingDefault();
   });
   // Sort imports
   return byPaths
     ? sortImportNodesByPaths(nodes, comparePaths, compareNames)
-    : sortImportNodesByNames(nodes, comparePaths, compareNames);
+    : sortImportNodesByNames(nodes, aliasFirst, comparePaths, compareNames);
 }
 
 export function sortAndMergeExportNodes(nodes: ExportNode[], compareNames?: Comparator) {
   nodes.reduce((r, n) => (r.some(a => a.merge(n)) ? r : [...r, n]), Array<ExportNode>());
   if (compareNames)
-    nodes.forEach(n => (n.names = sortBindingNames(DedupBindingNames(n.names), compareNames)));
+    nodes.forEach(
+      n => (n.names = sortBindingNames(DedupBindingNames(n.names), compareNames, false)),
+    );
 }
 
 function DedupBindingNames(names: NameBinding[]) {
@@ -52,8 +55,8 @@ function DedupBindingNames(names: NameBinding[]) {
   );
 }
 
-function sortBindingNames(names: NameBinding[], compareNames: Comparator) {
-  return names.sort((a, b) => compareBindingName(a, b, compareNames));
+function sortBindingNames(names: NameBinding[], compareNames: Comparator, aliasFirst: boolean) {
+  return names.sort((a, b) => compareBindingName(a, b, compareNames, aliasFirst));
 }
 
 function sortImportNodesByPaths(
@@ -68,11 +71,12 @@ function sortImportNodesByPaths(
 
 function sortImportNodesByNames(
   nodes: ImportNode[],
+  aliasFirst: boolean,
   comparePaths?: Comparator,
   compareNames?: Comparator,
 ) {
   return compareNames
-    ? nodes.sort((a, b) => compareImportNodesByNames(a, b, comparePaths, compareNames))
+    ? nodes.sort((a, b) => compareImportNodesByNames(a, b, comparePaths, compareNames, aliasFirst))
     : nodes;
 }
 
