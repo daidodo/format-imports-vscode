@@ -51,7 +51,12 @@ function calcSortRules({
   return { names };
 }
 
-function calcGroupRules({ memberSyntaxSortOrder, allowSeparatedGroups }: SortImportsOptions) {
+function calcGroupRules({
+  memberSyntaxSortOrder,
+  allowSeparatedGroups,
+  ignoreDeclarationSort,
+}: SortImportsOptions) {
+  if (ignoreDeclarationSort) return {};
   const groupOrder: FlagSymbol[] = memberSyntaxSortOrder.map(v => {
     switch (v) {
       case 'none':
