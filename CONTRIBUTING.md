@@ -87,13 +87,13 @@ All origin/result files are under `src/test/suite/examples/`. You can modify `sr
 
 You can provide custom config files to your examples to test all scenarios.
 
-- `import-sorter.json`
+- **`import-sorter.json`**
 
 Configurations from `import-sorter.json` will be MERGED from current folder to its parent and so on until `src/test/suite/examples/`. The closer to the example, the higher precedence.
 
 That means you can put general configs in the parent folders, and example specific configs in the current folder. It's also ok there is no `import-sorter.json`, which means the parent's configs will be used.
 
-- `tsconfig.json`
+- **`tsconfig.json`**
 
 If you need to customize TypeScript compiler options for your examples, you can add a `tsconfig.json` file in your example folder.
 
@@ -101,7 +101,7 @@ Please note that `tsconfig.json` is NOT inheritable, which means parent folders'
 
 Please check out `examples/js/jsx/` for examples.
 
-- `.eslintrc.json`
+- **`.eslintrc.json`**
 
 To test ESLint related examples, you can add an `.eslintrc.json` to your example folder.
 
