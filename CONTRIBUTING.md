@@ -50,8 +50,11 @@ In the [Run view](https://code.visualstudio.com/docs/editor/debugging), there ar
 
 - `Run Extension`: Start a contained instance of VS Code running the extension. Useful when you want to test it manually.
 - `Integration Tests`: Run all or some integration tests. Results are shown in the Debug Console:
+
   <img width="600" alt="1" src="https://user-images.githubusercontent.com/8170176/102334626-cea4b380-3f86-11eb-8421-c0954c7acefc.png">
+
 - `Unit Tests`: Run all unit tests. Results are shown in the Debug Console:
+
   <img width="400" alt="2" src="https://user-images.githubusercontent.com/8170176/102335128-6904f700-3f87-11eb-8ca3-c0a1d08cf716.png">
 
 You can setup [break points](https://code.visualstudio.com/docs/editor/debugging#_breakpoints) and debug [step by step](https://code.visualstudio.com/docs/editor/debugging#_debug-actions).
@@ -80,7 +83,7 @@ All origin/result files are under `src/test/suite/examples/`. You can modify `sr
 - `runTestSuite(examples, 'folder/name')` will test single example `examples/folder/name.origin.ts`. (Please note `.origin.ts` is not included in the parameter)
 - `runTestSuite(examples, 'folder/default')` will test single example `examples/folder/origin.ts`.
 
-#### Custom Configuration
+#### Configuration Files
 
 You can provide custom config files to your examples to test all scenarios.
 
