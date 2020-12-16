@@ -49,8 +49,10 @@ If you are experiencing some non-fatal issues, e.g. low performance or unexpecte
 In the [Run view](https://code.visualstudio.com/docs/editor/debugging), there are 3 launch configurations:
 
 - `Run Extension`: Start a contained instance of VS Code running the extension. Useful when you want to test it manually.
-- `Integration Tests`: Run all or some integration tests. Results are shown in the "Debug Console".
-- `Unit Tests`: Run all unit tests. Results are shown in the "Debug Console".
+- `Integration Tests`: Run all or some integration tests. Results are shown in the Debug Console:
+  <img width="600" alt="1" src="https://user-images.githubusercontent.com/8170176/102334626-cea4b380-3f86-11eb-8421-c0954c7acefc.png">
+- `Unit Tests`: Run all unit tests. Results are shown in the Debug Console:
+  <img width="400" alt="2" src="https://user-images.githubusercontent.com/8170176/102335128-6904f700-3f87-11eb-8ca3-c0a1d08cf716.png">
 
 You can setup [break points](https://code.visualstudio.com/docs/editor/debugging#_breakpoints) and debug [step by step](https://code.visualstudio.com/docs/editor/debugging#_debug-actions).
 
@@ -61,24 +63,52 @@ All source files are in `src/` and split into several modules:
 - `extension.ts`: Main entry point of the extension, including commands, event handling, etc.
 - `vscode/`: All code relating to VS Code Extension APIs, including user/workspace configurations, output channel logs, etc.
 - `config/`: Configuration loading and merging, for e.g. `tsconfig.json`, Prettier and `import-sorter.json`.
-- `format/`: Core logic for formatting.
+- `format/`: Core logic for source parsing and formatting.
 - `test/`: Integration and unit tests code and examples.
 - `common/`: Common functionalities shared.
 
-### Integration Test Examples
+### Integration Test and Examples
 
-After you made some code changes to the core formatter, you should always add integrations test examples, and make sure they FAIL without your changes and PASS otherwise.
+After you've made some code changes to the core formatter, you should always add integrations test examples, and make sure they FAIL without your changes and PASS otherwise.
 
-All examples are under `src/test/suite/examples/`. You can modify `src/test/suite/extension.test.ts` to control which tests to run:
+The test will take the `.origin.ts` file as input, format it, and compare the output with the corresponding `.result.ts` file, e.g. `abc.origin.ts` => `abc.result.ts`, `origin.ts` => `result.ts`.
 
-- `runTestSuite(examples)` will run all tests under `examples/`.
-- `runTestSuite(examples, 'some/folder')` will run all tests under `examples/some/folder`, including sub-folders.
-- `runTestSuite(examples, 'folder/name')` will run one test `examples/folder/name.origin.ts`. (Please note `.origin.ts` is not included in the parameter)
-- `runTestSuite(examples, 'folder/default')` will run one test `examples/folder/origin.ts`.
+All origin/result files are under `src/test/suite/examples/`. You can modify `src/test/suite/extension.test.ts` to control which examples to test:
 
-The test will take the `.origin.ts` file as input, and compare the output with the corresponding `.result.ts` file, e.g. `abc.origin.ts` => `abc.result.ts`, `origin.ts` => `result.ts`.
+- `runTestSuite(examples)` will test all examples.
+- `runTestSuite(examples, 'some/folder')` will test all examples under `examples/some/folder`, including sub-folders.
+- `runTestSuite(examples, 'folder/name')` will test single example `examples/folder/name.origin.ts`. (Please note `.origin.ts` is not included in the parameter)
+- `runTestSuite(examples, 'folder/default')` will test single example `examples/folder/origin.ts`.
 
-The test will pass when they match exactly, with a few convenient features:
+#### Custom Configuration
+
+You can provide custom config files to your examples to test all scenarios.
+
+- `import-sorter.json`
+
+Configurations from `import-sorter.json` will be MERGED from current folder to its parent and so on until `src/test/suite/examples/`. The closer to the example, the higher precedence.
+
+That means you can put general configs in the parent folders, and example specific configs in the current folder. It's also ok there is no `import-sorter.json`, which means the parent's configs will be used.
+
+- `tsconfig.json`
+
+If you need to customize TypeScript compiler options for your examples, you can add a `tsconfig.json` file in your example folder.
+
+Please note that `tsconfig.json` is NOT inheritable, which means parent folders' `tsconfig.json` will not affect the children. If there is no `tsconfig.json`, the TypeScript compiler options will be undefined.
+
+Please check out `examples/js/jsx/` for examples.
+
+- `.eslintrc.json`
+
+To test ESLint related examples, you can add an `.eslintrc.json` to your example folder.
+
+It is recommended that you always add `"root": true` in your `.eslintrc.json` to avoid unexpected rules from parent folders. That way, `.eslintrc.json` becomes non-inheritable, which means parent folders' `.eslintrc.json` will not affect the children, the same as `tsconfig.json`.
+
+Please check out `examples/eslint/` for examples.
+
+#### More Tips
+
+There are a few convenient features to reduce boiler-plate code:
 
 - If the output is the same as input, `.result.ts` can be omitted. E.g.:
 
@@ -90,9 +120,9 @@ The test will pass when they match exactly, with a few convenient features:
   import { A } from 'a';
   ```
 
-  You don't need an `abc.result.ts` because the formatter won't change the content as it's disabled.
+  You don't need an `abc.result.ts` because the formatter won't change the code as it's disabled.
 
-- If multiple `.origin.ts`s have the same output, you can merge them into one `result.ts`. E.g.:
+- If multiple `.origin.ts`s share the same output, you can merge them into one `result.ts`. E.g.:
 
   ```shell
   examples/folder
