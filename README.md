@@ -206,9 +206,9 @@ Here are all configs in `package.json` under `"importSorter"` section and their 
 }
 ```
 
-### ESLint rules
+### ESLint Compatibility
 
-If installed, [ESLint sort-imports](https://eslint.org/docs/rules/sort-imports) rules will be detected and consulted, so that the results code will comply to the lint rules.
+If installed, [ESLint sort-imports](https://eslint.org/docs/rules/sort-imports) rules will be detected and consulted, so that the result code will comply to the lint rules.
 
 If there are conflicts between user config and ESLint rules, the ESLint rules will win
 to avoid any lint errors.
