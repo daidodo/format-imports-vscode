@@ -12,6 +12,7 @@ export function loadTsConfig(fileName: string) {
     log.debug('Load TS config for fileName:', fileName);
     const { config } = ts.readConfigFile(configFile, sys.readFile.bind(sys));
     const path = parentFolder(configFile);
+    log.debug('Parse TS config for path:', path);
     const { options } = ts.parseJsonConfigFileContent(config, sys, path);
     return options;
   } catch (e: unknown) {
