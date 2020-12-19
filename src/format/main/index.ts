@@ -65,7 +65,7 @@ export function formatSource(
     sorter,
     processed,
   );
-  if (text && point) editManager.insert({ range: point, text, trailingNewLines: 2 });
+  if (text && point) editManager.insert({ range: point, text, minTrailingNewLines: 2 });
   const edits = formatExports(exportNodes, composeConfig, sorter);
   edits.forEach(e => editManager.insert(e));
   return apply(sourceText, sourceFile, editManager.generateEdits(composeConfig));
@@ -91,11 +91,5 @@ function formatExports(exportNodes: ExportNode[], composeConfig: ComposeConfig, 
   sortExports(exportNodes, sorter.compareNames);
   return exportNodes
     .filter(n => !n.empty())
-    .map(n => {
-      const { range } = n;
-      const { leadingNewLines: ln, trailingNewLines: tn } = range;
-      const leadingNewLines = Math.min(ln, 2);
-      const trailingNewLines = Math.min(tn, 2);
-      return { range, text: n.compose(composeConfig), leadingNewLines, trailingNewLines };
-    });
+    .map(n => ({ range: n.range, text: n.compose(composeConfig) }));
 }

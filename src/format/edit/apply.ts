@@ -2,6 +2,11 @@ import { SourceFile } from 'typescript';
 
 import { Edit } from './types';
 
+/**
+ * Apply `edits`(insert/replace/delete) to `sourceText` from `sourceFile`.
+ *
+ * @returns New source text, or `undefined` if nothing changes.
+ */
 export function apply(sourceText: string, sourceFile: SourceFile, edits: Edit[]) {
   if (edits.length < 1) return undefined;
   const sortedEdits = edits.sort(({ range: r1 }, { range: r2 }) => r1.start.pos - r2.start.pos);
