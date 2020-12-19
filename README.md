@@ -490,6 +490,10 @@ _Note:_
 "keepUnused": [".*"]
 ```
 
+## Contribution
+
+This is a community project so your contribution will be well appreciated. Please refer to [CONTRIBUTING.md](https://github.com/daidodo/tsimportsorter/blob/master/CONTRIBUTING.md) for more information.
+
 ## Thanks
 
 The initiative came from [import-sorter](https://github.com/SoominHan/import-sorter).
