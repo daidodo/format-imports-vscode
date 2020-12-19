@@ -13,3 +13,11 @@ export function assertNonNull<T>(value: T, message?: string): asserts value is N
 export function logger(category?: string) {
   return log4js.getLogger(category);
 }
+
+export function tuple1<T1>(v1: T1): [T1] {
+  return [v1];
+}
+
+export function tuple2<T1, T2>(v1: T1, v2: T2): [T1, T2] {
+  return [v1, v2];
+}

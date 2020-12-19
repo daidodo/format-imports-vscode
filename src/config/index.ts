@@ -20,7 +20,7 @@ export {
 } from './types';
 
 export { mergeConfig } from './helper';
-export { ESLintConfig, SortImportsOptions } from './eslint';
+export { ESLintConfig } from './eslint';
 
 export interface AllConfig {
   config: Configuration;

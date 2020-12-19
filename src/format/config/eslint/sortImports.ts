@@ -1,40 +1,26 @@
 import {
+  tuple1,
+  tuple2,
+} from '../../../common';
+import {
   CompareRule,
   Configuration,
   ESLintConfig,
   FlagSymbol,
   mergeConfig,
-  SortImportsOptions,
-} from '../../config';
+} from '../../../config';
 
-export interface ESLintConfigProcessed {
-  ignoreSorting: boolean;
-  aliasFirst: boolean;
-  groupOrder?: FlagSymbol[];
-}
+type SortImportsOptions = NonNullable<ESLintConfig['sortImports']>;
 
-interface TranslateResult {
-  config: Configuration;
-  processed?: ESLintConfigProcessed;
-}
-
-export function translateESLintConfig(
-  config: Configuration,
-  eslintConfig: ESLintConfig | undefined,
-): TranslateResult {
-  if (!eslintConfig) return { config };
-  return translateSortImportsRule(config, eslintConfig.sortImports);
-}
-
-function translateSortImportsRule(oldConfig: Configuration, options?: SortImportsOptions) {
-  if (!options) return { config: oldConfig };
+export function translateSortImportsRule(oldConfig: Configuration, options?: SortImportsOptions) {
+  if (!options) return tuple1(oldConfig);
   const sortImportsBy = calcSortImportsBy(options);
   const sortRules = calcSortRules(options);
   const aliasFirst = !!sortRules;
   const ignoreSorting = !!sortImportsBy || !!sortRules;
   const { groupRules, groupOrder } = calcGroupRules(options);
   const config = mergeConfig(oldConfig, { sortImportsBy, sortRules, groupRules });
-  return { config, processed: { groupOrder, ignoreSorting, aliasFirst } };
+  return tuple2(config, { groupOrder, ignoreSorting, aliasFirst });
 }
 
 function calcSortImportsBy({ ignoreDeclarationSort }: SortImportsOptions) {

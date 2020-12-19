@@ -1,0 +1,10 @@
+{
+  "root": true,
+  "rules": {
+    "no-unused-vars": "off",
+    "import/no-useless-path-segments": "off",
+    "no-duplicate-imports": "off",
+    "sort-imports": "off",
+    "import/newline-after-import": "error"
+  }
+}

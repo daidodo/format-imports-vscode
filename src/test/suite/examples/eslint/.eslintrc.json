@@ -3,6 +3,7 @@
   "rules": {
     "no-unused-vars": "off",
     "import/no-useless-path-segments": "off",
+    "import/newline-after-import": "off",
     "no-duplicate-imports": "off",
     "sort-imports": "off"
   }

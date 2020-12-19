@@ -79,7 +79,7 @@
       "default": 1,
       "description": "Number of empty lines between groups (NOT sub-groups)."
     },
-    "EmptyLinesAfterAllImports": {
+    "emptyLinesAfterAllImports": {
       "type": "integer",
       "minimum": 0,
       "default": 1,

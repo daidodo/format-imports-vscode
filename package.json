@@ -214,7 +214,7 @@
           "default": 1,
           "description": "Number of empty lines between groups (NOT sub-groups)."
         },
-        "tsImportSorter.configuration.EmptyLinesAfterAllImports": {
+        "tsImportSorter.configuration.emptyLinesAfterAllImports": {
           "type": "number",
           "default": 1,
           "description": "Number of empty lines after all import statements."

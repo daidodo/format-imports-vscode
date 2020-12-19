@@ -17,7 +17,7 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 
 ### Added
 
-- Add `EmptyLinesAfterAllImports`: Number of empty lines after all import statements.
+- Add `emptyLinesAfterAllImports`: Number of empty lines after all import statements.
 
 ## Features
 
@@ -31,7 +31,7 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - Preserve `'use strict'`, `///` directives, shebang (`#!`) and global comments, e.g. license.
 - Keep comments when moving code.
 - Respect configs from [Prettier](https://prettier.io), [EditorConfig](https://editorconfig.org) and VS Code editor settings.
-- Comply with [ESLint sort-imports](https://eslint.org/docs/rules/sort-imports) rules.
+- Work with [ESLint](https://eslint.org) and [eslint-plugin-import](https://github.com/benmosher/eslint-plugin-import) rules.
 
 ## How to use
 
@@ -103,7 +103,7 @@ All VS Code settings under `"tsImportSorter"` section and their default values:
 "tsImportSorter.configuration.EmptyLinesBetweenGroups": 1,
 
 // Number of empty lines after all import statements.
-"tsImportSorter.configuration.EmptyLinesAfterAllImports": 1,
+"tsImportSorter.configuration.emptyLinesAfterAllImports": 1,
 
 // Whether to enable debug mode and print detailed logs to the output channel.
 "tsImportSorter.configuration.development.enableDebug": false,
@@ -174,7 +174,7 @@ Here are all configs in `package.json` under `"importSorter"` section and their 
     "EmptyLinesBetweenGroups": 1,
 
     // Number of empty lines after all import statements.
-    "EmptyLinesAfterAllImports": 1,
+    "emptyLinesAfterAllImports": 1,
 
     // Number of spaces to replace a TAB.
     "tabSize": 2,
@@ -213,12 +213,11 @@ Here are all configs in `package.json` under `"importSorter"` section and their 
 
 ### ESLint Compatibility
 
-If installed, [ESLint sort-imports](https://eslint.org/docs/rules/sort-imports) rules will be detected and consulted, so that the result code will comply to the lint rules.
+If installed, [ESLint](https://eslint.org) and plugins rules will be detected and consulted, so that the result code will comply to the lint rules.
 
-If there are conflicts between user config and ESLint rules, the ESLint rules will win
-to avoid any lint errors.
+If there are conflicts between user config and ESLint rules, the ESLint rules will win to avoid any lint errors.
 
-For more info about how the confilicts are resolved, please check the [ESLint Compatibility](https://github.com/daidodo/tsimportsorter/wiki/ESLint-Compatibility) wiki.
+For more info about how the conflicts are resolved, please check the [ESLint Compatibility](https://github.com/daidodo/tsimportsorter/wiki/ESLint-Compatibility) wiki.
 
 ## Ignore files or import/export statements
 
