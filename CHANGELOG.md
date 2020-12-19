@@ -17,6 +17,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -->
 
+## [4.2.0] - 2020-12-19
+
+### Added
+
+- Add `EmptyLinesAfterAllImports`: Number of empty lines after all import statements.
+
 ## [4.1.0] - 2020-12-11
 
 ### Added

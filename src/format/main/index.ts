@@ -65,7 +65,8 @@ export function formatSource(
     sorter,
     processed,
   );
-  if (text && point) editManager.insert({ range: point, text, minTrailingNewLines: 2 });
+  if (text && point)
+    editManager.insert({ range: point, text, minTrailingNewLines: composeConfig.groupEnd });
   const edits = formatExports(exportNodes, composeConfig, sorter);
   edits.forEach(e => editManager.insert(e));
   return apply(sourceText, sourceFile, editManager.generateEdits(composeConfig));

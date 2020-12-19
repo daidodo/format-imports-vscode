@@ -13,12 +13,11 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - [Install Plugin](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter)
 - [Open Issues](https://github.com/daidodo/tsimportsorter/issues)
 
-## [4.1] Release Notes
+## [4.2] Release Notes
 
 ### Added
 
-- Comply with [ESLint sort-imports](https://eslint.org/docs/rules/sort-imports) rules.
-- Add `development.enableDebug` in VS Code user settings for detailed logs.
+- Add `EmptyLinesAfterAllImports`: Number of empty lines after all import statements.
 
 ## Features
 
@@ -103,6 +102,9 @@ All VS Code settings under `"tsImportSorter"` section and their default values:
 // Number of empty lines between groups (NOT sub-groups).
 "tsImportSorter.configuration.EmptyLinesBetweenGroups": 1,
 
+// Number of empty lines after all import statements.
+"tsImportSorter.configuration.EmptyLinesAfterAllImports": 1,
+
 // Whether to enable debug mode and print detailed logs to the output channel.
 "tsImportSorter.configuration.development.enableDebug": false,
 ```
@@ -170,6 +172,9 @@ Here are all configs in `package.json` under `"importSorter"` section and their 
 
     // Number of empty lines between groups (NOT sub-groups).
     "EmptyLinesBetweenGroups": 1,
+
+    // Number of empty lines after all import statements.
+    "EmptyLinesAfterAllImports": 1,
 
     // Number of spaces to replace a TAB.
     "tabSize": 2,
@@ -380,7 +385,7 @@ _Notes:_
 
 - _There are NO blank lines between sub-groups._
 - _Use `EmptyLinesBetweenGroups` to change empty lines between groups._
-- _A group can have its own `sortImportsBy` override regardless of the global option, and sub groups will respect it._
+- _A group can have its own `sortImportsBy` regardless of the global option, and sub groups will respect it._
 
 For example, `"groupRules": ["^react$", {}, "^[.]"]` defines 3 groups (and their order):
 

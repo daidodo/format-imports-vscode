@@ -17,6 +17,15 @@ interface RangeBlock extends RangeAndEmptyLines {
   keep?: boolean; // Whether to keep texts already in the range.
 }
 
+/**
+ * Manage edits (insert/delete/replace).
+ *
+ * When calculating number of newlines, please note that:
+ * - 0 newlines means statements are in the same line;
+ * - 1 newline means statements are in consecutive lines;
+ * - 2 newlines means there is ONE empty line between statements;
+ * - and so on.
+ */
 export default class EditManager {
   private readonly ranges_: RangeBlock[];
 
@@ -103,9 +112,10 @@ function joinInserts(inserts: EditBlock[], { nl }: ComposeConfig): EditBlock {
     if (a.text) {
       if (t.length < 1) t.push(a.text);
       if (b.text) {
-        const n1 = decideNewLines(a.range.trailingNewLines, a.minTrailingNewLines);
-        const n2 = decideNewLines(b.range.leadingNewLines, b.minLeadingNewLines);
-        const n = Math.max(n1, n2);
+        const n = decideNewLines(
+          [a.range.trailingNewLines, b.range.leadingNewLines],
+          [a.minTrailingNewLines, b.minLeadingNewLines],
+        );
         t.push(nl.repeat(n));
         t.push(b.text);
       }
@@ -122,8 +132,9 @@ function joinInserts(inserts: EditBlock[], { nl }: ComposeConfig): EditBlock {
 /**
  * Given existing and required minimum newlines, returns number of newlines after formatting.
  */
-function decideNewLines(nl: number, min?: number) {
-  return min === undefined ? normalize(min) : normalize(nl, 2);
+function decideNewLines(nl: number[], min: (number | undefined)[]) {
+  const m = min.filter((n): n is number => n !== undefined);
+  return m.length < 1 ? normalize(Math.max(...nl), 2) : normalize(Math.max(...m));
 }
 
 /**
@@ -148,7 +159,7 @@ function decideInsert(
   minTrailingNewLines?: number,
 ): Edit {
   const { fullStart: start, start: end, leadingNewLines: lnl } = range;
-  const ln = !start.pos ? 0 : decideNewLines(lnl, minLeadingNewLines);
+  const ln = !start.pos ? 0 : decideNewLines([lnl], [minLeadingNewLines]);
   const tn = normalize(minTrailingNewLines);
   return { range: { start, end }, newText: nl.repeat(ln) + text + nl.repeat(tn) };
 }
@@ -173,8 +184,8 @@ function decideReplace(
     trailingNewLines: tnl,
     eof,
   } = range;
-  const ln = !start.pos ? 0 : decideNewLines(lnl, minLeadingNewLines);
-  const tn = eof ? (lastNewLine ? 1 : 0) : decideNewLines(tnl, minTrailingNewLines);
+  const ln = !start.pos ? 0 : decideNewLines([lnl], [minLeadingNewLines]);
+  const tn = eof ? (lastNewLine ? 1 : 0) : decideNewLines([tnl], [minTrailingNewLines]);
   return { range: { start, end }, newText: nl.repeat(ln) + text + nl.repeat(tn) };
 }
 

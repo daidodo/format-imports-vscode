@@ -28,6 +28,7 @@ export type Configuration = Readonly<
     maxNamesPerWrappedLine: number;
     keepUnused: KeepUnusedRule[];
     EmptyLinesBetweenGroups: number;
+    EmptyLinesAfterAllImports: number;
     // From other configs
     maxLineLength: number;
     tabType: 'space' | 'tab';

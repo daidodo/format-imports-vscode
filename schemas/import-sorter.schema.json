@@ -79,6 +79,12 @@
       "default": 1,
       "description": "Number of empty lines between groups (NOT sub-groups)."
     },
+    "EmptyLinesAfterAllImports": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 1,
+      "description": "Number of empty lines after all import statements."
+    },
     "maxLineLength": {
       "type": "integer",
       "minimum": 0,
