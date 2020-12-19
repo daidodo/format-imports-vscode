@@ -224,16 +224,16 @@ For more info about how the conflicts are resolved, please check the [ESLint Com
 There are a few ways to exclude files from inspection:
 
 1. Add path patterns to `exclude` or `excludeGlob` in user or workspace settings in VSCode.
-  
-    ```json
-    "tsImportSorter.configuration.exclude": ["regexPattern"],
-    "tsImportSorter.configuration.excludeGlob": ["globPattern"],
-    ```
+
+   ```json
+   "tsImportSorter.configuration.exclude": ["regexPattern"],
+   "tsImportSorter.configuration.excludeGlob": ["globPattern"],
+   ```
 
 2. Add path patterns to `package.json` or `import-sorter.json`.
 
-    - _All path patterns are **merged** together instead of overwritten._
-    - _Use **forward-slash** (`/`) as path separator no matter in MacOS, *nix or Windows._
+   - _All path patterns are **merged** together instead of overwritten._
+   - _Use **forward-slash** (`/`) as path separator no matter in MacOS, \*nix or Windows._
 
 3. Add the following comment at the beginning of the source file and keep at least one empty line from the next statement:
 
@@ -278,7 +278,7 @@ Whether to wrap an `export` statement is decided by `maxExportNamesPerLine`, as 
 
 ### `maxBindingNamesPerLine`
 
-For a statement importing only *binding names*, this value determines how many names are allowed before wrapping.
+For a statement importing only _binding names_, this value determines how many names are allowed before wrapping.
 
 For example, if you set:
 
@@ -301,7 +301,7 @@ import {
 
 ### `maxDefaultAndBindingNamesPerLine`
 
-For a statement importing *default* and *binding names*, this value determines how many names are allowed before wrapping.
+For a statement importing _default_ and _binding names_, this value determines how many names are allowed before wrapping.
 
 For example, if you set:
 
@@ -388,9 +388,9 @@ _Notes:_
 
 For example, `"groupRules": ["^react$", {}, "^[.]"]` defines 3 groups (and their order):
 
-- `"^react$"`: matches any *named* imports from exact path `"react"`.
+- `"^react$"`: matches any _named_ imports from exact path `"react"`.
 - `{}`: is the fall-back group, i.e. any imports that don't match any other groups will fall into this group.
-- `"^[.]"`: matches any *named* imports from paths starting with `"."`.
+- `"^[.]"`: matches any _named_ imports from paths starting with `"."`.
 
 The following is an example of the results:
 
@@ -456,13 +456,13 @@ If you set `names` to `"none"`, names will not be sorted within an import or exp
 
 _Note:_
 
-- _Setting `paths` or `names` to `null` doesn't disable sorting but uses the fall-back sorting rules, i.e. `["AZ", "_", "az"]`._
+- _Setting `paths` or `names` to `null` doesn't disable sorting but uses the fall-back sorting rules, i.e. `["AZ", "_", "az"]`.\_
 
 For more details and how to construct your own rules, please read [the Wiki](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules).
 
 ## Unused Imports Removal
 
-By default all unused imports are removed. In some cases you might want to keep the import even if it's unused. For example to keep `import tw from 'twin.macro'`  you can do the following:
+By default all unused imports are removed. In some cases you might want to keep the import even if it's unused. For example to keep `import tw from 'twin.macro'` you can do the following:
 
 ```json
 "keepUnused": ["twin.macro"]
