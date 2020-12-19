@@ -27,7 +27,7 @@ export type Configuration = Readonly<
     maxExportNamesPerLine: number;
     maxNamesPerWrappedLine: number;
     keepUnused: KeepUnusedRule[];
-    EmptyLinesBetweenGroups: number;
+    emptyLinesBetweenGroups: number;
     emptyLinesAfterAllImports: number;
     // From other configs
     maxLineLength: number;

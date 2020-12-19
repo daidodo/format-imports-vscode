@@ -15,6 +15,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- [Stacked changes]
 
+### Added
+
+- Work with [import/newline-after-import](https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/newline-after-import.md) rules.
+
+### Changed
+
+- Change config `EmptyLinesBetweenGroups` to `emptyLinesBetweenGroups`.
+
 -->
 
 ## [4.2.0] - 2020-12-19
@@ -27,7 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Comply with [ESLint sort-imports](https://eslint.org/docs/rules/sort-imports) rules.
+- Work with [ESLint sort-imports](https://eslint.org/docs/rules/sort-imports) rules.
 - Add `development.enableDebug` in VS Code user settings for detailed logs.
 
 ## [4.0.0] - 2020-11-30

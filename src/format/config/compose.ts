@@ -10,7 +10,7 @@ export function configForCompose({
   maxDefaultAndBindingNamesPerLine,
   maxExportNamesPerLine,
   maxNamesPerWrappedLine,
-  EmptyLinesBetweenGroups,
+  emptyLinesBetweenGroups,
   emptyLinesAfterAllImports,
   tabType,
   tabSize,
@@ -30,7 +30,7 @@ export function configForCompose({
       wrapped: (maxNamesPerWrappedLine ?? 1) || Number.MAX_SAFE_INTEGER,
       exported: maxExportNamesPerLine || Number.MAX_SAFE_INTEGER,
     },
-    groupSep: nl.repeat((EmptyLinesBetweenGroups ?? 1) + 1),
+    groupSep: nl.repeat((emptyLinesBetweenGroups ?? 1) + 1),
     groupEnd: (emptyLinesAfterAllImports ?? 1) + 1,
     tab: tabType?.toLowerCase() === 'tab' ? '\t' : ' '.repeat(tabSize ?? 2),
     quote:

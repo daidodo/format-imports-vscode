@@ -209,7 +209,7 @@
           },
           "markdownDescription": "By default all unused imports are removed. Keep some or all them around with this setting if you need."
         },
-        "tsImportSorter.configuration.EmptyLinesBetweenGroups": {
+        "tsImportSorter.configuration.emptyLinesBetweenGroups": {
           "type": "number",
           "default": 1,
           "description": "Number of empty lines between groups (NOT sub-groups)."

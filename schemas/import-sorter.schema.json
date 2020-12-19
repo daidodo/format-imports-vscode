@@ -73,7 +73,7 @@
       "default": 1,
       "description": "Max names on wrapped lines for imports/exports. 0 for no limit."
     },
-    "EmptyLinesBetweenGroups": {
+    "emptyLinesBetweenGroups": {
       "type": "integer",
       "minimum": 0,
       "default": 1,

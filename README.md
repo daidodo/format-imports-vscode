@@ -100,7 +100,7 @@ All VS Code settings under `"tsImportSorter"` section and their default values:
 "tsImportSorter.configuration.maxNamesPerWrappedLine": 1,
 
 // Number of empty lines between groups (NOT sub-groups).
-"tsImportSorter.configuration.EmptyLinesBetweenGroups": 1,
+"tsImportSorter.configuration.emptyLinesBetweenGroups": 1,
 
 // Number of empty lines after all import statements.
 "tsImportSorter.configuration.emptyLinesAfterAllImports": 1,
@@ -171,7 +171,7 @@ Here are all configs in `package.json` under `"importSorter"` section and their 
     "maxNamesPerWrappedLine": 1,
 
     // Number of empty lines between groups (NOT sub-groups).
-    "EmptyLinesBetweenGroups": 1,
+    "emptyLinesBetweenGroups": 1,
 
     // Number of empty lines after all import statements.
     "emptyLinesAfterAllImports": 1,
@@ -383,7 +383,7 @@ A grouping rule defines:
 _Notes:_
 
 - _There are NO blank lines between sub-groups._
-- _Use `EmptyLinesBetweenGroups` to change empty lines between groups._
+- _Use `emptyLinesBetweenGroups` to change empty lines between groups._
 - _A group can have its own `sortImportsBy` regardless of the global option, and sub groups will respect it._
 
 For example, `"groupRules": ["^react$", {}, "^[.]"]` defines 3 groups (and their order):
