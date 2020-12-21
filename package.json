@@ -217,7 +217,7 @@
         "tsImportSorter.configuration.emptyLinesAfterAllImports": {
           "type": "number",
           "default": 1,
-          "description": "Number of empty lines after all import statements."
+          "description": "Number of empty lines after the last import statement."
         },
         "tsImportSorter.configuration.removeLastSlashInPath": {
           "type": "boolean",

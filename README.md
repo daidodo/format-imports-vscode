@@ -108,7 +108,7 @@ All VS Code settings under `"tsImportSorter"` section and their default values:
 // Number of empty lines between groups (NOT sub-groups).
 "tsImportSorter.configuration.emptyLinesBetweenGroups": 1,
 
-// Number of empty lines after all import statements.
+// Number of empty lines after the last import statement.
 "tsImportSorter.configuration.emptyLinesAfterAllImports": 1,
 
 // Whether to remove the last slash when normalizing paths.
@@ -185,7 +185,7 @@ Here are all configs in `package.json` under `"importSorter"` section and their 
     // Number of empty lines between groups (NOT sub-groups).
     "emptyLinesBetweenGroups": 1,
 
-    // Number of empty lines after all import statements.
+    // Number of empty lines after the last import statement.
     "emptyLinesAfterAllImports": 1,
 
     // Whether to remove the last slash when normalizing paths.

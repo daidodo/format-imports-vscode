@@ -93,7 +93,7 @@
       "type": "integer",
       "minimum": 0,
       "default": 1,
-      "description": "Number of empty lines after all import statements."
+      "description": "Number of empty lines after the last import statement."
     },
     "maxLineLength": {
       "type": "integer",
