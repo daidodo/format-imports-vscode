@@ -15,16 +15,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- [Stacked changes]
 
+-->
+
+## [5.0.0] - 2020-12-21
+
 ### Added
 
 - Add config `removeLastSlashInPath` and `removeLastIndexInPath`.
-- Work with [import/newline-after-import](https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/newline-after-import.md) rules.
+- Respect [import/newline-after-import](https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/newline-after-import.md) rules.
+- Respect [import/no-useless-path-segments](https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-useless-path-segments.md) rules.
 
 ### Changed
 
 - Change config `EmptyLinesBetweenGroups` to `emptyLinesBetweenGroups`.
-
--->
 
 ## [4.2.0] - 2020-12-19
 

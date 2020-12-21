@@ -13,11 +13,17 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - [Install Plugin](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter)
 - [Open Issues](https://github.com/daidodo/tsimportsorter/issues)
 
-## [4.2] Release Notes
+## [5.0] Release Notes
 
 ### Added
 
-- Add `emptyLinesAfterAllImports`: Number of empty lines after all import statements.
+- Add config `removeLastSlashInPath` and `removeLastIndexInPath`.
+- Respect [import/newline-after-import](https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/newline-after-import.md) rules.
+- Respect [import/no-useless-path-segments](https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-useless-path-segments.md) rules.
+
+### Changed
+
+- Change config `EmptyLinesBetweenGroups` to `emptyLinesBetweenGroups`.
 
 ## Features
 
@@ -31,7 +37,7 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - Preserve `'use strict'`, `///` directives, shebang (`#!`) and global comments, e.g. license.
 - Keep comments when moving code.
 - Respect configs from [Prettier](https://prettier.io), [EditorConfig](https://editorconfig.org) and VS Code editor settings.
-- Work with [ESLint](https://eslint.org) and [eslint-plugin-import](https://github.com/benmosher/eslint-plugin-import) rules.
+- Respect [ESLint](https://eslint.org) and [eslint-plugin-import](https://github.com/benmosher/eslint-plugin-import) rules.
 
 ## How to use
 
@@ -226,6 +232,12 @@ Here are all configs in `package.json` under `"importSorter"` section and their 
 ### ESLint Compatibility
 
 If installed, [ESLint](https://eslint.org) and plugins rules will be detected and consulted, so that the result code will comply to the lint rules.
+
+Currently supported rules are:
+
+- [sort-imports](https://github.com/daidodo/tsimportsorter/wiki/ESLint-Compatibility#import-sorting-sort-imports)
+- [import/newline-after-import](https://github.com/daidodo/tsimportsorter/wiki/ESLint-Compatibility#importnewline-after-import)
+- [import/no-useless-path-segments](https://github.com/daidodo/tsimportsorter/wiki/ESLint-Compatibility#importno-useless-path-segments)
 
 If there are conflicts between user config and ESLint rules, the ESLint rules will win to avoid any lint errors.
 
