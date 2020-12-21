@@ -6,6 +6,7 @@ import {
 
 import { logger } from '../../common';
 import { extractNewlineAfterImportRule } from './import/newline-after-import';
+import { extractNoUselessPathSegmentsRule } from './import/no-useless-path-segments';
 import { extractSortImportsRule } from './sort-imports';
 
 export type ESLintConfig = NonNullable<ReturnType<typeof loadESLintConfig>>;
@@ -34,5 +35,6 @@ function translate({ rules }: Linter.Config) {
   if (!rules) return undefined;
   const sortImports = extractSortImportsRule(rules);
   const newlineAfterImport = extractNewlineAfterImportRule(rules);
-  return { sortImports, newlineAfterImport };
+  const noUselessPathSegments = extractNoUselessPathSegmentsRule(rules);
+  return { sortImports, newlineAfterImport, noUselessPathSegments };
 }
