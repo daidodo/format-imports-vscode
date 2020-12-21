@@ -1,15 +1,19 @@
-import '/index'
-import '/index/'
-import '/index/index'
-import 'index'
-import 'index/'
-import 'index/index'
-import './index'
-import './index/'
-import './index/index'
-import '../index'
-import '../index/'
-import '../index/index'
+import '/index' // comment
+import '/index/' // comment
+import '/index/index' // comment
+import '/a/index' // comment
+import 'index' // comment
+import 'index/' // comment
+import 'index/index' // comment
+import 'a/index' // comment
+import './index' // comment
+import './index/' // comment
+import './index/index' // comment
+import './a/index' // comment
+import '../index' // comment
+import '../index/' // comment
+import '../index/index' // comment
+import '../a/index' // comment
 
 import A = require('/index')
 import B = require( '/index/')

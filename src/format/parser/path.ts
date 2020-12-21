@@ -1,5 +1,7 @@
 import path from 'path';
 
+import { assert } from '../../common';
+
 interface Options {
   removeLastSlashInPath?: boolean;
   removeLastIndexInPath?: boolean;
@@ -29,19 +31,43 @@ function normalize(str: string) {
     : r;
 }
 
+const PATTERNS = ['index', 'index.js', 'index.jsx', 'index.ts', 'index.tsx'];
+
 function removeLastSlash(str: string) {
-  if (!str || str === '/') return str;
-  return str.endsWith('/') ? str.substr(0, str.length - 1) : str;
+  if (!str || str === '/' || !str.endsWith('/')) return str;
+  /**
+   * ```txt
+   * "a/"       =>  "a"
+   * "index/"   =>  "index"
+   * "./a/"     =>  "./a"
+   *
+   * "./index/" =>  "./index/"
+   * ```
+   */
+  const parts = str.split('/');
+  assert(parts.length > 1);
+  const prev = parts[parts.length - 2];
+  if (parts.length > 2 && PATTERNS.includes(prev)) return str;
+  return str.substr(0, str.length - 1);
 }
 
 function removeLastIndex(str: string) {
-  const PATTERNS = ['index', 'index.js', 'index.jsx', 'index.ts', 'index.tsx'];
   if (!str) return str;
   const parts = str.split('/');
   if (parts.length < 2) return str;
   if (!PATTERNS.includes(parts[parts.length - 1])) return str;
+  /**
+   * ```txt
+   * "./index"        => "./"
+   * "../index"       =>  "../"
+   * "./index/index"  =>  "./index/"
+   *
+   * "index/index"    => "index"
+   * ```
+   *
+   */
   const prev = parts[parts.length - 2];
-  if (prev !== '.' && prev !== '..') parts.pop();
+  if (prev !== '.' && prev !== '..' && (!PATTERNS.includes(prev) || parts.length < 3)) parts.pop();
   else parts[parts.length - 1] = '';
   return parts.join('/') || '/';
 }

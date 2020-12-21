@@ -1,7 +1,11 @@
 import '/';
 import 'a';
+import 'index';
 import '.';
+import './a';
+import './index/';
 import '..';
+import '../index/';
 
 import A = require('/');
 import B = require('a');

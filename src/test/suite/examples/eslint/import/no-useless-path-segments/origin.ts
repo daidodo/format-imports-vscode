@@ -19,6 +19,7 @@ import '../index/' // comment
 import '../index/index' // comment
 import '../a/index' // comment
 import 'a/' // comment
+import 'a/index' // comment
 import './a/../index' // comment
 import '../a/../index' // comment
 
