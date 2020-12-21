@@ -62,7 +62,7 @@ function process(node: Node, p: ParseParams, config: Configuration, options?: Co
     eof,
   };
   const disabled = isDisabled(leadingComments) || isDisabled(trailingComments);
-  const a = { range, leadingComments, trailingCommentsText };
+  const a = { range, leadingComments, trailingCommentsText, config };
   if (node.kind === SyntaxKind.ImportDeclaration) {
     if (disabled) return true;
     const n = ImportNode.fromDecl(node as ImportDeclaration, a);

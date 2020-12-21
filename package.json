@@ -219,6 +219,16 @@
           "default": 1,
           "description": "Number of empty lines after all import statements."
         },
+        "tsImportSorter.configuration.removeLastSlashInPath": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether to remove the last slash when normalizing paths."
+        },
+        "tsImportSorter.configuration.removeLastIndexInPath": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether to remove the last 'index' when normalizing paths."
+        },
         "tsImportSorter.configuration.maxBindingNamesPerLine": {
           "type": "number",
           "default": 1,
@@ -263,6 +273,7 @@
     "@types/mocha": "^8.0.4",
     "@types/node": "^14.14.10",
     "@types/prettier": "^2.1.5",
+    "@types/rewire": "^2.5.28",
     "@types/vscode": "^1.51.0",
     "@typescript-eslint/eslint-plugin": "^4.9.0",
     "@typescript-eslint/parser": "^4.9.0",
@@ -273,6 +284,7 @@
     "istanbul": "^0.4.5",
     "mocha": "^7.2.0",
     "remap-istanbul": "^0.13.0",
+    "rewire": "^5.0.0",
     "utility-types": "^3.10.0",
     "vscode-test": "^1.4.1"
   },

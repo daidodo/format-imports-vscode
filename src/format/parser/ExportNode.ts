@@ -7,8 +7,8 @@ import {
 import { composeNodeAsNames } from '../compose';
 import { ComposeConfig } from '../config';
 import { NameBinding } from '../types';
-import { normalizePath } from '../utils';
 import { getNameBinding } from './helper';
+import { normalizePath } from './path';
 import Statement, { StatementArgs } from './Statement';
 
 export default class ExportNode extends Statement {
@@ -34,7 +34,7 @@ export default class ExportNode extends Statement {
     isTypeOnly: boolean,
   ) {
     super(args);
-    this.moduleIdentifier_ = moduleIdentifier && normalizePath(moduleIdentifier);
+    this.moduleIdentifier_ = moduleIdentifier && normalizePath(moduleIdentifier, args.config);
     this.isTypeOnly_ = isTypeOnly;
     this.names = names;
   }

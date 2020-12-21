@@ -6,8 +6,8 @@ import ts, {
 } from 'typescript';
 
 import { logger } from '../../common';
-import { normalizePath } from '../utils';
 import ImportNode from './ImportNode';
+import { normalizePath } from './path';
 
 export interface NameUsage {
   usedNames?: Set<string>;

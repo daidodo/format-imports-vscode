@@ -105,6 +105,12 @@ All VS Code settings under `"tsImportSorter"` section and their default values:
 // Number of empty lines after all import statements.
 "tsImportSorter.configuration.emptyLinesAfterAllImports": 1,
 
+// Whether to remove the last slash when normalizing paths.
+"tsImportSorter.configuration.removeLastSlashInPath": false,
+
+// Whether to remove the last 'index' when normalizing paths.
+"tsImportSorter.configuration.removeLastIndexInPath": false,
+
 // Whether to enable debug mode and print detailed logs to the output channel.
 "tsImportSorter.configuration.development.enableDebug": false,
 ```
@@ -175,6 +181,12 @@ Here are all configs in `package.json` under `"importSorter"` section and their 
 
     // Number of empty lines after all import statements.
     "emptyLinesAfterAllImports": 1,
+
+    // Whether to remove the last slash when normalizing paths.
+    "removeLastSlashInPath": false,
+
+    // Whether to remove the last 'index' when normalizing paths.
+    "removeLastIndexInPath": false,
 
     // Number of spaces to replace a TAB.
     "tabSize": 2,

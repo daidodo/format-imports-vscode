@@ -29,7 +29,8 @@ export type Configuration = Readonly<
     keepUnused: KeepUnusedRule[];
     emptyLinesBetweenGroups: number;
     emptyLinesAfterAllImports: number;
-    // From other configs
+    removeLastSlashInPath: boolean;
+    removeLastIndexInPath: boolean;
     maxLineLength: number;
     tabType: 'space' | 'tab';
     tabSize: number;

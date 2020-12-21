@@ -79,6 +79,16 @@
       "default": 1,
       "description": "Number of empty lines between groups (NOT sub-groups)."
     },
+    "removeLastSlashInPath": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether to remove the last slash when normalizing paths."
+    },
+    "removeLastIndexInPath": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether to remove the last 'index' when normalizing paths."
+    },
     "emptyLinesAfterAllImports": {
       "type": "integer",
       "minimum": 0,

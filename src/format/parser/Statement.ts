@@ -1,4 +1,5 @@
 import { assert } from '../../common';
+import { Configuration } from '../../config';
 import { composeComments } from '../compose';
 import { ComposeConfig } from '../config';
 import {
@@ -10,6 +11,7 @@ export interface StatementArgs {
   range: RangeAndEmptyLines;
   leadingComments?: NodeComment[];
   trailingCommentsText: string;
+  config: Configuration;
 }
 
 export default class Statement {

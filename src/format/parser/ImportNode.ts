@@ -18,9 +18,9 @@ import {
   Binding,
   NameBinding,
 } from '../types';
-import { normalizePath } from '../utils';
 import { getNameBinding } from './helper';
 import KeepUnused from './KeepUnused';
+import { normalizePath } from './path';
 import Statement, { StatementArgs } from './Statement';
 import { NameUsage } from './unused';
 
@@ -64,7 +64,7 @@ export default class ImportNode extends Statement {
   ) {
     super(args);
     this.node_ = node;
-    this.moduleIdentifier = normalizePath(moduleIdentifier);
+    this.moduleIdentifier = normalizePath(moduleIdentifier, args.config);
     this.defaultName_ = defaultName;
     this.binding_ = binding;
     this.isScript = isScript;
