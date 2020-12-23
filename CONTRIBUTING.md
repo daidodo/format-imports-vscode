@@ -136,3 +136,13 @@ There are a few convenient features to reduce boiler-plate code:
   ```
 
   All outputs for `0-0`, `1-1` and `2-2` will be compared with `result.ts`. Please note that it's ok to NOT have a `origin.ts` in place.
+
+## Code Coverage
+
+Code coverage has been implemented in [src/test/coverage.ts](https://github.com/daidodo/tsimportsorter/blob/master/src/test/coverage.ts)
+
+After running unit/integ tests, code coverage should be generated under `coverage/` directory. Here's an snapshot of the `coverage/index.html`:
+
+<img width="537" alt="1" src="https://user-images.githubusercontent.com/8170176/102989865-47b78400-450e-11eb-93dc-c52520efc5fc.png">
+
+The recommendation is that you should always check it after your new feature has been implemented and add any tests to cover missing parts.
