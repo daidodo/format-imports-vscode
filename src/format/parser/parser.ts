@@ -20,6 +20,7 @@ import {
   parseLineRanges,
 } from './lines';
 import ParseParams from './ParseParams';
+import { StatementArgs } from './Statement';
 
 export function parseSource(
   sourceFile: SourceFile,
@@ -63,25 +64,44 @@ function process(node: Node, p: ParseParams, config: Configuration, options?: Co
   };
   const disabled = isDisabled(leadingComments) || isDisabled(trailingComments);
   const a = { range, leadingComments, trailingCommentsText, config };
-  if (node.kind === SyntaxKind.ImportDeclaration) {
-    if (disabled) return true;
-    const n = ImportNode.fromDecl(node as ImportDeclaration, a);
-    p.addImport(n);
+  if (node.kind === SyntaxKind.ImportDeclaration)
+    handleImport(p, disabled, range, () => ImportNode.fromDecl(node as ImportDeclaration, a));
+  else if (node.kind === SyntaxKind.ImportEqualsDeclaration)
+    handleImport(p, disabled, range, () =>
+      ImportNode.fromEqDecl(node as ImportEqualsDeclaration, a),
+    );
+  else handleOthers(p, !formatExports || disabled, range, node, a, options);
+  return true;
+}
+
+function handleImport(
+  p: ParseParams,
+  disabled: boolean,
+  range: RangeAndEmptyLines,
+  importNode: () => ImportNode | undefined,
+) {
+  if (!disabled) {
+    p.addImport(importNode());
     p.updateImportInsertPoint(range);
-  } else if (node.kind === SyntaxKind.ImportEqualsDeclaration) {
-    if (disabled) return true;
-    const n = ImportNode.fromEqDecl(node as ImportEqualsDeclaration, a);
-    p.addImport(n);
-    p.updateImportInsertPoint(range);
-  } else {
-    parseId(node, p, options);
-    p.updateImportInsertPoint(range);
-    if (formatExports && !disabled && node.kind === SyntaxKind.ExportDeclaration) {
+  } else p.addUnhandledImportOrExport();
+}
+
+function handleOthers(
+  p: ParseParams,
+  disabled: boolean,
+  range: RangeAndEmptyLines,
+  node: Node,
+  a: StatementArgs,
+  options?: CompilerOptions,
+) {
+  parseId(node, p, options);
+  p.updateImportInsertPoint(range);
+  if (node.kind === SyntaxKind.ExportDeclaration) {
+    if (!disabled) {
       const n = ExportNode.fromDecl(node as ExportDeclaration, a);
       p.addExport(n);
-    }
-  }
-  return true;
+    } else p.addUnhandledImportOrExport();
+  } else if (node.kind === SyntaxKind.ExportAssignment) p.addUnhandledImportOrExport();
 }
 
 /**

@@ -37,3 +37,5 @@ export {HI} from HI;
 import B from HI;
 import C from '   ';
 import D = require(HI);
+
+export = { a: string};

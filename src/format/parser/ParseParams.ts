@@ -11,6 +11,7 @@ export default class ParseParams {
   readonly sourceFile: SourceFile;
   readonly sourceText: string;
   readonly allIds = new Set<string>();
+  private unhandledImportsOrExports_ = 0;
 
   readonly importNodes: ImportNode[] = [];
   // If 'range' is undefined, insert imports before the first ImportNode.
@@ -41,6 +42,10 @@ export default class ParseParams {
 
   addExport(node: ExportNode | undefined) {
     if (node) this.exportNodes.push(node);
+  }
+
+  addUnhandledImportOrExport() {
+    this.unhandledImportsOrExports_++;
   }
 }
 
