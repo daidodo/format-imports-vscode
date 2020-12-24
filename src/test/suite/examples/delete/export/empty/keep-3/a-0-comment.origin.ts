@@ -3,4 +3,4 @@ export {} from 'a'
 
 export {} // comment2
 
-export {}
+export {} // comment3
