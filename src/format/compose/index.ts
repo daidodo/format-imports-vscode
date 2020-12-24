@@ -61,7 +61,7 @@ function composeNodeAsNamesImpl(
   forceWrap: boolean,
 ) {
   const { text: t, canWrap } = composeNames(verb, !!defaultName, names, config, forceWrap);
-  const all = [defaultName, t].filter(s => !!s).join(', ');
+  const all = [defaultName, t].filter(s => !!s).join(', ') || '{}';
   const text = [verb, all, from].filter(s => !!s).join(' ');
   return { text, canWrap };
 }

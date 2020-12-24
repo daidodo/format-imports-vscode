@@ -81,9 +81,10 @@ function handleImport(
   importNode: () => ImportNode | undefined,
 ) {
   if (!disabled) {
-    p.addImport(importNode());
     p.updateImportInsertPoint(range);
-  } else p.addUnhandledImportOrExport();
+    if (p.addImport(importNode())) return;
+  }
+  p.addUnhandledImportOrExport();
 }
 
 function handleOthers(
@@ -99,8 +100,9 @@ function handleOthers(
   if (node.kind === SyntaxKind.ExportDeclaration) {
     if (!disabled) {
       const n = ExportNode.fromDecl(node as ExportDeclaration, a);
-      p.addExport(n);
-    } else p.addUnhandledImportOrExport();
+      if (p.addExport(n)) return;
+    }
+    p.addUnhandledImportOrExport();
   } else if (node.kind === SyntaxKind.ExportAssignment) p.addUnhandledImportOrExport();
 }
 

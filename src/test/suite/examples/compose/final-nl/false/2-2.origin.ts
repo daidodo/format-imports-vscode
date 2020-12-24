@@ -1,4 +1,4 @@
 'use'; 
 
-export {}
+import {A} from 'a'
 

@@ -39,25 +39,25 @@ export default class ExportNode extends Statement {
     this.names = names;
   }
 
+  hasModuleIdentifier() {
+    return !!this.moduleIdentifier_;
+  }
+
   empty() {
     return this.names.length < 1;
   }
 
   merge(node: ExportNode) {
     if (
-      this.empty() ||
+      // this.empty() ||
       this.moduleIdentifier_ !== node.moduleIdentifier_ ||
       this.isTypeOnly_ !== node.isTypeOnly_ ||
       !this.canMergeComments(node)
     )
       return false;
-    // For `export { A } from 'a'`, merge to the front.
-    // For `export { A }`, merge to the end.
-    const src = this.moduleIdentifier_ ? node : this;
-    const dst = this.moduleIdentifier_ ? this : node;
-    dst.names.push(...src.names);
-    src.names = [];
-    return dst.mergeComments(src) && !!this.moduleIdentifier_;
+    this.names.push(...node.names);
+    node.names = [];
+    return this.mergeComments(node);
   }
 
   compose(config: ComposeConfig) {

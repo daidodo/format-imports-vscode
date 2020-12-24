@@ -82,7 +82,7 @@ export default class ImportNode extends Statement {
   get flagType(): FlagSymbol {
     if (this.isScript) return 'scripts';
     if (this.defaultName_) return this.binding_ ? 'multiple' : 'single';
-    assertNonNull(this.binding_);
+    if (!this.binding_) return 'multiple';
     if (this.binding_.type === 'namespace') return 'namespace';
     return this.binding_.names.length === 1 ? 'single' : 'multiple';
   }
@@ -288,6 +288,7 @@ export default class ImportNode extends Statement {
     const parts = [];
     if (this.defaultName_) parts.push(this.defaultName_);
     if (this.binding_?.type === 'namespace') parts.push(`* as ${this.binding_.alias}`);
+    if (parts.length < 1) parts.push('{}');
     return composeNodeAsParts(verb, parts, from, extraLength, config);
   }
 }

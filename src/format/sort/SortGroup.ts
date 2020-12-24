@@ -97,7 +97,7 @@ export default class SortGroup {
    *      * Merge all imports together and sort them based on ESLint and user config.
    *    * Else, no sort is needed.
    */
-  sort(level: number) {
+  sort(level = 0) {
     const {
       nodes_,
       scripts_,

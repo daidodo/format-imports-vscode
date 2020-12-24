@@ -2,7 +2,6 @@
 
 ### Features
 
-- Do not remove `export {}` if there is no import/export left, see [here](https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/unambiguous.md).
 - Support rules from [awesome-eslint](https://github.com/dustinspecker/awesome-eslint).
 - Support [benmosher/eslint-plugin-import](https://github.com/benmosher/eslint-plugin-import) rules. ([Link](https://github.com/SoominHan/import-sorter/issues/43))
 - Support [Tibfib/eslint-plugin-import-helpers](https://github.com/Tibfib/eslint-plugin-import-helpers) rules. ([Link](https://github.com/SoominHan/import-sorter/issues/36)
@@ -32,6 +31,7 @@
 
 ### DONE
 
+- ~~Do not remove `export {}` if there is no import/export left, see [here](https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/unambiguous.md).~~
 - ~~Support ESLint plugin import/order. ([Link](https://github.com/SoominHan/import-sorter/issues/65), [Rule](https://eslint.org/docs/rules/sort-imports), [Rule](https://eslint.org/docs/rules/no-duplicate-imports), [API](https://github.com/eslint/eslintrc/blob/a75bacd9a743a7bbcdb8c59e5d4f9de3dc8b0f20/lib/config-array-factory.js#L16))~~
 - ~~Organize Imports should sort by import name instead path. ([Link](https://github.com/microsoft/TypeScript/issues/23279), [Link](https://github.com/SoominHan/import-sorter/issues/40))~~
 - ~~Infer 'flag' from sub-groups in GroupRule. ([Link](https://github.com/daidodo/tsimportsorter/issues/17))~~

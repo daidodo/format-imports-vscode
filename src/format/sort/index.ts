@@ -32,7 +32,7 @@ export function sortImports(
   const left = removeUnusedNames(nodes, usage, keepUnusedBouncer);
   const merged = mergeImportNodes(left);
   merged.forEach(n => group.add(n));
-  return group.sort(0);
+  return group.sort();
 }
 
 export { sortAndMergeExportNodes as sortExports } from './merge';

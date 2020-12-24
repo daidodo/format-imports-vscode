@@ -1,1 +1,1 @@
-'use'; export {} 
+'use'; import {A} from 'a'

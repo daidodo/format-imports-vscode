@@ -31,8 +31,14 @@ export default class ParseParams {
     return this.importsInsertPoint_;
   }
 
+  get unhandled() {
+    return this.unhandledImportsOrExports_;
+  }
+
   addImport(node: ImportNode | undefined) {
-    if (node) this.importNodes.push(node);
+    if (!node) return false;
+    this.importNodes.push(node);
+    return true;
   }
 
   updateImportInsertPoint(range: RangeAndEmptyLines) {
@@ -41,7 +47,9 @@ export default class ParseParams {
   }
 
   addExport(node: ExportNode | undefined) {
-    if (node) this.exportNodes.push(node);
+    if (!node) return false;
+    this.exportNodes.push(node);
+    return true;
   }
 
   addUnhandledImportOrExport() {

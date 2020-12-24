@@ -17,7 +17,7 @@ export function mergeImportNodes(nodes: ImportNode[]) {
     Array<ImportNode>(),
   );
   merged.forEach(n => {
-    if (n.binding?.type === 'named') n.binding.names = DedupBindingNames(n.binding.names);
+    if (n.binding?.type === 'named') n.binding.names = dedupBindingNames(n.binding.names);
   });
   return merged;
 }
@@ -41,14 +41,25 @@ export function sortImportNodes(
 }
 
 export function sortAndMergeExportNodes(nodes: ExportNode[], compareNames?: Comparator) {
-  nodes.reduce((r, n) => (r.some(a => a.merge(n)) ? r : [...r, n]), Array<ExportNode>());
+  // For `export { A } from 'a'`, merge to the front.
+  const m1 = nodes.reduce(
+    (r, n) => (n.hasModuleIdentifier() && r.some(a => a.merge(n)) ? r : [...r, n]),
+    Array<ExportNode>(),
+  );
+  // For `export { A }`, merge to the end.
+  const m2 = m1
+    .reverse()
+    .reduce(
+      (r, n) => (!n.hasModuleIdentifier() && r.some(a => a.merge(n)) ? r : [...r, n]),
+      Array<ExportNode>(),
+    )
+    .reverse();
   if (compareNames)
-    nodes.forEach(
-      n => (n.names = sortBindingNames(DedupBindingNames(n.names), compareNames, false)),
-    );
+    m2.forEach(n => (n.names = sortBindingNames(dedupBindingNames(n.names), compareNames, false)));
+  return m2;
 }
 
-function DedupBindingNames(names: NameBinding[]) {
+function dedupBindingNames(names: NameBinding[]) {
   return names.reduce(
     (r, a) => (r.some(e => isEqual(e, a)) ? r : [...r, a]), // Remove duplicates
     new Array<NameBinding>(),

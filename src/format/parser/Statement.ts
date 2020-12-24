@@ -30,6 +30,10 @@ export default class Statement {
     return start.pos <= pos && pos < end.pos;
   }
 
+  hasComments() {
+    return this.hasLeadingComments || this.hasTrailingComments;
+  }
+
   private get hasLeadingComments() {
     return !!this.leadingComments_ && this.leadingComments_.length > 0;
   }

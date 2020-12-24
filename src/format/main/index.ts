@@ -43,7 +43,7 @@ export function formatSource(
   log.debug('Translated ESLint config to newConfig:', config);
   log.debug('ESLint config processed data:', processed);
   const sourceFile = ts.createSourceFile(fileName, sourceText, ScriptTarget.Latest);
-  const { importNodes, importsInsertPoint: point, exportNodes, allIds } = parseSource(
+  const { importNodes, importsInsertPoint: point, exportNodes, allIds, unhandled } = parseSource(
     sourceFile,
     sourceText,
     config,
@@ -67,7 +67,8 @@ export function formatSource(
   );
   if (text && point)
     editManager.insert({ range: point, text, minTrailingNewLines: composeConfig.groupEnd });
-  const edits = formatExports(exportNodes, composeConfig, sorter);
+  const mustBeModule = unhandled > 0 || !!text; // If there are import/export declarations, it's must be a module.
+  const edits = formatExports(exportNodes, composeConfig, sorter, mustBeModule);
   edits.forEach(e => editManager.insert(e));
   return apply(sourceText, sourceFile, editManager.generateEdits(composeConfig));
 }
@@ -87,10 +88,27 @@ function formatImports(
   return groups.compose(composeConfig, groupSep);
 }
 
-function formatExports(exportNodes: ExportNode[], composeConfig: ComposeConfig, sorter: Sorter) {
+function formatExports(
+  exportNodes: ExportNode[],
+  composeConfig: ComposeConfig,
+  sorter: Sorter,
+  mustBeModule: boolean,
+) {
   if (!exportNodes.length) return [];
-  sortExports(exportNodes, sorter.compareNames);
-  return exportNodes
-    .filter(n => !n.empty())
-    .map(n => ({ range: n.range, text: n.compose(composeConfig) }));
+  const sorted = sortExports(exportNodes, sorter.compareNames);
+  const filtered = sorted.filter(n => !n.empty());
+  const nodes = filtered.length > 0 || mustBeModule ? filtered : decideKeep(sorted);
+  return nodes.map(n => ({ range: n.range, text: n.compose(composeConfig) }));
+}
+
+/**
+ * Scenarios:
+ * 1. If an export has comments, keep it.
+ * 2. If there are both `export {} from 'a'` and `export {}`, keep only `export {} from 'a'`.
+ * 3. If there are `export {} from 'a'` and `export {} from 'b'`, keep both of them.
+ */
+function decideKeep(emptyNodes: ExportNode[]) {
+  const hasExportFrom = emptyNodes.some(n => n.hasModuleIdentifier());
+  if (!hasExportFrom) return emptyNodes;
+  return emptyNodes.filter(n => n.hasModuleIdentifier() || n.hasComments());
 }
