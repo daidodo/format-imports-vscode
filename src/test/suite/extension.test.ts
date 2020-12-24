@@ -45,7 +45,7 @@ suite('Integration Test Suite', () => {
   if (!examples) return;
   // Run all tests
   return runTestSuite(examples);
-  // Or, run a specific test case
+  // Or, run specific test case(s)
   // return runTestSuite(examples, 'delete/export');
 });
 
