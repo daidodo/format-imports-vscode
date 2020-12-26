@@ -4,7 +4,7 @@
 
 - Support rules from [awesome-eslint](https://github.com/dustinspecker/awesome-eslint).
 - Support [benmosher/eslint-plugin-import](https://github.com/benmosher/eslint-plugin-import) rules. ([Link](https://github.com/SoominHan/import-sorter/issues/43))
-- Support [Tibfib/eslint-plugin-import-helpers](https://github.com/Tibfib/eslint-plugin-import-helpers) rules. ([Link](https://github.com/SoominHan/import-sorter/issues/36)
+- Support [Tibfib/eslint-plugin-import-helpers](https://github.com/Tibfib/eslint-plugin-import-helpers) rules. ([Link](https://github.com/SoominHan/import-sorter/issues/36))
 - Group level comments. ([Link](https://github.com/SoominHan/import-sorter/issues/46))
 - Import namespace alias. ([Link](https://github.com/SoominHan/import-sorter/issues/29))
 - Standalone npm package, CLI version. ([Link](https://github.com/znikola/vscode-es6-typescript-import-sorter/issues/20), [Link](https://github.com/SoominHan/import-sorter/issues/57))
