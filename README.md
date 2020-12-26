@@ -28,16 +28,14 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 ## Features
 
 - Auto format imports and exports on save, or manually from command, shortcut or context menu.
-- Merge and sort imports and exports, and remove duplicated names.
-- Delete unused imports with configurable exceptions for, e.g. macros.
-- Group and sort imports by custom rules, including sorted by paths or names.
+- Group and sort imports by custom rules, including sort by paths or names.
+- Remove duplicated and unused names with configurable exceptions.
+- Ignore files or declarations by config or inline comments.
+- Respect [ESLint](https://eslint.org) and [eslint-plugin-import](https://github.com/benmosher/eslint-plugin-import) rules.
+- Respect configs from [Prettier](https://prettier.io), [EditorConfig](https://editorconfig.org) and VS Code editor settings.
+- Preserve `'use strict'`, `///` directives, shebang (`#!`) and comments.
 - Support [Type-Only imports/exports](https://devblogs.microsoft.com/typescript/announcing-typescript-3-8/#type-only-imports-exports).
 - Support multi-root projects.
-- Ignore files, imports or exports by config or inline comments.
-- Preserve `'use strict'`, `///` directives, shebang (`#!`) and global comments, e.g. license.
-- Keep comments when moving code.
-- Respect configs from [Prettier](https://prettier.io), [EditorConfig](https://editorconfig.org) and VS Code editor settings.
-- Respect [ESLint](https://eslint.org) and [eslint-plugin-import](https://github.com/benmosher/eslint-plugin-import) rules.
 
 ## How to use
 
