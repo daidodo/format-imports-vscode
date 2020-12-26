@@ -46,7 +46,7 @@ suite('Integration Test Suite', () => {
   // Run all tests
   return runTestSuite(examples);
   // Or, run specific test case(s)
-  // return runTestSuite(examples, 'delete/export');
+  // return runTestSuite(examples, 'eslint');
 });
 
 function getTestSuite(dir: string, name: string): TestSuite | undefined {

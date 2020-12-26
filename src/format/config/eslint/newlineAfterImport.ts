@@ -1,4 +1,3 @@
-import { tuple1 } from '../../../common';
 import {
   Configuration,
   ESLintConfig,
@@ -7,11 +6,11 @@ import {
 type NewlineAfterImportOptions = NonNullable<ESLintConfig['newlineAfterImport']>;
 
 export function translateNewlineAfterImportRule(
-  oldConfig: Configuration,
+  config: Configuration,
   options?: NewlineAfterImportOptions,
 ) {
-  if (!options) return tuple1(oldConfig);
+  if (!options) return { config };
   const { count: emptyLinesAfterAllImports } = options;
-  const config = { ...oldConfig, emptyLinesAfterAllImports };
-  return tuple1(config);
+  const c = { ...config, emptyLinesAfterAllImports };
+  return { config: c };
 }

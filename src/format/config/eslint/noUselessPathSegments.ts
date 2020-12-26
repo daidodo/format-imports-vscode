@@ -1,4 +1,3 @@
-import { tuple1 } from '../../../common';
 import {
   Configuration,
   ESLintConfig,
@@ -7,11 +6,11 @@ import {
 type NoUselessPathSegmentsOptions = NonNullable<ESLintConfig['noUselessPathSegments']>;
 
 export function translateNoUselessPathSegmentsRule(
-  oldConfig: Configuration,
+  config: Configuration,
   options?: NoUselessPathSegmentsOptions,
 ) {
-  if (!options) return tuple1(oldConfig);
+  if (!options) return { config };
   const { noUselessIndex: removeLastIndexInPath } = options;
-  const config = { ...oldConfig, removeLastSlashInPath: true, removeLastIndexInPath };
-  return tuple1(config);
+  const c = { ...config, removeLastSlashInPath: true, removeLastIndexInPath };
+  return { config: c };
 }

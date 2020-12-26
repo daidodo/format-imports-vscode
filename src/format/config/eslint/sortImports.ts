@@ -1,8 +1,4 @@
 import {
-  tuple1,
-  tuple2,
-} from '../../../common';
-import {
   CompareRule,
   Configuration,
   ESLintConfig,
@@ -12,15 +8,15 @@ import {
 
 type SortImportsOptions = NonNullable<ESLintConfig['sortImports']>;
 
-export function translateSortImportsRule(oldConfig: Configuration, options?: SortImportsOptions) {
-  if (!options) return tuple1(oldConfig);
+export function translateSortImportsRule(config: Configuration, options?: SortImportsOptions) {
+  if (!options) return { config };
   const sortImportsBy = calcSortImportsBy(options);
   const sortRules = calcSortRules(options);
   const aliasFirst = !!sortRules;
   const ignoreSorting = !!sortImportsBy || !!sortRules;
   const { groupRules, groupOrder } = calcGroupRules(options);
-  const config = mergeConfig(oldConfig, { sortImportsBy, sortRules, groupRules });
-  return tuple2(config, { groupOrder, ignoreSorting, aliasFirst });
+  const c = mergeConfig(config, { sortImportsBy, sortRules, groupRules });
+  return { config: c, processed: { groupOrder, ignoreSorting, aliasFirst } };
 }
 
 function calcSortImportsBy({ ignoreDeclarationSort }: SortImportsOptions) {
