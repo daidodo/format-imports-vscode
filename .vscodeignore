@@ -1,7 +1,6 @@
 .vscode/
 .vscode-test/
-out/test/
-out/**/*.test.*
+out/
 src/
 .github/
 .gitignore
@@ -9,3 +8,6 @@ src/
 TODO.md
 tsconfig.json
 **/*.map
+coverage/
+node_modules/
+webpack.config.js
