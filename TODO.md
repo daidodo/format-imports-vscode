@@ -2,7 +2,7 @@
 
 ### Features
 
-- Do NOT sort script imports.
+- Sort numbers naturally. ([Example](https://github.com/lydell/eslint-plugin-simple-import-sort#sorting))
 - Support rules from [awesome-eslint](https://github.com/dustinspecker/awesome-eslint).
 - Support [benmosher/eslint-plugin-import](https://github.com/benmosher/eslint-plugin-import) rules. ([Link](https://github.com/SoominHan/import-sorter/issues/43), [exports-last](https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/exports-last.md), [import/order](https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/order.md))
 - Support [Tibfib/eslint-plugin-import-helpers](https://github.com/Tibfib/eslint-plugin-import-helpers) rules. ([Link](https://github.com/SoominHan/import-sorter/issues/36))
@@ -31,6 +31,7 @@
 
 ### DONE
 
+- ~~Do NOT sort script imports.~~
 - ~~Webpack the extension. ([Link](https://github.com/znikola/vscode-es6-typescript-import-sorter/issues/52))~~
 - ~~Do not remove `export {}` if there is no import/export left, see [here](https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/unambiguous.md).~~
 - ~~Support ESLint plugin import/order. ([Link](https://github.com/SoominHan/import-sorter/issues/65), [Rule](https://eslint.org/docs/rules/sort-imports), [Rule](https://eslint.org/docs/rules/no-duplicate-imports), [API](https://github.com/eslint/eslintrc/blob/a75bacd9a743a7bbcdb8c59e5d4f9de3dc8b0f20/lib/config-array-factory.js#L16))~~

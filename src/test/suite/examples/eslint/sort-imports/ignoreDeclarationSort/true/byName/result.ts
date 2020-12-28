@@ -20,12 +20,12 @@ import * as BA from 'bc'; // comment
 import { AG, _A, bF } from 'ba'; // comment
 import BD, { AE } from 'ba'; // comment
 
-import '../'; // comment
-import './'; // comment
-import '_'; // comment
 import 'ca'; // comment
 import 'cb'; // comment
 import 'cc'; // comment
+import '../'; // comment
+import './'; // comment
+import '_'; // comment
 
 import * as CA from 'cb'; // comment
 import * as Cc from '_'; // comment

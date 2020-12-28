@@ -1,16 +1,18 @@
-import '../';
-import './';
-import 'A';
-import 'B';
-import 'BB';
-import 'BBB';
-import 'C';
-import 'D';
-import '_';
-import 'a';
-import 'b';
-import 'c';
-import 'd';
-import 'dd';
-import '~';
-import '中';
+import A from '../';
+import A from './';
+import A from 'A';
+import A from 'B';
+import A from 'BB';
+import A from 'BBB';
+import A from 'C';
+import A from 'D';
+import A from '_';
+import A from 'a';
+import A from 'b';
+import A from 'c';
+import A from 'd';
+import A from 'dd';
+import A from '~';
+import A from '中';
+
+const a=A

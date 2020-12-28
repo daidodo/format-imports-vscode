@@ -1,9 +1,9 @@
-import '../';
-import '../cc';
-import './';
-import './bb';
-import '@dd';
 import 'aa';
+import './bb';
+import '../cc';
+import '@dd';
+import './';
+import '../';
 
 import F from '../';
 import * as C from '../c';

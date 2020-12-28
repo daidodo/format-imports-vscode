@@ -18,12 +18,12 @@ import * as BA from 'bc'; // comment
 import BD, { AE } from 'ba'; // comment
 import { bF, _A, AG } from 'ba'; // comment
 
-import '../'; // comment
-import './'; // comment
-import '_'; // comment
 import 'ca'; // comment
 import 'cb'; // comment
 import 'cc'; // comment
+import '../'; // comment
+import './'; // comment
+import '_'; // comment
 
 import ba from '../'; // comment
 import cA, { bA } from './'; // comment

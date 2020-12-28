@@ -85,12 +85,11 @@ export default class SortGroup {
   /**
    * Sort imports within this group.
    *
-   * 1. If `eslintGroupOrder_` is undefined, then sort `scripts_`, `nodes_` and `subGroups_`
+   * 1. If `eslintGroupOrder_` is undefined, then sort `nodes_` and `subGroups_`
    *    based on user config.
    * 2. Otherwise:
    *    * If this is the top group (`level === 0`), then:
-   *      * Sort `nodes_` (fallback group) and `scripts_` based on ESLint and user config,
-   *        though `scripts_` will be the same regardless of ESLint config.
+   *      * Sort `nodes_` (fallback group) based on ESLint and user config.
    *      * Sort `subGroups_` (user config groups) based on their rules.
    *    * If this is the user config group (`level === 1`), then:
    *      * Disregard `subGroups_`.
@@ -98,14 +97,7 @@ export default class SortGroup {
    *    * Else, no sort is needed.
    */
   sort(level = 0) {
-    const {
-      nodes_,
-      scripts_,
-      sorter_,
-      sortImportsBy_,
-      eslintGroupOrder_: flags,
-      aliasFirst_,
-    } = this;
+    const { nodes_, sorter_, sortImportsBy_, eslintGroupOrder_: flags, aliasFirst_ } = this;
     if (flags && level > 1) return this;
     const byPaths = sortImportsBy_ != 'names';
     this.nodes_ = flags
@@ -120,11 +112,7 @@ export default class SortGroup {
     if (flags && level === 1) {
       this.scripts_ = [];
       this.ignoreSubGroups_ = true;
-    } else {
-      // Script imports are always sorted by paths.
-      this.scripts_ = sortImportNodes(scripts_, true, sorter_, aliasFirst_);
-      this.subGroups_?.forEach(g => g.sort(level + 1));
-    }
+    } else this.subGroups_?.forEach(g => g.sort(level + 1));
     return this;
   }
 
@@ -229,6 +217,10 @@ function sortNodesByFlags(
   const order = flags.map(f => ({ flag: f, nodes: new Array<ImportNode>() }));
   const fallback: ImportNode[] = [];
   nodes.forEach(n => (order.find(g => g.flag === n.flagType)?.nodes ?? fallback).push(n));
-  const groups = [...order.map(({ nodes }) => nodes), fallback];
+  const sort = (nodes: ImportNode[]) => sortImportNodes(nodes, byPath, sorter, aliasFirst);
+  const groups = [
+    ...order.map(({ flag, nodes }) => (flag === 'scripts' ? nodes : sort(nodes))),
+    sort(fallback),
+  ];
   return groups.reduce((r, g) => [...r, ...sortImportNodes(g, byPath, sorter, aliasFirst)], []);
 }

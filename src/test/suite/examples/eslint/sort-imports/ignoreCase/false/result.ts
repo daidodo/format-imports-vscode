@@ -1,18 +1,18 @@
-import '../'; // comment
-import './'; // comment
-import '_'; // comment
 import 'aa'; // comment
-import 'ab'; // comment
 import 'ac'; // comment
 import 'ba'; // comment
+import 'cc'; // comment
 import 'bb'; // comment
+import 'da'; // comment
 import 'bc'; // comment
 import 'ca'; // comment
 import 'cb'; // comment
-import 'cc'; // comment
-import 'da'; // comment
+import 'ab'; // comment
 import 'db'; // comment
 import 'dc'; // comment
+import '../'; // comment
+import './'; // comment
+import '_'; // comment
 
 import * as BA from 'bc'; // comment
 import * as CA from 'cb'; // comment

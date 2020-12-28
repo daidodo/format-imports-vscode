@@ -424,6 +424,7 @@ import MyInput from './MyInput';
 _Notes:_
 
 - _By default, script imports are in the first group if you don't explicitly define rules for them._
+- _Script imports will NOT be sorted within a (sub) group, though sub groups may change their order._
 - _Exports will NOT be grouped. Grouping Rules are only for imports._
 
 For a complete guide, please refer to [the Wiki](https://github.com/daidodo/tsimportsorter/wiki/Grouping-Rules).
@@ -438,6 +439,7 @@ You can customize sorting rules for all imports and exports, or imports within a
 _Note:_
 
 - _Exports will NOT be sorted based on paths. Only names within an export are sorted._
+- _Script imports will NOT be sorted._
 
 You can decide:
 

@@ -1,6 +1,6 @@
 'use strict'
-import 'b';
 import 'd';
+import 'b';
 
 import B from 'B';
 import C from 'c';

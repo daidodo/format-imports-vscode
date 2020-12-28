@@ -39,6 +39,13 @@ const CONF = 'import-sorter.json';
 const TS_CONF = 'tsconfig.json';
 const ESLINT_CONF = '.eslintrc.json';
 
+/**
+ * If set to true, the result file will be updated if test fails.
+ *
+ * ! Use it with cautions.
+ */
+const UPDATE_RESULT = false;
+
 suite('Integration Test Suite', () => {
   const dir = path.resolve(__dirname).replace(/(\\|\/)out(\\|\/)/g, `${sep}src${sep}`);
   const examples = getTestSuite(dir, 'examples');
@@ -119,6 +126,7 @@ function runTestCase(
     const source = doc.getText();
     const expected = res ? fs.readFileSync(res).toString() : source;
     const actual = formatSource(origin, source, allConfig) ?? source;
+    if (UPDATE_RESULT && actual !== expected && result) fs.writeFileSync(result, actual);
     assert.strictEqual(actual, expected);
   });
 }

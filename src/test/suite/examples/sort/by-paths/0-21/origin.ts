@@ -1,24 +1,26 @@
-import 'D'
-import 'A'
-import '..'
-import 'BB'
-import 'c'
-import 'aA';
-import 'aa';
-import '.'
-import 'Aa';
-import 'a'
-import 'AA';
-import 'B'
-import '~';
-import 'BBB'
-import 'Ab';
-import '_'
-import 'd'
-import 'ab';
-import '中'
-import 'AB';
-import 'b'
-import 'aB';
-import 'C'
-import 'dd'
+import A from 'D'
+import A from 'A'
+import A from '..'
+import A from 'BB'
+import  A from 'c'
+import  A from 'aA';
+import  A from 'aa';
+import  A from '.'
+import  A from 'Aa';
+import  A from 'a'
+import  A from 'AA';
+import  A from 'B'
+import  A from '~';
+import  A from 'BBB'
+import  A from 'Ab';
+import  A from '_'
+import  A from 'd'
+import  A from 'ab';
+import  A from '中'
+import  A from 'AB';
+import A from  'b'
+import   A from 'aB';
+import A from  'C'
+import A from  'dd'
+
+const a = A;

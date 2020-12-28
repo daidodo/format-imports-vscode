@@ -1,6 +1,3 @@
-import '../'; // comment
-import './'; // comment
-import '_'; // comment
 import 'aa'; // comment
 import 'ab'; // comment
 import 'ac'; // comment
@@ -13,6 +10,9 @@ import 'cc'; // comment
 import 'da'; // comment
 import 'db'; // comment
 import 'dc'; // comment
+import '../'; // comment
+import './'; // comment
+import '_'; // comment
 
 import * as BA from 'bc'; // comment
 import * as CA from 'cb'; // comment

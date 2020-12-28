@@ -9,9 +9,9 @@ import Ba from 'ab'; // comment
 import { F, _, g } from 'ab'; // comment
 import { Ca } from 'ac'; // comment
 
-import 'ba'; // comment
 import 'bb'; // comment
 import 'bc'; // comment
+import 'ba'; // comment
 
 import bC = require('bb');
 import { BC } from 'bb'; // comment
@@ -20,12 +20,12 @@ import * as BA from 'bc'; // comment
 import BD, { AE } from 'ba'; // comment
 import { AG, _A, bF } from 'ba'; // comment
 
-import '../'; // comment
-import './'; // comment
-import '_'; // comment
 import 'ca'; // comment
 import 'cb'; // comment
 import 'cc'; // comment
+import '../'; // comment
+import './'; // comment
+import '_'; // comment
 
 import ba from '../'; // comment
 import cA, { bA } from './'; // comment
