@@ -4,8 +4,9 @@ import log4js, {
   AppenderModule,
   LoggingEvent,
 } from 'log4js';
-import path from 'path';
 import { OutputChannel } from 'vscode';
+
+import { projectRoot } from './env';
 
 export function initLog(channel: OutputChannel) {
   return log4js
@@ -46,7 +47,7 @@ function getAppenderModule(channel: OutputChannel): AppenderModule {
  * Strip sensitive info in stack trace message.
  */
 function stripInfo(msg: string) {
-  const rootPath = path.resolve(__dirname, '../..').replace(/\\/g, '\\\\');
+  const rootPath = projectRoot();
   const reg = new RegExp(rootPath, 'g');
   return msg.replace(reg, 'Project');
 }

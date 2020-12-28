@@ -8,13 +8,13 @@
   "version": "5.0.4",
   "license": "MIT",
   "scripts": {
-    "vscode:prepublish": "npm run clean && webpack --mode production",
+    "vscode:prepublish": "npm run clean && npm run compile",
     "webpack": "npm run clean && webpack --mode development",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile",
     "test": "node ./out/test/runTest.js",
-    "clean": "rm -rf coverage out"
+    "clean": "rm -rf out"
   },
   "homepage": "https://github.com/daidodo/tsimportsorter",
   "repository": {

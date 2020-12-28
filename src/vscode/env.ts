@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
 import os from 'os';
+import path from 'path';
 import vscode from 'vscode';
 
 export function osInfo() {
@@ -36,4 +37,10 @@ export function workspacesInfo() {
   return {
     rootPaths: vscode.workspace.workspaceFolders?.map(f => f.uri.path),
   };
+}
+
+const PROJECT_ROOT = path.resolve(__dirname, '../..').replace(/\\/g, '\\\\');
+
+export function projectRoot() {
+  return PROJECT_ROOT;
 }
