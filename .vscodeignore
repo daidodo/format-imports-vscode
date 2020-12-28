@@ -8,6 +8,5 @@ TODO.md
 tsconfig.json
 **/*.map
 coverage/
-node_modules/
 webpack.config.*
 tsconfig.tsbuildinfo
