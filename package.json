@@ -5,7 +5,7 @@
   "icon": "assets/icons/main.jpg",
   "main": "./out/extension.js",
   "publisher": "dozerg",
-  "version": "5.0.3",
+  "version": "5.0.4",
   "license": "MIT",
   "scripts": {
     "vscode:prepublish": "npm run clean && webpack --mode production",
