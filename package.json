@@ -3,17 +3,18 @@
   "displayName": "JS/TS Import/Export Sorter",
   "description": "Auto format imports and exports for JavaScript and TypeScript.",
   "icon": "assets/icons/main.jpg",
-  "main": "./dist/extension.js",
+  "main": "./out/extension.js",
   "publisher": "dozerg",
   "version": "5.0.2",
   "license": "MIT",
   "scripts": {
-    "vscode:prepublish": "rm -rf out && webpack --mode production",
-    "webpack": "webpack --mode development",
+    "vscode:prepublish": "npm run clean && webpack --mode production",
+    "webpack": "npm run clean && webpack --mode development",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile",
-    "test": "node ./out/test/runTest.js"
+    "test": "node ./out/test/runTest.js",
+    "clean": "rm -rf coverage out"
   },
   "homepage": "https://github.com/daidodo/tsimportsorter",
   "repository": {
@@ -276,6 +277,7 @@
     "@types/prettier": "^2.1.6",
     "@types/rewire": "^2.5.28",
     "@types/vscode": "^1.52.0",
+    "@types/webpack": "^4.41.25",
     "@typescript-eslint/eslint-plugin": "^4.11.0",
     "@typescript-eslint/parser": "^4.11.0",
     "decache": "^4.6.0",
@@ -287,6 +289,7 @@
     "remap-istanbul": "^0.13.0",
     "rewire": "^5.0.0",
     "ts-loader": "^8.0.12",
+    "ts-node": "^9.1.1",
     "utility-types": "^3.10.0",
     "vscode-test": "^1.4.1",
     "webpack": "^5.11.0",
@@ -320,7 +323,8 @@
       "prettier/@typescript-eslint"
     ],
     "ignorePatterns": [
-      "src/test/suite/examples/**/*.ts"
+      "src/test/suite/examples/**/*.ts",
+      "webpack.config.*"
     ],
     "rules": {
       "@typescript-eslint/no-explicit-any": "off",

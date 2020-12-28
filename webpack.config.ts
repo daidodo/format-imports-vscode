@@ -1,18 +1,13 @@
-//@ts-check
+import path from 'path';
+import { Configuration } from 'webpack';
 
-'use strict';
-
-const path = require('path');
-const TerserPlugin = require('terser-webpack-plugin');
-
-/**@type {import('webpack').Configuration}*/
-const config = {
+const config: Configuration = {
   target: 'node', // vscode extensions run in a Node.js-context 📖 -> https://webpack.js.org/configuration/node/
 
   entry: './src/extension.ts', // the entry point of this extension, 📖 -> https://webpack.js.org/configuration/entry-context/
   output: {
-    // the bundle is stored in the 'dist' folder (check package.json), 📖 -> https://webpack.js.org/configuration/output/
-    path: path.resolve(__dirname, 'dist'),
+    // the bundle is stored in the 'out' folder (check package.json), 📖 -> https://webpack.js.org/configuration/output/
+    path: path.resolve(__dirname, 'out'),
     filename: 'extension.js',
     libraryTarget: 'commonjs2',
     devtoolModuleFilenameTemplate: '../[resource-path]',
@@ -44,4 +39,4 @@ const config = {
   },
 };
 
-module.exports = config;
+export default config;

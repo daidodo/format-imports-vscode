@@ -1,8 +1,8 @@
 out
-dist
 node_modules
 .vscode-test/
 *.vsix
 .DS_Store
 coverage/
 .nyc_output/
+tsconfig.tsbuildinfo

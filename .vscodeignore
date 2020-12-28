@@ -1,6 +1,5 @@
 .vscode/
 .vscode-test/
-out/
 src/
 .github/
 .gitignore
@@ -10,4 +9,5 @@ tsconfig.json
 **/*.map
 coverage/
 node_modules/
-webpack.config.js
+webpack.config.*
+tsconfig.tsbuildinfo

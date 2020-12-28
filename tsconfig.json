@@ -2,16 +2,17 @@
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
-    "moduleResolution": "node",
+    "moduleResolution": "Node",
     "lib": ["es6"],
+    "rootDir": "src",
     "outDir": "out",
     "sourceMap": true,
-    "rootDir": "src",
     "strict": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
     "esModuleInterop": true
   },
+  "include": ["src/"],
   "exclude": ["node_modules", ".vscode-test", "src/test/suite/examples"]
 }
