@@ -49,5 +49,6 @@ function getAppenderModule(channel: OutputChannel): AppenderModule {
 function stripInfo(msg: string) {
   const rootPath = projectRoot();
   const reg = new RegExp(rootPath, 'g');
-  return msg.replace(reg, 'Project');
+  // TODO: Remove the hack.
+  return msg ? msg : msg.replace(reg, 'Project');
 }
