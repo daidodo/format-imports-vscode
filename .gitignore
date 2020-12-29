@@ -1,5 +1,8 @@
 out
 node_modules
+.cache/
+.parcel-cache/
+node_modules/
 .vscode-test/
 *.vsix
 .DS_Store

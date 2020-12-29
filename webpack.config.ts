@@ -10,9 +10,9 @@ const config: Configuration = {
     path: path.resolve(__dirname, 'out'),
     filename: 'extension.js',
     libraryTarget: 'commonjs2',
-    devtoolModuleFilenameTemplate: '../[resource-path]',
   },
   externals: {
+    eslint: 'eslint',
     vscode: 'commonjs vscode', // the vscode-module is created on-the-fly and must be excluded. Add other modules that cannot be webpack'ed, 📖 -> https://webpack.js.org/configuration/externals/
   },
   resolve: {
@@ -23,17 +23,8 @@ const config: Configuration = {
     rules: [
       {
         test: /\.ts$/,
-        exclude: [/node_modules/, /\.test\.ts$/, /\\test\\/],
-        use: [
-          {
-            loader: 'ts-loader',
-            options: {
-              compilerOptions: {
-                module: 'es6', // override `tsconfig.json` so that TypeScript emits native JavaScript modules.
-              },
-            },
-          },
-        ],
+        exclude: [/node_modules/],
+        use: 'ts-loader',
       },
     ],
   },
