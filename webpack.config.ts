@@ -12,7 +12,6 @@ const config: Configuration = {
     libraryTarget: 'commonjs2',
   },
   externals: {
-    eslint: 'eslint',
     vscode: 'commonjs vscode', // the vscode-module is created on-the-fly and must be excluded. Add other modules that cannot be webpack'ed, 📖 -> https://webpack.js.org/configuration/externals/
   },
   resolve: {
