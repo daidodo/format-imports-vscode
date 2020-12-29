@@ -8,7 +8,7 @@
   "version": "5.0.7",
   "license": "MIT",
   "scripts": {
-    "vscode:prepublish": "npm run webpack-prod",
+    "vscode:prepublish": "npm run clean && npm run compile",
     "webpack": "npm run clean && webpack --mode development",
     "webpack-prod": "npm run clean && webpack --mode production",
     "compile": "tsc -p ./",
