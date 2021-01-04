@@ -47,8 +47,6 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - [Thanks](#thanks)
 - [License](#license)
 
-<!-- Added by: zddai, at: Mon Jan  4 10:21:38 GMT 2021 -->
-
 <!--te-->
 
 # Features
