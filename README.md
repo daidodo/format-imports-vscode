@@ -68,8 +68,11 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - Auto format on save when `autoFormat` is set to `onSave` (this is the default).
 - Press shortcut keys, default to `Alt+Shift+S`.
 - Use `Sort Imports/Exports` command in the Command Palette (`Ctrl+Shift+P`).
+
   <img width="600" alt="1" src="https://user-images.githubusercontent.com/8170176/80916196-24598200-8d4f-11ea-99f5-208f46a9dcb5.png">
+
 - Right click on editor content and select `Sort Imports/Exports`.
+
   <img width="350" alt="image" src="https://user-images.githubusercontent.com/8170176/80916268-874b1900-8d4f-11ea-97de-f18c52bb54c6.png">
 
 # Extension Settings
