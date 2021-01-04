@@ -18,6 +18,7 @@
 - Add setting for one import per line. ([Link](https://gitlab.com/smartive-private/christoph/typescript-hero/-/issues/351))
 - Sort css imports to the bottom by default. ([Link](https://github.com/zeilmannnoah/orion-import-sorter/issues/1), [Ref](https://raygun.com/blog/css-preprocessors-examples/)).
 - Support other IDEs. ([Link](https://github.com/SoominHan/import-sorter/issues/63))
+- Webpack the extension. ([Link](https://github.com/znikola/vscode-es6-typescript-import-sorter/issues/52))
 
 ### Implementation
 
@@ -32,7 +33,6 @@
 ### DONE
 
 - ~~Do NOT sort script imports.~~
-- ~~Webpack the extension. ([Link](https://github.com/znikola/vscode-es6-typescript-import-sorter/issues/52))~~
 - ~~Do not remove `export {}` if there is no import/export left, see [here](https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/unambiguous.md).~~
 - ~~Support ESLint plugin import/order. ([Link](https://github.com/SoominHan/import-sorter/issues/65), [Rule](https://eslint.org/docs/rules/sort-imports), [Rule](https://eslint.org/docs/rules/no-duplicate-imports), [API](https://github.com/eslint/eslintrc/blob/a75bacd9a743a7bbcdb8c59e5d4f9de3dc8b0f20/lib/config-array-factory.js#L16))~~
 - ~~Organize Imports should sort by import name instead path. ([Link](https://github.com/microsoft/TypeScript/issues/23279), [Link](https://github.com/SoominHan/import-sorter/issues/40))~~

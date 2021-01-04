@@ -12,4 +12,3 @@ webpack.config.*
 tsconfig.tsbuildinfo
 .cache/
 .parcel-cache/
-node_modules/

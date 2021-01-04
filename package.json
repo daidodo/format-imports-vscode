@@ -12,7 +12,7 @@
     "webpack": "npm run clean && webpack --mode development",
     "webpack-prod": "npm run clean && webpack --mode production",
     "compile": "tsc -p ./",
-    "watch": "echo 1",
+    "watch": "tsc -watch -p ./",
     "pretest": "npm run compile",
     "test": "node ./out/test/runTest.js",
     "clean": "rm -rf out"
