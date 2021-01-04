@@ -27,6 +27,7 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 
 # Table of contents
 
+<!--Updated via `gh-md-toc --insert ./README.md`-->
 <!--ts-->
 
 - [Features](#features)
