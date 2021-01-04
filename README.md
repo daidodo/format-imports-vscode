@@ -25,7 +25,33 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 
 - Change config `EmptyLinesBetweenGroups` to `emptyLinesBetweenGroups`.
 
-## Features
+# Table of contents
+
+<!--ts-->
+
+- [Features](#features)
+- [How to use](#how-to-use)
+- [Extension Settings](#extension-settings)
+- [Configuration](#configuration)
+  - [ESLint Compatibility](#eslint-compatibility)
+- [Ignore files or declarations](#ignore-files-or-declarations)
+- [Maximum names per line](#maximum-names-per-line)
+  - [maxBindingNamesPerLine](#maxbindingnamesperline)
+  - [maxDefaultAndBindingNamesPerLine](#maxdefaultandbindingnamesperline)
+  - [maxExportNamesPerLine](#maxexportnamesperline)
+  - [maxNamesPerWrappedLine](#maxnamesperwrappedline)
+- [Grouping Rules](#grouping-rules)
+- [Sorting Rules](#sorting-rules)
+- [Unused Imports Removal](#unused-imports-removal)
+- [Contribution](#contribution)
+- [Thanks](#thanks)
+- [License](#license)
+
+<!-- Added by: zddai, at: Mon Jan  4 10:21:38 GMT 2021 -->
+
+<!--te-->
+
+# Features
 
 - Auto format imports and exports on save, or manually from command, shortcut or context menu.
 - Group and sort imports by custom rules, including sort by paths or names.
@@ -37,7 +63,7 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - Support [Type-Only imports/exports](https://devblogs.microsoft.com/typescript/announcing-typescript-3-8/#type-only-imports-exports).
 - Support multi-root projects.
 
-## How to use
+# How to use
 
 - Auto format on save when `autoFormat` is set to `onSave` (this is the default).
 - Press shortcut keys, default to `Alt+Shift+S`.
@@ -46,7 +72,7 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - Right click on editor content and select `Sort Imports/Exports`.
   <img width="350" alt="image" src="https://user-images.githubusercontent.com/8170176/80916268-874b1900-8d4f-11ea-97de-f18c52bb54c6.png">
 
-## Extension Settings
+# Extension Settings
 
 All VS Code settings under `"tsImportSorter"` section and their default values:
 
@@ -66,7 +92,7 @@ All VS Code settings under `"tsImportSorter"` section and their default values:
 // Disable formatting for files matching glob patterns.
 "tsImportSorter.configuration.excludeGlob": [],
 
-// Sort import statements by paths or first names. Valid values are 'paths' or 'names'.
+// Sort import declarations by paths or first names. Valid values are 'paths' or 'names'.
 "tsImportSorter.sortImportsBy": "paths",
 
 // Grouping rules for path patterns for imports. {} is the fall-back group.
@@ -103,7 +129,7 @@ All VS Code settings under `"tsImportSorter"` section and their default values:
 // Number of empty lines between groups (NOT sub-groups).
 "tsImportSorter.configuration.emptyLinesBetweenGroups": 1,
 
-// Number of empty lines after the last import statement.
+// Number of empty lines after the last import declaration.
 "tsImportSorter.configuration.emptyLinesAfterAllImports": 1,
 
 // Whether to remove the last slash when normalizing paths.
@@ -116,7 +142,7 @@ All VS Code settings under `"tsImportSorter"` section and their default values:
 "tsImportSorter.configuration.development.enableDebug": false,
 ```
 
-## Configuration
+# Configuration
 
 JS/TS Import/Export Sorter reads configurations from the following sources (in precedence from high to low):
 
@@ -145,7 +171,7 @@ Here are all configs in `package.json` under `"importSorter"` section and their 
     // Disable formatting for files matching glob patterns.
     "excludeGlob": [],
 
-    // Sort import statements by paths or first names. Valid values are 'paths' or 'names'.
+    // Sort import declarations by paths or first names. Valid values are 'paths' or 'names'.
     "sortImportsBy": "paths",
 
     // Grouping rules for path patterns for imports. {} is the fall-back group.
@@ -180,7 +206,7 @@ Here are all configs in `package.json` under `"importSorter"` section and their 
     // Number of empty lines between groups (NOT sub-groups).
     "emptyLinesBetweenGroups": 1,
 
-    // Number of empty lines after the last import statement.
+    // Number of empty lines after the last import declaration.
     "emptyLinesAfterAllImports": 1,
 
     // Whether to remove the last slash when normalizing paths.
@@ -201,7 +227,7 @@ Here are all configs in `package.json` under `"importSorter"` section and their 
     // When to add trailing a comma for the last name. Valid values are 'none' or 'multiLine'.
     "trailingComma": "multiLine",
 
-    // Whether to add semicolons at the end of statements.
+    // Whether to add semicolons at the end of declarations.
     "hasSemicolon": true,
 
     // Whether to end files with a new line.
@@ -224,7 +250,7 @@ Here are all configs in `package.json` under `"importSorter"` section and their 
 }
 ```
 
-### ESLint Compatibility
+## ESLint Compatibility
 
 If installed, [ESLint](https://eslint.org) and plugins rules will be detected and consulted, so that the result code will comply to the lint rules.
 
@@ -238,7 +264,7 @@ If there are conflicts between user config and ESLint rules, the ESLint rules wi
 
 For more info about how the conflicts are resolved, please check the [ESLint Compatibility](https://github.com/daidodo/tsimportsorter/wiki/ESLint-Compatibility) wiki.
 
-## Ignore files or import/export statements
+# Ignore files or declarations
 
 There are a few ways to exclude files from inspection:
 
@@ -254,7 +280,7 @@ There are a few ways to exclude files from inspection:
    - _All path patterns are **merged** together instead of overwritten._
    - _Use **forward-slash** (`/`) as path separator no matter in MacOS, \*nix or Windows._
 
-3. Add the following comment at the beginning of the source file and keep at least one empty line from the next statement:
+3. Add the following comment at the beginning of the source file and keep at least one empty line from the next declaration:
 
 ```ts
 // ts-import-sorter: disable
@@ -274,7 +300,7 @@ _Note:_
 
 - _Excluded paths and file disable-comments are **ignored** if the formatting is triggered manually, i.e. from Command Palette, editor context menu or shortcut._
 
-To exclude a specific `import` or `export` statement from formatting, please add the following as its leading or trailing comments:
+To exclude a specific `import` or `export` declaration from formatting, please add the following as its leading or trailing comments:
 
 ```ts
 // ts-import-sorter: disable
@@ -289,15 +315,15 @@ export { Excluded } from 'import/sorter'; /* ts-import-sorter: disable */
 
 To disable formatting for all exports, just set `"formatExports": false` in the config.
 
-## Maximum names per line
+# Maximum names per line
 
-Whether to wrap an `import` statement is decided by `maxBindingNamesPerLine` and `maxDefaultAndBindingNamesPerLine`, as well as `maxLineLength`.
+Whether to wrap an `import` declaration is decided by `maxBindingNamesPerLine` and `maxDefaultAndBindingNamesPerLine`, as well as `maxLineLength`.
 
-Whether to wrap an `export` statement is decided by `maxExportNamesPerLine`, as well as `maxLineLength`.
+Whether to wrap an `export` declaration is decided by `maxExportNamesPerLine`, as well as `maxLineLength`.
 
-### `maxBindingNamesPerLine`
+## `maxBindingNamesPerLine`
 
-For a statement importing only _binding names_, this value determines how many names are allowed before wrapping.
+For a declaration importing only _binding names_, this value determines how many names are allowed before wrapping.
 
 For example, if you set:
 
@@ -318,9 +344,9 @@ import {
 } from 'c';   // Wrapped as there are more than 2 names
 ```
 
-### `maxDefaultAndBindingNamesPerLine`
+## `maxDefaultAndBindingNamesPerLine`
 
-For a statement importing _default_ and _binding names_, this value determines how many names are allowed before wrapping.
+For a declaration importing _default_ and _binding names_, this value determines how many names are allowed before wrapping.
 
 For example, if you set:
 
@@ -339,9 +365,9 @@ import D, {
 } from 'c'; // Wrapped as there are more than 2 names
 ```
 
-### `maxExportNamesPerLine`
+## `maxExportNamesPerLine`
 
-For `export {}` or `export {} from 'x'` statements, this value determines how many names are allowed before wrapping.
+For `export {}` or `export {} from 'x'` declarations, this value determines how many names are allowed before wrapping.
 
 For example, if you set:
 
@@ -361,9 +387,9 @@ export {
 } from 'c'; // Wrapped as there are more than 2 names
 ```
 
-### `maxNamesPerWrappedLine`
+## `maxNamesPerWrappedLine`
 
-If an import/export statement is wrapped, this value decides how many names there are per line.
+If an import/export declaration is wrapped, this value decides how many names there are per line.
 
 For example, if you set:
 
@@ -387,7 +413,7 @@ export {
 }; // There are 2 names at most per wrapped line
 ```
 
-## Grouping Rules
+# Grouping Rules
 
 JS/TS Import/Export Sorter can put imports into different groups separated by empty lines (configurable), based on the rules defined in `groupRules`.
 
@@ -429,7 +455,7 @@ _Notes:_
 
 For a complete guide, please refer to [the Wiki](https://github.com/daidodo/tsimportsorter/wiki/Grouping-Rules).
 
-## Sorting Rules
+# Sorting Rules
 
 You can customize sorting rules for all imports and exports, or imports within a group, on:
 
@@ -471,9 +497,9 @@ You can also disable sorting by specifying `"none"` in `sortRules`, e.g.:
 }
 ```
 
-If you set `paths` to `"none"`, import statements will not be sorted.
+If you set `paths` to `"none"`, import declarations will not be sorted.
 
-If you set `names` to `"none"`, names will not be sorted within an import or export statement.
+If you set `names` to `"none"`, names will not be sorted within an import or export declaration.
 
 _Note:_
 
@@ -481,7 +507,7 @@ _Note:_
 
 For more details and how to construct your own rules, please read [the Wiki](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules).
 
-## Unused Imports Removal
+# Unused Imports Removal
 
 By default all unused imports are removed. In some cases you might want to keep the import even if it's unused. For example to keep `import tw from 'twin.macro'` you can do the following:
 
@@ -515,14 +541,14 @@ _Note:_
 "keepUnused": [".*"]
 ```
 
-## Contribution
+# Contribution
 
 This is a community project so your contribution will be well appreciated. Please refer to [CONTRIBUTING.md](https://github.com/daidodo/tsimportsorter/blob/master/CONTRIBUTING.md) for more information.
 
-## Thanks
+# Thanks
 
 The initiative came from [import-sorter](https://github.com/SoominHan/import-sorter).
 
-## License
+# License
 
 MIT

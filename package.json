@@ -138,7 +138,7 @@
             "names"
           ],
           "default": "paths",
-          "description": "Sort import statements by paths or first names."
+          "description": "Sort import declarations by paths or first names."
         },
         "tsImportSorter.configuration.groupRules": {
           "type": "array",
@@ -220,7 +220,7 @@
         "tsImportSorter.configuration.emptyLinesAfterAllImports": {
           "type": "number",
           "default": 1,
-          "description": "Number of empty lines after the last import statement."
+          "description": "Number of empty lines after the last import declaration."
         },
         "tsImportSorter.configuration.removeLastSlashInPath": {
           "type": "boolean",
