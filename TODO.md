@@ -2,6 +2,7 @@
 
 ### Features
 
+- Support for .vue files. ([Link](https://github.com/daidodo/tsimportsorter/issues/37), [Link](https://github.com/MLoughry/sort-typescript-imports/issues/31))
 - Sort numbers naturally. ([Example](https://github.com/lydell/eslint-plugin-simple-import-sort#sorting))
 - Support rules from [awesome-eslint](https://github.com/dustinspecker/awesome-eslint).
 - Support [benmosher/eslint-plugin-import](https://github.com/benmosher/eslint-plugin-import) rules. ([Link](https://github.com/SoominHan/import-sorter/issues/43), [exports-last](https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/exports-last.md), [import/order](https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/order.md))
@@ -12,7 +13,6 @@
 - Add a "sort-imports.on-focus-change" sorting option. ([Link](https://github.com/amatiasq/vsc-sort-imports/issues/30))
 - Format files within a directory.
 - Sort by file name instead of full path. ([Link](https://github.com/neilsoult/typescript-imports-sort/issues/3))
-- Support for .vue files. ([Link](https://github.com/MLoughry/sort-typescript-imports/issues/31))
 - Do not remove imports of commented code. ([Link](https://gitlab.com/smartive-private/christoph/typescript-hero/-/issues/460))
 - Prevent organize import on parse error. ([Link](https://gitlab.com/smartive-private/christoph/typescript-hero/-/issues/406))
 - Add setting for one import per line. ([Link](https://gitlab.com/smartive-private/christoph/typescript-hero/-/issues/351))
