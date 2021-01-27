@@ -23,11 +23,11 @@ If you see the following message, please click "View logs & Report" and follow t
 
 ### Debug Mode
 
-From v4.1.0, a "Debug Mode" was introduced which prints more logs to the output channel:
+From v4.1.0, a "Debug Mode" was introduced which prints detailed logs to the output channel:
 
 <img width="546" alt="1" src="https://user-images.githubusercontent.com/8170176/102225664-6222a980-3edf-11eb-9aea-12ae7fca8117.png">
 
-If you are experiencing some non-fatal issues, e.g. low performance or unexpected results, you can enable "Debug Mode" and send the logs in a new issue to help us root-cause it.
+If you are experiencing some non-fatal issues, e.g. low performance or unexpected results, you can enable "Debug Mode" and send logs in a new issue to help us root-cause it.
 
 <img width="522" alt="2" src="https://user-images.githubusercontent.com/8170176/102226074-d8bfa700-3edf-11eb-8e0b-8f6b4c8a62d5.png">
 
