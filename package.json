@@ -6,6 +6,7 @@
   "main": "./out/extension.js",
   "publisher": "dozerg",
   "version": "5.0.8",
+  "author": "Zhao DAI <daidodo@gmail.com>",
   "license": "MIT",
   "scripts": {
     "vscode:prepublish": "npm run clean && npm run compile",
