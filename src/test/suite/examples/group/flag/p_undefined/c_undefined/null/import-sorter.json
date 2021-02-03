@@ -1,5 +1,0 @@
-{
-  "groupRules": [
-    { "flags": null, "regex": "^[ab]", "subGroups": [{ "flags": null, "regex": "^b" }] }
-  ]
-}

@@ -1,8 +1,0 @@
-{
-  "groupRules": [
-    {
-      "regex": "^[abc]",
-      "subGroups": [{ "regex": "^[ab]", "subGroups": [{ "flags": "scripts", "regex": "^a" }] }]
-    }
-  ]
-}

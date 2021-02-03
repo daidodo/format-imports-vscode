@@ -1,3 +1,0 @@
-{
-  "groupRules": [{ "regex": "^[ab]", "subGroups": ["^b"] }]
-}

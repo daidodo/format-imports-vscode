@@ -1,5 +1,0 @@
-// only comments
-
-/**
- * More comments.
- */

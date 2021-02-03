@@ -1,4 +1,0 @@
-{
-  "sortImportsBy": "paths",
-  "groupRules": [[{ "sortImportsBy": "names" }, "^a"]]
-}

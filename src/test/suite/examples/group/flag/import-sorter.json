@@ -1,9 +1,0 @@
-{
-  "maxBindingNamesPerLine": 0,
-  "groupRules": [
-    { "flags": "single" },
-    { "flags": "scripts" },
-    { "flags": "multiple" },
-    { "flags": "namespace" }
-  ]
-}
