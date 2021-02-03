@@ -1,6 +1,8 @@
+import {
+  formatSource,
+  isFileExcludedByConfig,
+} from 'format-imports';
 import { URLSearchParams } from 'url';
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import {
   commands,
   ExtensionContext,
@@ -15,12 +17,10 @@ import {
   workspace,
 } from 'vscode';
 
-import { logger } from './common';
-import { isExcluded } from './config';
-import { formatSource } from './format';
 import {
   extensionsInfo,
   initLog,
+  logger,
   osInfo,
   resolveConfig,
   uninitLog,
@@ -93,7 +93,7 @@ function formatDocument(document: TextDocument, force?: boolean) {
     const allConfig = resolveConfig(fileUri, languageId, eol, force);
     const { config } = allConfig;
     if (!force && config.autoFormat !== 'onSave') return undefined;
-    if (isExcluded(fileName, config)) {
+    if (isFileExcludedByConfig(fileName, config)) {
       const { exclude, excludeGlob } = config;
       log.info('Excluding fileName:', fileName, 'via config:', { exclude, excludeGlob });
       return undefined;

@@ -1,3 +1,8 @@
+import {
+  Configuration,
+  mergeConfig,
+  resolveConfigForFile,
+} from 'format-imports';
 import cloneDeep from 'lodash.clonedeep';
 import {
   EndOfLine,
@@ -6,12 +11,7 @@ import {
   WorkspaceConfiguration,
 } from 'vscode';
 
-import { logger } from '../common';
-import {
-  Configuration,
-  loadConfig,
-  mergeConfig,
-} from '../config';
+import { logger } from './log';
 
 interface VscEditorConfig {
   detectIndentation: boolean;
@@ -29,7 +29,10 @@ export function resolveConfig(fileUri: Uri, languageId: string, eol: EndOfLine, 
   const { fsPath: fileName } = fileUri;
   log.info(`Start resolving configs for fileName: ${fileName}, languageId: ${languageId}`);
   const vscConfig = loadVscConfig(fileUri, languageId);
-  const { config: fileConfig, eslintConfig, tsCompilerOptions } = loadConfig(vscConfig, fileName);
+  const { config: fileConfig, eslintConfig, tsCompilerOptions } = resolveConfigForFile(
+    fileName,
+    vscConfig,
+  );
   const config = mergeConfig(fileConfig, {
     eol: eol === EndOfLine.CRLF ? 'CRLF' : 'LF',
     force,

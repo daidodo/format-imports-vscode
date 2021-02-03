@@ -28,6 +28,10 @@ export function uninitLog() {
   log4js.shutdown();
 }
 
+export function logger(category?: string) {
+  return log4js.getLogger(category);
+}
+
 function getAppenderModule(channel: OutputChannel): AppenderModule {
   return {
     configure(config: any, layouts: any) {
