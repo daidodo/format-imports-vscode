@@ -1,5 +1,5 @@
 import {
-  formatSource,
+  formatSourceFromFile,
   isFileExcludedByConfig,
 } from 'format-imports';
 import { URLSearchParams } from 'url';
@@ -90,8 +90,7 @@ function formatDocument(document: TextDocument, force?: boolean) {
   const { uri: fileUri, languageId, eol } = document;
   const { fsPath: fileName } = fileUri;
   try {
-    const allConfig = resolveConfig(fileUri, languageId, eol, force);
-    const { config } = allConfig;
+    const config = resolveConfig(fileUri, languageId, eol, force);
     if (!force && config.autoFormat !== 'onSave') return undefined;
     if (isFileExcludedByConfig(fileName, config)) {
       const { exclude, excludeGlob } = config;
@@ -100,7 +99,7 @@ function formatDocument(document: TextDocument, force?: boolean) {
     }
     log.debug('Start formatting fileName:', fileName);
     const sourceText = document.getText();
-    const newText = formatSource(fileName, sourceText, allConfig);
+    const newText = formatSourceFromFile(sourceText, fileName, config);
     const ret = newText === sourceText ? undefined : newText;
     log.info(`Finished format${ret === undefined ? ' with no-op.' : '.'}`);
     return ret;

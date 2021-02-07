@@ -29,16 +29,11 @@ export function resolveConfig(fileUri: Uri, languageId: string, eol: EndOfLine, 
   const { fsPath: fileName } = fileUri;
   log.info(`Start resolving configs for fileName: ${fileName}, languageId: ${languageId}`);
   const vscConfig = loadVscConfig(fileUri, languageId);
-  const { config: fileConfig, eslintConfig, tsCompilerOptions } = resolveConfigForFile(
-    fileName,
-    vscConfig,
-  );
-  const config = mergeConfig(fileConfig, {
+  const config = mergeConfig(vscConfig, {
     eol: eol === EndOfLine.CRLF ? 'CRLF' : 'LF',
     force,
   });
-  log.debug('Finish resolving configs.');
-  return { config, eslintConfig, tsCompilerOptions };
+  return resolveConfigForFile(fileName, config);
 }
 
 function loadVscConfig(fileUri: Uri, languageId: string): Configuration {
