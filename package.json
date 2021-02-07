@@ -13,10 +13,11 @@
     "webpack": "npm run clean && webpack --mode development",
     "webpack-prod": "npm run clean && webpack --mode production",
     "compile": "tsc",
-    "watch": "tsc -watch -p ./",
+    "compile:watch": "tsc -watch",
     "pretest": "npm run compile",
     "test": "node ./out/test/runTest.js",
-    "clean": "rm -rf out"
+    "clean": "rm -rf out",
+    "prepublishOnly": "cat publish/is/prevented"
   },
   "homepage": "https://github.com/daidodo/tsimportsorter",
   "repository": {
@@ -158,7 +159,7 @@
               "object"
             ]
           },
-          "markdownDescription": "Grouping rules for path patterns for imports. See the [wiki](https://github.com/daidodo/tsimportsorter/wiki/Grouping-Rules) for more details."
+          "markdownDescription": "Grouping rules for path patterns for imports. See the [wiki](https://github.com/daidodo/format-imports/wiki/Grouping-Rules) for more details."
         },
         "tsImportSorter.configuration.sortRules.paths": {
           "type": [
@@ -179,7 +180,7 @@
               "_"
             ]
           },
-          "markdownDescription": "Sorting rule for import paths. See the [wiki](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules) for more details."
+          "markdownDescription": "Sorting rule for import paths. See the [wiki](https://github.com/daidodo/format-imports/wiki/Sorting-Rules) for more details."
         },
         "tsImportSorter.configuration.sortRules.names": {
           "type": [
@@ -200,7 +201,7 @@
               "_"
             ]
           },
-          "markdownDescription": "Sorting rule for imported/exported names. See the [wiki](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules) for more details."
+          "markdownDescription": "Sorting rule for imported/exported names. See the [wiki](https://github.com/daidodo/format-imports/wiki/Sorting-Rules) for more details."
         },
         "tsImportSorter.configuration.keepUnused": {
           "type": "array",
@@ -262,7 +263,7 @@
     }
   },
   "dependencies": {
-    "format-imports": "^0.1.1",
+    "format-imports": "^1.0.2",
     "lodash.clonedeep": "^4.5.0",
     "log4js": "^6.3.0"
   },

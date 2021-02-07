@@ -553,4 +553,4 @@ The initiative came from [import-sorter](https://github.com/SoominHan/import-sor
 
 # License
 
-MIT
+MIT © Zhao DAI <daidodo@gmail.com>

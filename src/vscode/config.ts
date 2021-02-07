@@ -1,5 +1,5 @@
 import {
-  Configuration,
+  Configuration as BaseConfig,
   mergeConfig,
   resolveConfigForFile,
 } from 'format-imports';
@@ -12,6 +12,13 @@ import {
 } from 'vscode';
 
 import { logger } from './log';
+
+interface Configuration extends BaseConfig {
+  readonly autoFormat?: 'off' | 'onSave';
+  readonly development?: {
+    readonly enableDebug?: boolean;
+  };
+}
 
 interface VscEditorConfig {
   detectIndentation: boolean;
