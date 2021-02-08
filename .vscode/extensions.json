@@ -5,6 +5,7 @@
     "dbaeumer.vscode-eslint",
     "dozerg.tsimportsorter",
     "esbenp.prettier-vscode",
-    "EditorConfig.EditorConfig"
+    "EditorConfig.EditorConfig",
+    "yzhang.markdown-all-in-one"
   ]
 }
