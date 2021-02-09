@@ -34,22 +34,22 @@ interface VscFilesConfig {
 export function resolveConfig(fileUri: Uri, languageId: string, eol: EndOfLine, force?: boolean) {
   const log = logger('vscode.resolveConfig');
   const { fsPath: fileName } = fileUri;
-  log.info(`Start resolving configs for fileName: ${fileName}, languageId: ${languageId}`);
+  log.info('Resolving config for fileName:', fileName, 'languageId:', languageId);
   const vscConfig = loadVscConfig(fileUri, languageId);
   const config = mergeConfig(vscConfig, {
     eol: eol === EndOfLine.CRLF ? 'CRLF' : 'LF',
     force,
   });
+  log.debug('Loaded VSCode config');
   return resolveConfigForFile(fileName, config);
 }
 
 function loadVscConfig(fileUri: Uri, languageId: string): Configuration {
-  const log = logger('config.loadVscConfig');
-  log.debug(`Start loading VSC config for fileName: ${fileUri.fsPath}, languageId: ${languageId}`);
+  const log = logger('vscode.loadVscConfig');
+  log.debug('Loading VSCode config for fileName:', fileUri.fsPath);
   const wsConfig = workspaceConfig(fileUri);
   const general = workspace.getConfiguration(undefined, fileUri);
   const langSpec = workspace.getConfiguration(`[${languageId}]`, fileUri);
-  log.debug('Finish loading VSC config');
   return mergeConfig(wsConfig, transform(general), transform(langSpec));
 }
 

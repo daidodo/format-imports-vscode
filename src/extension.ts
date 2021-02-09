@@ -85,24 +85,25 @@ const ISSUE_URL =
   'https://github.com/daidodo/tsimportsorter/issues/new?assignees=&labels=&template=exception_report.md&';
 
 function formatDocument(document: TextDocument, force?: boolean) {
-  const log = logger('formatDocument');
+  const log = logger('vscode.formatDocument');
   if (!isSupported(document)) return undefined;
   const { uri: fileUri, languageId, eol } = document;
   const { fsPath: fileName } = fileUri;
   try {
     const config = resolveConfig(fileUri, languageId, eol, force);
-    if (!force && config.autoFormat !== 'onSave') return undefined;
-    if (isFileExcludedByConfig(fileName, config)) {
-      const { exclude, excludeGlob } = config;
-      log.info('Excluding fileName:', fileName, 'via config:', { exclude, excludeGlob });
+    if (!force && config.autoFormat !== 'onSave') {
+      log.info('Auto format is', config.autoFormat);
       return undefined;
     }
-    log.debug('Start formatting fileName:', fileName);
+    if (isFileExcludedByConfig(fileName, config)) {
+      const { exclude, excludeGlob } = config;
+      log.info('Excluded fileName:', fileName, 'via config:', { exclude, excludeGlob });
+      return undefined;
+    }
     const sourceText = document.getText();
     const newText = formatSourceFromFile(sourceText, fileName, config);
-    const ret = newText === sourceText ? undefined : newText;
-    log.info(`Finished format${ret === undefined ? ' with no-op.' : '.'}`);
-    return ret;
+    log.info('Finished', newText === undefined ? 'format with no-op' : 'format');
+    return newText;
   } catch (e: unknown) {
     log.error('Found exception:', e);
     void window

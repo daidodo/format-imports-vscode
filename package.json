@@ -13,7 +13,7 @@
     "webpack": "npm run clean && webpack --mode development",
     "webpack-prod": "npm run clean && webpack --mode production",
     "compile": "tsc",
-    "compile:watch": "tsc -watch",
+    "watch": "tsc -watch",
     "pretest": "npm run compile",
     "test": "node ./out/test/runTest.js",
     "clean": "rm -rf out",
@@ -263,7 +263,7 @@
     }
   },
   "dependencies": {
-    "format-imports": "^1.0.3",
+    "format-imports": "^1.0.6",
     "lodash.clonedeep": "^4.5.0",
     "log4js": "^6.3.0"
   },
