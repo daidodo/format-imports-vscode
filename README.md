@@ -13,17 +13,11 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - [Install Plugin](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter)
 - [Open Issues](https://github.com/daidodo/tsimportsorter/issues)
 
-## [5.0] Release Notes
-
-### Added
-
-- Add config `removeLastSlashInPath` and `removeLastIndexInPath`.
-- Respect [import/newline-after-import](https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/newline-after-import.md) rules.
-- Respect [import/no-useless-path-segments](https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-useless-path-segments.md) rules.
+## [6.0.0] - 2021-02-10
 
 ### Changed
 
-- Change config `EmptyLinesBetweenGroups` to `emptyLinesBetweenGroups`.
+- Separate core formatting logic as CLI and library in [Format-Imports](https://github.com/daidodo/format-imports).
 
 # Table of contents <!-- omit in toc -->
 

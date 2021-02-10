@@ -17,6 +17,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -->
 
+## [6.0.0] - 2021-02-10
+
+### Changed
+
+- Separate core formatting logic as CLI and library in [Format-Imports](https://github.com/daidodo/format-imports).
+
 ## [5.0.0] - 2020-12-21
 
 ### Added
