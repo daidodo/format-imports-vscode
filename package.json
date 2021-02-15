@@ -234,25 +234,47 @@
           "default": false,
           "description": "Whether to remove the last 'index' when normalizing paths."
         },
-        "tsImportSorter.configuration.wrappingStyle.maxBindingNamesPerLine": {
-          "type": "number",
-          "default": 1,
-          "description": "Max binding names per line before wrapping for imports. 0 for no limit."
-        },
-        "tsImportSorter.configuration.wrappingStyle.maxDefaultAndBindingNamesPerLine": {
-          "type": "number",
-          "default": 2,
-          "description": "Max default and binding names per line before wrapping for imports. 0 for no limit."
-        },
-        "tsImportSorter.configuration.wrappingStyle.maxExportNamesPerLine": {
-          "type": "number",
-          "default": 0,
-          "description": "Max binding names per line before wrapping for exports. 0 for no limit."
-        },
-        "tsImportSorter.configuration.wrappingStyle.maxNamesPerWrappedLine": {
-          "type": "number",
-          "default": 1,
-          "description": "Max names on wrapped lines for imports/exports. 0 for no limit."
+        "tsImportSorter.configuration.wrappingStyle": {
+          "oneOf": [
+            {
+              "type": "string",
+              "enum": [
+                "prettier"
+              ]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "maxBindingNamesPerLine": {
+                  "type": "number",
+                  "default": 1,
+                  "description": "Max binding names per line before wrapping for imports. 0 for no limit."
+                },
+                "maxDefaultAndBindingNamesPerLine": {
+                  "type": "number",
+                  "default": 2,
+                  "description": "Max default and binding names per line before wrapping for imports. 0 for no limit."
+                },
+                "maxExportNamesPerLine": {
+                  "type": "number",
+                  "default": 0,
+                  "description": "Max binding names per line before wrapping for exports. 0 for no limit."
+                },
+                "maxNamesPerWrappedLine": {
+                  "type": "number",
+                  "default": 1,
+                  "description": "Max names on wrapped lines for imports/exports. 0 for no limit."
+                }
+              }
+            }
+          ],
+          "default": {
+            "maxBindingNamesPerLine": 1,
+            "maxDefaultAndBindingNamesPerLine": 2,
+            "maxExportNamesPerLine": 0,
+            "maxNamesPerWrappedLine": 1
+          },
+          "markdownDescription": "Line wrapping styles. See the [wiki](https://github.com/daidodo/format-imports/wiki/Line-Wrapping-Style) for more details."
         },
         "tsImportSorter.configuration.development.enableDebug": {
           "type": "boolean",
