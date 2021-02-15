@@ -234,22 +234,22 @@
           "default": false,
           "description": "Whether to remove the last 'index' when normalizing paths."
         },
-        "tsImportSorter.configuration.maxBindingNamesPerLine": {
+        "tsImportSorter.configuration.wrappingStyle.maxBindingNamesPerLine": {
           "type": "number",
           "default": 1,
           "description": "Max binding names per line before wrapping for imports. 0 for no limit."
         },
-        "tsImportSorter.configuration.maxDefaultAndBindingNamesPerLine": {
+        "tsImportSorter.configuration.wrappingStyle.maxDefaultAndBindingNamesPerLine": {
           "type": "number",
           "default": 2,
           "description": "Max default and binding names per line before wrapping for imports. 0 for no limit."
         },
-        "tsImportSorter.configuration.maxExportNamesPerLine": {
+        "tsImportSorter.configuration.wrappingStyle.maxExportNamesPerLine": {
           "type": "number",
           "default": 0,
           "description": "Max binding names per line before wrapping for exports. 0 for no limit."
         },
-        "tsImportSorter.configuration.maxNamesPerWrappedLine": {
+        "tsImportSorter.configuration.wrappingStyle.maxNamesPerWrappedLine": {
           "type": "number",
           "default": 1,
           "description": "Max names on wrapped lines for imports/exports. 0 for no limit."
@@ -263,7 +263,7 @@
     }
   },
   "dependencies": {
-    "format-imports": "^1.0.6",
+    "format-imports": "^2.0.0",
     "lodash.clonedeep": "^4.5.0",
     "log4js": "^6.3.0"
   },

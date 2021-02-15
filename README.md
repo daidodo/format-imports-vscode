@@ -13,11 +13,23 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - [Install Plugin](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter)
 - [Open Issues](https://github.com/daidodo/tsimportsorter/issues)
 
-## [6.0.0] - 2021-02-10
+## [7.0] Release Notes
 
-### Changed
+### Added
 
-- Separate core formatting logic as CLI and library in [Format-Imports](https://github.com/daidodo/format-imports).
+- Config `wrappingStyle` which can be either a preset style `"prettier"` or an object of:
+  - `maxBindingNamesPerLine`
+  - `maxDefaultAndBindingNamesPerLine`
+  - `maxExportNamesPerLine`
+  - `maxNamesPerWrappedLine`
+
+### Removed
+
+- Top level config:
+  - `maxBindingNamesPerLine`
+  - `maxDefaultAndBindingNamesPerLine`
+  - `maxExportNamesPerLine`
+  - `maxNamesPerWrappedLine`
 
 # Table of contents <!-- omit in toc -->
 
@@ -97,16 +109,16 @@ All VS Code settings under `"tsImportSorter"` section and their default values:
 "tsImportSorter.configuration.keepUnused": [],
 
 // Max binding names per line before wrapping for imports. 0 for no limit.
-"tsImportSorter.configuration.maxBindingNamesPerLine": 1,
+"tsImportSorter.configuration.wrappingStyle.maxBindingNamesPerLine": 1,
 
 // Max default and binding names per line before wrapping for imports. 0 for no limit.
-"tsImportSorter.configuration.maxDefaultAndBindingNamesPerLine": 2,
+"tsImportSorter.configuration.wrappingStyle.maxDefaultAndBindingNamesPerLine": 2,
 
 // Max binding names per line before wrapping for exports. 0 for no limit.
-"tsImportSorter.configuration.maxExportNamesPerLine": 0,
+"tsImportSorter.configuration.wrappingStyle.maxExportNamesPerLine": 0,
 
 // Max names on wrapped lines. 0 for no limit.
-"tsImportSorter.configuration.maxNamesPerWrappedLine": 1,
+"tsImportSorter.configuration.wrappingStyle.maxNamesPerWrappedLine": 1,
 
 // Number of empty lines between groups (NOT sub-groups).
 "tsImportSorter.configuration.emptyLinesBetweenGroups": 1,
