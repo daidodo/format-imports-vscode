@@ -35,9 +35,10 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 
 - [Features](#features)
 - [How to use](#how-to-use)
-- [Extension Settings](#extension-settings)
 - [Configuration](#configuration)
-  - [ESLint Compatibility](#eslint-compatibility)
+  - [VSCode Settings](#vscode-settings)
+  - [Config Files](#config-files)
+- [ESLint Compatibility](#eslint-compatibility)
 - [Contribution](#contribution)
 - [Thanks](#thanks)
 - [License](#license)
@@ -66,9 +67,23 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 
   <img width="350" alt="image" src="https://user-images.githubusercontent.com/8170176/80916268-874b1900-8d4f-11ea-97de-f18c52bb54c6.png">
 
-# Extension Settings
+# Configuration
 
-All VS Code settings under `"tsImportSorter"` section and their default values:
+JS/TS Import/Export Sorter reads configurations from the following sources (in precedence from high to low):
+
+- [ESLint configuration](https://eslint.org/docs/user-guide/configuring) if installed.
+- `"importSorter"` section in `package.json`
+- `import-sorter.json` (File name is configurable)
+- [Prettier configuration](https://github.com/prettier/prettier-vscode#configuration) if installed
+- `.editorconfig`
+- VS Code `"editor"` and `"files"` settings
+- VS Code `"tsImportSorter"` settings
+
+Configs can be set in VSCode User Settings for the extension or config files.
+
+## VSCode Settings
+
+The following settings are available in VSCode User Settings for JS/TS Import/Export Sorter:
 
 ```json
 // Configuration file name.
@@ -136,21 +151,39 @@ All VS Code settings under `"tsImportSorter"` section and their default values:
 "tsImportSorter.configuration.development.enableDebug": false,
 ```
 
-# Configuration
+## Config Files
 
-JS/TS Import/Export Sorter reads configurations from the following sources (in precedence from high to low):
+All the above settings EXCEPT `development.enableDebug`, plus more in [Configuration](https://github.com/daidodo/format-imports/blob/main/docs/interfaces/configuration.md) are also available in `import-sorter.json` or `package.json` under `"importSorter` section.
 
-- [ESLint configuration](https://eslint.org/docs/user-guide/configuring) if installed.
-- `"importSorter"` section in `package.json`
-- `import-sorter.json` (File name is configurable)
-- [Prettier configuration](https://github.com/prettier/prettier-vscode#configuration) if installed
-- `.editorconfig`
-- VS Code `"editor"` and `"files"` settings
-- VS Code `"tsImportSorter"` settings
+For examples:
 
-Please refer to [Configuration](https://github.com/daidodo/format-imports/blob/main/docs/interfaces/configuration.md) interface for all fields can be set in `import-sorter.json` and `package.json` under `"importSorter"` section.
+_import-sorter.json:_
 
-## ESLint Compatibility
+```json
+{
+  "autoFormat": "onSave",
+  "wrappingStyle": {
+    "maxBindingNamesPerLine": 2
+  }
+}
+```
+
+Or
+
+_package.json:_
+
+```json
+{
+  "importSorter": {
+    "autoFormat": "onSave",
+    "wrappingStyle": {
+      "maxBindingNamesPerLine": 2
+    }
+  }
+}
+```
+
+# ESLint Compatibility
 
 If installed, [ESLint](https://eslint.org) and plugins rules will be detected and consulted, so that the result code will comply to the lint rules.
 
