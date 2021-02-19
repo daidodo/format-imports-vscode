@@ -161,47 +161,87 @@
           },
           "markdownDescription": "Grouping rules for path patterns for imports. See the [wiki](https://github.com/daidodo/format-imports/wiki/Grouping-Rules) for more details."
         },
-        "tsImportSorter.configuration.sortRules.paths": {
-          "type": [
-            "string",
-            "array"
+        "tsImportSorter.configuration.sortRules": {
+          "oneOf": [
+            {
+              "type": "string",
+              "enum": [
+                "none"
+              ]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "paths": {
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "none"
+                      ]
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "enum": [
+                          "az",
+                          "AZ",
+                          "aA",
+                          "Aa",
+                          "_"
+                        ]
+                      }
+                    }
+                  ],
+                  "default": [
+                    "_",
+                    "aA"
+                  ],
+                  "description": "Sorting rule for import paths."
+                },
+                "names": {
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "none"
+                      ]
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "enum": [
+                          "az",
+                          "AZ",
+                          "aA",
+                          "Aa",
+                          "_"
+                        ]
+                      }
+                    }
+                  ],
+                  "default": [
+                    "_",
+                    "aA"
+                  ],
+                  "description": "Sorting rule for imported/exported names."
+                }
+              }
+            }
           ],
-          "default": [
-            "_",
-            "aA"
-          ],
-          "items": {
-            "type": "string",
-            "enum": [
-              "az",
-              "AZ",
-              "aA",
-              "Aa",
-              "_"
+          "default": {
+            "paths": [
+              "_",
+              "aA"
+            ],
+            "names": [
+              "_",
+              "aA"
             ]
           },
-          "markdownDescription": "Sorting rule for import paths. See the [wiki](https://github.com/daidodo/format-imports/wiki/Sorting-Rules) for more details."
-        },
-        "tsImportSorter.configuration.sortRules.names": {
-          "type": [
-            "string",
-            "array"
-          ],
-          "default": [
-            "_",
-            "aA"
-          ],
-          "items": {
-            "type": "string",
-            "enum": [
-              "az",
-              "AZ",
-              "aA",
-              "Aa",
-              "_"
-            ]
-          },
-          "markdownDescription": "Sorting rule for imported/exported names. See the [wiki](https://github.com/daidodo/format-imports/wiki/Sorting-Rules) for more details."
+          "markdownDescription": "Sorting rule for paths and names. See the [wiki](https://github.com/daidodo/format-imports/wiki/Sorting-Rules) for more details."
         },
         "tsImportSorter.configuration.keepUnused": {
           "type": "array",
@@ -285,7 +325,7 @@
     }
   },
   "dependencies": {
-    "format-imports": "^2.0.0",
+    "format-imports": "^2.1.1",
     "lodash.clonedeep": "^4.5.0",
     "log4js": "^6.3.0"
   },

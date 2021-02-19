@@ -13,23 +13,11 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - [Install Plugin](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter)
 - [Open Issues](https://github.com/daidodo/tsimportsorter/issues)
 
-## [7.0] Release Notes
+## [7.1] Release Notes
 
-### Added
+### Changed
 
-- Config `wrappingStyle` which can be either a preset style `"prettier"` or an object of:
-  - `maxBindingNamesPerLine`
-  - `maxDefaultAndBindingNamesPerLine`
-  - `maxExportNamesPerLine`
-  - `maxNamesPerWrappedLine`
-
-### Removed
-
-- Top level config:
-  - `maxBindingNamesPerLine`
-  - `maxDefaultAndBindingNamesPerLine`
-  - `maxExportNamesPerLine`
-  - `maxNamesPerWrappedLine`
+- Config `sortRules` can also be `"none"` which means both `paths` and `names` are `"none"`.
 
 # Table of contents <!-- omit in toc -->
 
