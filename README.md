@@ -69,7 +69,7 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 
 # Configuration
 
-JS/TS Import/Export Sorter reads configurations from the following sources (in precedence from high to low):
+The extension reads configurations from the following sources (in precedence from high to low):
 
 - [ESLint configuration](https://eslint.org/docs/user-guide/configuring) if installed.
 - `"importSorter"` section in `package.json`
@@ -83,7 +83,7 @@ Configs can be set in VSCode User Settings for the extension or config files.
 
 ## VSCode Settings
 
-The following settings are available in VSCode User Settings for JS/TS Import/Export Sorter:
+The following settings (and default values) are available in VSCode User Settings for this extension:
 
 ```json
 // Configuration file name.
@@ -162,6 +162,7 @@ _import-sorter.json:_
 ```json
 {
   "autoFormat": "onSave",
+  "quoteMark": "single",
   "wrappingStyle": {
     "maxBindingNamesPerLine": 2
   }
@@ -176,6 +177,7 @@ _package.json:_
 {
   "importSorter": {
     "autoFormat": "onSave",
+    "quoteMark": "single",
     "wrappingStyle": {
       "maxBindingNamesPerLine": 2
     }
