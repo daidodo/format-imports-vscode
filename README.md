@@ -187,7 +187,7 @@ Please refer to [CONTRIBUTING.md](CONTRIBUTING.md) for more information.
 
 # Thanks
 
-The initiative came from [import-sorter](https://github.com/SoominHan/import-sorter).
+The inspiration came from [import-sorter](https://github.com/SoominHan/import-sorter).
 
 # License
 
