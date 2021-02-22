@@ -13,11 +13,11 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - [Install Plugin](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter)
 - [Open Issues](https://github.com/daidodo/tsimportsorter/issues)
 
-## [7.1] Release Notes
+## [7.2] Release Notes
 
-### Changed
+### Added
 
-- Config `sortRules` can also be `"none"` which means both `paths` and `names` are `"none"`.
+- Add `importType` to `GroupRule` to distinguish `import` and `import type`.
 
 # Table of contents <!-- omit in toc -->
 
