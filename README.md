@@ -67,14 +67,13 @@ The extension reads configurations from the following sources (in precedence fro
 - VS Code `"editor"` and `"files"` settings
 - VS Code `"tsImportSorter"` settings
 
-Configs can be set in VSCode User Settings for the extension or config files.
-
 ## VSCode Settings
 
 The following settings (and default values) are available in VSCode User Settings for this extension:
 
 ```json
 // Configuration file name.
+// Not available in 'import-sorter.json' or 'package.json'.
 "tsImportSorter.configuration.configurationFileName": "import-sorter.json",
 
 // When to auto format imports/exports. Valid values are 'off' or 'onSave'.
@@ -93,6 +92,7 @@ The following settings (and default values) are available in VSCode User Setting
 "tsImportSorter.sortImportsBy": "paths",
 
 // Grouping rules for path patterns for imports. {} is the fall-back group.
+// Wiki: https://github.com/daidodo/format-imports/wiki/Grouping-Rules
 "tsImportSorter.configuration.groupRules": [
   "^react(-dom)?$",
   "^@angular/",
@@ -102,26 +102,36 @@ The following settings (and default values) are available in VSCode User Setting
   "^[.]"
 ],
 
-// Sorting rule for import paths. Valid values are 'none' or string array.
-"tsImportSorter.configuration.sortRules.paths": ["_", "aA"],
+// Global Sorting rules. Valid values are 'none' or an object.
+// Wiki: https://github.com/daidodo/format-imports/wiki/Sorting-Rules
+"tsImportSorter.configuration.sortRules": {
 
-// Sorting rule for imported/exported names. Valid values are 'none' or string array.
-"tsImportSorter.configuration.sortRules.names": ["_", "aA"],
+  // Sorting rule for import paths. Valid values are 'none' or an array.
+  "paths": ["_", "aA"],
+
+  // Sorting rule for imported/exported names. Valid values are 'none' or an array.
+  "names": ["_", "aA"]
+}
 
 // By default all unused imports are removed. Keep some or all them around with this setting if you need.
 "tsImportSorter.configuration.keepUnused": [],
 
-// Max binding names per line before wrapping for imports. 0 for no limit.
-"tsImportSorter.configuration.wrappingStyle.maxBindingNamesPerLine": 1,
+// Line wrapping style. Valid values are 'prettier' or an object.
+// Wiki: https://github.com/daidodo/format-imports/wiki/Line-Wrapping-Style
+"tsImportSorter.configuration.wrappingStyle": {
 
-// Max default and binding names per line before wrapping for imports. 0 for no limit.
-"tsImportSorter.configuration.wrappingStyle.maxDefaultAndBindingNamesPerLine": 2,
+  // Max binding names per line before wrapping for imports. 0 for no limit.
+  "maxBindingNamesPerLine": 1,
 
-// Max binding names per line before wrapping for exports. 0 for no limit.
-"tsImportSorter.configuration.wrappingStyle.maxExportNamesPerLine": 0,
+  // Max default and binding names per line before wrapping for imports. 0 for no limit.
+  "maxDefaultAndBindingNamesPerLine": 2,
 
-// Max names on wrapped lines. 0 for no limit.
-"tsImportSorter.configuration.wrappingStyle.maxNamesPerWrappedLine": 1,
+  // Max binding names per line before wrapping for exports. 0 for no limit.
+  "maxExportNamesPerLine": 0,
+
+  // Max names on wrapped lines. 0 for no limit.
+  "maxNamesPerWrappedLine": 1
+}
 
 // Number of empty lines between groups (NOT sub-groups).
 "tsImportSorter.configuration.emptyLinesBetweenGroups": 1,
@@ -135,13 +145,14 @@ The following settings (and default values) are available in VSCode User Setting
 // Whether to remove the last 'index' when normalizing paths.
 "tsImportSorter.configuration.removeLastIndexInPath": false,
 
-// Whether to enable debug mode and print detailed logs to the output channel.
+// Whether to enable debug mode and write detailed logs to VSCode output channel.
+// Not available in 'import-sorter.json' or 'package.json'.
 "tsImportSorter.configuration.development.enableDebug": false,
 ```
 
 ## Config Files
 
-All the above settings EXCEPT `development.enableDebug`, plus more in [Configuration](https://github.com/daidodo/format-imports/blob/main/docs/interfaces/configuration.md) are also available in `import-sorter.json` or `package.json` under `"importSorter` section.
+Most of the above settings, plus more in [Configuration](https://github.com/daidodo/format-imports/blob/main/docs/interfaces/configuration.md) are also available in `import-sorter.json` or `package.json` under `"importSorter` section.
 
 For examples:
 
@@ -177,7 +188,7 @@ _package.json:_
 
 If installed, [ESLint](https://eslint.org) and plugins rules will be detected and consulted, so that the result code will comply to the lint rules.
 
-For more info about how it works, please check the [ESLint Compatibility](https://github.com/daidodo/format-imports/wiki/ESLint-Compatibility) wiki.
+For how it works, please check the [ESLint Compatibility](https://github.com/daidodo/format-imports/wiki/ESLint-Compatibility) wiki.
 
 # Contribution
 
