@@ -38,4 +38,4 @@ All source files are in `src/`:
 - `extension.ts`: Main entry point of the extension, including commands, event handling, etc.
 - `vscode/`: All code relating to VS Code Extension APIs, including user/workspace configurations, output channel logs, etc.
 
-This extension is built on [Format-Imports](https://github.com/daidodo/format-imports) APIs. Please check out its [CONTRIBUTING.md](https://github.com/daidodo/format-imports/blob/master/CONTRIBUTING.md) for how the formatting works.
+This extension is built on [Format-Imports](https://github.com/daidodo/format-imports) APIs. Please check out its [CONTRIBUTING.md](https://github.com/daidodo/format-imports/blob/main/CONTRIBUTING.md) for how the formatting works.
