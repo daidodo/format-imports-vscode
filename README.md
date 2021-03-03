@@ -71,7 +71,7 @@ The extension reads configurations from the following sources (in precedence fro
 
 The following settings (and default values) are available in VSCode User Settings for this extension:
 
-```json
+```js
 // Configuration file name.
 // Not available in 'import-sorter.json' or 'package.json'.
 "tsImportSorter.configuration.configurationFileName": "import-sorter.json",
