@@ -11,7 +11,7 @@
 Automatically format **imports** and **exports** for **JavaScript** and **TypeScript** in VSCode.
 
 - [Install Plugin](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter)
-- [Open Issues](https://github.com/daidodo/tsimportsorter/issues)
+- [Open Issues](https://github.com/daidodo/format-imports-vscode/issues)
 
 ## [7.2] Release Notes
 

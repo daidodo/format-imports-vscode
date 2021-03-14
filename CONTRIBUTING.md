@@ -14,10 +14,10 @@ Thank you for helping improve the extension!
 
 Please use the following links to:
 
-- [Request a New Feature](https://github.com/daidodo/tsimportsorter/issues/new?assignees=&labels=&template=feature_request.md&title=), or
-- [Report a Bug](https://github.com/daidodo/tsimportsorter/issues/new?assignees=&labels=&template=bug_report.md&title=)
+- [Request a New Feature](https://github.com/daidodo/format-imports-vscode/issues/new?assignees=&labels=&template=feature_request.md&title=), or
+- [Report a Bug](https://github.com/daidodo/format-imports-vscode/issues/new?assignees=&labels=&template=bug_report.md&title=)
 
-If you see the following message, please click "View logs & Report" and follow the instructions to [Report an Exception](https://github.com/daidodo/tsimportsorter/issues/new?assignees=&labels=&template=exception_report.md&title=).
+If you see the following message, please click "View logs & Report" and follow the instructions to [Report an Exception](https://github.com/daidodo/format-imports-vscode/issues/new?assignees=&labels=&template=exception_report.md&title=).
 
 <img width="400" alt="image" src="https://user-images.githubusercontent.com/8170176/82117797-9a57e300-976a-11ea-9aab-6dabb3a43abf.png">
 

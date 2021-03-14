@@ -82,7 +82,7 @@ function sortImportsBeforeSavingDocument(event: TextDocumentWillSaveEvent) {
 }
 
 const ISSUE_URL =
-  'https://github.com/daidodo/tsimportsorter/issues/new?assignees=&labels=&template=exception_report.md&';
+  'https://github.com/daidodo/format-imports-vscode/issues/new?assignees=&labels=&template=exception_report.md&';
 
 function formatDocument(document: TextDocument, force?: boolean) {
   const log = logger('vscode.formatDocument');

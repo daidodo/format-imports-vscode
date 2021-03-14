@@ -82,11 +82,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Extend grouping rules to support [more types of imports](https://github.com/daidodo/tsimportsorter/wiki/Grouping-Rules#types-of-imports).
+- Extend grouping rules to support [more types of imports](https://github.com/daidodo/format-imports/wiki/Grouping-Rules#types-of-imports).
 
 ### Changed
 
-- Change option `flag` to `flags` in [Grouping Rules](https://github.com/daidodo/tsimportsorter/wiki/Grouping-Rules).
+- Change option `flag` to `flags` in [Grouping Rules](https://github.com/daidodo/format-imports/wiki/Grouping-Rules).
 
 ## [3.1.0] - 2020-11-27
 
@@ -129,7 +129,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support formatting exports.
 - Add `"formatExports"`.
 - Add `"maxExportNamesPerLine"`.
-- Support `'none'` as [Sorting Rules](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules).
+- Support `'none'` as [Sorting Rules](https://github.com/daidodo/format-imports/wiki/Sorting-Rules).
 - Support `h` ([Stencil](https://stenciljs.com/)).
 
 ### Changed
@@ -143,7 +143,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Support [Sorting Rules](https://github.com/daidodo/tsimportsorter/wiki/Sorting-Rules).
+- Support [Sorting Rules](https://github.com/daidodo/format-imports/wiki/Sorting-Rules).
 - Add `"tsImportSorter.configuration.sortRules.paths"`.
 - Add `"tsImportSorter.configuration.sortRules.names"`.
 - Support shebang (`#!`).
@@ -153,7 +153,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Change `"tsImportSorter.configuration.groupRules"` content.
-- Improve [Grouping Rules](https://github.com/daidodo/tsimportsorter/wiki/Grouping-Rules).
+- Improve [Grouping Rules](https://github.com/daidodo/format-imports/wiki/Grouping-Rules).
 - Support sub-groups.
 
 ## [1.1.0] - 2020-03-21
