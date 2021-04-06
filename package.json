@@ -304,6 +304,11 @@
                   "type": "number",
                   "default": 1,
                   "description": "Max names on wrapped lines for imports/exports. 0 for no limit."
+                },
+                "ignoreComments": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Whether to ignore trailing comments when counting line length."
                 }
               }
             }
@@ -312,7 +317,8 @@
             "maxBindingNamesPerLine": 1,
             "maxDefaultAndBindingNamesPerLine": 2,
             "maxExportNamesPerLine": 0,
-            "maxNamesPerWrappedLine": 1
+            "maxNamesPerWrappedLine": 1,
+            "ignoreComments": false
           },
           "markdownDescription": "Line wrapping styles. See the [wiki](https://github.com/daidodo/format-imports/wiki/Line-Wrapping-Style) for more details."
         },
@@ -381,7 +387,7 @@
     }
   },
   "dependencies": {
-    "format-imports": "^2.2.1",
+    "format-imports": "^2.3.2",
     "lodash.clonedeep": "^4.5.0",
     "log4js": "^6.3.0"
   },

@@ -13,11 +13,12 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - [Install Plugin](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter)
 - [Open Issues](https://github.com/daidodo/format-imports-vscode/issues)
 
-## [7.2] Release Notes
+## [7.3] Release Notes
 
 ### Added
 
-- Add `importType` to `GroupRule` to distinguish `import` and `import type`.
+- Add `wrappingStyle.ignoreComments` to skip trailing comments when counting line length.
+- Support ESLint [max-len](https://eslint.org/docs/rules/max-len) rule.
 
 # Table of contents <!-- omit in toc -->
 

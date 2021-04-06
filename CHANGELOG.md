@@ -17,6 +17,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -->
 
+## [7.3.0] - 2021-04-06
+
+### Added
+
+- Add `wrappingStyle.ignoreComments` to skip trailing comments when counting line length.
+- Support ESLint [max-len](https://eslint.org/docs/rules/max-len) rule.
+
 ## [7.2.0] - 2021-02-22
 
 ### Added
