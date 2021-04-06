@@ -131,7 +131,10 @@ The following settings (and default values) are available in VSCode User Setting
   "maxExportNamesPerLine": 0,
 
   // Max names on wrapped lines. 0 for no limit.
-  "maxNamesPerWrappedLine": 1
+  "maxNamesPerWrappedLine": 1,
+
+  // Whether to ignore trailing comments when counting line length.
+  "ignoreComments": false
 }
 
 // Number of empty lines between groups (NOT sub-groups).
