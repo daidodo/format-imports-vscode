@@ -8,6 +8,8 @@
 
 # JS/TS Import/Export Sorter <!-- omit in toc -->
 
+[![Version](https://vsmarketplacebadge.apphb.com/version-short/dozerg.tsimportsorter.svg)](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter) &nbsp; [![Installs](https://vsmarketplacebadge.apphb.com/installs/dozerg.tsimportsorter.svg)](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter) &nbsp; [![Ratings](https://vsmarketplacebadge.apphb.com/rating-star/dozerg.tsimportsorter.svg)](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter)
+
 Automatically format **imports** and **exports** for **JavaScript** and **TypeScript** in VSCode.
 
 - [Install Plugin](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter)
