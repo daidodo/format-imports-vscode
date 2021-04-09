@@ -17,6 +17,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -->
 
+## [7.3.1] - 2021-04-09
+
+### Added
+
+- Support ESLint [indent](https://eslint.org/docs/rules/indent) and
+  [@typescript-eslint/indent](https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/indent.md)
+  rules.
+
+### Changed
+
+- `tabWidth` from ESLint [max-len](https://eslint.org/docs/rules/max-len) doesn't impact `tabSize` config.
+
 ## [7.3.0] - 2021-04-06
 
 ### Added

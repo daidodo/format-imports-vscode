@@ -13,12 +13,17 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - [Install Plugin](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter)
 - [Open Issues](https://github.com/daidodo/format-imports-vscode/issues)
 
-## [7.3] Release Notes
+## [7.3.1] Release Notes
 
 ### Added
 
-- Add `wrappingStyle.ignoreComments` to skip trailing comments when counting line length.
-- Support ESLint [max-len](https://eslint.org/docs/rules/max-len) rule.
+- Support ESLint [indent](https://eslint.org/docs/rules/indent) and
+  [@typescript-eslint/indent](https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/indent.md)
+  rules.
+
+### Changed
+
+- `tabWidth` from ESLint [max-len](https://eslint.org/docs/rules/max-len) doesn't impact `tabSize` config.
 
 # Table of contents <!-- omit in toc -->
 
