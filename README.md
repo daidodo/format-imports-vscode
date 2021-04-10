@@ -54,6 +54,7 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 
   ```json
   "editor.codeActionsOnSave": ["source.organizeImports.sortImports"],
+  "tsImportSorter.configuration.autoFormat": "off"
   ```
 
 - Press shortcut keys, default to `Alt+Shift+S`.
