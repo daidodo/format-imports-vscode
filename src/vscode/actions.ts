@@ -11,19 +11,18 @@ import type { TriggeredFrom } from './types';
 const CODE_ACTIONS = [
   {
     title: 'Sort Imports/Exports',
-    // source.organizeImports.formatImports
-    kind: CodeActionKind.SourceOrganizeImports.append('formatImports'),
+    // source.organizeImports.sortImports
+    kind: CodeActionKind.SourceOrganizeImports.append('sortImports'),
     command: 'tsImportSorter.command.sortImports',
-    tooltip: 'Format imports with JS/TS Import/Export Sorter',
   },
 ];
 
 export default class SortActionProvider implements CodeActionProvider {
   static readonly ACTION_KINDS = CODE_ACTIONS.map(action => action.kind);
-  static readonly ACTION_COMMANDS = CODE_ACTIONS.map(({ title, kind, command, tooltip }) => {
+  static readonly ACTION_COMMANDS = CODE_ACTIONS.map(({ title, kind, command }) => {
     const action = new CodeAction(title, kind);
     const from: TriggeredFrom = 'codeAction';
-    action.command = { command, title, tooltip, arguments: [from] };
+    action.command = { command, title, arguments: [from] };
     return action;
   });
 

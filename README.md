@@ -15,17 +15,11 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - [Install Plugin](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter)
 - [Open Issues](https://github.com/daidodo/format-imports-vscode/issues)
 
-## [7.3.1] Release Notes
+## [7.3.2] Release Notes
 
-### Added
+## Added
 
-- Support ESLint [indent](https://eslint.org/docs/rules/indent) and
-  [@typescript-eslint/indent](https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/indent.md)
-  rules.
-
-### Changed
-
-- `tabWidth` from ESLint [max-len](https://eslint.org/docs/rules/max-len) doesn't impact `tabSize` config.
+- Register code action `"source.organizeImports.sortImports"`.
 
 # Table of contents <!-- omit in toc -->
 
@@ -41,7 +35,7 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 
 # Features
 
-- Auto format imports and exports on save, or manually from command, shortcut or context menu.
+- Auto format imports and exports on save or [code actions](https://code.visualstudio.com/docs/languages/javascript#_code-actions-on-save), or manually from command, shortcut or context menu.
 - Group and sort imports by [custom rules](https://github.com/daidodo/format-imports/blob/main/README.md#grouping-rules), including [sort by paths or names](https://github.com/daidodo/format-imports/blob/main/docs/interfaces/configuration.md#sortimportsby).
 - Remove duplicated and unused names with [configurable exceptions](https://github.com/daidodo/format-imports/blob/main/README.md#unused-imports-removal).
 - [Ignore files or declarations](https://github.com/daidodo/format-imports/blob/main/README.md#ignoring-files-or-declarations) by config or inline comments.
@@ -54,6 +48,14 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 # How to use
 
 - Auto format on save when `autoFormat` is set to `onSave` (this is the default).
+- Auto format via [Code Actions on Save](https://code.visualstudio.com/docs/languages/javascript#_code-actions-on-save) (VSCode 1.44+)
+
+  - Note: you should turn off event-driven `autoFormat` to avoid formatting twice.
+
+  ```json
+  "editor.codeActionsOnSave": ["source.organizeImports.sortImports"],
+  ```
+
 - Press shortcut keys, default to `Alt+Shift+S`.
 - Use `Sort Imports/Exports` command in the Command Palette (`Ctrl+Shift+P`).
 
