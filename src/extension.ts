@@ -6,26 +6,32 @@ import { URLSearchParams } from 'url';
 import {
   commands,
   ExtensionContext,
+  languages,
   OutputChannel,
   Range,
   TextDocument,
   TextDocumentWillSaveEvent,
   TextEdit,
   TextEditor,
+  TextEditorEdit,
   Uri,
   window,
   workspace,
 } from 'vscode';
 
+import SortActionProvider from './vscode/actions';
+import { resolveConfig } from './vscode/config';
 import {
   extensionsInfo,
+  osInfo,
+  vscodeInfo,
+} from './vscode/env';
+import {
   initLog,
   logger,
-  osInfo,
-  resolveConfig,
   uninitLog,
-  vscodeInfo,
-} from './vscode';
+} from './vscode/log';
+import type { TriggeredFrom } from './vscode/types';
 
 let g_vscChannel: OutputChannel;
 
@@ -45,7 +51,15 @@ export function activate(context: ExtensionContext) {
   const beforeSave = workspace.onWillSaveTextDocument(event =>
     sortImportsBeforeSavingDocument(event),
   );
-  context.subscriptions.push(sortCommand, beforeSave);
+  context.subscriptions.push(
+    sortCommand,
+    beforeSave,
+    languages.registerCodeActionsProvider(
+      ['javascript', 'javascriptreact', 'typescript', 'typescriptreact'],
+      new SortActionProvider(),
+      { providedCodeActionKinds: SortActionProvider.ACTION_KINDS },
+    ),
+  );
 
   // let lastActiveDocument: TextDocument | undefined;
   // const editorChanged = window.onDidChangeActiveTextEditor(event => {
@@ -65,18 +79,18 @@ export function deactivate() {
   g_vscChannel.dispose();
 }
 
-function sortImportsByCommand(editor: TextEditor) {
+function sortImportsByCommand(editor: TextEditor, _: TextEditorEdit, from?: TriggeredFrom) {
   if (!editor) return;
   const { document } = editor;
   if (!document) return;
-  const newSourceText = formatDocument(document, true);
+  const newSourceText = formatDocument(document, from === 'codeAction' ? from : 'onCommand');
   if (newSourceText === undefined) return;
   void editor.edit(edit => edit.replace(fullRange(document), newSourceText));
 }
 
 function sortImportsBeforeSavingDocument(event: TextDocumentWillSaveEvent) {
   const { document } = event;
-  const newSourceText = formatDocument(document);
+  const newSourceText = formatDocument(document, 'onSave');
   if (newSourceText === undefined) return;
   event.waitUntil(Promise.resolve([TextEdit.replace(fullRange(document), newSourceText)]));
 }
@@ -84,14 +98,15 @@ function sortImportsBeforeSavingDocument(event: TextDocumentWillSaveEvent) {
 const ISSUE_URL =
   'https://github.com/daidodo/format-imports-vscode/issues/new?assignees=&labels=&template=exception_report.md&';
 
-function formatDocument(document: TextDocument, force?: boolean) {
+function formatDocument(document: TextDocument, from: TriggeredFrom) {
   const log = logger('vscode.formatDocument');
   if (!isSupported(document)) return undefined;
   const { uri: fileUri, languageId, eol } = document;
   const { fsPath: fileName } = fileUri;
+  log.debug('Triggered from:', from);
   try {
-    const config = resolveConfig(fileUri, languageId, eol, force);
-    if (!force && config.autoFormat !== 'onSave') {
+    const config = resolveConfig(fileUri, languageId, eol, from === 'onCommand');
+    if (from === 'onSave' && config.autoFormat !== 'onSave') {
       log.info('Auto format is', config.autoFormat);
       return undefined;
     }
