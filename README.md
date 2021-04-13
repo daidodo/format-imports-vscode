@@ -50,11 +50,14 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - Auto format on save when `autoFormat` is set to `onSave` (this is the default).
 - Auto format via [Code Actions on Save](https://code.visualstudio.com/docs/languages/javascript#_code-actions-on-save) (VSCode 1.44+)
 
-  - Note: you should turn off event-driven `autoFormat` to avoid formatting twice.
+  ```json
+  "editor.codeActionsOnSave": ["source.organizeImports.sortImports"]
+  ```
+
+  or
 
   ```json
-  "editor.codeActionsOnSave": ["source.organizeImports.sortImports"],
-  "tsImportSorter.configuration.autoFormat": "off"
+  "editor.codeActionsOnSave": {"source.organizeImports.sortImports": true}
   ```
 
 - Press shortcut keys, default to `Alt+Shift+S`.
