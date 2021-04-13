@@ -80,7 +80,7 @@ function workspaceConfig(fileUri: Uri) {
 function transform(wsConfig: WorkspaceConfiguration) {
   const { detectIndentation, insertSpaces, tabSize, codeActionsOnSave } =
     wsConfig.get<VscEditorConfig>('editor') ?? {};
-  // if 'detectIndentation' is true, indentation is detected instead of from settings.
+  // If 'detectIndentation' is true, indentation is detected instead of from settings.
   const tabType =
     detectIndentation || insertSpaces === undefined
       ? undefined
