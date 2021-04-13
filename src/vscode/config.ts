@@ -12,6 +12,7 @@ import {
   WorkspaceConfiguration,
 } from 'vscode';
 
+import SortActionProvider from './actions';
 import { logger } from './log';
 
 interface Configuration extends BaseConfig {
@@ -25,6 +26,7 @@ interface VscEditorConfig {
   detectIndentation: boolean;
   insertSpaces: boolean;
   tabSize: number;
+  codeActionsOnSave?: { [kind: string]: boolean } | string[];
 }
 
 interface VscFilesConfig {
@@ -43,24 +45,27 @@ export function resolveConfig(fileUri: Uri, languageId: string, eol: EndOfLine, 
     log.debug('Resolved config in cache');
     return c as Configuration;
   }
-  const vscConfig = loadVscConfig(fileUri, languageId);
-  const config = mergeConfig(vscConfig, {
+  const { config: vscConfig, codeAction } = loadVscConfig(fileUri, languageId);
+  const c1 = mergeConfig(vscConfig, {
     eol: eol === EndOfLine.CRLF ? 'CRLF' : 'LF',
     force,
   });
-  log.debug('Loaded VSCode config');
-  const r = resolveConfigForFile(fileName, config);
+  log.debug('Loaded VSCode config and codeAction:', codeAction);
+  const c2 = resolveConfigForFile(fileName, c1);
+  const r = codeAction ? mergeConfig(c2, { autoFormat: 'off' }) : c2;
   CACHE.set(fileName, r);
   return r;
 }
 
-function loadVscConfig(fileUri: Uri, languageId: string): Configuration {
+function loadVscConfig(fileUri: Uri, languageId: string) {
   const log = logger('vscode.loadVscConfig');
   log.debug('Loading VSCode config for fileName:', fileUri.fsPath);
   const wsConfig = workspaceConfig(fileUri);
   const general = workspace.getConfiguration(undefined, fileUri);
   const langSpec = workspace.getConfiguration(`[${languageId}]`, fileUri);
-  return mergeConfig(wsConfig, transform(general), transform(langSpec));
+  const { config: c1, codeAction: a1 } = transform(general);
+  const { config: c2, codeAction: a2 } = transform(langSpec);
+  return { config: mergeConfig(wsConfig, c1, c2), codeAction: a1 || a2 };
 }
 
 function workspaceConfig(fileUri: Uri) {
@@ -73,7 +78,7 @@ function workspaceConfig(fileUri: Uri) {
 }
 
 function transform(wsConfig: WorkspaceConfiguration) {
-  const { detectIndentation, insertSpaces, tabSize } =
+  const { detectIndentation, insertSpaces, tabSize, codeActionsOnSave } =
     wsConfig.get<VscEditorConfig>('editor') ?? {};
   // if 'detectIndentation' is true, indentation is detected instead of from settings.
   const tabType =
@@ -82,11 +87,20 @@ function transform(wsConfig: WorkspaceConfiguration) {
       : insertSpaces
       ? ('space' as const)
       : ('tab' as const);
+  const actionId = SortActionProvider.ACTION_ID;
+  const codeAction =
+    codeActionsOnSave &&
+    (Array.isArray(codeActionsOnSave)
+      ? codeActionsOnSave.includes(actionId)
+      : codeActionsOnSave[actionId]);
   const { insertFinalNewline, eol } = wsConfig.get<VscFilesConfig>('files') ?? {};
   return {
-    tabType,
-    tabSize: detectIndentation ? undefined : tabSize,
-    insertFinalNewline,
-    eof: eol === 'auto' ? undefined : eol,
+    config: {
+      tabType,
+      tabSize: detectIndentation ? undefined : tabSize,
+      insertFinalNewline,
+      eof: eol === 'auto' ? undefined : eol,
+    },
+    codeAction,
   };
 }

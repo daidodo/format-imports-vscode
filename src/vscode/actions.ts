@@ -11,13 +11,14 @@ import type { TriggeredFrom } from './types';
 const CODE_ACTIONS = [
   {
     title: 'Sort Imports/Exports',
-    // source.organizeImports.sortImports
+    // Correspond to `SortActionProvider.ACTION_ID`
     kind: CodeActionKind.SourceOrganizeImports.append('sortImports'),
     command: 'tsImportSorter.command.sortImports',
   },
 ];
 
 export default class SortActionProvider implements CodeActionProvider {
+  static readonly ACTION_ID = 'source.organizeImports.sortImports';
   static readonly ACTION_KINDS = CODE_ACTIONS.map(action => action.kind);
   static readonly ACTION_COMMANDS = CODE_ACTIONS.map(({ title, kind, command }) => {
     const action = new CodeAction(title, kind);
