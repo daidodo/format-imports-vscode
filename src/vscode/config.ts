@@ -4,6 +4,7 @@ import {
   resolveConfigForFile,
 } from 'format-imports';
 import cloneDeep from 'lodash.clonedeep';
+import NodeCache from 'node-cache';
 import {
   EndOfLine,
   Uri,
@@ -31,17 +32,26 @@ interface VscFilesConfig {
   eol: '\n' | '\r\n' | 'auto';
 }
 
+const CACHE = new NodeCache({ stdTTL: 2 });
+
 export function resolveConfig(fileUri: Uri, languageId: string, eol: EndOfLine, force?: boolean) {
   const log = logger('vscode.resolveConfig');
   const { fsPath: fileName } = fileUri;
   log.info('Resolving config for fileName:', fileName, 'languageId:', languageId);
+  const c = CACHE.get(fileName);
+  if (c && typeof c === 'object') {
+    log.debug('Resolved config in cache');
+    return c as Configuration;
+  }
   const vscConfig = loadVscConfig(fileUri, languageId);
   const config = mergeConfig(vscConfig, {
     eol: eol === EndOfLine.CRLF ? 'CRLF' : 'LF',
     force,
   });
   log.debug('Loaded VSCode config');
-  return resolveConfigForFile(fileName, config);
+  const r = resolveConfigForFile(fileName, config);
+  CACHE.set(fileName, r);
+  return r;
 }
 
 function loadVscConfig(fileUri: Uri, languageId: string): Configuration {
