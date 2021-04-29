@@ -15,11 +15,15 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - [Install Plugin](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter)
 - [Open Issues](https://github.com/daidodo/format-imports-vscode/issues)
 
-## [7.3.2] Release Notes
+## [7.4.0] Release Notes
 
-## Added
+### Added
 
-- Register code action `"source.organizeImports.sortImports"`.
+- Add `ignoreESLintRules` config to ignore specific ESLint rules.
+
+### Changed
+
+- Update default `GroupRules` to group [`node:` imports](https://nodejs.org/api/esm.html#esm_node_imports) separately.
 
 # Table of contents <!-- omit in toc -->
 
@@ -111,6 +115,7 @@ The following settings (and default values) are available in VSCode User Setting
   "^react(-dom)?$",
   "^@angular/",
   "^vue$",
+  "^node:",
   {},
   "^[@]",
   "^[.]"

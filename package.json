@@ -148,6 +148,7 @@
             "^react(-dom)?$",
             "^@angular/",
             "^vue$",
+            "^node:",
             {},
             "^[@]",
             "^[.]"
@@ -387,7 +388,7 @@
     }
   },
   "dependencies": {
-    "format-imports": "^2.3.3",
+    "format-imports": "^2.4.0",
     "lodash.clonedeep": "^4.5.0",
     "log4js": "^6.3.0",
     "node-cache": "^5.1.2"
