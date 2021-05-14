@@ -42,7 +42,7 @@ export function resolveConfig(fileUri: Uri, languageId: string, eol: EndOfLine, 
   log.info('Resolving config for fileName:', fileName, 'languageId:', languageId);
   const c = CACHE.get(fileName);
   if (c && typeof c === 'object') {
-    log.debug('Resolved config in cache');
+    log.debug('Resolved config in cache:', c);
     return c as Configuration;
   }
   const { config: vscConfig, codeAction } = loadVscConfig(fileUri, languageId);
@@ -50,7 +50,7 @@ export function resolveConfig(fileUri: Uri, languageId: string, eol: EndOfLine, 
     eol: eol === EndOfLine.CRLF ? 'CRLF' : 'LF',
     force,
   });
-  log.debug('Loaded VSCode config and codeAction:', codeAction);
+  log.debug('Loaded codeAction:', codeAction, 'and VSCode config:', c1);
   const c2 = resolveConfigForFile(fileName, c1);
   const r = codeAction ? mergeConfig(c2, { autoFormat: 'off' }) : c2;
   CACHE.set(fileName, r);
