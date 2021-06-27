@@ -15,15 +15,15 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - [Install Plugin](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter)
 - [Open Issues](https://github.com/daidodo/format-imports-vscode/issues)
 
-## [7.4.0] Release Notes
+## [7.4.1] Release Notes
 
 ### Added
 
-- Add `ignoreESLintRules` config to ignore specific ESLint rules.
+- Support ESLint [eol-last](https://eslint.org/docs/rules/eol-last) rule.
 
 ### Changed
 
-- Update default `GroupRules` to group [`node:` imports](https://nodejs.org/api/esm.html#esm_node_imports) separately.
+- Fix Prettier option `"trailingComma": "es5"`.
 
 # Table of contents <!-- omit in toc -->
 
