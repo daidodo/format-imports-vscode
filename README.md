@@ -132,7 +132,9 @@ The following settings (and default values) are available in VSCode User Setting
   "names": ["_", "aA"]
 }
 
-// By default all unused imports are removed. Keep some or all them around with this setting if you need.
+// By default all unused imports are removed. Keep some or all them around with this 
+// setting via a list of regular expressions if you need.
+// e.g. In order to keep all unused imports, use [".*"]
 "tsImportSorter.configuration.keepUnused": [],
 
 // Line wrapping style. Valid values are 'prettier' or an object.
