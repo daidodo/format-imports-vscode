@@ -18,7 +18,6 @@ import {
   vscChannel,
 } from './vscode/channel';
 import {
-  extensionsInfo,
   osInfo,
   vscodeInfo,
 } from './vscode/env';
@@ -36,7 +35,7 @@ export function activate(context: ExtensionContext) {
   const log = initLog(vscChannel);
   log.info('os:', osInfo());
   log.info('vscode:', vscodeInfo());
-  log.info('extensions:', extensionsInfo());
+  // log.info('extensions:', extensionsInfo());
 
   const sortCommand = commands.registerTextEditorCommand(
     'tsImportSorter.command.sortImports',
