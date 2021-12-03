@@ -28,7 +28,7 @@
     "url": "https://github.com/daidodo/format-imports-vscode/issues"
   },
   "engines": {
-    "vscode": "^1.52.0"
+    "vscode": "^1.62.0"
   },
   "categories": [
     "Formatters"
