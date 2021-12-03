@@ -15,15 +15,11 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - [Install Plugin](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter)
 - [Open Issues](https://github.com/daidodo/format-imports-vscode/issues)
 
-## [7.4.1] Release Notes
+## [7.4.2] - 2021-12-03
 
 ### Added
 
-- Support ESLint [eol-last](https://eslint.org/docs/rules/eol-last) rule.
-
-### Changed
-
-- Fix Prettier option `"trailingComma": "es5"`.
+- Support `type` [modifiers](https://devblogs.microsoft.com/typescript/announcing-typescript-4-5/#type-on-import-names) on import names
 
 # Table of contents <!-- omit in toc -->
 
@@ -46,7 +42,7 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - Respect [ESLint](https://eslint.org) and [eslint-plugin-import](https://github.com/benmosher/eslint-plugin-import) rules.
 - Respect configs from [Prettier](https://prettier.io), [EditorConfig](https://editorconfig.org) and VS Code editor settings.
 - Preserve `'use strict'`, `///` directives, shebang (`#!`) and comments.
-- Support [Type-Only imports/exports](https://devblogs.microsoft.com/typescript/announcing-typescript-3-8/#type-only-imports-exports).
+- Support [Type-Only imports/exports](https://devblogs.microsoft.com/typescript/announcing-typescript-3-8/#type-only-imports-exports) and [Type Modifier on names](https://devblogs.microsoft.com/typescript/announcing-typescript-4-5/#type-on-import-names).
 - Support multi-root projects.
 
 # How to use
