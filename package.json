@@ -388,7 +388,7 @@
     }
   },
   "dependencies": {
-    "format-imports": "^2.4.2",
+    "format-imports": "^2.4.3",
     "lodash.clonedeep": "^4.5.0",
     "log4js": "^6.3.0",
     "node-cache": "^5.1.2"
@@ -402,7 +402,7 @@
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-tsdoc": "^0.2.14",
-    "prettier": "^2.5.0",
+    "prettier": "^2.5.1",
     "typescript": "^4.5.2",
     "vscode-test": "^1.6.1"
   }
