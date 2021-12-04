@@ -15,11 +15,18 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - [Install Plugin](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter)
 - [Open Issues](https://github.com/daidodo/format-imports-vscode/issues)
 
-## [7.4.2] - 2021-12-03
+## [7.4.x]
 
 ### Added
 
+- Add `ignoreESLintRules` config to ignore specific ESLint rules.
+- Support ESLint [eol-last](https://eslint.org/docs/rules/eol-last) rule.
 - Support `type` [modifiers](https://devblogs.microsoft.com/typescript/announcing-typescript-4-5/#type-on-import-names) on import names
+
+### Changed
+
+- Update default `GroupRules` to group [`node:` imports](https://nodejs.org/api/esm.html#esm_node_imports) separately.
+- Fix Prettier option `"trailingComma": "es5"`.
 
 # Table of contents <!-- omit in toc -->
 
@@ -128,7 +135,7 @@ The following settings (and default values) are available in VSCode User Setting
   "names": ["_", "aA"]
 }
 
-// By default all unused imports are removed. Keep some or all them around with this 
+// By default all unused imports are removed. Keep some or all them around with this
 // setting via a list of regular expressions if you need.
 // e.g. In order to keep all unused imports, use [".*"]
 "tsImportSorter.configuration.keepUnused": [],
