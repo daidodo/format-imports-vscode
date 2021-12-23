@@ -16,6 +16,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <!-- [Stacked changes]
 -->
 
+## [7.4.3] - 2021-12-23
+
+### Added
+
+- Add `root` config to support monorepo projects.
+- Add `preserve` option for `insertFinalNewline` config.
+
 ## [7.4.2] - 2021-12-03
 
 ### Added

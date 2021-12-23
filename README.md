@@ -19,6 +19,8 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 
 ### Added
 
+- Add `root` config to support monorepo projects.
+- Add `preserve` option for `insertFinalNewline` config.
 - Add `ignoreESLintRules` config to ignore specific ESLint rules.
 - Support ESLint [eol-last](https://eslint.org/docs/rules/eol-last) rule.
 - Support `type` [modifiers](https://devblogs.microsoft.com/typescript/announcing-typescript-4-5/#type-on-import-names) on import names
@@ -36,6 +38,7 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
   - [VSCode Settings](#vscode-settings)
   - [Config Files](#config-files)
 - [ESLint Compatibility](#eslint-compatibility)
+- [Monorepo Support](#monorepo-support)
 - [Contribution](#contribution)
 - [Thanks](#thanks)
 - [License](#license)
@@ -216,6 +219,12 @@ _package.json:_
 If installed, [ESLint](https://eslint.org) and plugins rules will be detected and consulted, so that the result code will comply to the lint rules.
 
 For how it works, please check the [ESLint Compatibility](https://github.com/daidodo/format-imports/wiki/ESLint-Compatibility) wiki.
+
+# Monorepo Support
+
+When reading config from `import-sorter.json` or `package.json`, Format-Imports will automatically look for them in the directory of the file to be formatted, and in successive parent directories all the way up to the root directory of the filesystem (unless `"root": true` is specified).
+
+Multiple `import-sorter.json` or `package.json` files can be useful when you want different configurations for different sub projects of your monorepo, while common settings are kept in the root `import-sorter.json` or `package.json`. When there is a conflict, the sub project (more localized) config will take precedence.
 
 # Contribution
 
