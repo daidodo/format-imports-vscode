@@ -93,12 +93,12 @@ function transform(wsConfig: WorkspaceConfiguration) {
     (Array.isArray(codeActionsOnSave)
       ? codeActionsOnSave.includes(actionId)
       : codeActionsOnSave[actionId]);
-  const { insertFinalNewline, eol } = wsConfig.get<VscFilesConfig>('files') ?? {};
+  const { insertFinalNewline: nl, eol } = wsConfig.get<VscFilesConfig>('files') ?? {};
   return {
     config: {
       tabType,
       tabSize: detectIndentation ? undefined : tabSize,
-      insertFinalNewline,
+      insertFinalNewline: nl ? true : ('preserve' as const),
       eof: eol === 'auto' ? undefined : eol,
     },
     codeAction,
