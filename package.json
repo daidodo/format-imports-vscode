@@ -388,7 +388,7 @@
     }
   },
   "dependencies": {
-    "format-imports": "^2.4.6",
+    "format-imports": "^2.4.7",
     "lodash.clonedeep": "^4.5.0",
     "log4js": "^6.4.1",
     "node-cache": "^5.1.2"
