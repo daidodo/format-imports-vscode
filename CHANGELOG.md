@@ -16,6 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <!-- [Stacked changes]
 -->
 
+## [7.4.5] - 2022-01-24
+
+### Added
+
+- Support formatting [Import Assertions](https://devblogs.microsoft.com/typescript/announcing-typescript-4-5/#import-assertions).
+
 ## [7.4.4] - 2021-12-23
 
 ### Added

@@ -19,6 +19,7 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 
 ### Added
 
+- Support formatting [Import Assertions](https://devblogs.microsoft.com/typescript/announcing-typescript-4-5/#import-assertions).
 - Add `root` config to support monorepo projects.
 - Add `preserve` option for `insertFinalNewline` config.
 - Add `ignoreESLintRules` config to ignore specific ESLint rules.
@@ -52,7 +53,7 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - Respect [ESLint](https://eslint.org) and [eslint-plugin-import](https://github.com/benmosher/eslint-plugin-import) rules.
 - Respect configs from [Prettier](https://prettier.io), [EditorConfig](https://editorconfig.org) and VS Code editor settings.
 - Preserve `'use strict'`, `///` directives, shebang (`#!`) and comments.
-- Support [Type-Only imports/exports](https://devblogs.microsoft.com/typescript/announcing-typescript-3-8/#type-only-imports-exports) and [Type Modifier on names](https://devblogs.microsoft.com/typescript/announcing-typescript-4-5/#type-on-import-names).
+- Support [Type-Only imports/exports](https://devblogs.microsoft.com/typescript/announcing-typescript-3-8/#type-only-imports-exports), [Type Modifier on names](https://devblogs.microsoft.com/typescript/announcing-typescript-4-5/#type-on-import-names) and [Import Assertions](https://devblogs.microsoft.com/typescript/announcing-typescript-4-5/#import-assertions).
 - Support multi-root projects.
 
 # How to use
