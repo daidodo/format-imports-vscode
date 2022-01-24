@@ -47,8 +47,8 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 # Features
 
 - Auto format imports and exports on save or [code actions](https://code.visualstudio.com/docs/languages/javascript#_code-actions-on-save), or manually from command, shortcut or context menu.
-- Group and sort imports by [custom rules](https://github.com/daidodo/format-imports/blob/main/README.md#grouping-rules), including [sort by paths or names](https://github.com/daidodo/format-imports/blob/main/docs/interfaces/configuration.md#sortimportsby).
-- Remove duplicated and unused names with [configurable exceptions](https://github.com/daidodo/format-imports/blob/main/README.md#unused-imports-removal).
+- Group and sort imports by [custom rules](https://github.com/daidodo/format-imports/blob/main/README.md#grouping-rules), including [sort by paths or names](https://github.com/daidodo/format-imports/blob/main/docs/interfaces/Configuration.md#sortimportsby).
+- Remove duplicated and unused names with [configurable exceptions](https://github.com/daidodo/format-imports/blob/main/README.md#keeping-unused-imports).
 - [Ignore files or declarations](https://github.com/daidodo/format-imports/blob/main/README.md#ignoring-files-or-declarations) by config or inline comments.
 - Respect [ESLint](https://eslint.org) and [eslint-plugin-import](https://github.com/benmosher/eslint-plugin-import) rules.
 - Respect configs from [Prettier](https://prettier.io), [EditorConfig](https://editorconfig.org) and VS Code editor settings.
@@ -183,7 +183,7 @@ The following settings (and default values) are available in VSCode User Setting
 
 ## Config Files
 
-Most of the above settings, plus more in [Configuration](https://github.com/daidodo/format-imports/blob/main/docs/interfaces/configuration.md) are also available in `import-sorter.json` or `package.json` under `"importSorter` section.
+Most of the above settings, plus more in [Configuration](https://github.com/daidodo/format-imports/blob/main/docs/interfaces/Configuration.md) are also available in `import-sorter.json` or `package.json` under `"importSorter` section.
 
 For examples:
 
