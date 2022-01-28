@@ -2,6 +2,7 @@ import path from 'path';
 import { Configuration } from 'webpack';
 
 const config: Configuration = {
+  mode: 'production',
   target: 'node',
   entry: './src/extension.ts',
   output: {
