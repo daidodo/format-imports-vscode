@@ -14,6 +14,7 @@ const config: Configuration = {
   devtool: 'source-map',
   externals: {
     vscode: 'commonjs vscode',
+    eslint: 'commonjs eslint',
   },
   resolve: {
     mainFields: ['browser', 'module', 'main'],
@@ -36,6 +37,9 @@ const config: Configuration = {
     //   console: require.resolve('console-browserify'),
     //   buffer: require.resolve('buffer'),
     // },
+  },
+  node: {
+    __dirname: 'mock',
   },
   module: {
     rules: [

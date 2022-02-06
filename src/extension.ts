@@ -72,18 +72,18 @@ export function deactivate() {
   uninitChannel();
 }
 
-function sortImportsByCommand(editor: TextEditor, _: TextEditorEdit, from?: TriggeredFrom) {
+async function sortImportsByCommand(editor: TextEditor, _: TextEditorEdit, from?: TriggeredFrom) {
   if (!editor) return;
   const { document } = editor;
   if (!document) return;
-  const newSourceText = formatDocument(document, from === 'codeAction' ? from : 'onCommand');
+  const newSourceText = await formatDocument(document, from === 'codeAction' ? from : 'onCommand');
   if (newSourceText === undefined) return;
   void editor.edit(edit => edit.replace(fullRange(document), newSourceText));
 }
 
-function sortImportsBeforeSavingDocument(event: TextDocumentWillSaveEvent) {
+async function sortImportsBeforeSavingDocument(event: TextDocumentWillSaveEvent) {
   const { document } = event;
-  const newSourceText = formatDocument(document, 'onSave');
+  const newSourceText = await formatDocument(document, 'onSave');
   if (newSourceText === undefined) return;
   event.waitUntil(Promise.resolve([TextEdit.replace(fullRange(document), newSourceText)]));
 }
