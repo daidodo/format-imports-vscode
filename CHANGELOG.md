@@ -16,12 +16,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <!-- [Stacked changes]
 -->
 
-## [7.4.9] - 2022-02-06
+## [7.4.10] - 2022-02-06
 
 ### Added
 
 - Add `always` option for `trailingComma` config.
-- Support ESLint [comma-dangle](https://eslint.org/docs/rules/comma-dangle) rule.
+- Support new ESLint rules:
+  - [comma-dangle](https://eslint.org/docs/rules/comma-dangle)
+  - [@typescript-eslint/comma-dangle](https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/comma-dangle.md)
+  - [@typescript-eslint/semi](https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/semi.md)
 
 ## [7.4.6] - 2022-01-24
 

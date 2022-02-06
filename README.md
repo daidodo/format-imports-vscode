@@ -24,7 +24,10 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - Add `preserve` option for `insertFinalNewline` config.
 - Add `ignoreESLintRules` config to ignore specific ESLint rules.
 - Add `always` option for `trailingComma` config.
-- Support ESLint [eol-last](https://eslint.org/docs/rules/eol-last), [semi](https://eslint.org/docs/rules/semi) and [comma-dangle](https://eslint.org/docs/rules/comma-dangle) rules.
+- Support new ESLint rules:
+  - [eol-last](https://eslint.org/docs/rules/eol-last)
+  - [semi](https://eslint.org/docs/rules/semi) and [@typescript-eslint/semi](https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/semi.md)
+  - [comma-dangle](https://eslint.org/docs/rules/comma-dangle) and [@typescript-eslint/comma-dangle](https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/comma-dangle.md)
 - Support `type` [modifiers](https://devblogs.microsoft.com/typescript/announcing-typescript-4-5/#type-on-import-names) on import names
 
 ### Changed
