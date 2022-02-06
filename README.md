@@ -23,7 +23,8 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - Add `root` config to support monorepo projects.
 - Add `preserve` option for `insertFinalNewline` config.
 - Add `ignoreESLintRules` config to ignore specific ESLint rules.
-- Support ESLint [eol-last](https://eslint.org/docs/rules/eol-last), [semi](https://eslint.org/docs/rules/semi) rules.
+- Add `always` option for `trailingComma` config.
+- Support ESLint [eol-last](https://eslint.org/docs/rules/eol-last), [semi](https://eslint.org/docs/rules/semi) and [comma-dangle](https://eslint.org/docs/rules/comma-dangle) rules.
 - Support `type` [modifiers](https://devblogs.microsoft.com/typescript/announcing-typescript-4-5/#type-on-import-names) on import names
 
 ### Changed
