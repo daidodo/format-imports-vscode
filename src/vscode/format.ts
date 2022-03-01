@@ -18,7 +18,7 @@ import { TriggeredFrom } from './types';
 const ISSUE_URL =
   'https://github.com/daidodo/format-imports-vscode/issues/new?assignees=&labels=&template=exception_report.md&';
 
-export function formatDocument(document: TextDocument, from: TriggeredFrom) {
+export async function formatDocument(document: TextDocument, from: TriggeredFrom) {
   const log = logger('vscode.formatDocument');
   if (!isSupported(document)) return undefined;
   const { uri: fileUri, languageId, eol } = document;
@@ -36,7 +36,7 @@ export function formatDocument(document: TextDocument, from: TriggeredFrom) {
       return undefined;
     }
     const sourceText = document.getText();
-    const newText = formatSourceFromFile(sourceText, fileName, config);
+    const newText = await formatSourceFromFile(sourceText, fileName, config);
     log.info('Finished', newText === undefined ? 'format with no-op' : 'format');
     return newText;
   } catch (e: unknown) {
