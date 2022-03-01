@@ -2,27 +2,50 @@ import path from 'path';
 import { Configuration } from 'webpack';
 
 const config: Configuration = {
-  target: 'node', // vscode extensions run in a Node.js-context 📖 -> https://webpack.js.org/configuration/node/
-
-  entry: './src/extension.ts', // the entry point of this extension, 📖 -> https://webpack.js.org/configuration/entry-context/
+  mode: 'development',
+  target: 'node',
+  entry: './src/extension.ts',
   output: {
-    // the bundle is stored in the 'out' folder (check package.json), 📖 -> https://webpack.js.org/configuration/output/
     path: path.resolve(__dirname, 'out'),
     filename: 'extension.js',
     libraryTarget: 'commonjs2',
+    devtoolModuleFilenameTemplate: '../[resource-path]',
   },
+  devtool: 'source-map',
   externals: {
-    vscode: 'commonjs vscode', // the vscode-module is created on-the-fly and must be excluded. Add other modules that cannot be webpack'ed, 📖 -> https://webpack.js.org/configuration/externals/
+    vscode: 'commonjs vscode',
+    eslint: 'commonjs eslint',
   },
   resolve: {
-    // support reading TypeScript and JavaScript files, 📖 -> https://github.com/TypeStrong/ts-loader
+    mainFields: ['browser', 'module', 'main'],
     extensions: ['.ts', '.js'],
+    // fallback: {
+    //   fs: false,
+    //   module: false,
+    //   net: false,
+    //   perf_hooks: false,
+    //   cluster: false,
+    //   url: require.resolve('url'),
+    //   path: require.resolve('path-browserify'),
+    //   os: require.resolve('os-browserify/browser'),
+    //   crypto: require.resolve('crypto-browserify'),
+    //   util: require.resolve('util'),
+    //   assert: require.resolve('assert'),
+    //   zlib: require.resolve('browserify-zlib'),
+    //   stream: require.resolve('stream-browserify'),
+    //   constants: require.resolve('constants-browserify'),
+    //   console: require.resolve('console-browserify'),
+    //   buffer: require.resolve('buffer'),
+    // },
+  },
+  node: {
+    __dirname: 'mock',
   },
   module: {
     rules: [
       {
         test: /\.ts$/,
-        exclude: [/node_modules/],
+        exclude: /node_modules/,
         use: 'ts-loader',
       },
     ],
