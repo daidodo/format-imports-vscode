@@ -21,7 +21,6 @@ import {
   osInfo,
   vscodeInfo,
 } from './vscode/env';
-import { formatDocument } from './vscode/format';
 import {
   initLog,
   uninitLog,
@@ -76,6 +75,7 @@ async function sortImportsByCommand(editor: TextEditor, _: TextEditorEdit, from?
   if (!editor) return;
   const { document } = editor;
   if (!document) return;
+  const { formatDocument } = await import('./vscode/format');
   const newSourceText = await formatDocument(document, from === 'codeAction' ? from : 'onCommand');
   if (newSourceText === undefined) return;
   void editor.edit(edit => edit.replace(fullRange(document), newSourceText));
@@ -83,6 +83,7 @@ async function sortImportsByCommand(editor: TextEditor, _: TextEditorEdit, from?
 
 async function sortImportsBeforeSavingDocument(event: TextDocumentWillSaveEvent) {
   const { document } = event;
+  const { formatDocument } = await import('./vscode/format');
   const newSourceText = await formatDocument(document, 'onSave');
   if (newSourceText === undefined) return;
   event.waitUntil(Promise.resolve([TextEdit.replace(fullRange(document), newSourceText)]));
