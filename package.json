@@ -11,8 +11,7 @@
   "scripts": {
     "vscode:prepublish": "npm run clean && npm run compile",
     "compile": "tsc",
-    "webpack": "webpack",
-    "watch": "",
+    "watch": "tsc -watch",
     "pretest": "npm run compile",
     "test": "node ./out/test/runTest.js",
     "clean": "rm -rf out",
@@ -340,26 +339,14 @@
   "eslintConfig": {
     "root": true,
     "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-      "tsconfigRootDir": "./",
-      "project": [
-        "./tsconfig.json"
-      ]
-    },
     "plugins": [
       "@typescript-eslint",
       "eslint-plugin-tsdoc"
     ],
     "extends": [
       "eslint:recommended",
-      "plugin:@typescript-eslint/eslint-recommended",
       "plugin:@typescript-eslint/recommended",
-      "plugin:@typescript-eslint/recommended-requiring-type-checking",
-      "prettier/@typescript-eslint"
-    ],
-    "ignorePatterns": [
-      "src/test/suite/examples/**/*.ts",
-      "webpack.config.*"
+      "prettier"
     ],
     "rules": {
       "@typescript-eslint/no-explicit-any": "off",
