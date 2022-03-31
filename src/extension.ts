@@ -41,9 +41,7 @@ export function activate(context: ExtensionContext) {
     'tsImportSorter.command.sortImports',
     sortImportsByCommand,
   );
-  const beforeSave = workspace.onWillSaveTextDocument(event =>
-    sortImportsBeforeSavingDocument(event),
-  );
+  const beforeSave = workspace.onWillSaveTextDocument(sortImportsBeforeSavingDocument);
   context.subscriptions.push(
     sortCommand,
     beforeSave,
@@ -81,11 +79,14 @@ async function sortImportsByCommand(editor: TextEditor, _: TextEditorEdit, from?
   void editor.edit(edit => edit.replace(fullRange(document), newSourceText));
 }
 
-async function sortImportsBeforeSavingDocument(event: TextDocumentWillSaveEvent) {
+function sortImportsBeforeSavingDocument(event: TextDocumentWillSaveEvent) {
   const { document } = event;
-  const newSourceText = await formatDocument(document, 'onSave');
-  if (newSourceText === undefined) return;
-  event.waitUntil(Promise.resolve([TextEdit.replace(fullRange(document), newSourceText)]));
+  const format = async () => {
+    const newSourceText = await formatDocument(document, 'onSave');
+    if (newSourceText === undefined) return [];
+    return [TextEdit.replace(fullRange(document), newSourceText)];
+  };
+  event.waitUntil(format());
 }
 
 function fullRange(document: TextDocument) {
