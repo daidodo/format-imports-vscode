@@ -16,6 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <!-- [Stacked changes]
 -->
 
+## [7.4.13] - 2022-03-31
+
+### Changed
+
+- Webpack the extension.
+
 ## [7.4.10] - 2022-02-06
 
 ### Added
