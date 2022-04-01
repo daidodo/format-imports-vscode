@@ -31,6 +31,7 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
   - [eol-last](https://eslint.org/docs/rules/eol-last)
   - [semi](https://eslint.org/docs/rules/semi) and [@typescript-eslint/semi](https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/semi.md)
   - [comma-dangle](https://eslint.org/docs/rules/comma-dangle) and [@typescript-eslint/comma-dangle](https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/comma-dangle.md)
+  - [object-curly-spacing](https://eslint.org/docs/rules/object-curly-spacing) and [@typescript-eslint/object-curly-spacing](https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/docs/rules/object-curly-spacing.md)
 - Support `type` [modifiers](https://devblogs.microsoft.com/typescript/announcing-typescript-4-5/#type-on-import-names) on import names
 
 ### Changed
