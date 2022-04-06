@@ -11,7 +11,7 @@
   "scripts": {
     "vscode:prepublish": "npm run clean && webpack --mode production",
     "compile": "tsc",
-    "watch": "tsc -watch",
+    "watch": "",
     "pretest": "npm run compile",
     "test": "node ./out/test/runTest.js",
     "clean": "rm -rf out",
@@ -374,7 +374,7 @@
     }
   },
   "dependencies": {
-    "format-imports": "^3.0.5",
+    "format-imports": "^3.0.6",
     "lodash.clonedeep": "^4.5.0",
     "log4js": "^6.4.4",
     "node-cache": "^5.1.2"
