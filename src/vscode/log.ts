@@ -6,8 +6,6 @@ import log4js, {
 } from 'log4js';
 import { OutputChannel } from 'vscode';
 
-import { projectRoot } from './env';
-
 export function initLog(channel: OutputChannel) {
   return log4js
     .configure({
@@ -41,18 +39,8 @@ function getAppenderModule(channel: OutputChannel): AppenderModule {
       const normalLayout = getLayout(n.type, n) ?? basicLayout;
       return (event: LoggingEvent) => {
         const msg = normalLayout(event, timezoneOffset);
-        channel.appendLine(stripInfo(msg));
+        channel.appendLine(msg);
       };
     },
   };
-}
-
-/**
- * Strip sensitive info in stack trace message.
- */
-function stripInfo(msg: string) {
-  const rootPath = projectRoot();
-  const reg = new RegExp(rootPath, 'g');
-  // TODO: Remove the hack.
-  return msg ? msg : msg.replace(reg, 'Project');
 }

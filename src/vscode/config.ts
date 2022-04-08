@@ -1,5 +1,5 @@
 import {
-  Configuration as BaseConfig,
+  type Configuration as BaseConfig,
   mergeConfig,
   resolveConfigForFile,
 } from 'format-imports';

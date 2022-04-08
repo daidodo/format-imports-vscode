@@ -1,5 +1,5 @@
-out
-node_modules
+out/
+node_modules/
 .cache/
 .parcel-cache/
 node_modules/
