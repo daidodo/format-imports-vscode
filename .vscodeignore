@@ -14,3 +14,4 @@ tsconfig.tsbuildinfo
 .parcel-cache/
 node_modules/
 !node_modules/format-imports/schemas/
+!node_modules/format-imports/package.json
