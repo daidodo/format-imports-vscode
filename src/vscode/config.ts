@@ -1,7 +1,7 @@
+import * as formatImports from 'format-imports';
 import {
   type Configuration as BaseConfig,
   mergeConfig,
-  resolveConfigForFile,
 } from 'format-imports';
 import cloneDeep from 'lodash.clonedeep';
 import NodeCache from 'node-cache';
@@ -11,6 +11,8 @@ import {
   workspace,
   WorkspaceConfiguration,
 } from 'vscode';
+
+import requireModule from '@dozerg/require-module';
 
 import SortActionProvider from './actions';
 import { logger } from './log';
@@ -51,6 +53,12 @@ export function resolveConfig(fileUri: Uri, languageId: string, eol: EndOfLine, 
     force,
   });
   log.debug('Loaded codeAction:', codeAction, 'and VSCode config:', c1);
+  const { resolveConfigForFile, VERSION } = requireModule(
+    'format-imports',
+    fileName,
+    formatImports,
+  );
+  log.debug('Format Import version:', VERSION);
   const c2 = resolveConfigForFile(fileName, c1);
   const r = codeAction ? mergeConfig(c2, { autoFormat: 'off' }) : c2;
   CACHE.set(fileName, r);
