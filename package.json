@@ -26,7 +26,7 @@
     "url": "https://github.com/daidodo/format-imports-vscode/issues"
   },
   "engines": {
-    "vscode": "^1.70.0"
+    "vscode": "^1.71.0"
   },
   "categories": [
     "Formatters"
@@ -374,7 +374,7 @@
     }
   },
   "dependencies": {
-    "format-imports": "^3.0.13",
+    "format-imports": "^3.1.0",
     "lodash.clonedeep": "^4.5.0",
     "log4js": "^6.6.1",
     "node-cache": "^5.1.2"
@@ -382,7 +382,7 @@
   "devDependencies": {
     "@types/lodash.clonedeep": "^4.5.7",
     "@types/node": "^18.7.14",
-    "@types/vscode": "^1.70.0",
+    "@types/vscode": "^1.71.0",
     "@typescript-eslint/eslint-plugin": "^5.36.1",
     "@typescript-eslint/parser": "^5.36.1",
     "eslint": "^8.23.0",
