@@ -16,6 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <!-- [Stacked changes]
 -->
 
+## [7.5.1] - 2022-10-29
+
+### Added
+
+- Support React 18 [use client](https://github.com/reactjs/rfcs/blob/main/text/0227-server-module-conventions.md) directive.
+
 ## [7.5.0] - 2022-09-09
 
 ### Added
