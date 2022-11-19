@@ -140,6 +140,11 @@
           "default": "paths",
           "description": "Sort import declarations by paths or first names."
         },
+        "tsImportSorter.configuration.nodeProtocol": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "adding or removing \"node:\" to builtin module paths"
+        },
         "tsImportSorter.configuration.groupRules": {
           "type": "array",
           "default": [
