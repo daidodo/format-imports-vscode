@@ -16,6 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <!-- [Stacked changes]
 -->
 
+## [7.5.2] - 2022-11-25
+
+### Added
+
+- Support TypeScript 4.9 [satisfies](https://devblogs.microsoft.com/typescript/announcing-typescript-4-9/#satisfies) operator.
+
 ## [7.5.1] - 2022-10-29
 
 ### Added

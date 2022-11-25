@@ -48,7 +48,7 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - Respect [ESLint](https://eslint.org) and [eslint-plugin-import](https://github.com/benmosher/eslint-plugin-import) rules.
 - Respect configs from [Prettier](https://prettier.io), [EditorConfig](https://editorconfig.org) and VS Code editor settings.
 - Preserve `'use strict/client'`, `///` directives, shebang (`#!`) and comments.
-- Support [Type-Only imports/exports](https://devblogs.microsoft.com/typescript/announcing-typescript-3-8/#type-only-imports-exports), [Type Modifier on names](https://devblogs.microsoft.com/typescript/announcing-typescript-4-5/#type-on-import-names) and [Import Assertions](https://devblogs.microsoft.com/typescript/announcing-typescript-4-5/#import-assertions).
+- Support [Type-Only imports/exports](https://devblogs.microsoft.com/typescript/announcing-typescript-3-8/#type-only-imports-exports), [Type Modifier on names](https://devblogs.microsoft.com/typescript/announcing-typescript-4-5/#type-on-import-names), [Import Assertions](https://devblogs.microsoft.com/typescript/announcing-typescript-4-5/#import-assertions) and [satisfies](https://devblogs.microsoft.com/typescript/announcing-typescript-4-9/#satisfies) operator.
 - Support multi-root projects.
 
 # How to use
