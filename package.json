@@ -141,9 +141,14 @@
           "description": "Sort import declarations by paths or first names."
         },
         "tsImportSorter.configuration.nodeProtocol": {
-          "type": "boolean",
-          "default": false,
-          "markdownDescription": "adding or removing \"node:\" to builtin module paths"
+          "type": "string",
+          "enum": [
+            "always",
+            "none",
+            "preserve"
+          ],
+          "default": "preserve",
+          "markdownDescription": "Whether to add or remove node protocol (\"node:\") to/from builtin module paths."
         },
         "tsImportSorter.configuration.groupRules": {
           "type": "array",
