@@ -58,7 +58,14 @@ export async function formatDocument(document: TextDocument, from: TriggeredFrom
   return undefined;
 }
 
+export const SUPPORTED_LANGUAGE_IDS = [
+  'typescript',
+  'typescriptreact',
+  'javascript',
+  'javascriptreact',
+  'vue',
+];
+
 function isSupported(document: TextDocument) {
-  const SUPPORTED = new Set(['typescript', 'typescriptreact', 'javascript', 'javascriptreact']);
-  return SUPPORTED.has(document.languageId);
+  return SUPPORTED_LANGUAGE_IDS.includes(document.languageId);
 }

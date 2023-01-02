@@ -55,14 +55,14 @@
       "commandPalette": [
         {
           "command": "tsImportSorter.command.sortImports",
-          "when": "editorLangId==javascript || editorLangId==javascriptreact || editorLangId==typescript || editorLangId==typescriptreact"
+          "when": "editorLangId==javascript || editorLangId==javascriptreact || editorLangId==typescript || editorLangId==typescriptreact || editorLangId==vue"
         }
       ],
       "editor/context": [
         {
           "command": "tsImportSorter.command.sortImports",
           "group": "1_modification",
-          "when": "resourceLangId==javascript || resourceLangId==javascriptreact || resourceLangId==typescript || resourceLangId==typescriptreact"
+          "when": "resourceLangId==javascript || resourceLangId==javascriptreact || resourceLangId==typescript || resourceLangId==typescriptreact || resourceLangId==vue"
         }
       ]
     },

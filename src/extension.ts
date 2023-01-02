@@ -21,7 +21,10 @@ import {
   osInfo,
   vscodeInfo,
 } from './vscode/env';
-import { formatDocument } from './vscode/format';
+import {
+  formatDocument,
+  SUPPORTED_LANGUAGE_IDS,
+} from './vscode/format';
 import {
   initLog,
   uninitLog,
@@ -45,11 +48,9 @@ export function activate(context: ExtensionContext) {
   context.subscriptions.push(
     sortCommand,
     beforeSave,
-    languages.registerCodeActionsProvider(
-      ['javascript', 'javascriptreact', 'typescript', 'typescriptreact'],
-      new SortActionProvider(),
-      { providedCodeActionKinds: SortActionProvider.ACTION_KINDS },
-    ),
+    languages.registerCodeActionsProvider(SUPPORTED_LANGUAGE_IDS, new SortActionProvider(), {
+      providedCodeActionKinds: SortActionProvider.ACTION_KINDS,
+    }),
   );
 
   // let lastActiveDocument: TextDocument | undefined;
