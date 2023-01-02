@@ -34,8 +34,9 @@
   "keywords": [
     "javascript",
     "typescript",
-    "import",
-    "export",
+    "vue",
+    "imports",
+    "exports",
     "sort imports",
     "format imports",
     "format exports",
@@ -46,6 +47,7 @@
     "onLanguage:javascriptreact",
     "onLanguage:typescript",
     "onLanguage:typescriptreact",
+    "onLanguage:vue",
     "onCommand:tsImportSorter.command.sortImports"
   ],
   "contributes": {
@@ -388,20 +390,20 @@
     }
   },
   "dependencies": {
-    "format-imports": "^3.1.5",
+    "format-imports": "^3.2.0",
     "lodash.clonedeep": "^4.5.0",
     "log4js": "^6.7.1",
     "node-cache": "^5.1.2"
   },
   "devDependencies": {
     "@types/lodash.clonedeep": "^4.5.7",
-    "@types/node": "^18.11.12",
+    "@types/node": "^18.11.18",
     "@types/vscode": "^1.74.0",
-    "@typescript-eslint/eslint-plugin": "^5.46.0",
-    "@typescript-eslint/parser": "^5.46.0",
+    "@typescript-eslint/eslint-plugin": "^5.48.0",
+    "@typescript-eslint/parser": "^5.48.0",
     "@vscode/test-electron": "^2.2.1",
-    "eslint": "^8.29.0",
-    "eslint-config-prettier": "^8.5.0",
+    "eslint": "^8.31.0",
+    "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-tsdoc": "^0.2.17",
     "prettier": "^2.8.1",
     "ts-loader": "^9.4.2",
