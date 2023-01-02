@@ -18,14 +18,11 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - [Install VS Code Extension](https://marketplace.visualstudio.com/items?itemName=dozerg.tsimportsorter)
 - [Open Issues](https://github.com/daidodo/format-imports-vscode/issues)
 
-## [7.5.x]
+## [7.6.x]
 
 ### Added
 
-- Add `builtin` to `GroupRule` to support NodeJS builtin module imports.
-- Add `nodeProtocol` to support adding or removing `"node:"` to builtin module paths.
-- Support React 18 [use client](https://github.com/reactjs/rfcs/blob/main/text/0227-server-module-conventions.md) directive.
-- Support TypeScript 4.9 [satisfies](https://devblogs.microsoft.com/typescript/announcing-typescript-4-9/#satisfies) operator.
+- Support [Vue.js](https://vuejs.org).
 
 # Table of contents <!-- omit in toc -->
 
@@ -36,6 +33,7 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
   - [Config Files](#config-files)
 - [ESLint Compatibility](#eslint-compatibility)
 - [Monorepo Support](#monorepo-support)
+- [Vue.js Support](#vuejs-support)
 - [Contribution](#contribution)
 - [Thanks](#thanks)
 - [License](#license)
@@ -51,6 +49,7 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - Preserve `'use strict/client'`, `///` directives, shebang (`#!`) and comments.
 - Support [Type-Only imports/exports](https://devblogs.microsoft.com/typescript/announcing-typescript-3-8/#type-only-imports-exports), [Type Modifier on names](https://devblogs.microsoft.com/typescript/announcing-typescript-4-5/#type-on-import-names), [Import Assertions](https://devblogs.microsoft.com/typescript/announcing-typescript-4-5/#import-assertions) and [satisfies](https://devblogs.microsoft.com/typescript/announcing-typescript-4-9/#satisfies) operator.
 - Support multi-root projects.
+- Support [Vue.js](https://vuejs.org).
 
 # How to use
 
@@ -219,9 +218,13 @@ For how it works, please check the [ESLint Compatibility](https://github.com/dai
 
 # Monorepo Support
 
-When reading config from `import-sorter.json` or `package.json`, Format-Imports will automatically look for them in the directory of the file to be formatted, and in successive parent directories all the way up to the root directory of the filesystem (unless `"root": true` is specified).
+When reading config from `import-sorter.json` or `package.json`, the extention will automatically look for them in the directory of the file to be formatted, and in successive parent directories all the way up to the root directory of the filesystem (unless `"root": true` is specified).
 
 Multiple `import-sorter.json` or `package.json` files can be useful when you want different configurations for different sub projects of your monorepo, while common settings are kept in the root `import-sorter.json` or `package.json`. When there is a conflict, the sub project (more localized) config will take precedence.
+
+# Vue.js Support
+
+From v7.2.0, the extension supports formatting `<script>` in *.vue* files. But removing unused imports is disabled due to [an issue](https://github.com/daidodo/format-imports/issues/20). You'll need to remove them manually.
 
 # Contribution
 

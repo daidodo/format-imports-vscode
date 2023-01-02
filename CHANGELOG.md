@@ -16,6 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <!-- [Stacked changes]
 -->
 
+## [7.6.0] - 2023-01-02
+
+### Added
+
+- Support Vue.js.
+
 ## [7.5.2] - 2022-11-25
 
 ### Added
