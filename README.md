@@ -23,6 +23,8 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 ### Added
 
 - Support [Vue.js](https://vuejs.org).
+- Support [use server](https://nextjs.org/blog/next-13-4#server-actions-alpha)
+
 
 # Table of contents <!-- omit in toc -->
 
@@ -46,7 +48,7 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - [Ignore files or declarations](https://github.com/daidodo/format-imports/blob/main/README.md#ignoring-files-or-declarations) by config or inline comments.
 - Respect [ESLint](https://eslint.org) and [eslint-plugin-import](https://github.com/benmosher/eslint-plugin-import) rules.
 - Respect configs from [Prettier](https://prettier.io), [EditorConfig](https://editorconfig.org) and VS Code editor settings.
-- Preserve `'use strict/client'`, `///` directives, shebang (`#!`) and comments.
+- Preserve `'use strict/client/server'`, `///` directives, shebang (`#!`) and comments.
 - Support [Type-Only imports/exports](https://devblogs.microsoft.com/typescript/announcing-typescript-3-8/#type-only-imports-exports), [Type Modifier on names](https://devblogs.microsoft.com/typescript/announcing-typescript-4-5/#type-on-import-names), [Import Assertions](https://devblogs.microsoft.com/typescript/announcing-typescript-4-5/#import-assertions) and [satisfies](https://devblogs.microsoft.com/typescript/announcing-typescript-4-9/#satisfies) operator.
 - Support multi-root projects.
 - Support [Vue.js](https://vuejs.org).
