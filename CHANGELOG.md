@@ -16,6 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <!-- [Stacked changes]
 -->
 
+## [7.6.4] - 2023-05-19
+
+### Added
+
+- Support URL as module identifier.
+
 ## [7.6.3] - 2023-05-12
 
 ### Added

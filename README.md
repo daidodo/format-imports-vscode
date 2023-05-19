@@ -24,7 +24,7 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 
 - Support [Vue.js](https://vuejs.org).
 - Support [use server](https://nextjs.org/blog/next-13-4#server-actions-alpha)
-
+- Support URL as module identifier.
 
 # Table of contents <!-- omit in toc -->
 
@@ -226,7 +226,7 @@ Multiple `import-sorter.json` or `package.json` files can be useful when you wan
 
 # Vue.js Support
 
-From v7.2.0, the extension supports formatting `<script>` in *.vue* files. But removing unused imports is disabled due to [an issue](https://github.com/daidodo/format-imports/issues/20). You'll need to remove them manually.
+From v7.2.0, the extension supports formatting `<script>` in _.vue_ files. But removing unused imports is disabled due to [an issue](https://github.com/daidodo/format-imports/issues/20). You'll need to remove them manually.
 
 # Contribution
 
