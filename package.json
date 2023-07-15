@@ -9,7 +9,7 @@
   "author": "Zhao DAI <daidodo@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "vscode:prepublish": "npm run clean && webpack --mode production",
+    "vscode:prepublish": "npm run clean && eslint && webpack --mode production",
     "compile": "tsc",
     "watch": "",
     "pretest": "npm run compile",
@@ -26,7 +26,7 @@
     "url": "https://github.com/daidodo/format-imports-vscode/issues"
   },
   "engines": {
-    "vscode": "^1.78.0"
+    "vscode": "^1.80.0"
   },
   "categories": [
     "Formatters"
@@ -396,18 +396,18 @@
   },
   "devDependencies": {
     "@types/lodash.clonedeep": "^4.5.7",
-    "@types/node": "^20.2.1",
-    "@types/vscode": "^1.78.0",
-    "@typescript-eslint/eslint-plugin": "^5.59.6",
-    "@typescript-eslint/parser": "^5.59.6",
-    "@vscode/test-electron": "^2.3.2",
-    "eslint": "^8.40.0",
+    "@types/node": "^20.4.2",
+    "@types/vscode": "^1.80.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "@vscode/test-electron": "^2.3.3",
+    "eslint": "^8.45.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-tsdoc": "^0.2.17",
     "prettier": "^2.8.8",
-    "ts-loader": "^9.4.2",
+    "ts-loader": "^9.4.4",
     "ts-node": "^10.9.1",
-    "webpack": "^5.83.1",
-    "webpack-cli": "^5.1.1"
+    "webpack": "^5.88.1",
+    "webpack-cli": "^5.1.4"
   }
 }
