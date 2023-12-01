@@ -389,25 +389,25 @@
     }
   },
   "dependencies": {
-    "format-imports": "^3.2.6",
+    "format-imports": "^3.2.7",
     "lodash.clonedeep": "^4.5.0",
     "log4js": "^6.9.1",
     "node-cache": "^5.1.2"
   },
   "devDependencies": {
-    "@types/lodash.clonedeep": "^4.5.7",
-    "@types/node": "^20.5.9",
-    "@types/vscode": "^1.81.0",
-    "@typescript-eslint/eslint-plugin": "^6.5.0",
-    "@typescript-eslint/parser": "^6.5.0",
-    "@vscode/test-electron": "^2.3.4",
-    "eslint": "^8.48.0",
+    "@types/lodash.clonedeep": "^4.5.9",
+    "@types/node": "^20.10.1",
+    "@types/vscode": "^1.84.2",
+    "@typescript-eslint/eslint-plugin": "^6.13.1",
+    "@typescript-eslint/parser": "^6.13.1",
+    "@vscode/test-electron": "^2.3.8",
+    "eslint": "^8.54.0",
     "eslint-config-prettier": "^8.10.0",
     "eslint-plugin-tsdoc": "^0.2.17",
-    "prettier": "^3.0.3",
-    "ts-loader": "^9.4.4",
+    "prettier": "^3.1.0",
+    "ts-loader": "^9.5.1",
     "ts-node": "^10.9.1",
-    "webpack": "^5.88.2",
+    "webpack": "^5.89.0",
     "webpack-cli": "^5.1.4"
   }
 }
