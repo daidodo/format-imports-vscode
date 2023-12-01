@@ -5,7 +5,7 @@
   "icon": "assets/icons/main.jpg",
   "main": "./out/extension.js",
   "publisher": "dozerg",
-  "version": "7.6.6",
+  "version": "7.6.7",
   "author": "Zhao DAI <daidodo@gmail.com>",
   "license": "MIT",
   "scripts": {
