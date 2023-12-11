@@ -25,7 +25,7 @@ export async function formatDocument(document: TextDocument, from: TriggeredFrom
   const { fsPath: fileName } = fileUri;
   log.debug('Triggered from:', from);
   try {
-    const config = resolveConfig(fileUri, languageId, eol, from === 'onCommand');
+    const config = await resolveConfig(fileUri, languageId, eol, from === 'onCommand');
     if (from === 'onSave' && config.autoFormat !== 'onSave') {
       log.info('Auto format is', config.autoFormat);
       return undefined;

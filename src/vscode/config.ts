@@ -36,7 +36,12 @@ interface VscFilesConfig {
 
 const CACHE = new NodeCache({ stdTTL: 2 });
 
-export function resolveConfig(fileUri: Uri, languageId: string, eol: EndOfLine, force?: boolean) {
+export async function resolveConfig(
+  fileUri: Uri,
+  languageId: string,
+  eol: EndOfLine,
+  force?: boolean,
+) {
   const log = logger('vscode.resolveConfig');
   const { fsPath: fileName } = fileUri;
   log.info('Resolving config for fileName:', fileName, 'languageId:', languageId);
@@ -51,7 +56,7 @@ export function resolveConfig(fileUri: Uri, languageId: string, eol: EndOfLine, 
     force,
   });
   log.debug('Loaded codeAction:', codeAction, 'and VSCode config:', c1);
-  const c2 = resolveConfigForFile(fileName, c1);
+  const c2 = await resolveConfigForFile(fileName, c1);
   const r = codeAction ? mergeConfig(c2, { autoFormat: 'off' }) : c2;
   CACHE.set(fileName, r);
   return r;
@@ -85,8 +90,8 @@ function transform(wsConfig: WorkspaceConfiguration) {
     detectIndentation || insertSpaces === undefined
       ? undefined
       : insertSpaces
-      ? ('space' as const)
-      : ('tab' as const);
+        ? ('space' as const)
+        : ('tab' as const);
   const actionId = SortActionProvider.ACTION_ID;
   const codeAction =
     codeActionsOnSave &&
