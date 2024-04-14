@@ -25,6 +25,7 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 - Support [Vue.js](https://vuejs.org).
 - Support [use server](https://nextjs.org/blog/next-13-4#server-actions-alpha)
 - Support URL as module identifier.
+- Support [Import Attributes](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-3.html#import-attributes).
 
 # Table of contents <!-- omit in toc -->
 
@@ -43,13 +44,13 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 # Features
 
 - Auto format imports and exports on save or [code actions](https://code.visualstudio.com/docs/languages/javascript#_code-actions-on-save), or manually from command, shortcut or context menu.
-- Group and sort imports by [custom rules](https://github.com/daidodo/format-imports/blob/main/README.md#grouping-rules), including [sort by paths or names](https://github.com/daidodo/format-imports/blob/main/docs/interfaces/Configuration.md#sortimportsby).
-- Remove duplicated and unused names with [configurable exceptions](https://github.com/daidodo/format-imports/blob/main/README.md#keeping-unused-imports).
+- Group and sort imports by [configurable rules](https://github.com/daidodo/format-imports/blob/main/README.md#grouping-rules), including [sort by paths or names](https://github.com/daidodo/format-imports/blob/main/docs/interfaces/Configuration.md#sortimportsby).
+- Remove duplicated and unused names with [exceptions](https://github.com/daidodo/format-imports/blob/main/README.md#keeping-unused-imports).
 - [Ignore files or declarations](https://github.com/daidodo/format-imports/blob/main/README.md#ignoring-files-or-declarations) by config or inline comments.
 - Respect [ESLint](https://eslint.org) and [eslint-plugin-import](https://github.com/benmosher/eslint-plugin-import) rules.
 - Respect configs from [Prettier](https://prettier.io), [EditorConfig](https://editorconfig.org) and VS Code editor settings.
 - Preserve `'use strict/client/server'`, `///` directives, shebang (`#!`) and comments.
-- Support [Type-Only imports/exports](https://devblogs.microsoft.com/typescript/announcing-typescript-3-8/#type-only-imports-exports), [Type Modifier on names](https://devblogs.microsoft.com/typescript/announcing-typescript-4-5/#type-on-import-names), [Import Assertions](https://devblogs.microsoft.com/typescript/announcing-typescript-4-5/#import-assertions) and [satisfies](https://devblogs.microsoft.com/typescript/announcing-typescript-4-9/#satisfies) operator.
+- Support [Type-Only imports/exports](https://devblogs.microsoft.com/typescript/announcing-typescript-3-8/#type-only-imports-exports), [Type Modifier on names](https://devblogs.microsoft.com/typescript/announcing-typescript-4-5/#type-on-import-names), [Import Attributes](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-3.html#import-attributes) and [satisfies](https://devblogs.microsoft.com/typescript/announcing-typescript-4-9/#satisfies) operator.
 - Support multi-root projects.
 - Support [Vue.js](https://vuejs.org).
 

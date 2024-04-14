@@ -16,6 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <!-- [Stacked changes]
 -->
 
+## [7.6.11] - 2024-04-14
+
+### Added
+
+- Support [Import Attributes](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-3.html#import-attributes).
+
 ## [7.6.4] - 2023-05-19
 
 ### Added
