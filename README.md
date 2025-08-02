@@ -27,7 +27,7 @@ Automatically format **imports** and **exports** for **JavaScript** and **TypeSc
 ### Added
 
 - Support [Vue.js](https://vuejs.org).
-- Support [use server](https://nextjs.org/blog/next-13-4#server-actions-alpha)
+- Support [use server](https://nextjs.org/blog/next-13-4#server-actions-alpha) / [cache](https://nextjs.org/docs/app/api-reference/directives/use-cache)
 - Support URL as module identifier.
 - Support [Import Attributes](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-3.html#import-attributes).
 
