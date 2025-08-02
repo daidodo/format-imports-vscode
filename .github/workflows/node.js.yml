@@ -18,7 +18,7 @@ jobs:
     strategy:
       matrix:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-        node: [18.x, 20.x, 21.x]
+        node: [18.x, 20.x, 22.x, 24.x]
         # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstrategy
         os: [macos-latest, ubuntu-latest, windows-latest]
 
