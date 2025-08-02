@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <!-- [Stacked changes]
 -->
 
-## [7.6.12] - 2025-08-02
+## [7.6.13] - 2025-08-02
 
 ### Added
 
